@@ -1,0 +1,72 @@
+<ion-header [translucent]="false">
+  <ion-toolbar class="toolbar">
+    <img
+      alt
+      src="assets/icon/dome_white_logo.png"
+      width="auto"
+      slot="start"
+      height="35px"
+    />
+    <ion-button
+      slot="end"
+      color="primary"
+      class="toolbar-but"
+      
+    >
+      Logout
+      <ion-icon
+    slot="end"
+    class="ion-icon-home"
+    size="small"
+    name="person"
+  ></ion-icon>
+    </ion-button>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding home-content">
+  <ion-grid class="background-grid">
+    <ion-row class="ion-justify-content-left">
+      <ion-col class="ion-justify-content-first" style="border-left-width:3px;border-color: #B0FF2B; margin-left: 10px;border-left-style: solid;">
+        <ion-text class="">
+          <b>Credencials</b>
+        </ion-text>
+      </ion-col>
+    </ion-row>
+    <ion-row class="ion-justify-content-center">
+      <b>Selecciona el tipus de Credencials</b>
+      <ion-item class="credential_item">
+        
+        <ion-select labelPlacement="stacked" label="Tipus de Credencial" class="select-cred" interface="popover" value="lear_cred">
+          <ion-select-option value="lear_cred">LEAR Credential</ion-select-option>
+        </ion-select>
+      </ion-item>
+        
+    </ion-row>
+    <br/>
+    <ion-row class="ion-justify-content-center">
+      <ion-item class="credential_item_text_area">
+        <ion-textarea labelPlacement="stacked" label="Leave a comment" auto-grow placeholder="Escribe aquí"></ion-textarea>
+      </ion-item>
+    </ion-row>
+    <br/>
+    <ion-row class="ion-justify-content-center">
+      <ion-button class="generate_cred_but">
+        Generar Credencial
+      </ion-button>
+    </ion-row>
+
+    <ion-row class="ion-justify-content-center">
+      <qrcode  [qrdata]="userData" [width]="300"  colorDark="#203d76"></qrcode>
+    </ion-row>
+
+    <ion-row class="ion-justify-content-center">
+      <ion-button class="generate_cred_but">
+        Descarrega el Wallet per guardar la teva informació
+      </ion-button>
+    </ion-row>
+    
+      
+  </ion-grid>
+</ion-content>

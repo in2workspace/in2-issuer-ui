@@ -1,0 +1,7 @@
+{
+  "name": "Credential-issuer-ui",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
