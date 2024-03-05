@@ -27,6 +27,7 @@
     "@capacitor/keyboard": "5.0.8",
     "@capacitor/status-bar": "5.0.7",
     "@ionic/angular": "^7.5.0",
+    "@ionic/storage-angular": "^4.0.0",
     "angular-auth-oidc-client": "^17.0.0",
     "angularx-qrcode": "^17.0.0",
     "ionicons": "^7.2.1",

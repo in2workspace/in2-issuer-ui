@@ -5,6 +5,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { QRCodeModule } from 'angularx-qrcode';
 import { UserData } from '../interfaces/userData.interface';
+import { AuthenticationService } from '../services/authentication.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -22,7 +24,8 @@ export class HomePage {
   }
   public userDataTextAreaValue: string ="";
   public qrdata : string = "";
-  constructor() {
+  constructor(private authenticationService: AuthenticationService,
+    private router: Router,) {
     this.userDataTextAreaValue = this.getUserDataString();
   }
 
@@ -41,4 +44,11 @@ export class HomePage {
   saveInfo() {
     
   }
+
+  logout() {
+    this.authenticationService.logout().subscribe(() => {
+      this.router.navigate(['/'], {})
+    });
+  }
+
 }
