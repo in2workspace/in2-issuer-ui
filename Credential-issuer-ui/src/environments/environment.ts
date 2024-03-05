@@ -3,7 +3,16 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  loginParams: {
+    has_login: true,
+    login_url: 'http://localhost:9099/realms/wallet',
+    client_id: 'auth-client',
+    scope: 'openid profile email offline_access',
+    grant_type: 'code'
+  },
+  issuer_url: '',
+  issuer_uri: '',
 };
 
 /*

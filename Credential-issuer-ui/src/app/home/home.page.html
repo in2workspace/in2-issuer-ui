@@ -47,22 +47,22 @@
     <br/>
     <ion-row class="ion-justify-content-center">
       <ion-item class="credential_item_text_area">
-        <ion-textarea labelPlacement="stacked" label="Leave a comment" auto-grow placeholder="Escribe aquí"></ion-textarea>
+        <ion-textarea labelPlacement="stacked" label="Leave a comment" auto-grow placeholder='{{userDataTextAreaValue}}' [(ngModel)]="userDataTextAreaValue" (ionChange)="updateUserData()"></ion-textarea>
       </ion-item>
     </ion-row>
     <br/>
     <ion-row class="ion-justify-content-center">
-      <ion-button class="generate_cred_but">
+      <ion-button class="generate_cred_but" (click)="generateQR()">
         Generar Credencial
       </ion-button>
     </ion-row>
 
     <ion-row class="ion-justify-content-center">
-      <qrcode  [qrdata]="userData" [width]="300"  colorDark="#203d76"></qrcode>
+      <qrcode *ngIf="qrdata!==''" [qrdata]="qrdata" [width]="300"  colorDark="#203d76"></qrcode>
     </ion-row>
 
     <ion-row class="ion-justify-content-center">
-      <ion-button class="generate_cred_but">
+      <ion-button class="generate_cred_but" (click)="saveInfo()">
         Descarrega el Wallet per guardar la teva informació
       </ion-button>
     </ion-row>

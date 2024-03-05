@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import {IonicModule, PopoverController} from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { QRCodeModule } from 'angular2-qrcode';
+import { QRCodeModule } from 'angularx-qrcode';
 import { UserData } from '../interfaces/userData.interface';
 
 @Component({
@@ -20,5 +20,25 @@ export class HomePage {
     idDoc: '12345',
     job: 'Developer'
   }
-  constructor() {}
+  public userDataTextAreaValue: string ="";
+  public qrdata : string = "";
+  constructor() {
+    this.userDataTextAreaValue = this.getUserDataString();
+  }
+
+  updateUserData() {
+    console.log(this.userDataTextAreaValue);
+  }
+
+  generateQR() {
+
+  }
+
+  getUserDataString() {
+    return JSON.stringify(this.userData, null, 2);
+  }
+
+  saveInfo() {
+    
+  }
 }
