@@ -14,5 +14,11 @@ export const routes: Routes = [
   },
   {path: 'callback',
   loadComponent: () => import('./callback/callback.page').then((m) => m.CallbackPage)
-  }
+  },
+  {path: 'user-info',
+  canActivate: [AutoLoginPartialRoutesGuard],
+  loadComponent: () =>
+    import('./info/info.page').then(
+      (m) => m.InfoPage
+    )}
 ];

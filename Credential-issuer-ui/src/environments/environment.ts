@@ -13,6 +13,8 @@ export const environment = {
   },
   issuer_url: '',
   issuer_uri: '',
+  base_url: 'https://localhost:8071',
+  wallet_url: 'https://localhost:4200'
 };
 
 /*

@@ -9,6 +9,12 @@ import { AuthenticationService } from './services/authentication.service';
   imports: [IonApp, IonRouterOutlet],
 })
 export class AppComponent {
-  private AuthenticationService = inject (AuthenticationService)
+  private AuthenticationService = inject (AuthenticationService);
+
+  public appPages = [
+    { title: 'home', url: '/home', icon: 'home' },
+    { title: 'user-info', url: '/user-info', icon: 'user'},
+    { title: 'logout', url: '/login', icon: 'log-out'},
+  ];
   constructor() {}
 }

@@ -1,5 +1,24 @@
-<ion-header [translucent]="false">
+<ion-menu side="start" contentId="main-content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Menu</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding">
+    <ion-list class="menu-list">
+      <ion-item class="menu-item" (click)="navigateToPage('user-info')">
+        <ion-label>Dades Usuari</ion-label>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-menu>
+
+
+<ion-header [translucent]="false" id="main-content">
   <ion-toolbar class="toolbar">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
     <img
       alt
       src="assets/icon/dome_white_logo.png"
@@ -14,12 +33,7 @@
       (click)="logout()"
     >
       Logout
-      <ion-icon
-    slot="end"
-    class="ion-icon-home"
-    size="small"
-    name="person"
-  ></ion-icon>
+    
     </ion-button>
 
   </ion-toolbar>
@@ -35,20 +49,13 @@
       </ion-col>
     </ion-row>
     <ion-row class="ion-justify-content-center">
-      <b>Selecciona el tipus de Credencials</b>
-      <ion-item class="credential_item">
-        
-        <ion-select labelPlacement="stacked" label="Tipus de Credencial" class="select-cred" interface="popover" value="lear_cred">
-          <ion-select-option value="lear_cred">LEAR Credential</ion-select-option>
-        </ion-select>
-      </ion-item>
-        
-    </ion-row>
-    <br/>
-    <ion-row class="ion-justify-content-center">
-      <ion-item class="credential_item_text_area">
-        <ion-textarea labelPlacement="stacked" label="Leave a comment" auto-grow placeholder='{{userDataTextAreaValue}}' [(ngModel)]="userDataTextAreaValue" (ionChange)="updateUserData()"></ion-textarea>
-      </ion-item>
+      <br/>
+      <span>Procedimiento para el almacenamiento de Lear credential:<br/>
+        1- Clicar sobre botó Generar Credencial.
+        <br/>
+        2- <br/>
+        - En cas d'accedir des d'un dispositiu mobil, fer clic sobre el botó Redireccionar al Wallet.<br/>
+        - En cas d'accedir des de PC, accedir des del dispositiu mobil a https://wallet, iniciar sessió i escanejar el codi QR dins del wallet.</span>
     </ion-row>
     <br/>
     <ion-row class="ion-justify-content-center">
@@ -62,7 +69,7 @@
     </ion-row>
 
     <ion-row class="ion-justify-content-center">
-      <ion-button class="generate_cred_but" (click)="saveInfo()">
+      <ion-button *ngIf="qrdata!==''" class="generate_cred_but" (click)="saveInfo()">
         Descarrega el Wallet per guardar la teva informació
       </ion-button>
     </ion-row>

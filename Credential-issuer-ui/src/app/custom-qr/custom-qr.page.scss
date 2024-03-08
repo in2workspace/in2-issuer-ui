@@ -1,0 +1,82 @@
+#container {
+    text-align: center;
+  
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  #container strong {
+    font-size: 20px;
+    line-height: 26px;
+  }
+  
+  #container p {
+    font-size: 16px;
+    line-height: 22px;
+  
+    color: #8c8c8c;
+  
+    margin: 0;
+  }
+  
+  #container a {
+    text-decoration: none;
+  }
+  
+  .toolbar {
+    padding-right: 0.5rem;
+    background-color: blue;
+    --box-shadow: 3px 3px 5px 1px #B0FF2B;
+  }
+  
+  .toolbar-but {
+    --box-shadow: none !important;
+      text-transform: none;
+  }
+  
+  .home-content {
+    --ion-background-color: #DDE6F6;
+  }
+  
+  .background-grid {
+    background-color: #ffffff;
+    width: 50%;
+  }
+  
+  .credential_item {
+    --ion-item-background: #ffffff;
+    --ion-item-color: #000000;
+  }
+  
+  .select-cred {
+    background-color: #d7d8da;
+  }
+  
+  .credential_item_text_area {
+    --ion-item-background: #ffffff;
+  }
+  
+  ion-textarea {
+    resize: both;
+    overflow: auto;
+    min-height: 200px !important; 
+    max-height: 300px !important;
+    min-width: 400px !important;
+    max-width: 600px !important;
+    border: 1px solid #ccc;
+    padding: 10px;
+    background-color: #d7d8da;
+    color: black;
+  }
+  
+  .div_text_area {
+    display: flex;
+    align-items: center;
+  }
+  
+  .generate_cred_but {
+    text-transform:none;
+  }

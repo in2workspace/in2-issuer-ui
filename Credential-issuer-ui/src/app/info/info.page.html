@@ -1,0 +1,79 @@
+<ion-menu side="start" contentId="main-content">
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Menu</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <ion-list class="menu-list">
+        <ion-item class="menu-item" (click)="navigateToPage('home')">
+          <ion-label>Home</ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ion-menu>
+
+<ion-header [translucent]="false">
+    <ion-toolbar class="toolbar">
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+      <img
+        alt
+        src="assets/icon/dome_white_logo.png"
+        width="auto"
+        slot="start"
+        height="35px"
+      />
+      <ion-button
+        slot="end"
+        color="primary"
+        class="toolbar-but"
+        (click)="logout()"
+      >
+        Logout
+        
+      </ion-button>
+  
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content [fullscreen]="true" class="ion-padding info-content">
+    <ion-grid class="background-grid">
+
+    <ion-row class="ion-justify-content-left">
+        <ion-col class="ion-justify-content-first" style="border-left-width:3px;border-color: #B0FF2B; margin-left: 10px;border-left-style: solid;">
+          <ion-text class="">
+            <b>Información del usuario</b>
+          </ion-text>
+        </ion-col>
+    </ion-row>
+
+    <ion-list class="custom-list">
+      <ion-item class="custom-item">
+        <ion-label class="custom-label" position="floating">Nom complet</ion-label>
+        <ion-input class="custom-input" type="text" value="{{fullName}}" [readonly]="true"></ion-input>
+      </ion-item>
+  
+      <ion-item class="custom-item">
+        <ion-label class="custom-label" position="floating">Nom d'usuari</ion-label>
+        <ion-input class="custom-input" type="text" value="{{username}}" [readonly]="true"></ion-input>
+      </ion-item>
+  
+      <ion-item class="custom-item">
+        <ion-label class="custom-label" position="floating">Nom de pila</ion-label>
+        <ion-input class="custom-input" type="text" value="{{givenName}}" [readonly]="true"></ion-input>
+      </ion-item>
+  
+      <ion-item class="custom-item">
+        <ion-label class="custom-label" position="floating">Cognom</ion-label>
+        <ion-input class="custom-input" type="text" value="{{familyName}}" [readonly]="true"></ion-input>
+      </ion-item>
+  
+      <ion-item class="custom-item">
+        <ion-label class="custom-label" position="floating">Email</ion-label>
+        <ion-input class="custom-input" type="text" value="{{email}}" [readonly]="true"></ion-input>
+      </ion-item>
+    </ion-list>
+  </ion-grid>
+  </ion-content>

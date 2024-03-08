@@ -7,4 +7,5 @@
     window["env"]["grant_type"] = "code";
     window["env"]["issuer_url"] = "";
     window["env"]["issuer_uri"] = "";
+    window["env"]["wallet_url"] = "https://localhost:4200"
 })

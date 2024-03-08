@@ -34,7 +34,7 @@
 
 .toolbar-but {
   --box-shadow: none !important;
-    text-transform: none;
+  text-transform: none;
 }
 
 .home-content {
@@ -44,6 +44,7 @@
 .background-grid {
   background-color: #ffffff;
   width: 50%;
+  //height: 400px;
 }
 
 .credential_item {
@@ -79,4 +80,15 @@ ion-textarea {
 
 .generate_cred_but {
   text-transform:none;
+}
+
+.menu-list {
+  background-color: white;
+}
+
+.menu-item {
+  --background: white;
+  color: black;
+  border-radius: 8px;
+  border: 1px solid black;
 }

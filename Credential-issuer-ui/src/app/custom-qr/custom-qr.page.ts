@@ -7,18 +7,15 @@ import { QRCodeModule } from 'angularx-qrcode';
 import { UserData } from '../interfaces/userData.interface';
 import { AuthenticationService } from '../services/authentication.service';
 import { Router } from '@angular/router';
-import { IssuerService } from '../services/issuer.service';
-import { environment } from 'src/environments/environment';
-import { NavController } from '@ionic/angular';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss'],
+  selector: 'app-custom-qr',
+  templateUrl: 'custom-qr.page.html',
+  styleUrls: ['custom-qr.page.scss'],
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule, QRCodeModule],
 })
-export class HomePage {
+export class CustomQRPage {
   userData: UserData = {
     name: 'John',
     surname: 'Doe',
@@ -28,9 +25,7 @@ export class HomePage {
   public userDataTextAreaValue: string ="";
   public qrdata : string = "";
   constructor(private authenticationService: AuthenticationService,
-    private router: Router,
-    private issuerService: IssuerService,
-    private navCtrl: NavController) {
+    private router: Router,) {
     this.userDataTextAreaValue = this.getUserDataString();
   }
 
@@ -39,9 +34,7 @@ export class HomePage {
   }
 
   generateQR() {
-    this.issuerService.credentialOffer().subscribe(data=>{
-      this.qrdata=data;
-    })
+
   }
 
   getUserDataString() {
@@ -49,15 +42,7 @@ export class HomePage {
   }
 
   saveInfo() {
-    window.location.href = (environment.wallet_url + '/' + this.qrdata);
-  }
-
-  navigateToPage(page: string) {
-    switch (page) {
-      case 'user-info':
-        this.navCtrl.navigateRoot('/user-info');
-        break;
-    }
+    
   }
 
   logout() {

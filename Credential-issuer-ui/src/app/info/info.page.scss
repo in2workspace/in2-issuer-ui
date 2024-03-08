@@ -1,0 +1,51 @@
+.info-content {
+    --ion-background-color: #DDE6F6;
+}
+
+.background-grid {
+    background-color: #ffffff;
+    width: 50%;
+}
+
+.toolbar-but {
+    --box-shadow: none !important;
+    text-transform: none;
+}
+
+.custom-item {
+    --background: white;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    margin-top: 20px;
+    width: 300px;
+}
+
+
+.custom-label {
+    color: black;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 3px;
+}
+  
+.custom-input {
+    color: black;
+    font-size: 14px;
+    border: 1px solid black;
+    padding-left: 4px !important;
+}
+
+.custom-list {
+    background-color: white;
+}
+
+.menu-list {
+    background-color: white;
+  }
+  
+  .menu-item {
+    --background: white;
+    color: black;
+    border-radius: 8px;
+    border: 1px solid black;
+  }
