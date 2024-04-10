@@ -3,7 +3,8 @@
   "ignorePatterns": [
     "projects/**/*",
     "**/*.spec.ts",
-    ".vscode/"
+    ".vscode/",
+    ".environments/*"
   ],
   "overrides": [
     {
