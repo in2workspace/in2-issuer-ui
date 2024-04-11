@@ -1,5 +1,5 @@
 :host {
-  .login-container {
+  .register-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -15,7 +15,8 @@
     width: 100%;
     display: block;
   }
-  .register {
+
+  .login {
     margin-top: 5%;
     a{
       cursor: pointer;

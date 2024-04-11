@@ -15,23 +15,26 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
-    imports: [],
-    declarations: [],
-    exports: [
-        MatButtonModule,
-        MatIconModule,
-        MatCardModule,
-        MatInputModule,
-        MatRadioModule,
-        MatFormFieldModule,
-        MatDialogModule,
-        MatTooltipModule,
-        TextFieldModule,
-        MatDividerModule,
-        MatProgressSpinnerModule,
-        MatSelectModule,
-        MatProgressBarModule,
-        MatSnackBarModule
-    ]
+  imports: [],
+  declarations: [],
+  exports: [
+    MatButtonModule,
+    MatIconModule,
+    MatCardModule,
+    MatInputModule,
+    MatRadioModule,
+    MatFormFieldModule,
+    MatDialogModule,
+    MatTooltipModule,
+    TextFieldModule,
+    MatDividerModule,
+    MatProgressSpinnerModule,
+    MatSelectModule,
+    MatProgressBarModule,
+    MatSnackBarModule,
+    MatIconModule,
+    MatTooltipModule,
+    MatInputModule,
+  ],
 })
 export class MaterialModule {}

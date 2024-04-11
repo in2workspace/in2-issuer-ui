@@ -1,0 +1,31 @@
+:host {
+  .main-content {
+    padding-left: 0;
+    transition: padding-left 0.3s;
+  }
+
+  .main-header {
+    background-color: blue;
+    color: white;
+    padding: 20px;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 100;
+  }
+
+  .toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logout-button {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 10px;
+  }
+}
