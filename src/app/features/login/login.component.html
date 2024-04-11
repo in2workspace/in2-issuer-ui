@@ -1,1 +1,20 @@
-<p>login works!</p>
+<div class="login-container">
+  <mat-card>
+    <mat-card-content>
+      <form (submit)="login()">
+        <mat-form-field>
+          <mat-label>User</mat-label>
+          <input matInput type="user" id="reg-user" name="user">
+        </mat-form-field>
+        <br>
+        <mat-form-field>
+          <mat-label>Contraseña:</mat-label>
+          <input matInput type="password" id="password" name="password">
+        </mat-form-field>
+        <br>
+        <button mat-raised-button color="primary" type="submit">Entrar</button>
+      </form>
+      <p>Si no estás registrado, <a href="#">pulsa aquí</a>.</p>
+    </mat-card-content>
+  </mat-card>
+</div>

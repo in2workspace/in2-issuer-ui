@@ -5,16 +5,19 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthModule, LogLevel } from 'angular-auth-oidc-client';
 import { environment } from 'src/environments/environment';
-import { LoginComponent } from './features/login/login.component';
+import { LoginModule } from './features/login/login.module';
+import { MaterialModule } from './material.module';
+
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent
   ],
   imports: [
     BrowserModule,
+    MaterialModule,
     AppRoutingModule,
+    LoginModule,
     BrowserAnimationsModule,
     AuthModule.forRoot({
       config: {
