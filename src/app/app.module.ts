@@ -3,31 +3,38 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClient } from '@angular/common/http';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-
+import { AuthModule, LogLevel } from 'angular-auth-oidc-client';
+import { environment } from 'src/environments/environment';
+import { LoginComponent } from './features/login/login.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    TranslateModule.forRoot({
-      loader: {
-          provide: TranslateLoader,
-          useFactory: HttpLoaderFactory,
-          deps: [HttpClient]
-      }
-  }),
+    AuthModule.forRoot({
+      config: {
+        postLoginRoute: '/home',
+        authority: environment.loginParams.login_url,
+        redirectUrl: `${window.location.origin}/callback`,
+        postLogoutRedirectUri: window.location.origin,
+        clientId: environment.loginParams.client_id,
+        scope: environment.loginParams.scope,
+        responseType: environment.loginParams.grant_type,
+        silentRenew: true,
+        useRefreshToken: true,
+        ignoreNonceAfterRefresh: true,
+        triggerRefreshWhenIdTokenExpired: false,
+        autoUserInfo: false,
+        logLevel: LogLevel.Debug,
+      },
+    }),
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
-export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
-  return new TranslateHttpLoader(http);
-}
