@@ -14,14 +14,7 @@ export class LoginComponent {
   public constructor(public authService: AuthService, private router: Router) {}
 
   public login() {
-    if (this.authService.login(this.user, this.password)) {
-      console.log('Login successful');
-      this.router.navigate(['/home']);
-
-    } else {
-      console.log('Login failed');
-
-    }
+    this.authService.login();
   }
   public navigateToRegister() {
     this.router.navigate(['/register']);

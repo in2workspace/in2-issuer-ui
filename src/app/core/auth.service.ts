@@ -1,43 +1,52 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
+import { BehaviorSubject, Observable, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private isAuthenticated = new BehaviorSubject<boolean>(false);
 
-  private users = [
-    { username: 'issuer', password: '1234' }
-  ];
+  // private users = [
+  //   { username: 'issuer', password: '1234' }
+  // ];
 
-  public login(username: string, password: string): boolean {
-    const user = this.users.find(u => u.username === username && u.password === password);
-    if (user) {
-      this.isAuthenticated.next(true);
-      return true;
-    } else {
-      this.isAuthenticated.next(false);
-      return false;
-    }
+
+  // public register(username: string, password: string): boolean {
+  //   const userExists = this.users.some(u => u.username === username);
+  //   if (!userExists) {
+  //     this.users.push({ username, password });
+
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // }
+
+  private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
+
+  public constructor(private oidcSecurityService: OidcSecurityService) {
+    this.checkAuth().subscribe();
   }
 
-  public register(username: string, password: string): boolean {
-    const userExists = this.users.some(u => u.username === username);
-    if (!userExists) {
-      this.users.push({ username, password });
+  public checkAuth(): Observable<boolean> {
+    return this.oidcSecurityService.checkAuth().pipe(map(({ isAuthenticated }) => {
+      this.isAuthenticatedSubject.next(isAuthenticated);
+      return isAuthenticated;
+    }));
+  }
 
-      return true;
-    } else {
-      return false;
-    }
+  public login(): void {
+    this.oidcSecurityService.authorize();
   }
 
   public logout(): void {
-    this.isAuthenticated.next(false);
+    this.oidcSecurityService.logoff();
   }
 
   public isLoggedIn(): Observable<boolean> {
-    return this.isAuthenticated.asObservable();
+    return this.isAuthenticatedSubject.asObservable();
   }
+
+
 }
