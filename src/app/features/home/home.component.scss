@@ -1,31 +1,186 @@
-:host {
-  .main-content {
-    padding-left: 0;
-    transition: padding-left 0.3s;
+@import "../../../styles.scss";
+
+.landing-page {
+  font-family: "Blinker", sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
+  .container-nav {
+    background: url("/assets/background/fondoIssuer.png") no-repeat center
+      center;
+    background-size: cover;
+    padding: 1rem 0;
+    background-repeat: no-repeat;
+    background-position: 50% 0;
+
+    .main-header {
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 2rem;
+
+        .navbar-brand {
+          display: flex;
+          align-items: center;
+
+          .logo {
+            height: 30px;
+            margin-right: 0.5rem;
+          }
+
+          span {
+            color: $White;
+            font-weight: bold;
+            font-size: 1.2rem;
+            padding-bottom: 2px;
+          }
+        }
+
+        .navbar-nav {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          display: flex;
+
+          .nav-item {
+            margin-left: 1rem;
+
+            .nav-link {
+              color: $White;
+              text-decoration: none;
+              &:hover {
+                text-decoration: underline;
+              }
+            }
+          }
+        }
+      }
+    }
   }
 
-  .main-header {
-    background-color: blue;
-    color: white;
-    padding: 20px;
-    position: fixed;
-    top: 0;
-    right: 0;
-    left: 0;
-    z-index: 100;
+  .cover {
+    color: $White;
+    text-align: center;
+    padding-top: 10rem;
+    padding-bottom: 5rem;
+    flex-shrink: 0;
+    position: relative;
+
+    .cover-content {
+      h1 {
+        margin-bottom: 1rem;
+        margin-bottom: 1rem;
+        font-size: calc(1.625rem + 4vw);
+        line-height: 1.2;
+        max-width: 82%;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .btn-primary {
+        background-color: #30638e;
+        color: #fff;
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+        border-radius: 0.375rem;
+        border: none;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        transition: all 0.2s ease-in-out;
+
+        &:hover {
+          background-color: darken(#30638e, 5%);
+          box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        i.fas {
+          margin-left: 0.5rem;
+        }
+      }
+      .scroller {
+        margin-top: 4.5%;
+        font-size: 20px;
+      }
+      .scroll-indicator {
+        margin-top: 2.5%;
+
+        .btn-link {
+          color: $Light-Blue-Secondary;
+          font-size: 2rem;
+          text-decoration: none;
+        }
+      }
+    }
   }
 
-  .toolbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  .content-section {
+    padding: 4rem 2rem;
+    &:first-of-type {
+      background-color: $Light-Blue-Secondary;
+      font-size: calc(1.275rem + .3vw);
+      margin-top: 0;
+      font-weight: 500;
+      line-height: 1.2;
+      .content-wrapper{
+        max-width: 82%;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+    &:nth-of-type(2n) {
+      background-color: #30638e;
+      color: $White;
+      font-size: calc(1.275rem + .3vw);
+      margin-top: 0;
+      font-weight: 500;
+      line-height: 1.2;
+      .legal-representative{
+        max-width: 82%;
+        margin-left: auto;
+        margin-right: auto;
+        .btn-secondary{
+          max-width: 29%;
+          margin-left: auto;
+          margin-right: auto;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          background-color:#ffa630;
+          color: black;
+          padding: 0.5rem 1rem;
+          border-radius: 0.375rem;
+          text-decoration: none;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+      }
+
+    }
+    &:last-of-type {
+      color: $White;
+    }
   }
 
-  .logout-button {
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
-    padding: 10px;
+  .main-footer {
+    background-color: $Dark-Blue;
+    color: $White;
+    text-align: center;
+    padding: 1rem 0;
+    margin-top: auto;
+
+    a {
+      color: $Light-Blue-Secondary;
+      text-decoration: none;
+
+      &:hover {
+        color: lighten($Light-Blue-Secondary, 10%);
+      }
+    }
   }
 }
