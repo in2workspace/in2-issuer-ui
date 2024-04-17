@@ -8,13 +8,32 @@ const ELEMENT_DATA: CredentialManagement[] = [
   { id: '1', status: 'issued', name: 'Matt Smith', issuanceDate: '23/04/2024' },
   { id: '2', status: 'issued', name: 'Tom Baker', issuanceDate: '22/05/2021' },
   { id: '3', status: 'issued', name: 'Pepe Perez', issuanceDate: '09/07/2022' },
-  { id: '4', status: 'issued', name: 'Isaiah Smith', issuanceDate: '12/04/2024' },
-  { id: '5', status: 'issued', name: 'Naruto Uchiha', issuanceDate: '01/04/2024' },
+  {
+    id: '4',
+    status: 'issued',
+    name: 'Isaiah Smith',
+    issuanceDate: '12/04/2024',
+  },
+  {
+    id: '5',
+    status: 'issued',
+    name: 'Naruto Uchiha',
+    issuanceDate: '01/04/2024',
+  },
   { id: '6', status: 'issued', name: 'Lisa Symon', issuanceDate: '02/04/2024' },
-  { id: '7', status: 'issued', name: 'Shasuke Uchiha', issuanceDate: '05/04/2023' },
-  { id: '8', status: 'issued', name: 'Carlos Guzman', issuanceDate: '11/09/2024' },
+  {
+    id: '7',
+    status: 'issued',
+    name: 'Shasuke Uchiha',
+    issuanceDate: '05/04/2023',
+  },
+  {
+    id: '8',
+    status: 'issued',
+    name: 'Carlos Guzman',
+    issuanceDate: '11/09/2024',
+  },
 ];
-
 
 @Component({
   selector: 'app-credential-management',
@@ -37,6 +56,6 @@ export class CredentialManagementComponent implements AfterViewInit {
     this.router.navigate(['/credentialIssuance']);
   }
   public goToCredentialDetails(element: CredentialManagement) {
-    this.router.navigate(['/credential-details', element.id]);
+    this.router.navigate(['/credentialManagement/details', element.id]);
   }
 }

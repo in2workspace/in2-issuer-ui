@@ -29,9 +29,9 @@ const routes: Routes = [
   {
     path: 'credentialIssuance',
     loadChildren: () =>
-      import(
-        './features/credentialIssuance/credentialIssuance.module'
-      ).then((m) => m.CredentialIssuanceModule),
+      import('./features/credentialIssuance/credentialIssuance.module').then(
+        (m) => m.CredentialIssuanceModule
+      ),
   },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
 ];
