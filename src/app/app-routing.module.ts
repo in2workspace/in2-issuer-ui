@@ -27,11 +27,11 @@ const routes: Routes = [
       ).then((m) => m.CredentialManagementModule),
   },
   {
-    path: 'learCredendial',
+    path: 'credentialIssuance',
     loadChildren: () =>
       import(
-        './features/form-lear-credential/form-lear-credential.module'
-      ).then((m) => m.FormLearCredentialModule),
+        './features/form-lear-credential/credentialIssuance.module'
+      ).then((m) => m.CredentialIssuanceModule),
   },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
 ];

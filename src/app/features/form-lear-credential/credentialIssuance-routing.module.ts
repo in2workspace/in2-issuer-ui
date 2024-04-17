@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { FormLearCredentialComponent } from './form-lear-credential.component';
+import { CredentialIssuanceComponent } from './credentialIssuance.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: FormLearCredentialComponent
+    component: CredentialIssuanceComponent
   }
 ];
 
@@ -13,4 +13,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class FormLearCredentialRoutingModule { }
+export class CredentialIssuanceRoutingModule { }
