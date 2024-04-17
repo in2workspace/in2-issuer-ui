@@ -30,7 +30,7 @@ const routes: Routes = [
     path: 'credentialIssuance',
     loadChildren: () =>
       import(
-        './features/form-lear-credential/credentialIssuance.module'
+        './features/credentialIssuance/credentialIssuance.module'
       ).then((m) => m.CredentialIssuanceModule),
   },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
