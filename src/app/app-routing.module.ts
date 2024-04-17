@@ -12,6 +12,9 @@ const routes: Routes = [
   },{
     path: 'register',
     loadChildren: () => import('./features/register/register.module').then(m => m.RegisterModule)
+  },{
+    path: 'learCredendial',
+    loadChildren: () => import('./features/form-lear-credential/form-lear-credential.module').then(m => m.FormLearCredentialModule)
   },
   { path: '', redirectTo: '/home', pathMatch: 'full' }
 ];
