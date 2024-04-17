@@ -1,0 +1,291 @@
+@import "../../../styles.scss";
+
+.landing-page {
+  font-family: "Blinker", sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
+  .container-nav {
+    background: $Blue;
+    padding: 1rem 0;
+    background-repeat: no-repeat;
+    background-position: 50% 0;
+
+    .main-header {
+      position: fixed;
+      top: 0;
+      background: $Blue;
+      padding: 3rem 0;
+      margin-top: 0;
+      width: 100%;
+
+
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 2rem;
+        position: relative;
+        z-index: 3;
+
+        .navbar-brand {
+          display: flex;
+          align-items: center;
+
+          .logo {
+            height: 30px;
+            margin-right: 0.5rem;
+          }
+
+          span {
+            color: $White;
+            font-weight: bold;
+            font-size: 1.2rem;
+            padding-bottom: 3.5px;
+          }
+        }
+
+        .navbar-nav {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          display: flex;
+
+          .nav-item {
+            margin-left: 1rem;
+
+            .nav-link {
+              color: $White;
+              text-decoration: none;
+              &:hover {
+                text-decoration: underline;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .cover {
+    color: $White;
+    text-align: center;
+    padding-top: 10rem;
+    padding-bottom: 5rem;
+    flex-shrink: 0;
+    position: relative;
+
+    .cover-content {
+      h1 {
+        margin-bottom: 1rem;
+        margin-bottom: 1rem;
+        font-size: calc(1.625rem + 4vw);
+        line-height: 1.2;
+        max-width: 82%;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .btn-primary {
+        background-color: $Blue;
+        color: #fff;
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+        border-radius: 0.375rem;
+        border: none;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        transition: all 0.2s ease-in-out;
+
+        &:hover {
+          background-color: darken( $Blue, 5%);
+          box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        i.fas {
+          margin-left: 0.5rem;
+        }
+      }
+      .scroller {
+        margin-top: 4.5%;
+        font-size: 20px;
+      }
+      .scroll-indicator {
+        margin-top: 2.5%;
+
+        .btn-link {
+          color: $Light-Blue-Secondary;
+          font-size: 2rem;
+          text-decoration: none;
+        }
+      }
+    }
+  }
+
+  .content-section {
+    padding: 4rem 2rem;
+    position: relative;
+    z-index: -1;
+    &:first-of-type {
+      background-color: $Light-Blue-Secondary;
+      font-size: calc(1.275rem + 0.3vw);
+      margin-top: 0;
+      font-weight: 500;
+      line-height: 1.2;
+      .content-wrapper {
+        max-width: 82%;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+    &:nth-of-type(2n) {
+      background-color:  $Blue;
+      color: $White;
+      font-size: calc(1.275rem + 0.3vw);
+      margin-top: 0;
+      font-weight: 500;
+      line-height: 1.2;
+      position: relative;
+
+      .legal-representative {
+        max-width: 82%;
+        margin-left: auto;
+        margin-right: auto;
+
+        .btn-secondary {
+          width: 100%;
+          max-width: 16rem;
+          font-size: 1.25rem;
+          padding: 0.75rem 0.75rem;
+          margin-left: auto;
+          margin-right: auto;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          background-color: #ffa630;
+          color: black;
+          padding: 0.5rem 1rem;
+          border-radius: 0.375rem;
+          text-decoration: none;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        &::after {
+          content: "";
+          position: absolute;
+          left: 50%;
+          bottom: calc(-2vw - 0px);
+          width: 0;
+          height: 0;
+          border-left: 2vw solid transparent;
+          border-right: 2vw solid transparent;
+          border-top: 2vw solid  $Blue;
+          transform: translateX(-50%);
+          z-index: 3;
+        }
+      }
+    }
+    &:last-of-type {
+      padding: 4rem 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      .wallet-section {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      .wallet-description {
+        width: 40%;
+        text-align: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-top: 0;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        line-height: 1.2;
+      }
+      .wallet-info-container {
+        display: flex;
+        justify-content: space-evenly;
+        align-items: flex-start;
+        text-align: center;
+        width: 60%;
+        text-align: center;
+      }
+
+      .wallet-info-qr,
+      .wallet-info-text {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+        align-items: center;
+        padding: 2rem;
+        h2 {
+          font-size: 1.5rem;
+        }
+        p {
+          font-size: 1.25rem;
+        }
+        .btn-verifier {
+          background-color:  $Blue;
+          color: #fff;
+          padding: 0.5rem 1rem;
+          font-size: 1rem;
+          border-radius: 0.375rem;
+          border: none;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          text-decoration: none;
+          transition: all 0.2s ease-in-out;
+        }
+      }
+    }
+  }
+
+  .main-footer {
+    background-color: $Dark-Blue;
+    color: $White;
+    padding: 3rem 0;
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    span:first-child {
+      flex: 1;
+      text-align: center;
+    }
+
+    span:last-child {
+      flex: 0;
+      text-align: right;
+    }
+
+    a {
+      color: $Light-Blue-Secondary;
+      text-decoration: none;
+      &:hover {
+        color: lighten($Light-Blue-Secondary, 10%);
+      }
+    }
+
+    .footer-logo {
+      padding-right: 0.25rem;
+      width: 2.5rem;
+      height: auto;
+    }
+  }
+
+}

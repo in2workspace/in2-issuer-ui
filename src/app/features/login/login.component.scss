@@ -1,0 +1,25 @@
+:host {
+  .login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  mat-card {
+    width: 300px;
+    margin: auto;
+  }
+
+  mat-form-field {
+    width: 100%;
+    display: block;
+  }
+  .register {
+    margin-top: 5%;
+    a{
+      cursor: pointer;
+      font-weight: bold;
+    }
+  }
+}

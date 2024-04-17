@@ -1,0 +1,64 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: 'Blinker', sans-serif; }
+
+@import url('https://fonts.googleapis.com/css2?family=Blinker:wght@400;600&display=swap');
+
+
+$Blue: #2D58A7;
+$Light-Blue-Primary: #00ADD3;
+$Dark-Blue: #14274A;
+$Light-Blue-Secondary: #DDE6F6;
+$White: #FFFFFF;
+
+@font-face {
+  font-family: 'Blinker';
+  font-weight: 400;
+  src: url('./assets/fonts/Blinker-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Blinker';
+  font-weight: 600;
+  src: url('./assets/fonts/Blinker-SemiBold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Blinker';
+  font-weight: 700;
+  src: url('./assets/fonts/Blinker-Bold.ttf') format('truetype');
+}
+
+
+body, h1, h2, h3, p, a {
+  font-family: 'Blinker', sans-serif;
+}
+
+:root {
+  --Blue: #{$Blue};
+  --Light-Blue-Primary: #{$Light-Blue-Primary};
+  --Dark-Blue: #{$Dark-Blue};
+  --Light-Blue-Secondary: #{$Light-Blue-Secondary};
+  --white: #{$White};
+}
+
+.primary-bg {
+  background-color: var(--Blue);
+}
+
+.secondary-bg {
+  background-color: var(--Light-Blue-Primary);
+}
+
+.tertiary-bg {
+  background-color: var(--Dark-Blue);
+}
+
+.quaternary-bg {
+  background-color: var(--Light-Blue-Secondary);
+}
+.white-color {
+  background-color: var(--white);
+}
+
