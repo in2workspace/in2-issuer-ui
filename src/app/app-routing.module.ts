@@ -4,23 +4,40 @@ import { Routes, RouterModule } from '@angular/router';
 const routes: Routes = [
   {
     path: 'login',
-    loadChildren: () => import('./features/login/login.module').then(m => m.LoginModule)
+    loadChildren: () =>
+      import('./features/login/login.module').then((m) => m.LoginModule),
   },
   {
     path: 'home',
-    loadChildren: () => import('./features/home/home.module').then(m => m.HomeModule)
-  },{
-    path: 'register',
-    loadChildren: () => import('./features/register/register.module').then(m => m.RegisterModule)
-  },{
-    path: 'learCredendial',
-    loadChildren: () => import('./features/form-lear-credential/form-lear-credential.module').then(m => m.FormLearCredentialModule)
+    loadChildren: () =>
+      import('./features/home/home.module').then((m) => m.HomeModule),
   },
-  { path: '', redirectTo: '/home', pathMatch: 'full' }
+  {
+    path: 'register',
+    loadChildren: () =>
+      import('./features/register/register.module').then(
+        (m) => m.RegisterModule
+      ),
+  },
+  {
+    path: 'credendialManagement',
+    loadChildren: () =>
+      import(
+        './features/credential-management/credential-management.module'
+      ).then((m) => m.CredentialManagementModule),
+  },
+  {
+    path: 'learCredendial',
+    loadChildren: () =>
+      import(
+        './features/form-lear-credential/form-lear-credential.module'
+      ).then((m) => m.FormLearCredentialModule),
+  },
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
