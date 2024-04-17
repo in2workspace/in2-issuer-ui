@@ -66,10 +66,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "Credential-issuer-ui:build:production"
+              "buildTarget": "Credential-issuer-ui:build:production"
             },
             "development": {
-              "browserTarget": "Credential-issuer-ui:build:development"
+              "buildTarget": "Credential-issuer-ui:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -77,12 +77,13 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "Credential-issuer-ui:build"
+            "buildTarget": "Credential-issuer-ui:build"
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
+            "karmaConfig": "karma.conf.js",
             "polyfills": [
               "zone.js",
               "zone.js/testing"
