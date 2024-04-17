@@ -20,7 +20,7 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'credendialManagement',
+    path: 'credentialManagement',
     loadChildren: () =>
       import(
         './features/credential-management/credential-management.module'
