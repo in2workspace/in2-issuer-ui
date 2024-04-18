@@ -1,0 +1,27 @@
+{
+  "credentials": [
+    {
+      "id": "cred-1713452207603",
+      "firstname": "Dani",
+      "lastname": "Guillen",
+      "emailaddress": "bla@in2.es",
+      "mobilephone": "909876543",
+      "options": [
+        {
+          "name": "Onboarding",
+          "execute": true,
+          "create": true,
+          "update": true,
+          "delete": true
+        },
+        {
+          "name": "Product offer",
+          "execute": true,
+          "create": true,
+          "update": false,
+          "delete": false
+        }
+      ]
+    }
+  ]
+}

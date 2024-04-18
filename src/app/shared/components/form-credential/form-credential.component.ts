@@ -1,5 +1,7 @@
 import { Component, Input } from '@angular/core';
+import { CredentialMandatee } from 'src/app/core/models/credendentialMandatee.interface';
 import { Option } from 'src/app/core/models/option.interface';
+import { CredentialissuanceService } from 'src/app/features/credentialIssuance/services/credentialissuance.service';
 
 @Component({
   selector: 'app-form-credential',
@@ -13,13 +15,21 @@ export class FormCredentialComponent {
 
   public selectedOption = '';
   public addedOptions: Option[] = [];
+  public credential: CredentialMandatee = {
+    id: '',
+    firstname: '',
+    lastname: '',
+    emailaddress: '',
+    mobilephone: '',
+    options: []
+  };
+
+  public constructor(private credentialService: CredentialissuanceService) {}
 
   public addOption() {
     if (this.isDisabled) return;
 
-    if (
-      this.addedOptions.find((option) => option.name === this.selectedOption)
-    ) {
+    if (this.addedOptions.some(option => option.name === this.selectedOption)) {
       alert('This option has already been added.');
       return;
     }
@@ -36,6 +46,36 @@ export class FormCredentialComponent {
       delete: false,
     };
     this.addedOptions.push(newOption);
+    this.selectedOption = '';
+  }
+
+  public submitCredential() {
+    if (this.isDisabled) return;
+
+    this.credential.id = 'cred-' + new Date().getTime();
+
+    this.credential.options = this.addedOptions;
+    this.credentialService.createCredential(this.credential).subscribe({
+      next: (credential) => {
+        console.log('Credential created', credential);
+        this.resetForm();
+      },
+      error: (error) => {
+        console.error('Error creating credential', error);
+      }
+    });
+  }
+
+  private resetForm() {
+    this.credential = {
+      id: '',
+      firstname: '',
+      lastname: '',
+      emailaddress: '',
+      mobilephone: '',
+      options: []
+    };
+    this.addedOptions = [];
     this.selectedOption = '';
   }
 }

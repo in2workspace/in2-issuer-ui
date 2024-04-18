@@ -8,7 +8,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "test:ci": "ng test --browsers=Headless --no-watch",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "mock-server": "json-server --watch db.json"
   },
   "private": true,
   "dependencies": {
@@ -42,6 +43,7 @@
     "@typescript-eslint/parser": "^7.2.0",
     "eslint": "^8.57.0",
     "jasmine-core": "~4.5.0",
+    "json-server": "^1.0.0-alpha.23",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.1.0",
     "karma-coverage": "~2.2.0",
