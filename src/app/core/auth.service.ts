@@ -41,6 +41,7 @@ export class AuthService {
   }
 
   public logout(): void {
+    localStorage.clear();
     this.oidcSecurityService.logoff();
   }
 

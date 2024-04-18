@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AuthService } from 'src/app/core/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -16,9 +17,10 @@ export class NavbarComponent {
   ];
   public selectedLanguage = 'EN';
 
+  public constructor(private authService: AuthService) {}
 
   public logout(): void {
-    console.log('Logging out...');
+    this.authService.logout();
   }
 
   public changeLanguage(languageCode: string) {
