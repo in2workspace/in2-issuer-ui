@@ -1,6 +1,10 @@
+
+import { Option } from 'src/app/core/models/option.interface';
 export interface Credential {
-  firstName: string;
-  lastName: string;
-  emailAddress: string;
-  mobile: string;
+  id: string;
+  firstname: string;
+  lastname: string;
+  emailaddress: string;
+  mobilephone: string;
+  options: Option[];
 }
