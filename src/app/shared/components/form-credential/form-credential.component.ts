@@ -8,6 +8,8 @@ import { Option } from 'src/app/core/models/option.interface';
 })
 export class FormCredentialComponent {
   @Input() public isDisabled: boolean = false;
+  @Input() public title: string = '';
+  @Input() public showButton: boolean = false;
 
   public selectedOption = '';
   public addedOptions: Option[] = [];
