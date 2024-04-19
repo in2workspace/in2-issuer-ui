@@ -1,6 +1,10 @@
+import { CredentialMandatee } from "./credendentialMandatee.interface";
+
 export interface CredentialManagement {
   id:string;
   status: string;
   name: string;
-  issuanceDate: string;
+  updated: string;
+  mandatee: CredentialMandatee;
 }
+

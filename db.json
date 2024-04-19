@@ -1,27 +1,246 @@
 {
+  "mandators": [
+    {
+      "organizationId": "IDCES-21444555T",
+      "organization": "Tardis S.A.",
+      "name": "Tardis S.A.",
+      "email": "infinity@timeless.org",
+      "serialNumber": "IDCES-21444555T",
+      "country": "ES"
+    }
+  ],
   "credentials": [
     {
-      "id": "cred-1713452207603",
-      "firstname": "Dani",
-      "lastname": "Guillen",
-      "emailaddress": "bla@in2.es",
-      "mobilephone": "909876543",
-      "options": [
-        {
-          "name": "Onboarding",
-          "execute": true,
-          "create": true,
-          "update": true,
-          "delete": true
-        },
-        {
-          "name": "Product offer",
-          "execute": true,
-          "create": true,
-          "update": false,
-          "delete": false
-        }
-      ]
+      "id": "cred-4567890123456",
+      "status": "issued",
+      "name": "Luffy Monkey D.",
+      "updated": "2024-04-21",
+      "mandatee": {
+        "id": "cred-4567890123456",
+        "firstname": "Monkey D.",
+        "lastname": "Luffy",
+        "emailaddress": "luffy@onepiece.sea",
+        "mobilephone": "777888999",
+        "options": [
+          {
+            "name": "Leadership",
+            "execute": true,
+            "create": true,
+            "update": true,
+            "delete": false
+          },
+          {
+            "name": "Adventure",
+            "execute": true,
+            "create": true,
+            "update": true,
+            "delete": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "cred-5678901234567",
+      "status": "issued",
+      "name": "Ichigo Kurosaki",
+      "updated": "2024-04-22",
+      "mandatee": {
+        "id": "cred-5678901234567",
+        "firstname": "Ichigo",
+        "lastname": "Kurosaki",
+        "emailaddress": "ichigo@bleach.jp",
+        "mobilephone": "999888777",
+        "options": [
+          {
+            "name": "Combat",
+            "execute": true,
+            "create": true,
+            "update": true,
+            "delete": true
+          },
+          {
+            "name": "Protection",
+            "execute": true,
+            "create": false,
+            "update": true,
+            "delete": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "cred-6789012345678",
+      "status": "issued",
+      "name": "Mikasa Ackerman",
+      "updated": "2024-04-23",
+      "mandatee": {
+        "id": "cred-6789012345678",
+        "firstname": "Mikasa",
+        "lastname": "Ackerman",
+        "emailaddress": "mikasa@aot.mil",
+        "mobilephone": "666777888",
+        "options": [
+          {
+            "name": "Combat",
+            "execute": true,
+            "create": true,
+            "update": false,
+            "delete": true
+          },
+          {
+            "name": "Strategy",
+            "execute": true,
+            "create": true,
+            "update": true,
+            "delete": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "cred-7890123456789",
+      "status": "issued",
+      "name": "Edward Elric",
+      "updated": "2024-04-24",
+      "mandatee": {
+        "id": "cred-7890123456789",
+        "firstname": "Edward",
+        "lastname": "Elric",
+        "emailaddress": "edward@fma.al",
+        "mobilephone": "555666777",
+        "options": [
+          {
+            "name": "Alchemy",
+            "execute": true,
+            "create": true,
+            "update": true,
+            "delete": true
+          },
+          {
+            "name": "Research",
+            "execute": true,
+            "create": false,
+            "update": true,
+            "delete": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "cred-8901234567890",
+      "status": "issued",
+      "name": "Kakashi Hatake",
+      "updated": "2024-04-25",
+      "mandatee": {
+        "id": "cred-8901234567890",
+        "firstname": "Kakashi",
+        "lastname": "Hatake",
+        "emailaddress": "kakashi@konoha.jp",
+        "mobilephone": "333444555",
+        "options": [
+          {
+            "name": "Strategy",
+            "execute": true,
+            "create": true,
+            "update": true,
+            "delete": false
+          },
+          {
+            "name": "Teaching",
+            "execute": true,
+            "create": false,
+            "update": true,
+            "delete": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "cred-9012345678901",
+      "status": "issued",
+      "name": "Sasuke Uchiha",
+      "updated": "2024-04-26",
+      "mandatee": {
+        "id": "cred-9012345678901",
+        "firstname": "Sasuke",
+        "lastname": "Uchiha",
+        "emailaddress": "sasuke@konoha.jp",
+        "mobilephone": "222333444",
+        "options": [
+          {
+            "name": "Revenge",
+            "execute": true,
+            "create": true,
+            "update": false,
+            "delete": true
+          },
+          {
+            "name": "Tactics",
+            "execute": true,
+            "create": false,
+            "update": true,
+            "delete": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "cred-0123456789012",
+      "status": "issued",
+      "name": "Naruto Uzumaki",
+      "updated": "2024-04-27",
+      "mandatee": {
+        "id": "cred-0123456789012",
+        "firstname": "Naruto",
+        "lastname": "Uzumaki",
+        "emailaddress": "naruto@konoha.jp",
+        "mobilephone": "111222333",
+        "options": [
+          {
+            "name": "Leadership",
+            "execute": true,
+            "create": true,
+            "update": true,
+            "delete": false
+          },
+          {
+            "name": "Persistence",
+            "execute": true,
+            "create": false,
+            "update": true,
+            "delete": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "cred-1713530099820",
+      "status": "issued",
+      "name": "naty natasha",
+      "updated": "2024-04-19",
+      "mandatee": {
+        "id": "cred-1713530099820",
+        "firstname": "naty",
+        "lastname": "natasha",
+        "emailaddress": "bla@in2.es",
+        "mobilephone": "456345789",
+        "options": [
+          {
+            "name": "Onboarding",
+            "execute": true,
+            "create": true,
+            "update": true,
+            "delete": true
+          },
+          {
+            "name": "Product offer",
+            "execute": true,
+            "create": true,
+            "update": false,
+            "delete": false
+          }
+        ]
+      }
     }
   ]
 }
