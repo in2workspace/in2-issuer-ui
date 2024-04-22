@@ -1,12 +1,3 @@
-<!-- <div class="main-content">
-  <header class="main-header">
-    <div class="toolbar">
-      <img src="assets/icon/dome_white_logo.png" alt="Logo" height="35px">
-      <button class="logout-button" (click)="logout()">Logout</button>
-    </div>
-  </header>
-</div> -->
-<!-- landing-page.component.html -->
 <div class="landing-page">
   <div class="container-nav">
     <header class="main-header">
@@ -14,10 +5,9 @@
         <div class="navbar-brand" href="/">
           <img
             class="logo"
-            src="../../../assets/logo/DOME_Logo_White.png"
+            src="../../../assets/logo/logo-dome-issuer.png"
             alt="DOME Logo"
           />
-          <span>Issuer</span>
         </div>
         <ul class="navbar-nav">
           <li class="nav-item">
@@ -34,12 +24,12 @@
       <div class="cover-content">
         <h1>Welcome to the DOME Issuer for LEARCredentials</h1>
         <div class="scroll-indicator">
-          <a class="btn btn-primary" routerLink="/docs">
+          <a class="btn btn-primary"href="https://dome.mycredential.eu/docs/" target="_blank">
             Learn More
-            <i class="fas fa-arrow-alt-circle-right">-></i>
+            <img src="../../../assets/icon/fletxa_dreta.png" alt="arrow">
           </a>
           <p class="scroller">Scroll to see more</p>
-          <a class="btn btn-link" href="#about-section">
+          <a class="btn btn-link" >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="64"
@@ -136,6 +126,7 @@
     </div>
     <div class="wallet-info-container">
       <div class="wallet-info-qr">
+        <img class="wallet-logo" src="../../../assets/icon/wallet.png" alt="wallet">
         <h2>Obtain your wallet</h2>
         <p>
           You need a wallet to store your LEARCredentials and present them to
@@ -157,6 +148,7 @@
         </p>
       </div>
       <div class="wallet-info-text">
+        <img class="verifier-logo" src="../../../assets/icon/verifier.png" alt="wallet">
         <h2>Test the credential with a Verifier</h2>
         <p>
           Use your LEARCredential in your wallet to authenticate to a test
@@ -166,7 +158,7 @@
           In this way you can see how everything works and will become familiar
           with the flows.
         </p>
-        <a class="btn-verifier" href="#">Go to the test Verifier</a>
+        <a class="btn-verifier" href="https://demo.mycredential.eu/" target="_blank">Go to the test Verifier</a>
       </div>
     </div>
   </section>
