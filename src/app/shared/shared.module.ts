@@ -4,6 +4,7 @@ import { FormCredentialComponent } from './components/form-credential/form-crede
 import { MaterialModule } from '../material.module';
 import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { RouterModule } from '@angular/router';
 
 
 
@@ -13,7 +14,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
     NavbarComponent
   ],
   imports: [
-    CommonModule,MaterialModule, FormsModule
+    CommonModule,MaterialModule, FormsModule, RouterModule
   ],
   exports:[CommonModule,MaterialModule, FormsModule,FormCredentialComponent, NavbarComponent]
 })

@@ -6,7 +6,8 @@
       "name": "Tardis S.A.",
       "email": "infinity@timeless.org",
       "serialNumber": "IDCES-21444555T",
-      "country": "ES"
+      "country": "ES",
+      "id": "65e4"
     }
   ],
   "credentials": [
@@ -234,6 +235,28 @@
           },
           {
             "name": "Product offer",
+            "execute": true,
+            "create": true,
+            "update": false,
+            "delete": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "cred-1713782344842",
+      "status": "issued",
+      "name": "goku son",
+      "updated": "2024-04-22",
+      "mandatee": {
+        "id": "cred-1713782344842",
+        "firstname": "goku",
+        "lastname": "son",
+        "emailaddress": "bola@gmail.com",
+        "mobilephone": "543234456",
+        "options": [
+          {
+            "name": "Onboarding",
             "execute": true,
             "create": true,
             "update": false,
