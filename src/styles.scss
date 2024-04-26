@@ -1,38 +1,47 @@
-/* You can add global styles to this file, and also import other style files */
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+}
 
-html, body { height: 100%; }
-body { margin: 0; font-family: 'Blinker', sans-serif; }
+@import url("https://fonts.googleapis.com/css2?family=Blinker:wght@400;600&display=swap");
 
-@import url('https://fonts.googleapis.com/css2?family=Blinker:wght@400;600&display=swap');
-
-
-$Blue: #2D58A7;
-$Light-Blue-Primary: #00ADD3;
-$Dark-Blue: #14274A;
-$Light-Blue-Secondary: #DDE6F6;
-$White: #FFFFFF;
+$Blue: #2d58a7;
+$Light-Blue-Primary: #00add3;
+$Dark-Blue: #14274a;
+$Light-Blue-Secondary: #dde6f6;
+$White: #ffffff;
 
 @font-face {
-  font-family: 'Blinker';
+  font-family: "Blinker";
   font-weight: 400;
-  src: url('./assets/fonts/Blinker-Regular.ttf') format('truetype');
+  src: url("./assets/fonts/Blinker-Regular.ttf") format("truetype");
 }
 
 @font-face {
-  font-family: 'Blinker';
+  font-family: "Blinker";
   font-weight: 600;
-  src: url('./assets/fonts/Blinker-SemiBold.ttf') format('truetype');
+  src: url("./assets/fonts/Blinker-SemiBold.ttf") format("truetype");
 }
 
 @font-face {
-  font-family: 'Blinker';
+  font-family: "Blinker";
   font-weight: 700;
-  src: url('./assets/fonts/Blinker-Bold.ttf') format('truetype');
+  src: url("./assets/fonts/Blinker-Bold.ttf") format("truetype");
 }
 
-
-body, h1, h2, h3, p, a {
-  font-family: 'Blinker', sans-serif;
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a {
+  font-family: "Blinker", sans-serif;
 }
 
 :root {
@@ -61,4 +70,3 @@ body, h1, h2, h3, p, a {
 .white-color {
   background-color: var(--white);
 }
-

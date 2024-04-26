@@ -1,0 +1,51 @@
+<app-navbar></app-navbar>
+<div class="credendial-container">
+  <div class="title-credendial">
+    <h2>Credential detail</h2>
+    <p>
+      A new Dome credential has been issued for you with the following
+      information
+    </p>
+  </div>
+  <div class="content-container">
+    <div class="mandator-container">
+      <h2 class="mandator">Mandator</h2>
+      <mat-card-content>
+        <h6>Organization id</h6>
+        <p>{{ mandator?.organizationId }}</p>
+        <h6>Organization</h6>
+        <p>{{ mandator?.organization }}</p>
+        <h6>Name</h6>
+        <p>{{ mandator?.name }}</p>
+        <h6>Email address</h6>
+        <p>{{ mandator?.email }}</p>
+        <h6>Serial number</h6>
+        <p>{{ mandator?.serialNumber }}</p>
+        <h6>Country</h6>
+        <p>{{ mandator?.country }}</p>
+      </mat-card-content>
+    </div>
+    <div class="mandatee-container">
+      <h2 class="mandatee">Mandatee</h2>
+      <mat-card-content>
+        <h6>First name id</h6>
+        <p>{{ credential?.mandatee?.firstname }}</p>
+        <h6>Last name</h6>
+        <p>{{ credential?.mandatee?.lastname }}</p>
+        <h6>Email addres</h6>
+        <p>{{ credential?.mandatee?.emailaddress }}</p>
+        <h6>Mobile phone</h6>
+        <p>{{ credential?.mandatee?.mobilephone }}</p>
+      </mat-card-content>
+    </div>
+    <div class="qr-container">
+      <p>
+        Scan with your wallet to download the credential
+      </p>
+      <img
+        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEAAQMAAABmvDolAAAABlBMVEX///8AAABVwtN+AAABoElEQVR42uyYPXKEMAyFn4eCkiNwFI5mH81H4QiUFIxf5snALhvSZtYaVGSC8jWR9fMkPPbYY19rA2UrpmQfOb5croAZQLcOTIFcRqaw7i5nwMQigMJmRAHmcgnkyA3Y4+AWwJTCpqwGnQJ7CsfjA7dp3zpQG9KQY9j6ZczK6rsm1jhwcqmgJwX8MXiaBo5WnLEXL3rOsEpuCWD9E6IecCSLYd4AYGKgnrF0PF7TtIIrQKOyAEM+uk6gKtQdIH3X1Tis+0BhvnRaF8AMWPNJBcCYo7XZFOgLUFabFtCjo45PuS5p3z4gyWP6R21JQanPfZVJ7QP2r3dcJupXaVouZ1D8AMNcN80MLWKYpIjI9L5vugBqpQ4ZpdLFsvqiaT0A81mp5ovlCI03IJl0B6QDq5j4zIevB17KnFuvpDUVxDvp3jJwLlVV+Exp35q9AfuKLJ/tWaya9tda3Tpw3EBKJzULiws/itcNgGgDBbH0+vm+kHoCbJJI/4QaCHfAeb7qFAcUO/jcHO7aBo6LlsmDuqjUG4Ir4LHHHvt3+wkAAP//DQRXndz8xuAAAAAASUVORK5CYII="
+        alt="Wallet QR Code"
+      />
+    </div>
+  </div>
+</div>

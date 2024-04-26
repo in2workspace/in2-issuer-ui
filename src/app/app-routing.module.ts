@@ -2,13 +2,13 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 const routes: Routes = [
+  // {
+  //   path: 'login',
+  //   loadChildren: () =>
+  //     import('./features/login/login.module').then((m) => m.LoginModule),
+  // },
   {
-    path: 'login',
-    loadChildren: () =>
-      import('./features/login/login.module').then((m) => m.LoginModule),
-  },
-  {
-    path: 'home',
+    path: '',
     loadChildren: () =>
       import('./features/home/home.module').then((m) => m.HomeModule),
   },
@@ -31,6 +31,13 @@ const routes: Routes = [
     loadChildren: () =>
       import('./features/credentialIssuance/credentialIssuance.module').then(
         (m) => m.CredentialIssuanceModule
+      ),
+  },
+  {
+    path: 'credentialOffer',
+    loadChildren: () =>
+      import('./features/credencial-offer/credencial-offer.module').then(
+        (m) => m.CredencialOfferModule
       ),
   },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
