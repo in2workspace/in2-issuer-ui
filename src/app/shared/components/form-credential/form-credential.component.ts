@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CredentialMandatee } from 'src/app/core/models/credendentialMandatee.interface';
 import { Mandator } from 'src/app/core/models/madator.interface';
 import { Option } from 'src/app/core/models/option.interface';
+import { AlertService } from 'src/app/core/services/alert.service';
 import { CredentialissuanceService } from 'src/app/core/services/credentialissuance.service';
 import { MandatorService } from 'src/app/core/services/mandator.service';
 
@@ -32,7 +33,8 @@ export class FormCredentialComponent implements OnInit {
 
   public constructor(
     private credentialService: CredentialissuanceService,
-    private mandatorService: MandatorService
+    private mandatorService: MandatorService,
+    private alertService: AlertService
   ) {}
   public ngOnInit(): void {
     this.mandatorService.getMandator().subscribe((mandator) => {
@@ -76,7 +78,7 @@ export class FormCredentialComponent implements OnInit {
         this.resetForm();
       },
       error: (error) => {
-        console.error('Error creating credential', error);
+        this.alertService.showAlert('Error creating credential: ' + error, 'error');
       },
     });
   }

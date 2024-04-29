@@ -9,7 +9,9 @@ import { LoginModule } from './features/login/login.module';
 import { MaterialModule } from './material.module';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { HttpClient } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http';
+import { ServeErrorInterceptor } from './core/interceptors/server-error-interceptor';
+import { AlertService } from './core/services/alert.service';
 
 
 @NgModule({
@@ -47,7 +49,12 @@ import { HttpClient } from '@angular/common/http';
       },
     }),
   ],
-  providers: [],
+  providers: [    {
+    provide: HTTP_INTERCEPTORS,
+    useClass: ServeErrorInterceptor,
+    multi: true
+  },
+  AlertService, ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
