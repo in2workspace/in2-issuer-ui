@@ -6,6 +6,7 @@ import { MaterialModule } from 'src/app/material.module';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [CredencialOfferComponent],
@@ -15,7 +16,8 @@ import { SharedModule } from 'src/app/shared/shared.module';
     MaterialModule,
     FormsModule,
     RouterModule,
-    SharedModule
+    SharedModule,
+    TranslateModule
   ],
 })
 export class CredencialOfferModule {}

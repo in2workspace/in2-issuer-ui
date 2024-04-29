@@ -7,6 +7,9 @@ import { AuthModule, LogLevel } from 'angular-auth-oidc-client';
 import { environment } from 'src/environments/environment';
 import { LoginModule } from './features/login/login.module';
 import { MaterialModule } from './material.module';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { HttpClient } from '@angular/common/http';
 
 
 @NgModule({
@@ -19,6 +22,13 @@ import { MaterialModule } from './material.module';
     AppRoutingModule,
     LoginModule,
     BrowserAnimationsModule,
+    TranslateModule.forRoot({
+      loader: {
+          provide: TranslateLoader,
+          useFactory: HttpLoaderFactory,
+          deps: [HttpClient]
+      }
+  }),
     AuthModule.forRoot({
       config: {
         postLoginRoute: '/home',
@@ -41,3 +51,6 @@ import { MaterialModule } from './material.module';
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
+  return new TranslateHttpLoader(http);
+}
