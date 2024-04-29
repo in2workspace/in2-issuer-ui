@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { AuthService } from 'src/app/core/auth.service';
+import { AuthService } from 'src/app/core/services/auth.service';
 import { Mandator } from 'src/app/core/models/madator.interface';
 import { MandatorService } from 'src/app/core/services/mandator.service';
 
@@ -18,7 +18,7 @@ export class NavbarComponent implements OnInit {
     { code: 'es', label: 'Español' },
     { code: 'ca', label: 'Català' },
   ];
-  public selectedLanguage = 'en'; // Default language
+  public selectedLanguage = 'en';
 
   public constructor(
     public translate: TranslateService,

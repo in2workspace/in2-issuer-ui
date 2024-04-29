@@ -2,8 +2,8 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CredentialMandatee } from 'src/app/core/models/credendentialMandatee.interface';
 import { Mandator } from 'src/app/core/models/madator.interface';
 import { Option } from 'src/app/core/models/option.interface';
+import { CredentialissuanceService } from 'src/app/core/services/credentialissuance.service';
 import { MandatorService } from 'src/app/core/services/mandator.service';
-import { CredentialissuanceService } from 'src/app/features/credentialIssuance/services/credentialissuance.service';
 
 @Component({
   selector: 'app-form-credential',

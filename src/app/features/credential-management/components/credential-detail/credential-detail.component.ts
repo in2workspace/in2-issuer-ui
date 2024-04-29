@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CredentialManagement } from 'src/app/core/models/credentialManagement.interface';
-import { CredentialManagementService } from '../../services/credential-management.service';
+import { CredentialManagementService } from '../../../../core/services/credential-management.service';
 
 @Component({
   selector: 'app-credential-detail',

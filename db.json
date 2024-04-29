@@ -264,6 +264,57 @@
           }
         ]
       }
+    },
+    {
+      "id": "cred-1714381494858",
+      "status": "issued",
+      "name": "james bond",
+      "updated": "2024-04-29",
+      "mandatee": {
+        "id": "cred-1714381494858",
+        "firstname": "james",
+        "lastname": "bond",
+        "emailaddress": "007@in2.es",
+        "mobilephone": "007987234",
+        "options": [
+          {
+            "name": "Onboarding",
+            "execute": true,
+            "create": true,
+            "update": true,
+            "delete": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "cred-1714381667315",
+      "status": "issued",
+      "name": "jes nick",
+      "updated": "2024-04-29",
+      "mandatee": {
+        "id": "cred-1714381667315",
+        "firstname": "jes",
+        "lastname": "nick",
+        "emailaddress": "bla@in2.es",
+        "mobilephone": "456789345",
+        "options": [
+          {
+            "name": "Onboarding",
+            "execute": false,
+            "create": false,
+            "update": true,
+            "delete": true
+          },
+          {
+            "name": "Product offer",
+            "execute": true,
+            "create": true,
+            "update": false,
+            "delete": false
+          }
+        ]
+      }
     }
   ]
 }

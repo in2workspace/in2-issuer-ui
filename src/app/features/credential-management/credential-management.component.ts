@@ -3,7 +3,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { CredentialManagement } from 'src/app/core/models/credentialManagement.interface';
 import { Router } from '@angular/router';
-import { CredentialManagementService } from './services/credential-management.service';
+import { CredentialManagementService } from '../../core/services/credential-management.service';
 
 @Component({
   selector: 'app-credential-management',
