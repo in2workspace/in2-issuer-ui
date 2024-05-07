@@ -1,1 +1,23 @@
-{}
+{
+  "mandator": {
+    "organizationid": "ID de l'organització",
+    "organization": "Organització",
+    "name": "Nom",
+    "email": "Adreça de correu",
+    "serialNumber": "Número de sèrie",
+    "country": "País"
+  },
+  "mandatee": {
+    "firstnameid": "ID del nom",
+    "lastname": "Cognoms",
+    "email": "Adreça de correu",
+    "mobilephone": "Telèfon mòbil"
+  },
+  "credentialDetail": {
+    "credentialDetail": "Detall de la credencial",
+    "textinformation": "S'ha emès una nova credencial Dome per a vostè amb la següent informació"
+  },
+  "scaner": {
+    "textinformation": "Escaneig de l'organització amb la seva cartera per descarregar la credencial"
+  }
+}

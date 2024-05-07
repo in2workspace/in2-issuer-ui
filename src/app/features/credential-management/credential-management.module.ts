@@ -6,6 +6,7 @@ import { MaterialModule } from 'src/app/material.module';
 import { FormsModule } from '@angular/forms';
 import { CredentialDetailComponent } from './components/credential-detail/credential-detail.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [CredentialManagementComponent, CredentialDetailComponent],
@@ -14,7 +15,8 @@ import { SharedModule } from 'src/app/shared/shared.module';
     CredentialManagementRoutingModule,
     MaterialModule,
     FormsModule,
-    SharedModule
+    SharedModule,
+    TranslateModule
   ],
   exports: [CredentialManagementComponent, CredentialDetailComponent]
 })

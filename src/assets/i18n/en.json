@@ -1,5 +1,49 @@
 {
   "mandator": {
-    "organization": "Organization id"
+    "organizationid": "Organization id",
+    "organization": "Organization",
+    "name": "Name",
+    "email": "Email address",
+    "serialNumber": "Serial number",
+    "country": "Country"
+  },
+  "mandatee": {
+    "firstnameid": "First name id",
+    "lastname": "Last name",
+    "email": "Email address",
+    "mobilephone": " mobile phone"
+  },
+  "credentialDetail": {
+    "credentialDetail": "Credential detail",
+    "textinformation": "A new Dome credential has been issued for you with the following information"
+  },
+  "scaner": {
+    "textinformation": "OrganizationScan with your wallet to download the credential"
+  },
+  "credentialManagement": {
+    "title": "List of issued credentials",
+    "button": "Create new credential",
+    "status": "Status",
+    "name": "Name",
+    "updated": "Updated",
+    "sendReminder": "Send Reminder",
+    "cancel": "Cancel"
+  },
+    "powers": {
+      "power": "Powers",
+      "domain": "Domain",
+      "dome": "dome",
+      "function": "Function",
+      "onboarding": "Onboarding",
+      "productoffer": "Product offer",
+      "add": "Add",
+      "execute": "Execute",
+      "create": "Create",
+      "update": "Update",
+      "delete": "Delete"
+    },
+    "credentialIssuance":{
+      "create": "Create Credential"
+    }
   }
-}
+

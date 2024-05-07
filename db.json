@@ -21,17 +21,17 @@
         "firstname": "Monkey D.",
         "lastname": "Luffy",
         "emailaddress": "luffy@onepiece.sea",
-        "mobilephone": "777888999",
+        "mobilephone": "+777888999",
         "options": [
           {
-            "name": "Leadership",
+            "name": "Onboarding",
             "execute": true,
             "create": true,
             "update": true,
             "delete": false
           },
           {
-            "name": "Adventure",
+            "name": "Product offer",
             "execute": true,
             "create": true,
             "update": true,
@@ -53,14 +53,14 @@
         "mobilephone": "999888777",
         "options": [
           {
-            "name": "Combat",
+            "name": "Onboarding",
             "execute": true,
             "create": true,
             "update": true,
             "delete": true
           },
           {
-            "name": "Protection",
+            "name": "Product offer",
             "execute": true,
             "create": false,
             "update": true,
@@ -82,14 +82,14 @@
         "mobilephone": "666777888",
         "options": [
           {
-            "name": "Combat",
+            "name": "Onboarding",
             "execute": true,
             "create": true,
             "update": false,
             "delete": true
           },
           {
-            "name": "Strategy",
+            "name": "Product offer",
             "execute": true,
             "create": true,
             "update": true,
@@ -111,14 +111,14 @@
         "mobilephone": "555666777",
         "options": [
           {
-            "name": "Alchemy",
+            "name": "Onboarding",
             "execute": true,
             "create": true,
             "update": true,
             "delete": true
           },
           {
-            "name": "Research",
+            "name": "Product offer",
             "execute": true,
             "create": false,
             "update": true,
@@ -140,14 +140,14 @@
         "mobilephone": "333444555",
         "options": [
           {
-            "name": "Strategy",
+            "name": "Onboarding",
             "execute": true,
             "create": true,
             "update": true,
             "delete": false
           },
           {
-            "name": "Teaching",
+            "name": "Product offer",
             "execute": true,
             "create": false,
             "update": true,
@@ -169,14 +169,14 @@
         "mobilephone": "222333444",
         "options": [
           {
-            "name": "Revenge",
+            "name": "Onboarding",
             "execute": true,
             "create": true,
             "update": false,
             "delete": true
           },
           {
-            "name": "Tactics",
+            "name": "Product offer",
             "execute": true,
             "create": false,
             "update": true,
@@ -198,14 +198,14 @@
         "mobilephone": "111222333",
         "options": [
           {
-            "name": "Leadership",
+            "name": "Onboarding",
             "execute": true,
             "create": true,
             "update": true,
             "delete": false
           },
           {
-            "name": "Persistence",
+            "name": "Product offer",
             "execute": true,
             "create": false,
             "update": true,

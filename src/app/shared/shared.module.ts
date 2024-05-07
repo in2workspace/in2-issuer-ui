@@ -5,6 +5,7 @@ import { MaterialModule } from '../material.module';
 import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 
@@ -14,7 +15,7 @@ import { RouterModule } from '@angular/router';
     NavbarComponent
   ],
   imports: [
-    CommonModule,MaterialModule, FormsModule, RouterModule
+    CommonModule,MaterialModule, FormsModule, RouterModule, TranslateModule
   ],
   exports:[CommonModule,MaterialModule, FormsModule,FormCredentialComponent, NavbarComponent]
 })
