@@ -31,16 +31,46 @@ export class FormCredentialComponent implements OnInit {
   public addedOptions: Option[] = [];
   public mandator: Mandator | null = null;
 
+  public countries = [
+    { name: 'Spain', code: '34' },
+    { name: 'Germany', code: '49' },
+    { name: 'France', code: '33' },
+    { name: 'Italy', code: '39' },
+    { name: 'United Kingdom', code: '44' },
+    { name: 'Russia', code: '7' },
+    { name: 'Ukraine', code: '380' },
+    { name: 'Poland', code: '48' },
+    { name: 'Romania', code: '40' },
+    { name: 'Netherlands', code: '31' },
+    { name: 'Belgium', code: '32' },
+    { name: 'Greece', code: '30' },
+    { name: 'Portugal', code: '351' },
+    { name: 'Sweden', code: '46' },
+    { name: 'Norway', code: '47' },
+  ];
+  public selectedCountry: string = '';
+  public actualMobilePhone: string = '';
+
   public constructor(
     private credentialService: CredentialissuanceService,
     private mandatorService: MandatorService,
     private alertService: AlertService
   ) {}
+
+  public get mobilePhone(): string {
+    return `+${this.selectedCountry} ${this.credential.mobilephone}`;
+  }
+  public set mobilePhone(value: string) {
+    const numberPart = value.replace(`+${this.selectedCountry} `, '').trim();
+
+    this.credential.mobilephone = numberPart;
+  }
   public ngOnInit(): void {
     this.mandatorService.getMandator().subscribe((mandator) => {
       this.mandator = mandator;
     });
   }
+
   public addOption() {
     if (this.isDisabled) return;
 
@@ -69,8 +99,9 @@ export class FormCredentialComponent implements OnInit {
   public submitCredential() {
     if (this.isDisabled) return;
 
-    this.credential.id = 'cred-' + new Date().getTime();
+    this.credential.mobilephone = `${this.selectedCountry} ${this.credential.mobilephone}`;
 
+    this.credential.id = 'cred-' + new Date().getTime();
     this.credential.options = this.addedOptions;
     this.credentialService.createCredential(this.credential).subscribe({
       next: (credential) => {
@@ -78,13 +109,18 @@ export class FormCredentialComponent implements OnInit {
         this.resetForm();
       },
       error: (error) => {
-        this.alertService.showAlert('Error creating credential: ' + error, 'error');
+        this.alertService.showAlert(
+          'Error creating credential: ' + error,
+          'error'
+        );
       },
     });
   }
+
   public triggerSendReminder() {
     this.sendReminder.emit();
   }
+
   private resetForm() {
     this.credential = {
       id: '',
