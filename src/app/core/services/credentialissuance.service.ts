@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { CredentialMandatee } from 'src/app/core/models/credendentialMandatee.interface';
-import { CredentialManagement } from 'src/app/core/models/credentialManagement.interface';
+import { Mandatee } from 'src/app/core/models/mandatee.interface';
+import { Mandate } from 'src/app/core/models/mandate.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -12,12 +12,12 @@ export class CredentialissuanceService {
 
   public constructor(private http: HttpClient) {}
 
-  public createCredential(credential: CredentialMandatee): Observable<CredentialManagement> {
+  public createCredential(credential: Mandatee): Observable<Mandate> {
     const timestamp = new Date().getTime();
-    const newCredential: CredentialManagement = {
+    const newCredential: Mandate = {
       id: 'cred-' + timestamp,
       status: 'issued',
-      name: `${credential.firstname} ${credential.lastname}`,
+      name: `${credential.first_name} ${credential.last_name}`,
       updated: new Date().toISOString().split('T')[0],
       mandatee: {
         ...credential,
@@ -25,6 +25,6 @@ export class CredentialissuanceService {
       }
     };
 
-    return this.http.post<CredentialManagement>(`${this.apiUrl}/credentials`, newCredential);
+    return this.http.post<Mandate>(`${this.apiUrl}/credentials`, newCredential);
   }
 }

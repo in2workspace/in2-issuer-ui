@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CredentialManagement } from 'src/app/core/models/credentialManagement.interface';
+import { Mandate } from 'src/app/core/models/mandate.interface';
 import { CredentialManagementService } from '../../../../core/services/credential-management.service';
 
 @Component({
@@ -10,7 +10,7 @@ import { CredentialManagementService } from '../../../../core/services/credentia
 })
 export class CredentialDetailComponent implements OnInit {
   public credentialId: string | null = null;
-  public credential: CredentialManagement | null = null;
+  public credential: Mandate | null = null;
 
   public constructor(
     private route: ActivatedRoute,

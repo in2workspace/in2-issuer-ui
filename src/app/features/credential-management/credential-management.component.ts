@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { CredentialManagement } from 'src/app/core/models/credentialManagement.interface';
+import { Mandate } from 'src/app/core/models/mandate.interface';
 import { Router } from '@angular/router';
 import { CredentialManagementService } from '../../core/services/credential-management.service';
 
@@ -13,7 +13,7 @@ import { CredentialManagementService } from '../../core/services/credential-mana
 export class CredentialManagementComponent implements AfterViewInit {
   @ViewChild(MatPaginator) public paginator!: MatPaginator;
   public displayedColumns: string[] = ['status', 'name', 'updated'];
-  public dataSource = new MatTableDataSource<CredentialManagement>();
+  public dataSource = new MatTableDataSource<Mandate>();
 
   public constructor(
     private credentialManagementService: CredentialManagementService,
@@ -40,7 +40,7 @@ export class CredentialManagementComponent implements AfterViewInit {
     this.router.navigate(['/credentialIssuance']);
   }
 
-  public goToCredentialDetails(element: CredentialManagement): void {
+  public goToCredentialDetails(element: Mandate): void {
     this.router.navigate(['/credentialManagement/details', element.id]);
   }
 }

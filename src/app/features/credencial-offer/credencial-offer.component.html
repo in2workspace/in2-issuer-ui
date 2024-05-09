@@ -11,13 +11,13 @@
       <h2 class="mandator">Mandator</h2>
       <mat-card-content>
         <h6>{{"mandator.organizationid" | translate}}</h6>
-        <p>{{ mandator?.organizationId }}</p>
+        <p>{{ mandator?.organizationIdentifier }}</p>
         <h6>{{"mandator.organization" | translate}}</h6>
         <p>{{ mandator?.organization }}</p>
         <h6>{{"mandator.name" | translate}}</h6>
-        <p>{{ mandator?.name }}</p>
+        <p>{{ mandator?.commonName }}</p>
         <h6>{{"mandator.email" | translate}}</h6>
-        <p>{{ mandator?.email }}</p>
+        <p>{{ mandator?.emailAddress }}</p>
         <h6>{{"mandator.serialNumber" | translate}}</h6>
         <p>{{ mandator?.serialNumber }}</p>
         <h6>{{"mandator.country" | translate}}</h6>
@@ -28,13 +28,13 @@
       <h2 class="mandatee">Mandatee</h2>
       <mat-card-content>
         <h6>{{"mandatee.firstnameid" | translate}}</h6>
-        <p>{{ credential?.mandatee?.firstname }}</p>
+        <p>{{ credential?.mandatee?.first_name }}</p>
         <h6>{{"mandatee.lastname" | translate}}</h6>
-        <p>{{ credential?.mandatee?.lastname }}</p>
+        <p>{{ credential?.mandatee?.last_name }}</p>
         <h6>{{"mandatee.email" | translate}}</h6>
-        <p>{{ credential?.mandatee?.emailaddress }}</p>
+        <p>{{ credential?.mandatee?.email }}</p>
         <h6>{{"mandatee.mobilephone" | translate}}</h6>
-        <p>{{ credential?.mandatee?.mobilephone }}</p>
+        <p>{{ credential?.mandatee?.mobile_phone }}</p>
       </mat-card-content>
     </div>
     <div class="qr-container">

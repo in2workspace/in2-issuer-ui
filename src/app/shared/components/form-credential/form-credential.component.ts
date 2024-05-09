@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { CredentialMandatee } from 'src/app/core/models/credendentialMandatee.interface';
+import { Mandatee } from 'src/app/core/models/mandatee.interface';
 import { Mandator } from 'src/app/core/models/madator.interface';
 import { Option } from 'src/app/core/models/option.interface';
 import { AlertService } from 'src/app/core/services/alert.service';
@@ -18,12 +18,12 @@ export class FormCredentialComponent implements OnInit {
   @Input() public title: string = '';
   @Input() public showButton: boolean = false;
   @Input() public hideButton: boolean = true;
-  @Input() public credential: CredentialMandatee = {
+  @Input() public credential: Mandatee = {
     id: '',
-    firstname: '',
-    lastname: '',
-    emailaddress: '',
-    mobilephone: '',
+    first_name: '',
+    last_name: '',
+    email: '',
+    mobile_phone: '',
     options: [],
   };
 
@@ -58,12 +58,12 @@ export class FormCredentialComponent implements OnInit {
   ) {}
 
   public get mobilePhone(): string {
-    return `+${this.selectedCountry} ${this.credential.mobilephone}`;
+    return `+${this.selectedCountry} ${this.credential.mobile_phone}`;
   }
   public set mobilePhone(value: string) {
     const numberPart = value.replace(`+${this.selectedCountry} `, '').trim();
 
-    this.credential.mobilephone = numberPart;
+    this.credential.mobile_phone = numberPart;
   }
   public ngOnInit(): void {
     this.mandatorService.getMandator().subscribe((mandator) => {
@@ -99,7 +99,7 @@ export class FormCredentialComponent implements OnInit {
   public submitCredential() {
     if (this.isDisabled) return;
 
-    this.credential.mobilephone = `${this.selectedCountry} ${this.credential.mobilephone}`;
+    this.credential.mobile_phone = `${this.selectedCountry} ${this.credential.mobile_phone}`;
 
     this.credential.id = 'cred-' + new Date().getTime();
     this.credential.options = this.addedOptions;
@@ -124,10 +124,10 @@ export class FormCredentialComponent implements OnInit {
   private resetForm() {
     this.credential = {
       id: '',
-      firstname: '',
-      lastname: '',
-      emailaddress: '',
-      mobilephone: '',
+      first_name: '',
+      last_name: '',
+      email: '',
+      mobile_phone: '',
       options: [],
     };
     this.addedOptions = [];

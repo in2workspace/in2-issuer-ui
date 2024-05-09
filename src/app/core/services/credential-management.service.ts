@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { CredentialManagement } from 'src/app/core/models/credentialManagement.interface';
+import { Mandate } from 'src/app/core/models/mandate.interface';
 import { AlertService } from './alert.service';
 
 
@@ -14,15 +14,15 @@ export class CredentialManagementService {
 
   public constructor(private http: HttpClient, private alertService: AlertService) {}
 
-  public getCredentials(): Observable<CredentialManagement[]> {
-    return this.http.get<CredentialManagement[]>(this.apiUrl).pipe(
-      catchError(this.handleError<CredentialManagement[]>('getCredentials', []))
+  public getCredentials(): Observable<Mandate[]> {
+    return this.http.get<Mandate[]>(this.apiUrl).pipe(
+      catchError(this.handleError<Mandate[]>('getCredentials', []))
     );
   }
 
-  public getCredentialById(id: string): Observable<CredentialManagement> {
-    return this.http.get<CredentialManagement>(`${this.apiUrl}/${id}`).pipe(
-      catchError(this.handleError<CredentialManagement>('getCredentialById'))
+  public getCredentialById(id: string): Observable<Mandate> {
+    return this.http.get<Mandate>(`${this.apiUrl}/${id}`).pipe(
+      catchError(this.handleError<Mandate>('getCredentialById'))
     );
   }
 
