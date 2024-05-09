@@ -12,309 +12,91 @@
   ],
   "credentials": [
     {
-      "id": "cred-4567890123456",
-      "status": "issued",
-      "name": "Luffy Monkey D.",
-      "updated": "2024-04-21",
-      "mandatee": {
-        "id": "cred-4567890123456",
-        "firstname": "Monkey D.",
-        "lastname": "Luffy",
-        "emailaddress": "luffy@onepiece.sea",
-        "mobilephone": "+777888999",
-        "options": [
-          {
-            "name": "Onboarding",
-            "execute": true,
-            "create": true,
-            "update": true,
-            "delete": false
-          },
-          {
-            "name": "Product offer",
-            "execute": true,
-            "create": true,
-            "update": true,
-            "delete": false
-          }
-        ]
-      }
-    },
-    {
-      "id": "cred-5678901234567",
-      "status": "issued",
-      "name": "Ichigo Kurosaki",
-      "updated": "2024-04-22",
-      "mandatee": {
-        "id": "cred-5678901234567",
-        "firstname": "Ichigo",
-        "lastname": "Kurosaki",
-        "emailaddress": "ichigo@bleach.jp",
-        "mobilephone": "999888777",
-        "options": [
-          {
-            "name": "Onboarding",
-            "execute": true,
-            "create": true,
-            "update": true,
-            "delete": true
-          },
-          {
-            "name": "Product offer",
-            "execute": true,
-            "create": false,
-            "update": true,
-            "delete": false
-          }
-        ]
-      }
-    },
-    {
-      "id": "cred-6789012345678",
-      "status": "issued",
-      "name": "Mikasa Ackerman",
-      "updated": "2024-04-23",
-      "mandatee": {
-        "id": "cred-6789012345678",
-        "firstname": "Mikasa",
-        "lastname": "Ackerman",
-        "emailaddress": "mikasa@aot.mil",
-        "mobilephone": "666777888",
-        "options": [
-          {
-            "name": "Onboarding",
-            "execute": true,
-            "create": true,
-            "update": false,
-            "delete": true
-          },
-          {
-            "name": "Product offer",
-            "execute": true,
-            "create": true,
-            "update": true,
-            "delete": false
-          }
-        ]
-      }
-    },
-    {
-      "id": "cred-7890123456789",
-      "status": "issued",
-      "name": "Edward Elric",
-      "updated": "2024-04-24",
-      "mandatee": {
-        "id": "cred-7890123456789",
-        "firstname": "Edward",
-        "lastname": "Elric",
-        "emailaddress": "edward@fma.al",
-        "mobilephone": "555666777",
-        "options": [
-          {
-            "name": "Onboarding",
-            "execute": true,
-            "create": true,
-            "update": true,
-            "delete": true
-          },
-          {
-            "name": "Product offer",
-            "execute": true,
-            "create": false,
-            "update": true,
-            "delete": false
-          }
-        ]
-      }
-    },
-    {
-      "id": "cred-8901234567890",
-      "status": "issued",
-      "name": "Kakashi Hatake",
-      "updated": "2024-04-25",
-      "mandatee": {
-        "id": "cred-8901234567890",
-        "firstname": "Kakashi",
-        "lastname": "Hatake",
-        "emailaddress": "kakashi@konoha.jp",
-        "mobilephone": "333444555",
-        "options": [
-          {
-            "name": "Onboarding",
-            "execute": true,
-            "create": true,
-            "update": true,
-            "delete": false
-          },
-          {
-            "name": "Product offer",
-            "execute": true,
-            "create": false,
-            "update": true,
-            "delete": false
-          }
-        ]
-      }
-    },
-    {
-      "id": "cred-9012345678901",
-      "status": "issued",
-      "name": "Sasuke Uchiha",
-      "updated": "2024-04-26",
-      "mandatee": {
-        "id": "cred-9012345678901",
-        "firstname": "Sasuke",
-        "lastname": "Uchiha",
-        "emailaddress": "sasuke@konoha.jp",
-        "mobilephone": "222333444",
-        "options": [
-          {
-            "name": "Onboarding",
-            "execute": true,
-            "create": true,
-            "update": false,
-            "delete": true
-          },
-          {
-            "name": "Product offer",
-            "execute": true,
-            "create": false,
-            "update": true,
-            "delete": false
-          }
-        ]
-      }
-    },
-    {
-      "id": "cred-0123456789012",
-      "status": "issued",
-      "name": "Naruto Uzumaki",
-      "updated": "2024-04-27",
-      "mandatee": {
-        "id": "cred-0123456789012",
-        "firstname": "Naruto",
-        "lastname": "Uzumaki",
-        "emailaddress": "naruto@konoha.jp",
-        "mobilephone": "111222333",
-        "options": [
-          {
-            "name": "Onboarding",
-            "execute": true,
-            "create": true,
-            "update": true,
-            "delete": false
-          },
-          {
-            "name": "Product offer",
-            "execute": true,
-            "create": false,
-            "update": true,
-            "delete": false
-          }
-        ]
-      }
-    },
-    {
-      "id": "cred-1713530099820",
-      "status": "issued",
-      "name": "naty natasha",
-      "updated": "2024-04-19",
-      "mandatee": {
-        "id": "cred-1713530099820",
-        "firstname": "naty",
-        "lastname": "natasha",
-        "emailaddress": "bla@in2.es",
-        "mobilephone": "456345789",
-        "options": [
-          {
-            "name": "Onboarding",
-            "execute": true,
-            "create": true,
-            "update": true,
-            "delete": true
-          },
-          {
-            "name": "Product offer",
-            "execute": true,
-            "create": true,
-            "update": false,
-            "delete": false
-          }
-        ]
-      }
-    },
-    {
-      "id": "cred-1713782344842",
-      "status": "issued",
-      "name": "goku son",
-      "updated": "2024-04-22",
-      "mandatee": {
-        "id": "cred-1713782344842",
-        "firstname": "goku",
-        "lastname": "son",
-        "emailaddress": "bola@gmail.com",
-        "mobilephone": "543234456",
-        "options": [
-          {
-            "name": "Onboarding",
-            "execute": true,
-            "create": true,
-            "update": false,
-            "delete": false
-          }
-        ]
-      }
-    },
-    {
-      "id": "cred-1714381494858",
+      "id": "cred-1715245731866",
       "status": "issued",
       "name": "james bond",
-      "updated": "2024-04-29",
+      "updated": "2024-05-09",
       "mandatee": {
-        "id": "cred-1714381494858",
+        "id": "",
         "firstname": "james",
         "lastname": "bond",
         "emailaddress": "007@in2.es",
-        "mobilephone": "007987234",
-        "options": [
-          {
-            "name": "Onboarding",
-            "execute": true,
-            "create": true,
-            "update": true,
-            "delete": false
-          }
-        ]
-      }
+        "mobilephone": "007007007"
+      },
+      "powers": [
+        {
+          "name": "Onboarding",
+          "execute": true,
+          "create": true,
+          "update": true,
+          "delete": true
+        },
+        {
+          "name": "Product offer",
+          "execute": false,
+          "create": false,
+          "update": true,
+          "delete": true
+        }
+      ]
     },
     {
-      "id": "cred-1714381667315",
+      "id": "cred-1715246011611",
       "status": "issued",
-      "name": "jes nick",
-      "updated": "2024-04-29",
+      "name": "Dan jac",
+      "updated": "2024-05-09",
       "mandatee": {
-        "id": "cred-1714381667315",
-        "firstname": "jes",
-        "lastname": "nick",
+        "id": "",
+        "firstname": "Dan",
+        "lastname": "jac",
         "emailaddress": "bla@in2.es",
-        "mobilephone": "456789345",
-        "options": [
-          {
-            "name": "Onboarding",
-            "execute": false,
-            "create": false,
-            "update": true,
-            "delete": true
-          },
-          {
-            "name": "Product offer",
-            "execute": true,
-            "create": true,
-            "update": false,
-            "delete": false
-          }
-        ]
-      }
+        "mobilephone": "123456789"
+      },
+      "powers": [
+        {
+          "name": "Onboarding",
+          "execute": true,
+          "create": true,
+          "update": true,
+          "delete": true
+        },
+        {
+          "name": "Product offer",
+          "execute": true,
+          "create": true,
+          "update": true,
+          "delete": true
+        }
+      ]
+    },
+    {
+      "id": "cred-1715247192627",
+      "status": "issued",
+      "name": "hello wolrd",
+      "updated": "2024-05-09",
+      "mandatee": {
+        "id": "",
+        "firstname": "hello",
+        "lastname": "wolrd",
+        "emailaddress": "bola@gmail.com",
+        "mobilephone": "987654321"
+      },
+      "powers": [
+        {
+          "name": "Onboarding",
+          "execute": false,
+          "create": false,
+          "update": true,
+          "delete": true
+        },
+        {
+          "name": "Product offer",
+          "execute": true,
+          "create": true,
+          "update": false,
+          "delete": false
+        }
+      ]
     }
   ]
 }

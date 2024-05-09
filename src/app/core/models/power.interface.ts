@@ -1,4 +1,4 @@
-export interface Option {
+export interface Power {
   name: string;
   execute: boolean;
   create: boolean;

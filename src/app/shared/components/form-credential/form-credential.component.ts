@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CredentialMandatee } from 'src/app/core/models/credendentialMandatee.interface';
+import { CredentialManagement } from 'src/app/core/models/credentialManagement.interface';
 import { Mandator } from 'src/app/core/models/madator.interface';
-import { Option } from 'src/app/core/models/option.interface';
+import { Power } from 'src/app/core/models/power.interface';
 import { AlertService } from 'src/app/core/services/alert.service';
 import { CredentialissuanceService } from 'src/app/core/services/credentialissuance.service';
 import { MandatorService } from 'src/app/core/services/mandator.service';
@@ -18,17 +19,17 @@ export class FormCredentialComponent implements OnInit {
   @Input() public title: string = '';
   @Input() public showButton: boolean = false;
   @Input() public hideButton: boolean = true;
+  @Input() public powers: Power[] = [];
   @Input() public credential: CredentialMandatee = {
     id: '',
     firstname: '',
     lastname: '',
     emailaddress: '',
     mobilephone: '',
-    options: [],
   };
 
   public selectedOption = '';
-  public addedOptions: Option[] = [];
+  public addedOptions: Power[] = [];
   public mandator: Mandator | null = null;
 
   public countries = [
@@ -85,7 +86,7 @@ export class FormCredentialComponent implements OnInit {
       return;
     }
 
-    const newOption: Option = {
+    const newOption: Power = {
       name: this.selectedOption,
       execute: false,
       create: false,
@@ -99,38 +100,33 @@ export class FormCredentialComponent implements OnInit {
   public submitCredential() {
     if (this.isDisabled) return;
 
-    this.credential.mobilephone = `${this.selectedCountry} ${this.credential.mobilephone}`;
+    const credentialManagement: CredentialManagement = {
+      id: 'cred-' + new Date().getTime(),
+      status: 'issued',
+      name: `${this.credential.firstname} ${this.credential.lastname}`,
+      updated: new Date().toISOString().split('T')[0],
+      mandatee: this.credential,
+      powers: this.addedOptions
+    };
 
-    this.credential.id = 'cred-' + new Date().getTime();
-    this.credential.options = this.addedOptions;
-    this.credentialService.createCredential(this.credential).subscribe({
+    this.credentialService.createCredential(credentialManagement).subscribe({
       next: (credential) => {
         console.log('Credential created', credential);
         this.resetForm();
       },
       error: (error) => {
-        this.alertService.showAlert(
-          'Error creating credential: ' + error,
-          'error'
-        );
+        this.alertService.showAlert('Error creating credential: ' + error, 'error');
       },
     });
   }
+
 
   public triggerSendReminder() {
     this.sendReminder.emit();
   }
 
   private resetForm() {
-    this.credential = {
-      id: '',
-      firstname: '',
-      lastname: '',
-      emailaddress: '',
-      mobilephone: '',
-      options: [],
-    };
+    this.credential = { id: '', firstname: '', lastname: '', emailaddress: '', mobilephone: '' };
     this.addedOptions = [];
-    this.selectedOption = '';
   }
 }
