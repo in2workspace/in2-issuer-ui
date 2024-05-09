@@ -2,13 +2,13 @@ export const environment = {
   production: true,
   loginParams: {
     has_login: true,
-    login_url: window["env"]["login_url"] || 'http://localhost:9099/realms/wallet',
-    client_id: window["env"]["client_id"] || 'auth-client',
-    scope: window["env"]["scope"] || 'openid profile email offline_access',
-    grant_type: window["env"]["grant_type"] || 'code'
+    login_url: 'http://localhost:8088/realms/EAAProvider',
+    client_id: 'oidc4vci-wallet-client',
+    scope: 'openid profile email offline_access',
+    grant_type:'code'
   },
-  issuer_url: window["env"]["issuer_url"] || '',
-  issuer_uri: window["env"]["issuer_uri"] || '',
-  base_url: window["env"]["base_url"] || 'https://localhost:8071',
-  wallet_url: window["env"]["wallet_url"] || 'https://localhost:4200'
+  issuer_url: '',
+  issuer_uri: '',
+  base_url: 'http://localhost:8071',
+  wallet_url: 'http://localhost:4200'
 };

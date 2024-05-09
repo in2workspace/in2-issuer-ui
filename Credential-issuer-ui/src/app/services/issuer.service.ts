@@ -18,7 +18,7 @@ import { Observable, shareReplay } from 'rxjs';
 
       credentialOffer(){
         return this.http.get<any>(
-          environment.base_url + '/api/v2/credential-offer',
+          environment.base_url + '/api/v1/credential-offer?credential-type=LEARCredentialEmployee',
           {
             headers: { 'Content-Type': 'application/json',
               'Authorization': 'Bearer '+this.authenticationService.getToken()
