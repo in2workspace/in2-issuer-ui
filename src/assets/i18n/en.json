@@ -8,7 +8,7 @@
     "country": "Country"
   },
   "mandatee": {
-    "firstnameid": "First name id",
+    "firstnameid": "First name",
     "lastname": "Last name",
     "email": "Email address",
     "mobilephone": " mobile phone"
@@ -27,7 +27,8 @@
     "name": "Name",
     "updated": "Updated",
     "sendReminder": "Send Reminder",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "create" : "Create Credential"
   },
     "powers": {
       "power": "Powers",

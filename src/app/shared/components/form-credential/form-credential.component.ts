@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CredentialMandatee } from 'src/app/core/models/credendentialMandatee.interface';
 import { CredentialManagement } from 'src/app/core/models/credentialManagement.interface';
 import { Mandator } from 'src/app/core/models/madator.interface';
@@ -51,18 +52,20 @@ export class FormCredentialComponent implements OnInit {
   ];
   public selectedCountry: string = '';
   public actualMobilePhone: string = '';
+  public credentialForm!: FormGroup;
 
   public constructor(
     private credentialService: CredentialissuanceService,
     private mandatorService: MandatorService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private fb: FormBuilder
   ) {}
 
   public get mobilePhone(): string {
-    return `+${this.selectedCountry} ${this.credential.mobilephone}`;
+    return `${this.selectedCountry} ${this.credential.mobilephone}`;
   }
   public set mobilePhone(value: string) {
-    const numberPart = value.replace(`+${this.selectedCountry} `, '').trim();
+    const numberPart = value.replace(`${this.selectedCountry} `, '').trim();
 
     this.credential.mobilephone = numberPart;
   }
@@ -70,6 +73,14 @@ export class FormCredentialComponent implements OnInit {
     this.mandatorService.getMandator().subscribe((mandator) => {
       this.mandator = mandator;
     });
+    this.credentialForm = this.fb.group({
+      firstname: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*')]],
+      lastname: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*')]],
+      emailaddress: ['', [Validators.required, Validators.email]],
+      mobilephone: ['', [Validators.required, Validators.pattern('[0-9 ]*')]],
+      country: ['', Validators.required]
+    });
+
   }
 
   public addOption() {
@@ -97,8 +108,15 @@ export class FormCredentialComponent implements OnInit {
     this.selectedOption = '';
   }
 
+  public  handleSelectChange(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    this.selectedOption = selectElement.value;
+  }
+
+
   public submitCredential() {
     if (this.isDisabled) return;
+    this.credential.mobilephone = `+${this.selectedCountry} ${this.credential.mobilephone}`;
 
     const credentialManagement: CredentialManagement = {
       id: 'cred-' + new Date().getTime(),
@@ -110,8 +128,7 @@ export class FormCredentialComponent implements OnInit {
     };
 
     this.credentialService.createCredential(credentialManagement).subscribe({
-      next: (credential) => {
-        console.log('Credential created', credential);
+      next: () => {
         this.resetForm();
       },
       error: (error) => {
