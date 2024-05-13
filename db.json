@@ -12,88 +12,66 @@
   ],
   "credentials": [
     {
-      "id": "cred-1715245731866",
+      "id": "cred-1715581469685",
+      "status": "issued",
+      "name": "test bond",
+      "updated": "2024-05-13",
+      "mandatee": {
+        "id": "",
+        "firstname": "test",
+        "lastname": "bond",
+        "emailaddress": "bla@in2.es",
+        "mobilephone": "+34 123456789"
+      },
+      "powers": [
+        {
+          "name": "Onboarding",
+          "execute": true,
+          "create": true,
+          "update": false,
+          "delete": false
+        },
+        {
+          "name": "Product offer",
+          "execute": false,
+          "create": false,
+          "update": true,
+          "delete": true
+        }
+      ]
+    },
+    {
+      "id": "cred-1715583018422",
       "status": "issued",
       "name": "james bond",
-      "updated": "2024-05-09",
+      "updated": "2024-05-13",
       "mandatee": {
         "id": "",
         "firstname": "james",
         "lastname": "bond",
         "emailaddress": "007@in2.es",
-        "mobilephone": "007007007"
+        "mobilephone": "+44 909876543"
       },
-      "powers": [
-        {
-          "name": "Onboarding",
-          "execute": true,
-          "create": true,
-          "update": true,
-          "delete": true
-        },
-        {
-          "name": "Product offer",
-          "execute": false,
-          "create": false,
-          "update": true,
-          "delete": true
-        }
-      ]
+      "powers": []
     },
     {
-      "id": "cred-1715246011611",
+      "id": "cred-1715583059864",
       "status": "issued",
-      "name": "Dan jac",
-      "updated": "2024-05-09",
+      "name": "goku testeo",
+      "updated": "2024-05-13",
       "mandatee": {
         "id": "",
-        "firstname": "Dan",
-        "lastname": "jac",
-        "emailaddress": "bla@in2.es",
-        "mobilephone": "123456789"
-      },
-      "powers": [
-        {
-          "name": "Onboarding",
-          "execute": true,
-          "create": true,
-          "update": true,
-          "delete": true
-        },
-        {
-          "name": "Product offer",
-          "execute": true,
-          "create": true,
-          "update": true,
-          "delete": true
-        }
-      ]
-    },
-    {
-      "id": "cred-1715247192627",
-      "status": "issued",
-      "name": "hello wolrd",
-      "updated": "2024-05-09",
-      "mandatee": {
-        "id": "",
-        "firstname": "hello",
-        "lastname": "wolrd",
+        "firstname": "goku",
+        "lastname": "testeo",
         "emailaddress": "bola@gmail.com",
-        "mobilephone": "987654321"
+        "mobilephone": "+34 123456789"
       },
       "powers": [
         {
           "name": "Onboarding",
-          "execute": false,
-          "create": false,
-          "update": true,
-          "delete": true
-        },
-        {
-          "name": "Product offer",
           "execute": true,
           "create": true,
-          "update": false,
+          "update": true,
           "delete": false
         }
       ]
