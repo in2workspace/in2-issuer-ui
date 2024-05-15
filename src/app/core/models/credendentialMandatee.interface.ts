@@ -1,8 +1,8 @@
 
 export interface CredentialMandatee {
   id: string;
-  firstname: string;
-  lastname: string;
-  emailaddress: string;
-  mobilephone: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  mobile_phone: string;
 }

@@ -1,8 +1,8 @@
 export interface Mandator {
-  organizationId: string;
+  organizationIdentifier: string;
   organization: string;
-  name: string;
-  email: string;
+  commonName: string;
+  emailAddress: string;
   serialNumber: string;
   country: string;
 }

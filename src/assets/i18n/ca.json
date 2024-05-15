@@ -9,9 +9,9 @@
   },
   "mandatee": {
     "firstnameid": "ID del nom",
-    "lastname": "Cognoms",
+    "last_name": "Cognoms",
     "email": "Adreça de correu",
-    "mobilephone": "Telèfon mòbil"
+    "mobile_phone": "Telèfon mòbil"
   },
   "credentialDetail": {
     "credentialDetail": "Detall de la credencial",

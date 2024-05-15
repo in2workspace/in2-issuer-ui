@@ -9,9 +9,9 @@
   },
   "mandatee": {
     "firstnameid": "ID del nombre",
-    "lastname": "Apellidos",
+    "last_name": "Apellidos",
     "email": "Dirección de correo",
-    "mobilephone": "Teléfono móvil"
+    "mobile_phone": "Teléfono móvil"
   },
   "credentialDetail": {
     "credentialDetail": "Detalle de la credencial",

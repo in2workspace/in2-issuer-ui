@@ -1,7 +1,7 @@
 {
   "mandators": [
     {
-      "organizationId": "IDCES-21444555T",
+      "organizationIdentifier": "IDCES-21444555T",
       "organization": "Tardis S.A.",
       "name": "Tardis S.A.",
       "email": "infinity@timeless.org",
@@ -18,10 +18,10 @@
       "updated": "2024-05-13",
       "mandatee": {
         "id": "",
-        "firstname": "test",
-        "lastname": "bond",
-        "emailaddress": "bla@in2.es",
-        "mobilephone": "+34 123456789"
+        "first_name": "test",
+        "last_name": "bond",
+        "email": "bla@in2.es",
+        "mobile_phone": "+34 123456789"
       },
       "powers": [
         {
@@ -47,10 +47,10 @@
       "updated": "2024-05-13",
       "mandatee": {
         "id": "",
-        "firstname": "james",
-        "lastname": "bond",
-        "emailaddress": "007@in2.es",
-        "mobilephone": "+44 909876543"
+        "first_name": "james",
+        "last_name": "bond",
+        "email": "007@in2.es",
+        "mobile_phone": "+44 909876543"
       },
       "powers": []
     },
@@ -61,10 +61,10 @@
       "updated": "2024-05-13",
       "mandatee": {
         "id": "",
-        "firstname": "goku",
-        "lastname": "testeo",
-        "emailaddress": "bola@gmail.com",
-        "mobilephone": "+34 123456789"
+        "first_name": "goku",
+        "last_name": "testeo",
+        "email": "bola@gmail.com",
+        "mobile_phone": "+34 123456789"
       },
       "powers": [
         {

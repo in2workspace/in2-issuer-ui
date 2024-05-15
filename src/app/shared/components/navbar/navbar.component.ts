@@ -46,7 +46,7 @@ export class NavbarComponent implements OnInit {
   public loadMandatorData(): void {
     this.mandatorService.getMandator().subscribe({
       next: (mandator: Mandator) => {
-        this.userName = mandator.name;
+        this.userName = mandator.commonName;
         this.companyName = mandator.organization;
       }
     });

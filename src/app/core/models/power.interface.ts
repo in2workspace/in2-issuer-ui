@@ -1,7 +1,7 @@
 export interface Power {
-  name: string;
-  execute: boolean;
-  create: boolean;
-  update: boolean;
-  delete: boolean;
+  id: string;
+  tmf_action: string[];
+  tmf_domain: string;
+  tmf_function: string;
+  tmf_type: string;
 }
