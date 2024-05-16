@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CredentialManagement } from 'src/app/core/models/credentialManagement.interface';
 import { CredentialManagementService } from '../../core/services/credential-management.service';
-import { Mandator } from 'src/app/core/models/madator.interface';
-import { MandatorService } from 'src/app/core/services/mandator.service';
 
 @Component({
   selector: 'app-credencial-offer',
@@ -13,19 +11,13 @@ import { MandatorService } from 'src/app/core/services/mandator.service';
 export class CredencialOfferComponent implements OnInit {
   public credentialId: string | null = null;
   public credential: CredentialManagement | null = null;
-  public mandator: Mandator | null = null;
 
   public constructor(
     private credentialManagementService: CredentialManagementService,
-    private mandatorService: MandatorService,
     private route: ActivatedRoute,
   ) {}
 
-  public  ngOnInit(): void {
-    this.mandatorService.getMandator().subscribe(mandator => {
-      this.mandator = mandator;
-    });
-
+  public ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       this.credentialId = params.get('id');
       if (this.credentialId) {

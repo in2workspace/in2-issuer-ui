@@ -40,11 +40,10 @@ export class FormCredentialComponent implements OnInit {
     email: '',
     mobile_phone: '',
   };
-
+  @Input() public mandator: Mandator | null = null;
   public selectedOption = '';
   public addedOptions: TempPower[] = [];
   public tempPowers: TempPower[] = [];
-  public mandator: Mandator | null = null;
 
   public countries = [
     { name: 'Spain', code: '34' },
