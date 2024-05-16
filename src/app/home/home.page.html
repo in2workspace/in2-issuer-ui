@@ -7,7 +7,7 @@
   <ion-content class="ion-padding">
     <ion-list class="menu-list">
       <ion-item class="menu-item" (click)="navigateToPage('user-info')">
-        <ion-label>Dades Usuari</ion-label>
+        <ion-label>User data</ion-label>
       </ion-item>
     </ion-list>
   </ion-content>
@@ -50,17 +50,17 @@
     </ion-row>
     <ion-row class="ion-justify-content-center">
       <br/>
-      <span>Procedimiento para el almacenamiento de Lear credential:<br/>
-        1- Clicar sobre botó Generar Credencial.
+      <span>Instructions for storing Lear credential:<br/>
+        1- Click on the Generate Credential button.
         <br/>
         2- <br/>
-        - En cas d'accedir des d'un dispositiu mobil, fer clic sobre el botó Redireccionar al Wallet.<br/>
-        - En cas d'accedir des de PC, accedir des del dispositiu mobil a https://wallet, iniciar sessió i escanejar el codi QR dins del wallet.</span>
+        - If accessing from a mobile device, click on the Redirect to Wallet button.<br/>
+        - If accessing from a PC, access from the mobile device at https://wallet, log in and scan the QR code inside the wallet.</span>
     </ion-row>
     <br/>
     <ion-row class="ion-justify-content-center">
       <ion-button class="generate_cred_but" (click)="generateQR()">
-        Generar Credencial
+        Generate Credential
       </ion-button>
     </ion-row>
 
@@ -70,7 +70,7 @@
 
     <ion-row class="ion-justify-content-center">
       <ion-button *ngIf="qrdata!==''" class="generate_cred_but" (click)="saveInfo()">
-        Descarrega el Wallet per guardar la teva informació
+        Download the Wallet to save your credentials
       </ion-button>
     </ion-row>
     
