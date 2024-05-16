@@ -119,51 +119,6 @@
           "tmf_type": "Domain"
         }
       ]
-    },
-    {
-      "id": "cred-1715852141019",
-      "status": "issued",
-      "name": "test Bond",
-      "updated": "2024-05-16",
-      "mandatee": {
-        "id": "",
-        "first_name": "test",
-        "last_name": "Bond",
-        "email": "prueba@gmai.com",
-        "mobile_phone": "+380 007007007"
-      },
-      "mandator": {
-        "organizationIdentifier": "VATES-B60645900",
-        "organization": "IN2, Ingeniería de la Información, S.L.",
-        "commonName": "IN2",
-        "emailAddress": "rrhh@in2.es",
-        "serialNumber": "B60645900",
-        "country": "ES"
-      },
-      "powers": [
-        {
-          "id": "Onboarding",
-          "tmf_action": [
-            "Execute",
-            "Create",
-            "Update",
-            "Delete"
-          ],
-          "tmf_domain": "DOME",
-          "tmf_function": "Onboarding",
-          "tmf_type": "Domain"
-        },
-        {
-          "id": "ProductOffering",
-          "tmf_action": [
-            "Execute",
-            "Create"
-          ],
-          "tmf_domain": "DOME",
-          "tmf_function": "ProductOffering",
-          "tmf_type": "Domain"
-        }
-      ]
     }
   ]
 }
