@@ -1,78 +1,46 @@
 {
-  "mandators": [
-    {
-      "organizationIdentifier": "IDCES-21444555T",
-      "organization": "Tardis S.A.",
-      "name": "Tardis S.A.",
-      "email": "infinity@timeless.org",
-      "serialNumber": "IDCES-21444555T",
-      "country": "ES",
-      "id": "65e4"
-    }
-  ],
   "credentials": [
     {
-      "id": "cred-1715581469685",
+      "id": "cred-1715848905935",
       "status": "issued",
-      "name": "test bond",
-      "updated": "2024-05-13",
-      "mandatee": {
-        "id": "",
-        "first_name": "test",
-        "last_name": "bond",
-        "email": "bla@in2.es",
-        "mobile_phone": "+34 123456789"
-      },
-      "powers": [
-        {
-          "name": "Onboarding",
-          "execute": true,
-          "create": true,
-          "update": false,
-          "delete": false
-        },
-        {
-          "name": "Product offer",
-          "execute": false,
-          "create": false,
-          "update": true,
-          "delete": true
-        }
-      ]
-    },
-    {
-      "id": "cred-1715583018422",
-      "status": "issued",
-      "name": "james bond",
-      "updated": "2024-05-13",
+      "name": "james Bond",
+      "updated": "2024-05-16",
       "mandatee": {
         "id": "",
         "first_name": "james",
-        "last_name": "bond",
-        "email": "007@in2.es",
-        "mobile_phone": "+44 909876543"
+        "last_name": "Bond",
+        "email": "007@gmail.com",
+        "mobile_phone": "+44 007007007"
       },
-      "powers": []
-    },
-    {
-      "id": "cred-1715583059864",
-      "status": "issued",
-      "name": "goku testeo",
-      "updated": "2024-05-13",
-      "mandatee": {
-        "id": "",
-        "first_name": "goku",
-        "last_name": "testeo",
-        "email": "bola@gmail.com",
-        "mobile_phone": "+34 123456789"
+      "mandator": {
+        "organizationIdentifier": "VATES-B60645900",
+        "organization": "IN2, Ingeniería de la Información, S.L.",
+        "commonName": "IN2",
+        "emailAddress": "rrhh@in2.es",
+        "serialNumber": "B60645900",
+        "country": "ES"
       },
       "powers": [
         {
-          "name": "Onboarding",
-          "execute": true,
-          "create": true,
-          "update": true,
-          "delete": false
+          "id": "Onboarding",
+          "tmf_action": [
+            "Execute",
+            "Create",
+            "Update",
+            "Delete"
+          ],
+          "tmf_domain": "DOME",
+          "tmf_function": "Onboarding",
+          "tmf_type": "Domain"
+        },
+        {
+          "id": "ProductOffering",
+          "tmf_action": [
+            "Delete"
+          ],
+          "tmf_domain": "DOME",
+          "tmf_function": "ProductOffering",
+          "tmf_type": "Domain"
         }
       ]
     }

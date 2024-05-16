@@ -5,7 +5,6 @@ import { catchError } from 'rxjs/operators';
 import { CredentialManagement } from 'src/app/core/models/credentialManagement.interface';
 import { AlertService } from './alert.service';
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -39,5 +38,5 @@ export class CredentialManagementService {
       this.alertService.showAlert(`${operation} failed: ${error.message}`, 'error');
       return throwError(() => error);
     };
-}
+  }
 }

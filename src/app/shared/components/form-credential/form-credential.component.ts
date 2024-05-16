@@ -176,6 +176,9 @@ export class FormCredentialComponent implements OnInit {
 
     const credentialManagement: CredentialManagement = {
       id: 'cred-' + new Date().getTime(),
+      status: 'issued',
+      name: `${this.credential.first_name} ${this.credential.last_name}`,
+      updated: new Date().toISOString().split('T')[0],
       mandatee: this.credential,
       mandator: mockMandator,
       powers: powers
