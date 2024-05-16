@@ -11,17 +11,17 @@
       <h2 class="mandator">Mandator</h2>
       <mat-card-content>
         <h6>{{"mandator.organizationid" | translate}}</h6>
-        <p>{{ mandator?.organizationIdentifier }}</p>
+        <p>{{ credential?.mandator?.organizationIdentifier }}</p>
         <h6>{{"mandator.organization" | translate}}</h6>
-        <p>{{ mandator?.organization }}</p>
+        <p>{{ credential?.mandator?.organization }}</p>
         <h6>{{"mandator.name" | translate}}</h6>
-        <p>{{ mandator?.commonName }}</p>
+        <p>{{ credential?.mandator?.commonName }}</p>
         <h6>{{"mandator.email" | translate}}</h6>
-        <p>{{ mandator?.emailAddress }}</p>
+        <p>{{ credential?.mandator?.emailAddress }}</p>
         <h6>{{"mandator.serialNumber" | translate}}</h6>
-        <p>{{ mandator?.serialNumber }}</p>
+        <p>{{ credential?.mandator?.serialNumber }}</p>
         <h6>{{"mandator.country" | translate}}</h6>
-        <p>{{ mandator?.country }}</p>
+        <p>{{ credential?.mandator?.country }}</p>
       </mat-card-content>
     </div>
     <div class="mandatee-container">
