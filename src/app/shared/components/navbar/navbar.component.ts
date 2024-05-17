@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from 'src/app/core/services/auth.service';
-import { Mandator } from 'src/app/core/models/madator.interface';
-import { MandatorService } from 'src/app/core/services/mandator.service';
 
 @Component({
   selector: 'app-navbar',
@@ -24,14 +22,13 @@ export class NavbarComponent implements OnInit {
     public translate: TranslateService,
     private authService: AuthService,
     private router: Router,
-    private mandatorService: MandatorService
   ) {}
 
   public ngOnInit() {
     this.translate.addLangs(['en', 'es', 'ca']);
     this.translate.setDefaultLang('en');
     this.selectedLanguage = this.translate.getDefaultLang();
-    this.loadMandatorData();
+    // this.loadMandatorData();
   }
 
   public logout(): void {
@@ -43,12 +40,10 @@ export class NavbarComponent implements OnInit {
     this.selectedLanguage = languageCode;
   }
 
-  public loadMandatorData(): void {
-    this.mandatorService.getMandator().subscribe({
-      next: (mandator: Mandator) => {
-        this.userName = mandator.commonName;
-        this.companyName = mandator.organization;
-      }
-    });
-  }
+  // public loadMandatorData(): void {
+
+  //       this.userName = mandator.commonName;
+  //       this.companyName = mandator.organization;
+  //     }
+  // }
 }

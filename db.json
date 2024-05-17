@@ -46,6 +46,41 @@
           }
         ]
       }
+    },
+    {
+      "id": "a1b2",
+      "procedure_id": "proc-1715941755024",
+      "full_name": "test teo",
+      "status": "issued",
+      "updated": "2024-05-17",
+      "credential": {
+        "mandatee": {
+          "first_name": "test",
+          "last_name": "teo",
+          "email": "test@gmail.com",
+          "mobile_phone": "+44 007007007"
+        },
+        "mandator": null,
+        "powers": [
+          {
+            "tmf_action": [
+              "Execute"
+            ],
+            "tmf_domain": "DOME",
+            "tmf_function": "Onboarding",
+            "tmf_type": "Domain"
+          },
+          {
+            "tmf_action": [
+              "Update",
+              "Delete"
+            ],
+            "tmf_domain": "DOME",
+            "tmf_function": "ProductOffering",
+            "tmf_type": "Domain"
+          }
+        ]
+      }
     }
   ]
 }

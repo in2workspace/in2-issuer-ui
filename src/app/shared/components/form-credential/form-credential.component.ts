@@ -6,7 +6,6 @@ import { Mandator } from 'src/app/core/models/madator.interface';
 import { Power } from 'src/app/core/models/power.interface';
 import { AlertService } from 'src/app/core/services/alert.service';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
-import { MandatorService } from 'src/app/core/services/mandator.service';
 
 interface TempPower {
   tmf_action: string[];
@@ -66,7 +65,6 @@ export class FormCredentialComponent implements OnInit {
 
   public constructor(
     private credentialProcedureService: CredentialProcedureService,
-    private mandatorService: MandatorService,
     private alertService: AlertService,
     private fb: FormBuilder
   ) {}
@@ -80,9 +78,6 @@ export class FormCredentialComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.mandatorService.getMandator().subscribe((mandator) => {
-      this.mandator = mandator;
-    });
     this.credentialForm = this.fb.group({
       first_name: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*')]],
       last_name: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*')]],
