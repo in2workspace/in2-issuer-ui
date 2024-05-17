@@ -9,7 +9,6 @@ import { CredentialProcedureService } from 'src/app/core/services/credential-pro
 import { MandatorService } from 'src/app/core/services/mandator.service';
 
 interface TempPower {
-  id: string;
   tmf_action: string[];
   tmf_domain: string;
   tmf_function: string;
@@ -34,7 +33,6 @@ export class FormCredentialComponent implements OnInit {
   @Input() public hideButton: boolean = true;
   @Input() public powers: Power[] = [];
   @Input() public credential: CredentialMandatee = {
-    id: '',
     first_name: '',
     last_name: '',
     email: '',
@@ -100,7 +98,6 @@ export class FormCredentialComponent implements OnInit {
 
   public convertToTempPower(power: Power): TempPower {
     return {
-      id: power.id,
       tmf_action: power.tmf_action,
       tmf_domain: power.tmf_domain,
       tmf_function: power.tmf_function,
@@ -115,7 +112,7 @@ export class FormCredentialComponent implements OnInit {
   public addOption(): void {
     if (this.isDisabled) return;
 
-    if (this.addedOptions.some((option) => option.id === this.selectedOption)) {
+    if (this.addedOptions.some((option) => option.tmf_function === this.selectedOption)) {
       alert('This option has already been added.');
       return;
     }
@@ -125,7 +122,6 @@ export class FormCredentialComponent implements OnInit {
     }
 
     const newOption: TempPower = {
-      id: this.selectedOption,
       tmf_action: [],
       tmf_domain: 'DOME',
       tmf_function: this.selectedOption,
@@ -156,7 +152,6 @@ export class FormCredentialComponent implements OnInit {
       if (option.delete) tmf_action.push('Delete');
 
       return {
-        id: option.id,
         tmf_action,
         tmf_domain: option.tmf_domain,
         tmf_function: option.tmf_function,
@@ -192,7 +187,7 @@ export class FormCredentialComponent implements OnInit {
   }
 
   private resetForm(): void {
-    this.credential = { id: '', first_name: '', last_name: '', email: '', mobile_phone: '' };
+    this.credential = { first_name: '', last_name: '', email: '', mobile_phone: '' };
     this.addedOptions = [];
     this.credentialForm.reset();
   }

@@ -1,18 +1,17 @@
 {
   "credentialProcedures": [
     {
-      "id": "3756",
-      "procedure_id": "proc-1715934667669",
-      "name": "james Bond",
+      "id": "f8fe",
+      "procedure_id": "proc-1715939721741",
+      "name": "test Bond",
       "status": "issued",
       "updated": "2024-05-17",
       "credential": {
         "mandatee": {
-          "id": "",
-          "first_name": "james",
+          "first_name": "test",
           "last_name": "Bond",
-          "email": "007@gmail.com",
-          "mobile_phone": "+44 007007007"
+          "email": "prueba@gmai.com",
+          "mobile_phone": "+30 007007007"
         },
         "mandator": {
           "organizationIdentifier": "VATES-B60645900",
@@ -24,7 +23,6 @@
         },
         "powers": [
           {
-            "id": "Onboarding",
             "tmf_action": [
               "Execute",
               "Create",
@@ -36,9 +34,11 @@
             "tmf_type": "Domain"
           },
           {
-            "id": "ProductOffering",
             "tmf_action": [
-              "Execute"
+              "Execute",
+              "Create",
+              "Update",
+              "Delete"
             ],
             "tmf_domain": "DOME",
             "tmf_function": "ProductOffering",
