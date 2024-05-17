@@ -1,124 +1,50 @@
 {
-  "credentials": [
+  "credentialProcedures": [
     {
-      "id": "cred-1715848905935",
+      "procedure_id": "proc-1715848905935",
+      "name": "James Bond",
       "status": "issued",
-      "name": "james Bond",
       "updated": "2024-05-16",
-      "mandatee": {
-        "id": "",
-        "first_name": "james",
-        "last_name": "Bond",
-        "email": "007@gmail.com",
-        "mobile_phone": "+44 007007007"
-      },
-      "mandator": {
-        "organizationIdentifier": "VATES-B60645900",
-        "organization": "IN2, Ingeniería de la Información, S.L.",
-        "commonName": "IN2",
-        "emailAddress": "rrhh@in2.es",
-        "serialNumber": "B60645900",
-        "country": "ES"
-      },
-      "powers": [
-        {
-          "id": "Onboarding",
-          "tmf_action": [
-            "Execute",
-            "Create",
-            "Update",
-            "Delete"
-          ],
-          "tmf_domain": "DOME",
-          "tmf_function": "Onboarding",
-          "tmf_type": "Domain"
+      "credential": {
+        "mandatee": {
+          "id": "",
+          "first_name": "James",
+          "last_name": "Bond",
+          "email": "007@gmail.com",
+          "mobile_phone": "+44 007007007"
         },
-        {
-          "id": "ProductOffering",
-          "tmf_action": [
-            "Delete"
-          ],
-          "tmf_domain": "DOME",
-          "tmf_function": "ProductOffering",
-          "tmf_type": "Domain"
-        }
-      ]
-    },
-    {
-      "id": "cred-1715851082394",
-      "status": "issued",
-      "name": "test teo",
-      "updated": "2024-05-16",
-      "mandatee": {
-        "id": "",
-        "first_name": "test",
-        "last_name": "teo",
-        "email": "test@gmail.com",
-        "mobile_phone": "+34 007007007"
-      },
-      "mandator": {
-        "organizationIdentifier": "VATES-B60645900",
-        "organization": "IN2, Ingeniería de la Información, S.L.",
-        "commonName": "IN2",
-        "emailAddress": "rrhh@in2.es",
-        "serialNumber": "B60645900",
-        "country": "ES"
-      },
-      "powers": [
-        {
-          "id": "Onboarding",
-          "tmf_action": [
-            "Update",
-            "Delete"
-          ],
-          "tmf_domain": "DOME",
-          "tmf_function": "Onboarding",
-          "tmf_type": "Domain"
-        }
-      ]
-    },
-    {
-      "id": "cred-1715851100730",
-      "status": "issued",
-      "name": "test teo",
-      "updated": "2024-05-16",
-      "mandatee": {
-        "id": "",
-        "first_name": "test",
-        "last_name": "teo",
-        "email": "test@gmail.com",
-        "mobile_phone": "+34 007007007"
-      },
-      "mandator": {
-        "organizationIdentifier": "VATES-B60645900",
-        "organization": "IN2, Ingeniería de la Información, S.L.",
-        "commonName": "IN2",
-        "emailAddress": "rrhh@in2.es",
-        "serialNumber": "B60645900",
-        "country": "ES"
-      },
-      "powers": [
-        {
-          "id": "Onboarding",
-          "tmf_action": [
-            "Execute",
-            "Create"
-          ],
-          "tmf_domain": "DOME",
-          "tmf_function": "Onboarding",
-          "tmf_type": "Domain"
+        "mandator": {
+          "organizationIdentifier": "VATES-B60645900",
+          "organization": "IN2, Ingeniería de la Información, S.L.",
+          "commonName": "IN2",
+          "emailAddress": "rrhh@in2.es",
+          "serialNumber": "B60645900",
+          "country": "ES"
         },
-        {
-          "id": "ProductOffering",
-          "tmf_action": [
-            "Update",
-            "Delete"
-          ],
-          "tmf_domain": "DOME",
-          "tmf_function": "ProductOffering",
-          "tmf_type": "Domain"
-        }
-      ]
+        "powers": [
+          {
+            "id": "Onboarding",
+            "tmf_action": [
+              "Execute",
+              "Create",
+              "Update",
+              "Delete"
+            ],
+            "tmf_domain": "DOME",
+            "tmf_function": "Onboarding",
+            "tmf_type": "Domain"
+          },
+          {
+            "id": "ProductOffering",
+            "tmf_action": [
+              "Delete"
+            ],
+            "tmf_domain": "DOME",
+            "tmf_function": "ProductOffering",
+            "tmf_type": "Domain"
+          }
+        ]
+      }
     }
   ]
 }
