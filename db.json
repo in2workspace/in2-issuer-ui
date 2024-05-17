@@ -1,14 +1,15 @@
 {
   "credentialProcedures": [
     {
-      "procedure_id": "proc-1715848905935",
-      "name": "James Bond",
+      "id": "3756",
+      "procedure_id": "proc-1715934667669",
+      "name": "james Bond",
       "status": "issued",
-      "updated": "2024-05-16",
+      "updated": "2024-05-17",
       "credential": {
         "mandatee": {
           "id": "",
-          "first_name": "James",
+          "first_name": "james",
           "last_name": "Bond",
           "email": "007@gmail.com",
           "mobile_phone": "+44 007007007"
@@ -37,7 +38,7 @@
           {
             "id": "ProductOffering",
             "tmf_action": [
-              "Delete"
+              "Execute"
             ],
             "tmf_domain": "DOME",
             "tmf_function": "ProductOffering",

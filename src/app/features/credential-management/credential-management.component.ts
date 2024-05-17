@@ -1,9 +1,9 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { CredentialManagement } from 'src/app/core/models/credentialManagement.interface';
 import { Router } from '@angular/router';
-import { CredentialManagementService } from '../../core/services/credential-management.service';
+import { CredentialProcedure } from 'src/app/core/models/credentialProcedure.interface';
+import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 
 @Component({
   selector: 'app-credential-management',
@@ -13,10 +13,10 @@ import { CredentialManagementService } from '../../core/services/credential-mana
 export class CredentialManagementComponent implements AfterViewInit {
   @ViewChild(MatPaginator) public paginator!: MatPaginator;
   public displayedColumns: string[] = ['status', 'name', 'updated'];
-  public dataSource = new MatTableDataSource<CredentialManagement>();
+  public dataSource = new MatTableDataSource<CredentialProcedure>();
 
   public constructor(
-    private credentialManagementService: CredentialManagementService,
+    private credentialProcedureService: CredentialProcedureService,
     private router: Router
   ) {}
 
@@ -26,7 +26,7 @@ export class CredentialManagementComponent implements AfterViewInit {
   }
 
   public loadCredentialData(): void {
-    this.credentialManagementService.getCredentials().subscribe({
+    this.credentialProcedureService.getCredentialProcedures().subscribe({
       next: (data) => {
         this.dataSource.data = data;
       },
@@ -40,7 +40,7 @@ export class CredentialManagementComponent implements AfterViewInit {
     this.router.navigate(['/credentialIssuance']);
   }
 
-  public goToCredentialDetails(element: CredentialManagement): void {
-    this.router.navigate(['/credentialManagement/details', element.id]);
+  public goToCredentialDetails(element: CredentialProcedure): void {
+    this.router.navigate(['/credentialManagement/details', element.procedure_id]);
   }
 }

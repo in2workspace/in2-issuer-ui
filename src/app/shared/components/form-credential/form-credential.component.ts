@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CredentialMandatee } from 'src/app/core/models/credendentialMandatee.interface';
-import { CredentialManagement } from 'src/app/core/models/credentialManagement.interface';
+import { CredentialProcedure } from 'src/app/core/models/credentialProcedure.interface';
 import { Mandator } from 'src/app/core/models/madator.interface';
 import { Power } from 'src/app/core/models/power.interface';
 import { AlertService } from 'src/app/core/services/alert.service';
-import { CredentialissuanceService } from 'src/app/core/services/credentialissuance.service';
+import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { MandatorService } from 'src/app/core/services/mandator.service';
 
 interface TempPower {
@@ -67,7 +67,7 @@ export class FormCredentialComponent implements OnInit {
   public credentialForm!: FormGroup;
 
   public constructor(
-    private credentialService: CredentialissuanceService,
+    private credentialProcedureService: CredentialProcedureService,
     private mandatorService: MandatorService,
     private alertService: AlertService,
     private fb: FormBuilder
@@ -112,7 +112,7 @@ export class FormCredentialComponent implements OnInit {
     };
   }
 
-  public addOption() {
+  public addOption(): void {
     if (this.isDisabled) return;
 
     if (this.addedOptions.some((option) => option.id === this.selectedOption)) {
@@ -144,7 +144,7 @@ export class FormCredentialComponent implements OnInit {
     this.selectedOption = selectElement.value;
   }
 
-  public submitCredential() {
+  public submitCredential(): void {
     if (this.isDisabled) return;
     this.credential.mobile_phone = `+${this.selectedCountry} ${this.credential.mobile_phone}`;
 
@@ -164,41 +164,36 @@ export class FormCredentialComponent implements OnInit {
       };
     });
 
-    const mockMandator: Mandator = {
-      organizationIdentifier: 'VATES-B60645900',
-      organization: 'IN2, Ingeniería de la Información, S.L.',
-      commonName: 'IN2',
-      emailAddress: 'rrhh@in2.es',
-      serialNumber: 'B60645900',
-      country: 'ES'
-    };
-
-    const credentialManagement: CredentialManagement = {
-      id: 'cred-' + new Date().getTime(),
-      status: 'issued',
+    const credentialProcedure: CredentialProcedure = {
+      procedure_id: 'proc-' + new Date().getTime(),
       name: `${this.credential.first_name} ${this.credential.last_name}`,
+      status: 'issued',
       updated: new Date().toISOString().split('T')[0],
-      mandatee: this.credential,
-      mandator: mockMandator,
-      powers: powers
+      credential: {
+        mandatee: this.credential,
+        mandator: this.mandator!,
+        powers: powers
+      }
     };
 
-    this.credentialService.createCredential(credentialManagement).subscribe({
+    this.credentialProcedureService.saveCredentialProcedure(credentialProcedure).subscribe({
       next: () => {
+        this.alertService.showAlert('Credential created successfully!', 'success');
         this.resetForm();
       },
-      error: (error) => {
+      error: (error: any) => {
         this.alertService.showAlert('Error creating credential: ' + error, 'error');
       },
     });
   }
 
-  public triggerSendReminder() {
+  public triggerSendReminder(): void {
     this.sendReminder.emit();
   }
 
-  private resetForm() {
+  private resetForm(): void {
     this.credential = { id: '', first_name: '', last_name: '', email: '', mobile_phone: '' };
     this.addedOptions = [];
+    this.credentialForm.reset();
   }
 }

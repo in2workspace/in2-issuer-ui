@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CredentialManagement } from 'src/app/core/models/credentialManagement.interface';
-import { CredentialManagementService } from '../../../../core/services/credential-management.service';
+import { CredentialProcedure } from 'src/app/core/models/credentialProcedure.interface';
+import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 
 @Component({
   selector: 'app-credential-detail',
@@ -10,14 +10,14 @@ import { CredentialManagementService } from '../../../../core/services/credentia
 })
 export class CredentialDetailComponent implements OnInit {
   public credentialId: string | null = null;
-  public credential: CredentialManagement | null = null;
+  public credential: CredentialProcedure | null = null;
 
   public constructor(
     private route: ActivatedRoute,
-    private credentialManagementService: CredentialManagementService
+    private credentialProcedureService: CredentialProcedureService
   ) {}
 
-  public ngOnInit() {
+  public ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       this.credentialId = params.get('id');
       if (this.credentialId) {
@@ -26,24 +26,25 @@ export class CredentialDetailComponent implements OnInit {
     });
   }
 
-  public loadCredentialDetail(id: string): void {
-    this.credentialManagementService.getCredentialById(id).subscribe({
-      next: (credential) => {
-        this.credential = credential;
+  public loadCredentialDetail(procedureId: string): void {
+    this.credentialProcedureService.getCredentialProcedureById(procedureId).subscribe({
+      next: (credentials: CredentialProcedure[]) => {
+        this.credential = credentials.length > 0 ? credentials[0] : null;
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error fetching credential details', error);
       }
     });
   }
 
+
   public sendReminder(): void {
     if (this.credentialId) {
-      this.credentialManagementService.sendReminder(this.credentialId).subscribe({
-        next: (response) => {
+      this.credentialProcedureService.sendReminder(this.credentialId).subscribe({
+        next: (response: any) => {
           console.log('Reminder sent successfully', response);
         },
-        error: (error) => {
+        error: (error: any) => {
           console.error('Error sending reminder', error);
         }
       });
