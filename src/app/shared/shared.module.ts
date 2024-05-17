@@ -6,17 +6,20 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { PowerComponent } from './components/power/power/power.component';
 
 
 
 @NgModule({
   declarations: [
     FormCredentialComponent,
-    NavbarComponent
+    NavbarComponent,
+    PowerComponent
+
   ],
   imports: [
     CommonModule, MaterialModule, FormsModule, RouterModule, TranslateModule, ReactiveFormsModule
   ],
-  exports:[CommonModule,MaterialModule, FormsModule,FormCredentialComponent, NavbarComponent]
+  exports:[CommonModule,MaterialModule, FormsModule,FormCredentialComponent, NavbarComponent, PowerComponent]
 })
 export class SharedModule { }

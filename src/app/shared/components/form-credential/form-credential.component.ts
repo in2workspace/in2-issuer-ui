@@ -6,17 +6,7 @@ import { Mandator } from 'src/app/core/models/madator.interface';
 import { Power } from 'src/app/core/models/power.interface';
 import { AlertService } from 'src/app/core/services/alert.service';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
-
-interface TempPower {
-  tmf_action: string[];
-  tmf_domain: string;
-  tmf_function: string;
-  tmf_type: string;
-  execute: boolean;
-  create: boolean;
-  update: boolean;
-  delete: boolean;
-}
+import { TempPower } from '../power/power/power.component';
 
 @Component({
   selector: 'app-form-credential',
@@ -104,30 +94,9 @@ export class FormCredentialComponent implements OnInit {
     };
   }
 
-  public addOption(): void {
+  public addOption(options: TempPower[]): void {
     if (this.isDisabled) return;
-
-    if (this.addedOptions.some((option) => option.tmf_function === this.selectedOption)) {
-      alert('This option has already been added.');
-      return;
-    }
-    if (!this.selectedOption) {
-      alert('Please select an option.');
-      return;
-    }
-
-    const newOption: TempPower = {
-      tmf_action: [],
-      tmf_domain: 'DOME',
-      tmf_function: this.selectedOption,
-      tmf_type: 'Domain',
-      execute: false,
-      create: false,
-      update: false,
-      delete: false,
-    };
-    this.addedOptions.push(newOption);
-    this.selectedOption = '';
+    this.addedOptions = options;
   }
 
   public handleSelectChange(event: Event): void {
