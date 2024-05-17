@@ -1,13 +1,13 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CredentialMandatee } from 'src/app/core/models/credendentialMandatee.interface';
-import { CredentialProcedure } from 'src/app/core/models/credentialProcedure.interface';
 import { Mandator } from 'src/app/core/models/madator.interface';
 import { Power } from 'src/app/core/models/power.interface';
 import { AlertService } from 'src/app/core/services/alert.service';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { TempPower } from '../power/power/power.component';
-import { Country, CountryService } from '../../services/country.service';
+import { Country, CountryService } from './services/country.service';
+import { FormCredentialService } from './services/form-credential.service';
 
 @Component({
   selector: 'app-form-credential',
@@ -42,7 +42,8 @@ export class FormCredentialComponent implements OnInit {
     private credentialProcedureService: CredentialProcedureService,
     private alertService: AlertService,
     private fb: FormBuilder,
-    private countryService: CountryService
+    private countryService: CountryService,
+    private formCredentialService: FormCredentialService
   ) {
     this.countries = this.countryService.getCountries();
   }
@@ -65,73 +66,28 @@ export class FormCredentialComponent implements OnInit {
     });
 
     if (this.viewMode === 'detail') {
-      this.tempPowers = this.powers.map(power => this.convertToTempPower(power));
+      this.tempPowers = this.powers.map(power => this.formCredentialService.convertToTempPower(power));
     }
   }
 
-  public convertToTempPower(power: Power): TempPower {
-    return {
-      tmf_action: power.tmf_action,
-      tmf_domain: power.tmf_domain,
-      tmf_function: power.tmf_function,
-      tmf_type: power.tmf_type,
-      execute: power.tmf_action.includes('Execute'),
-      create: power.tmf_action.includes('Create'),
-      update: power.tmf_action.includes('Update'),
-      delete: power.tmf_action.includes('Delete')
-    };
-  }
-
   public addOption(options: TempPower[]): void {
-    if (this.isDisabled) return;
-    this.addedOptions = options;
+    this.addedOptions = this.formCredentialService.addOption(this.addedOptions, options, this.isDisabled);
   }
 
   public handleSelectChange(event: Event): void {
-    const selectElement = event.target as HTMLSelectElement;
-    this.selectedOption = selectElement.value;
+    this.selectedOption = this.formCredentialService.handleSelectChange(event);
   }
 
   public submitCredential(): void {
-    if (this.isDisabled) return;
-    this.credential.mobile_phone = `+${this.selectedCountry} ${this.credential.mobile_phone}`;
-
-    const powers: Power[] = this.addedOptions.map(option => {
-      const tmf_action: string[] = [];
-      if (option.execute) tmf_action.push('Execute');
-      if (option.create) tmf_action.push('Create');
-      if (option.update) tmf_action.push('Update');
-      if (option.delete) tmf_action.push('Delete');
-
-      return {
-        tmf_action,
-        tmf_domain: option.tmf_domain,
-        tmf_function: option.tmf_function,
-        tmf_type: option.tmf_type
-      };
-    });
-
-    const credentialProcedure: CredentialProcedure = {
-      procedure_id: 'proc-' + new Date().getTime(),
-      full_name: `${this.credential.first_name} ${this.credential.last_name}`,
-      status: 'issued',
-      updated: new Date().toISOString().split('T')[0],
-      credential: {
-        mandatee: this.credential,
-        mandator: this.mandator!,
-        powers: powers
-      }
-    };
-
-    this.credentialProcedureService.saveCredentialProcedure(credentialProcedure).subscribe({
-      next: () => {
-        this.alertService.showAlert('Credential created successfully!', 'success');
-        this.resetForm();
-      },
-      error: (error: unknown) => {
-        this.alertService.showAlert('Error creating credential: ' + error, 'error');
-      },
-    });
+    this.formCredentialService.submitCredential(
+      this.credential,
+      this.selectedCountry,
+      this.addedOptions,
+      this.mandator,
+      this.credentialProcedureService,
+      this.alertService,
+      this.resetForm.bind(this)
+    );
   }
 
   public triggerSendReminder(): void {
@@ -139,7 +95,7 @@ export class FormCredentialComponent implements OnInit {
   }
 
   private resetForm(): void {
-    this.credential = { first_name: '', last_name: '', email: '', mobile_phone: '' };
+    this.credential = this.formCredentialService.resetForm();
     this.addedOptions = [];
     this.credentialForm.reset();
   }

@@ -84,6 +84,46 @@
           }
         ]
       }
+    },
+    {
+      "id": "1493",
+      "procedure_id": "proc-1715948632692",
+      "full_name": "james Bond",
+      "status": "issued",
+      "updated": "2024-05-17",
+      "credential": {
+        "mandatee": {
+          "first_name": "james",
+          "last_name": "Bond",
+          "email": "007@gmail.com",
+          "mobile_phone": "+44 007007007"
+        },
+        "mandator": null,
+        "powers": [
+          {
+            "tmf_action": [
+              "Execute",
+              "Create",
+              "Update",
+              "Delete"
+            ],
+            "tmf_domain": "DOME",
+            "tmf_function": "Onboarding",
+            "tmf_type": "Domain"
+          },
+          {
+            "tmf_action": [
+              "Execute",
+              "Create",
+              "Update",
+              "Delete"
+            ],
+            "tmf_domain": "DOME",
+            "tmf_function": "ProductOffering",
+            "tmf_type": "Domain"
+          }
+        ]
+      }
     }
   ]
 }
