@@ -12,7 +12,7 @@ import { CredentialProcedureService } from 'src/app/core/services/credential-pro
 })
 export class CredentialManagementComponent implements AfterViewInit {
   @ViewChild(MatPaginator) public paginator!: MatPaginator;
-  public displayedColumns: string[] = ['status', 'name', 'updated'];
+  public displayedColumns: string[] = ['status', 'full_name', 'updated'];
   public dataSource = new MatTableDataSource<CredentialProcedure>();
 
   public constructor(

@@ -161,7 +161,7 @@ export class FormCredentialComponent implements OnInit {
 
     const credentialProcedure: CredentialProcedure = {
       procedure_id: 'proc-' + new Date().getTime(),
-      name: `${this.credential.first_name} ${this.credential.last_name}`,
+      full_name: `${this.credential.first_name} ${this.credential.last_name}`,
       status: 'issued',
       updated: new Date().toISOString().split('T')[0],
       credential: {

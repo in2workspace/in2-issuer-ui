@@ -3,7 +3,7 @@
     {
       "id": "f8fe",
       "procedure_id": "proc-1715939721741",
-      "name": "test Bond",
+      "full_name": "test Bond",
       "status": "issued",
       "updated": "2024-05-17",
       "credential": {
