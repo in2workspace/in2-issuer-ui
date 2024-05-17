@@ -7,6 +7,7 @@ import { Power } from 'src/app/core/models/power.interface';
 import { AlertService } from 'src/app/core/services/alert.service';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { TempPower } from '../power/power/power.component';
+import { Country, CountryService } from '../../services/country.service';
 
 @Component({
   selector: 'app-form-credential',
@@ -32,23 +33,7 @@ export class FormCredentialComponent implements OnInit {
   public addedOptions: TempPower[] = [];
   public tempPowers: TempPower[] = [];
 
-  public countries = [
-    { name: 'Spain', code: '34' },
-    { name: 'Germany', code: '49' },
-    { name: 'France', code: '33' },
-    { name: 'Italy', code: '39' },
-    { name: 'United Kingdom', code: '44' },
-    { name: 'Russia', code: '7' },
-    { name: 'Ukraine', code: '380' },
-    { name: 'Poland', code: '48' },
-    { name: 'Romania', code: '40' },
-    { name: 'Netherlands', code: '31' },
-    { name: 'Belgium', code: '32' },
-    { name: 'Greece', code: '30' },
-    { name: 'Portugal', code: '351' },
-    { name: 'Sweden', code: '46' },
-    { name: 'Norway', code: '47' },
-  ];
+  public countries: Country[] = [];
   public selectedCountry: string = '';
   public actualMobilePhone: string = '';
   public credentialForm!: FormGroup;
@@ -56,8 +41,11 @@ export class FormCredentialComponent implements OnInit {
   public constructor(
     private credentialProcedureService: CredentialProcedureService,
     private alertService: AlertService,
-    private fb: FormBuilder
-  ) {}
+    private fb: FormBuilder,
+    private countryService: CountryService
+  ) {
+    this.countries = this.countryService.getCountries();
+  }
 
   public get mobilePhone(): string {
     return `${this.selectedCountry} ${this.credential.mobile_phone}`;
@@ -140,7 +128,7 @@ export class FormCredentialComponent implements OnInit {
         this.alertService.showAlert('Credential created successfully!', 'success');
         this.resetForm();
       },
-      error: (error: any) => {
+      error: (error: unknown) => {
         this.alertService.showAlert('Error creating credential: ' + error, 'error');
       },
     });
