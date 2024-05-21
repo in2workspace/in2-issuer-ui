@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { AuthService } from 'src/app/core/services/auth.service';
+// import { Router } from '@angular/router';
+// import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -8,15 +8,15 @@ import { AuthService } from 'src/app/core/services/auth.service';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent {
-  public user = '';
-  public password = '';
+  // public user = '';
+  // public password = '';
 
-  public constructor(public authService: AuthService, private router: Router) {}
+  // public constructor(public authService: AuthService, private router: Router) {}
 
-  public login() {
-    this.authService.login();
-  }
-  public navigateToRegister() {
-    this.router.navigate(['/register']);
-  }
+  // public login() {
+  //   this.authService.login();
+  // }
+  // public navigateToRegister() {
+  //   this.router.navigate(['/register']);
+  // }
 }

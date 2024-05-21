@@ -11,7 +11,7 @@ export class AlertService {
     public showAlert(
         messageKey: string,
         alertType: 'error' | 'info' | 'success' | 'warning' = 'info',
-        timeOut = 500000000
+        timeOut = 3000
     ): void {
         this.translate.get(messageKey).subscribe((message) => {
             if (message && message.trim().length > 0) {

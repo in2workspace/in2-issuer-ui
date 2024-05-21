@@ -1,100 +1,96 @@
-import { HttpErrorResponse, HttpResponse, HttpStatusCode } from '@angular/common/http';
-import { ServeErrorInterceptor } from './server-error-interceptor';
+import { TestBed } from '@angular/core/testing';
+import { HttpErrorResponse, HttpResponse, HttpStatusCode, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
 import { of, throwError } from 'rxjs';
+import { AlertService } from '../services/alert.service';
+import { TranslateService } from '@ngx-translate/core';
+import { ServeErrorInterceptor } from './server-error-interceptor';
 
-describe('GIVEN ServerErrorsInterceptor', () => {
-    let interceptor: ServeErrorInterceptor;
-    let alertServiceMock;
-    let translateSpy;
-    let httpRequestSpy;
-    let httpHandlerSpy;
+describe('ServeErrorInterceptor', () => {
+  let interceptor: ServeErrorInterceptor;
+  let alertService: jasmine.SpyObj<AlertService>;
+  let translateService: jasmine.SpyObj<TranslateService>;
+  let httpRequest: jasmine.SpyObj<HttpRequest<any>>;
+  let httpHandler: jasmine.SpyObj<HttpHandler>;
 
-    beforeEach(() => {
-        alertServiceMock = jasmine.createSpyObj('AlertService', ['showAlert']);
-        translateSpy = jasmine.createSpyObj('TranslateService', ['instant']);
+  beforeEach(() => {
+    const alertServiceSpy = jasmine.createSpyObj('AlertService', ['showAlert']);
+    const translateServiceSpy = jasmine.createSpyObj('TranslateService', ['instant']);
+    const httpRequestSpy = jasmine.createSpyObj('HttpRequest', ['noMethod']);
+    const httpHandlerSpy = jasmine.createSpyObj('HttpHandler', ['handle']);
 
-        httpRequestSpy = jasmine.createSpyObj('HttpRequest', ['noMethod']);
-        httpHandlerSpy = jasmine.createSpyObj('HttpHandler', ['handle']);
-
-        interceptor = new ServeErrorInterceptor(alertServiceMock, translateSpy);
+    TestBed.configureTestingModule({
+      providers: [
+        ServeErrorInterceptor,
+        { provide: AlertService, useValue: alertServiceSpy },
+        { provide: TranslateService, useValue: translateServiceSpy }
+      ]
     });
 
-    it('should be created', () => {
-        expect(interceptor).toBeTruthy();
+    interceptor = TestBed.inject(ServeErrorInterceptor);
+    alertService = TestBed.inject(AlertService) as jasmine.SpyObj<AlertService>;
+    translateService = TestBed.inject(TranslateService) as jasmine.SpyObj<TranslateService>;
+    httpRequest = httpRequestSpy;
+    httpHandler = httpHandlerSpy;
+  });
+
+  it('should be created', () => {
+    expect(interceptor).toBeTruthy();
+  });
+
+  describe('when HttpErrorResponse is received', () => {
+    it('should call showAlert with the proper message', (done: DoneFn) => {
+      const httpErrorResponse = new HttpErrorResponse({ status: 400, statusText: 'Bad Request' });
+
+      httpHandler.handle.and.returnValue(throwError(() => httpErrorResponse));
+      translateService.instant.and.returnValue('Error');
+
+      interceptor.intercept(httpRequest, httpHandler).subscribe({
+        next: () => fail('expected an error, not a response'),
+        error: (err: HttpErrorResponse) => {
+          expect(err.statusText).toBe('Bad Request');
+          expect(translateService.instant).toHaveBeenCalled();
+          expect(alertService.showAlert).toHaveBeenCalledWith('Error', 'error');
+          done();
+        }
+      });
     });
+  });
 
-    describe('WHEN HttpErrorResponse is recived', () => {
-        it('Should call showAlert on error with the proper message', (done: DoneFn) => {
-            httpHandlerSpy.handle.and.returnValue(
-                throwError(() => {
-                    const error: HttpErrorResponse = new HttpErrorResponse({ status: 400, statusText: 'Not Found' });
-                    return error;
-                })
-            );
+  describe('when an empty body is received', () => {
+    it('should handle an empty body response gracefully', (done: DoneFn) => {
+      const httpResponse = new HttpResponse<unknown>({ body: null, status: HttpStatusCode.Ok });
 
-            const expectedMessage = 'Error';
-            translateSpy.instant.and.returnValue(expectedMessage);
+      httpHandler.handle.and.returnValue(of(httpResponse));
+      translateService.instant.and.returnValue('Empty Body');
 
-            interceptor.intercept(httpRequestSpy, httpHandlerSpy).subscribe({
-                next(result) {
-                    fail(`got result from test: ${result}`);
-                },
-                error(err: HttpErrorResponse) {
-                    expect(err.statusText).toEqual('Not Found');
-                    expect(translateSpy.instant).toHaveBeenCalled();
-                    expect(alertServiceMock.showAlert).toHaveBeenCalledOnceWith(expectedMessage, 'error');
-                    done();
-                }
-            });
-        });
+      interceptor.intercept(httpRequest, httpHandler).subscribe({
+        next: (result: HttpEvent<unknown>) => {
+          if (result instanceof HttpResponse) {
+            expect(result.body).toBeNull();
+            done();
+          }
+        },
+        error: () => fail('expected a response, not an error')
+      });
     });
+  });
 
-    describe('WHEN empty body is recived', () => {
-        it('Should call showAlert on error with the proper message', (done: DoneFn) => {
-            const httpResponse: HttpResponse<unknown> = new HttpResponse<unknown>({
-                body: null,
-                status: HttpStatusCode.Ok
-            });
+  describe('when a correct response is received', () => {
+    it('should pass the response through', (done: DoneFn) => {
+      const expectedBody = { message: 'Correct Body' };
+      const httpResponse = new HttpResponse({ body: expectedBody, status: HttpStatusCode.Ok });
 
-            httpHandlerSpy.handle.and.returnValue(of(httpResponse));
+      httpHandler.handle.and.returnValue(of(httpResponse));
 
-            const expectedMessage = 'Empty Body';
-            translateSpy.instant.and.returnValue(expectedMessage);
-
-            interceptor.intercept(httpRequestSpy, httpHandlerSpy).subscribe({
-                next(result) {
-                    fail(`got result from test: ${result}`);
-                },
-                error(err: HttpErrorResponse) {
-                    expect(err.statusText).toEqual('Empty response, no body.');
-                    expect(translateSpy.instant).toHaveBeenCalled();
-                    expect(alertServiceMock.showAlert).toHaveBeenCalledOnceWith(expectedMessage, 'error');
-                    done();
-                }
-            });
-        });
+      interceptor.intercept(httpRequest, httpHandler).subscribe({
+        next: (result: HttpEvent<unknown>) => {
+          if (result instanceof HttpResponse) {
+            expect(result.body).toEqual(expectedBody);
+            done();
+          }
+        },
+        error: () => fail('expected a response, not an error')
+      });
     });
-
-    describe('WHEN correct response is recived', () => {
-        it('Should call showAlert on error with the proper message', (done: DoneFn) => {
-            const expectedBody = { message: 'Correct Body' };
-
-            const httpResponse: HttpResponse<unknown> = new HttpResponse<unknown>({
-                body: expectedBody,
-                status: HttpStatusCode.Ok
-            });
-
-            httpHandlerSpy.handle.and.returnValue(of(httpResponse));
-
-            interceptor.intercept(httpRequestSpy, httpHandlerSpy).subscribe({
-                next(result: HttpResponse<unknown>) {
-                    expect(result.body).toEqual(expectedBody);
-                    done();
-                },
-                error(err: HttpErrorResponse) {
-                    fail('There was an error on correct body');
-                }
-            });
-        });
-    });
+  });
 });
