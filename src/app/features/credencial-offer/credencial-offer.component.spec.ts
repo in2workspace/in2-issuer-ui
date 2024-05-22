@@ -29,22 +29,10 @@ describe('CredencialOfferComponent', () => {
         HttpClientTestingModule,
         MaterialModule,
         SharedModule,
-        AuthModule.forRoot({ loader: { provide: StsConfigLoader, useValue: {} } }),
+        AuthModule.forRoot({}),
       ],
       providers: [
         AuthService,
-        {
-          provide: StsConfigLoader,
-          useValue: new StsConfigStaticLoader({
-            authWellknownEndpointUrl: 'http://localhost:4200/assets',
-            postLogoutRedirectUri: 'http://localhost:4200',
-            clientId: 'your-client-id',
-            scope: 'openid profile',
-            responseType: 'code',
-            silentRenew: true,
-            useRefreshToken: true
-          })
-        }
       ]
     })
     .compileComponents();

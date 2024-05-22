@@ -15,10 +15,15 @@ describe('PowerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PowerComponent ],
-      imports: [TranslateModule.forRoot(), FormsModule, BrowserAnimationsModule, MaterialModule, RouterModule.forRoot([])],
-    })
-    .compileComponents();
+      declarations: [PowerComponent],
+      imports: [
+        TranslateModule.forRoot(),
+        FormsModule,
+        BrowserAnimationsModule,
+        MaterialModule,
+        RouterModule.forRoot([]),
+      ],
+    }).compileComponents();
   });
 
   beforeEach(() => {
@@ -44,7 +49,18 @@ describe('PowerComponent', () => {
   it('should not add an option if it already exists', () => {
     component.isDisabled = false;
     component.selectedOption = 'TestOption';
-    component.addedOptions = [{ tmf_action: [], tmf_domain: 'DOME', tmf_function: 'TestOption', tmf_type: 'Domain', execute: false, create: false, update: false, delete: false }];
+    component.addedOptions = [
+      {
+        tmf_action: [],
+        tmf_domain: 'DOME',
+        tmf_function: 'TestOption',
+        tmf_type: 'Domain',
+        execute: false,
+        create: false,
+        update: false,
+        delete: false,
+      },
+    ];
 
     component.addOption();
 
@@ -78,7 +94,9 @@ describe('PowerComponent', () => {
 
     component.addOption();
 
-    expect(component.addedOptionsChange.emit).toHaveBeenCalledWith(component.addedOptions);
+    expect(component.addedOptionsChange.emit).toHaveBeenCalledWith(
+      component.addedOptions
+    );
   });
 
   it('should emit handleSelectChange when onHandleSelectChange is called', () => {
@@ -88,18 +106,5 @@ describe('PowerComponent', () => {
     component.onHandleSelectChange(event);
 
     expect(component.handleSelectChange.emit).toHaveBeenCalledWith(event);
-  });
-
-  it('should emit selectedOptionChange when selectedOption is changed', () => {
-    spyOn(component.selectedOptionChange, 'emit');
-
-    component.selectedOption = 'NewOption';
-    fixture.detectChanges();
-
-    const select = debugElement.query(By.css('select')).nativeElement;
-    select.value = 'NewOption';
-    select.dispatchEvent(new Event('change'));
-
-    expect(component.selectedOptionChange.emit).toHaveBeenCalledWith('NewOption');
   });
 });

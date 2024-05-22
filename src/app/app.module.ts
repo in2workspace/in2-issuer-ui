@@ -13,7 +13,6 @@ import { HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http';
 import { ServeErrorInterceptor } from './core/interceptors/server-error-interceptor';
 import { AlertService } from './core/services/alert.service';
 
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -26,38 +25,37 @@ import { AlertService } from './core/services/alert.service';
     BrowserAnimationsModule,
     TranslateModule.forRoot({
       loader: {
-          provide: TranslateLoader,
-          useFactory: HttpLoaderFactory,
-          deps: [HttpClient]
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
       }
-  }),
+    }),
     AuthModule.forRoot({
       config: {
-        postLoginRoute: '/home',
         authority: environment.loginParams.login_url,
-        redirectUrl: `${window.location.origin}/callback`,
+        redirectUrl: window.location.origin,
         postLogoutRedirectUri: window.location.origin,
         clientId: environment.loginParams.client_id,
         scope: environment.loginParams.scope,
         responseType: environment.loginParams.grant_type,
         silentRenew: true,
         useRefreshToken: true,
-        ignoreNonceAfterRefresh: true,
-        triggerRefreshWhenIdTokenExpired: false,
-        autoUserInfo: false,
         logLevel: LogLevel.Debug,
       },
     }),
   ],
-  providers: [    {
-    provide: HTTP_INTERCEPTORS,
-    useClass: ServeErrorInterceptor,
-    multi: true
-  },
-  AlertService, ],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ServeErrorInterceptor,
+      multi: true
+    },
+    AlertService,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http);
 }
