@@ -98,8 +98,14 @@
               "@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.scss"
             ],
-            "scripts": []
-          }
+            "scripts": [],
+            "codeCoverage": true
+
+          },"configurations": {
+            "ci": {
+              "progress": false,
+              "watch": false
+            }
         },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
