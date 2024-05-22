@@ -101,11 +101,7 @@
             "scripts": [],
             "codeCoverage": true
 
-          },"configurations": {
-            "ci": {
-              "progress": false,
-              "watch": false
-            }
+          }
         },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
