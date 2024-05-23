@@ -74,7 +74,7 @@ export class FormCredentialService {
     const credentialProcedure: CredentialProcedure = {
       procedure_id: 'proc-' + new Date().getTime(),
       full_name: `${credential.first_name} ${credential.last_name}`,
-      status: 'issued',
+      status: 'Withdrawn',
       updated: new Date().toISOString().split('T')[0],
       credential: {
         mandatee: credential,
