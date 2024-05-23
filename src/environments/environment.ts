@@ -9,8 +9,6 @@ export const environment = {
     scope: 'openid profile email offline_access',
     grant_type: 'code'
   },
-  issuer_url: '',
-  issuer_uri: '',
   base_url: 'https://localhost:8088',
   wallet_url: 'https://localhost:4200'
 };
