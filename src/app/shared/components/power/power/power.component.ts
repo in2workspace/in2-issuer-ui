@@ -1,4 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+
 export interface TempPower {
   tmf_action: string[];
   tmf_domain: string;
@@ -38,16 +39,32 @@ export class PowerComponent {
       return;
     }
 
-    const newOption: TempPower = {
-      tmf_action: [],
-      tmf_domain: 'DOME',
-      tmf_function: this.selectedOption,
-      tmf_type: 'Domain',
-      execute: false,
-      create: false,
-      update: false,
-      delete: false,
-    };
+    let newOption: TempPower;
+
+    if (this.selectedOption === 'DomePlatform') {
+      newOption = {
+        tmf_action: ["Operator", "Customer", "Provider"],
+        tmf_domain: 'DOME',
+        tmf_function: this.selectedOption,
+        tmf_type: 'Domain',
+        execute: false,
+        create: false,
+        update: false,
+        delete: false,
+      };
+    } else {
+      newOption = {
+        tmf_action: ["Execute", "Create", "Update", "Delete"],
+        tmf_domain: 'DOME',
+        tmf_function: this.selectedOption,
+        tmf_type: 'Domain',
+        execute: false,
+        create: false,
+        update: false,
+        delete: false,
+      };
+    }
+
     this.addedOptions.push(newOption);
     this.addedOptionsChange.emit(this.addedOptions);
     this.selectedOption = '';

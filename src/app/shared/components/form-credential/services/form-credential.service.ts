@@ -16,9 +16,9 @@ export class FormCredentialService {
       tmf_domain: power.tmf_domain,
       tmf_function: power.tmf_function,
       tmf_type: power.tmf_type,
-      execute: power.tmf_action.includes('Execute'),
-      create: power.tmf_action.includes('Create'),
-      update: power.tmf_action.includes('Update'),
+      execute: power.tmf_action.includes('Execute') || power.tmf_action.includes('Operator'),
+      create: power.tmf_action.includes('Create') || power.tmf_action.includes('Customer'),
+      update: power.tmf_action.includes('Update') || power.tmf_action.includes('Provider'),
       delete: power.tmf_action.includes('Delete')
     };
   }
@@ -42,7 +42,9 @@ export class FormCredentialService {
     selectedCountry: string,
     addedOptions: TempPower[],
     mandator: Mandator | null,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     credentialProcedureService: any,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     alertService: any,
     resetForm: () => void
   ): void {
@@ -50,10 +52,16 @@ export class FormCredentialService {
 
     const powers: Power[] = addedOptions.map(option => {
       const tmf_action: string[] = [];
-      if (option.execute) tmf_action.push('Execute');
-      if (option.create) tmf_action.push('Create');
-      if (option.update) tmf_action.push('Update');
-      if (option.delete) tmf_action.push('Delete');
+      if (option.tmf_function === 'DomePlatform') {
+        if (option.execute) tmf_action.push('Operator');
+        if (option.create) tmf_action.push('Customer');
+        if (option.update) tmf_action.push('Provider');
+      } else {
+        if (option.execute) tmf_action.push('Execute');
+        if (option.create) tmf_action.push('Create');
+        if (option.update) tmf_action.push('Update');
+        if (option.delete) tmf_action.push('Delete');
+      }
 
       return {
         tmf_action,
