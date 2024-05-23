@@ -10,5 +10,6 @@ export const environment = {
     grant_type: 'code'
   },
   base_url: 'https://localhost:8088',
-  wallet_url: 'https://localhost:4200'
+  wallet_url: 'https://localhost:4200',
+  api_base_url: '/api/v1/credentials'
 };

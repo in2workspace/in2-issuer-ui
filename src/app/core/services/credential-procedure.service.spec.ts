@@ -2,10 +2,12 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { CredentialProcedureService } from './credential-procedure.service';
 import { CredentialProcedure } from '../models/credentialProcedure.interface';
+import { environment } from 'src/environments/environment';
 
 describe('CredentialProcedureService', () => {
   let service: CredentialProcedureService;
   let httpMock: HttpTestingController;
+  const apiUrl = `${environment.base_url}${environment.api_base_url}`;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -36,7 +38,7 @@ describe('CredentialProcedureService', () => {
       expect(data).toEqual(mockData);
     });
 
-    const req = httpMock.expectOne('http://localhost:3000/credentialProcedures');
+    const req = httpMock.expectOne(apiUrl);
     expect(req.request.method).toBe('GET');
     req.flush(mockData);
   });
@@ -52,7 +54,7 @@ describe('CredentialProcedureService', () => {
       expect(data).toEqual(mockData);
     });
 
-    const req = httpMock.expectOne(`http://localhost:3000/credentialProcedures?procedure_id=${procedureId}`);
+    const req = httpMock.expectOne(`${apiUrl}?procedure_id=${procedureId}`);
     expect(req.request.method).toBe('GET');
     req.flush(mockData);
   });
@@ -66,7 +68,7 @@ describe('CredentialProcedureService', () => {
       expect(data).toEqual(mockData);
     });
 
-    const req = httpMock.expectOne('http://localhost:3000/credentialProcedures');
+    const req = httpMock.expectOne(apiUrl);
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual(mockData);
     req.flush(mockData);
@@ -79,7 +81,7 @@ describe('CredentialProcedureService', () => {
       expect(data).toBeTruthy();
     });
 
-    const req = httpMock.expectOne(`http://localhost:3000/credentialProcedures/${procedureId}/sendReminder`);
+    const req = httpMock.expectOne(`${apiUrl}/${procedureId}/sendReminder`);
     expect(req.request.method).toBe('POST');
     req.flush({});
   });

@@ -9,4 +9,5 @@ export const environment = {
   },
   base_url: window["env"]["base_url"] || 'https://localhost:8088',
   wallet_url: window["env"]["wallet_url"] || 'https://localhost:4200'
+  api_base_url: window["env"]["api_base_url"] || '/api/v1/credentials'
 };

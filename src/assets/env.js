@@ -8,4 +8,5 @@
     window["env"]["grant_type"] = "code";
     window["env"]["base_url"] = "https://localhost:8088";
     window["env"]["wallet_url"] = "https://localhost:4200";
+    window["env"]["api_base_url"] = "/api/v1/credentials";
   })(this);
