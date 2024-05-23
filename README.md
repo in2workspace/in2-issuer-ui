@@ -1,27 +1,62 @@
-# CredentialIssuerUi
+<div align="center">
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.0.0.
+<h1>Issuer UI</h1>
+<span>by </span><a href="https://in2.es">in2.es</a>
+<p><p>
 
-## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_credential-issuer-ui&metric=alert_status)](https://sonarcloud.io/dashboard?id=in2workspace_credential-issuer-ui)
 
-## Code scaffolding
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_credential-issuer-ui&metric=bugs)](https://sonarcloud.io/summary/new_code?id=in2workspace_credential-issuer-ui)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_credential-issuer-ui&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=in2workspace_credential-issuer-ui)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_credential-issuer-ui&metric=security_rating)](https://sonarcloud.io/dashboard?id=in2workspace_credential-issuer-ui)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_credential-issuer-ui&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=in2workspace_credential-issuer-ui)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_credential-issuer-ui&metric=ncloc)](https://sonarcloud.io/dashboard?id=in2workspace_credential-issuer-ui)
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_credential-issuer-ui&metric=coverage)](https://sonarcloud.io/summary/new_code?id=in2workspace_credential-issuer-ui)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_credential-issuer-ui&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=in2workspace_credential-issuer-ui)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_credential-issuer-ui&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=in2workspace_credential-issuer-ui)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_credential-issuer-ui&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=in2workspace_credential-issuer-ui)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_credential-issuer-ui&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=in2workspace_credential-issuer-ui)
 
-## Build
+</div>
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+# Introduction 
+IN2 Issuer UI is the presentation side application for the IN2 Issuer project. It is a Angular application. 
 
-## Running unit tests
+## Architecture
+The application is based on the following architecture:
+### Issuer UI 
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Main Features
+// TODO: Add the main features of the application
+·Landing Page
 
-## Running end-to-end tests
+# Getting Started
+This aplication is developed, builded and tested in Visual Studio Code 
+1. Clone the repository:
+```git clone https://github.com/in2workspace/issuer-ui.git```
+2. Install dependencies:
+```npm install```
+1. Start aplication in local development
+```npm start```
+1. Build docker image
+```docker build -t issuer-ui .```
+1. Run docker image
+```docker run -p 4200:8088 -e login_url=http://yourdomain.com -e wallet_url=http://yourdomain.com issuer-ui```
+# Customization
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
 
-## Further help
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+# Build and Test
+We have 3 different ways to build and test the project depending on the selected Spring Boot profile.
+- `test` profile: This profile is used for unit testing. It uses an in-memory database and does not require any external dependencies.
+- `local` profile: This profile is used for local development. It uses an in-memory database and generates default data to test the application. You need to run a set of docker containers to run the application (Orion Context Broker and MongoDb).
+- `local-docker` profile: This profile is used for local development. It uses a dockerized database and generates default data to test the application.
+- `dev` profile: This profile is used for development. It uses a dockerized database and generates default data to test the application.
+- `docker` you can set environment variables dinamicaly using '-e WCA_URL=http://yourdomain.com' all the diferent environment variables are WCA_URL, DATA_URL, LOGIN_URL, REGISTER_URL, EXECCONT_URI, VP_URL, CRED_URI, CREDID_URI, USER_URI
+# Contribute
+
+# License
+
+# Documentation
