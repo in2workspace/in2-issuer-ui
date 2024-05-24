@@ -62,6 +62,6 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
           DOCKER_HUB_CLIENT_NAME: ${{ secrets.DOCKER_HUB_CLIENT_NAME }}
-          COMPONENT_NAME: credential-issuer-ui
+          COMPONENT_NAME: issuer-ui
           VERSION: ${{ '0.6.0' }}
           SUFFIX: -SNAPSHOT
