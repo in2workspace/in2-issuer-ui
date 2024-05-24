@@ -43,39 +43,20 @@ export class PowerComponent {
       return;
     }
 
-    let newOption: TempPower;
-
-    if (this.selectedOption === 'DomePlatform') {
-      newOption = {
-        tmf_action: [],
-        tmf_domain: 'DOME',
-        tmf_function: this.selectedOption,
-        tmf_type: 'Domain',
-        execute: false,
-        create: false,
-        update: false,
-        delete: false,
-        operator: false,
-        customer: false,
-        provider: false,
-        marketplace: false,
-      };
-    } else {
-      newOption = {
-        tmf_action: [],
-        tmf_domain: 'DOME',
-        tmf_function: this.selectedOption,
-        tmf_type: 'Domain',
-        execute: false,
-        create: false,
-        update: false,
-        delete: false,
-        operator: false,
-        customer: false,
-        provider: false,
-        marketplace: false,
-      };
-    }
+    const newOption: TempPower = {
+      tmf_action: [],
+      tmf_domain: 'DOME',
+      tmf_function: this.selectedOption,
+      tmf_type: 'Domain',
+      execute: false,
+      create: false,
+      update: false,
+      delete: false,
+      operator: false,
+      customer: false,
+      provider: false,
+      marketplace: false,
+    };
 
     this.addedOptions.push(newOption);
     this.addedOptionsChange.emit(this.addedOptions);
