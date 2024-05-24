@@ -60,18 +60,18 @@ export class PowerComponent {
 
     switch(this.selectedOption) {
       case 'Marketplace':
-        newOption.operator ;
-        newOption.customer ;
-        newOption.provider ;
-        newOption.marketplace ;
+        newOption.operator = false;
+        newOption.customer = false;
+        newOption.provider = false;
+        newOption.marketplace = false;
         break;
       case 'ProductOffering':
-        newOption.create ;
-        newOption.update ;
-        newOption.delete ;
+        newOption.create = false;
+        newOption.update = false;
+        newOption.delete = false;
         break;
       case 'Onboarding':
-        newOption.execute ;
+        newOption.execute = false;
         break;
       default:
         break;
