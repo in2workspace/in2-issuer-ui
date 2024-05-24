@@ -86,11 +86,6 @@ export class FormCredentialComponent implements OnInit {
   }
 
   public submitCredential(): void {
-    console.log('Submitting Credential Form');
-    console.log('Credential:', this.credential);
-    console.log('Selected Country:', this.selectedCountry);
-    console.log('Added Options:', this.addedOptions);
-    console.log('Mandator:', this.mandator);
     this.formCredentialService.submitCredential(
       this.credential,
       this.selectedCountry,

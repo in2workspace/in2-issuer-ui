@@ -53,7 +53,7 @@ export class FormCredentialService {
   ): void {
     credential.mobile_phone = `+${selectedCountry} ${credential.mobile_phone}`;
 
-    const powers: Power[] = addedOptions.map(option => {
+    const power: Power[] = addedOptions.map(option => {
       const tmf_action: string[] = [];
       if (option.execute) tmf_action.push('Execute');
       if (option.create) tmf_action.push('Create');
@@ -76,7 +76,7 @@ export class FormCredentialService {
       credential: {
         mandatee: credential,
         mandator: mandator!,
-        powers: powers
+        power: power
       }
     };
 
