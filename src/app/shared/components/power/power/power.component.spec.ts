@@ -89,19 +89,45 @@ describe('PowerComponent', () => {
     expect(component.addedOptions[0].tmf_function).toBe('NewOption');
   });
 
-  it('should add a "DomePlatform" option with correct properties', () => {
+  it('should add a "Marketplace" option with correct properties', () => {
     component.isDisabled = false;
-    component.selectedOption = 'DomePlatform';
+    component.selectedOption = 'Marketplace';
 
     component.addOption();
 
     expect(component.addedOptions.length).toBe(1);
     const addedOption = component.addedOptions[0];
-    expect(addedOption.tmf_function).toBe('DomePlatform');
+    expect(addedOption.tmf_function).toBe('Marketplace');
     expect(addedOption.operator).toBe(false);
     expect(addedOption.customer).toBe(false);
     expect(addedOption.provider).toBe(false);
     expect(addedOption.marketplace).toBe(false);
+  });
+
+  it('should add a "ProductOffering" option with correct properties', () => {
+    component.isDisabled = false;
+    component.selectedOption = 'ProductOffering';
+
+    component.addOption();
+
+    expect(component.addedOptions.length).toBe(1);
+    const addedOption = component.addedOptions[0];
+    expect(addedOption.tmf_function).toBe('ProductOffering');
+    expect(addedOption.create).toBe(false);
+    expect(addedOption.update).toBe(false);
+    expect(addedOption.delete).toBe(false);
+  });
+
+  it('should add an "Onboarding" option with correct properties', () => {
+    component.isDisabled = false;
+    component.selectedOption = 'Onboarding';
+
+    component.addOption();
+
+    expect(component.addedOptions.length).toBe(1);
+    const addedOption = component.addedOptions[0];
+    expect(addedOption.tmf_function).toBe('Onboarding');
+    expect(addedOption.execute).toBe(false);
   });
 
   it('should emit addedOptionsChange when an option is added', () => {
