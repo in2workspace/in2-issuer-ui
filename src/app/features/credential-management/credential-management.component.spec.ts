@@ -111,7 +111,7 @@ describe('CredentialManagementComponent', () => {
         serialNumber: 'SN123456',
         country: 'CountryA',
       },
-      powers: [
+      power: [
         {
           tmf_action: ['action1', 'action2'],
           tmf_domain: 'domain1',
@@ -181,7 +181,7 @@ describe('CredentialManagementComponent', () => {
         serialNumber: 'SN123456',
         country: 'CountryA',
       },
-      powers: [
+      power: [
         {
           tmf_action: ['action1', 'action2'],
           tmf_domain: 'domain1',

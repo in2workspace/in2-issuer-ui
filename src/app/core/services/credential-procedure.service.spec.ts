@@ -29,8 +29,8 @@ describe('CredentialProcedureService', () => {
 
   it('should fetch credential procedures successfully', () => {
     const mockData: CredentialProcedure[] = [
-      { procedure_id: '1', status: 'completed', full_name: 'John Doe', updated: '2023-01-01', credential: { mandatee: {}, mandator: {}, powers: [] } as any },
-      { procedure_id: '2', status: 'pending', full_name: 'Jane Doe', updated: '2023-01-02', credential: { mandatee: {}, mandator: {}, powers: [] } as any }
+      { procedure_id: '1', status: 'completed', full_name: 'John Doe', updated: '2023-01-01', credential: { mandatee: {}, mandator: {}, power: [] } as any },
+      { procedure_id: '2', status: 'pending', full_name: 'Jane Doe', updated: '2023-01-02', credential: { mandatee: {}, mandator: {}, power: [] } as any }
     ];
 
     service.getCredentialProcedures().subscribe(data => {
@@ -46,7 +46,7 @@ describe('CredentialProcedureService', () => {
   it('should fetch credential procedure by id successfully', () => {
     const procedureId = '1';
     const mockData: CredentialProcedure[] = [
-      { procedure_id: '1', status: 'completed', full_name: 'John Doe', updated: '2023-01-01', credential: { mandatee: {}, mandator: {}, powers: [] } as any }
+      { procedure_id: '1', status: 'completed', full_name: 'John Doe', updated: '2023-01-01', credential: { mandatee: {}, mandator: {}, power: [] } as any }
     ];
 
     service.getCredentialProcedureById(procedureId).subscribe(data => {
@@ -61,7 +61,7 @@ describe('CredentialProcedureService', () => {
 
   it('should save credential procedure successfully', () => {
     const mockData: CredentialProcedure = {
-      procedure_id: '1', status: 'completed', full_name: 'John Doe', updated: '2023-01-01', credential: { mandatee: {}, mandator: {}, powers: [] } as any
+      procedure_id: '1', status: 'completed', full_name: 'John Doe', updated: '2023-01-01', credential: { mandatee: {}, mandator: {}, power: [] } as any
     };
 
     service.saveCredentialProcedure(mockData).subscribe(data => {

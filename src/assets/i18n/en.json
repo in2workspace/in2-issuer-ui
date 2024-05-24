@@ -30,7 +30,7 @@
     "cancel": "Cancel",
     "create" : "Create Credential"
   },
-    "powers": {
+    "power": {
       "power": "Powers",
       "domain": "Domain",
       "dome": "dome",

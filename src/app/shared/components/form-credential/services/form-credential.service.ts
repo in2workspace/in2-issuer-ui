@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { TempPower } from '../../power/power/power.component';
 import { Power } from 'src/app/core/models/power.interface';
 import { CredentialMandatee } from 'src/app/core/models/credendentialMandatee.interface';
-import { CredentialProcedure } from 'src/app/core/models/credentialProcedure.interface';
 import { Mandator } from 'src/app/core/models/madator.interface';
 
 @Injectable({
@@ -50,7 +49,7 @@ export class FormCredentialService {
   ): void {
     credential.mobile_phone = `+${selectedCountry} ${credential.mobile_phone}`;
 
-    const powers: Power[] = addedOptions.map(option => {
+    const power: Power[] = addedOptions.map(option => {
       const tmf_action: string[] = [];
       if (option.tmf_function === 'DomePlatform') {
         if (option.execute) tmf_action.push('Operator');
@@ -71,15 +70,11 @@ export class FormCredentialService {
       };
     });
 
-    const credentialProcedure: CredentialProcedure = {
-      procedure_id: 'proc-' + new Date().getTime(),
-      full_name: `${credential.first_name} ${credential.last_name}`,
-      status: 'Withdrawn',
-      updated: new Date().toISOString().split('T')[0],
+    const credentialProcedure = {
       credential: {
         mandatee: credential,
         mandator: mandator!,
-        powers: powers
+        power: power
       }
     };
 

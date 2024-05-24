@@ -21,7 +21,7 @@
           "serialNumber": "B60645900",
           "country": "ES"
         },
-        "powers": [
+        "power": [
           {
             "tmf_action": [
               "Execute",
@@ -59,7 +59,7 @@
           "mobile_phone": "+34 007007007"
         },
         "mandator": null,
-        "powers": [
+        "power": [
           {
             "tmf_action": [
               "Execute",
@@ -99,7 +99,7 @@
           "mobile_phone": "+44 007007007"
         },
         "mandator": null,
-        "powers": [
+        "power": [
           {
             "tmf_action": [
               "Execute",

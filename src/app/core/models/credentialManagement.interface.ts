@@ -7,7 +7,7 @@ import { Power } from "./power.interface";
 export interface CredentialManagement {
   mandator: Mandator;
   mandatee: CredentialMandatee;
-  powers: Power[];
+  power: Power[];
 }
 
 

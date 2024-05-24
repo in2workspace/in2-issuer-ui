@@ -19,7 +19,7 @@ export interface TempPower {
 export class PowerComponent {
   @Input() public isDisabled: boolean = false;
   @Input() public viewMode: 'create' | 'detail' = 'create';
-  @Input() public powers: TempPower[] = [];
+  @Input() public power: TempPower[] = [];
   @Input() public addedOptions: TempPower[] = [];
   @Output() public addedOptionsChange = new EventEmitter<TempPower[]>();
   @Output() public selectedOptionChange = new EventEmitter<string>();

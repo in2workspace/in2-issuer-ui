@@ -21,7 +21,7 @@ export class FormCredentialComponent implements OnInit {
   @Input() public title: string = '';
   @Input() public showButton: boolean = false;
   @Input() public hideButton: boolean = true;
-  @Input() public powers: Power[] = [];
+  @Input() public power: Power[] = [];
   @Input() public credential: CredentialMandatee = {
     first_name: '',
     last_name: '',
@@ -66,7 +66,7 @@ export class FormCredentialComponent implements OnInit {
     });
 
     if (this.viewMode === 'detail') {
-      this.tempPowers = this.powers.map(power => this.formCredentialService.convertToTempPower(power));
+      this.tempPowers = this.power.map(power => this.formCredentialService.convertToTempPower(power));
     }
   }
 

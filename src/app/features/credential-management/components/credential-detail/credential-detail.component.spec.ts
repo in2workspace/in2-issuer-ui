@@ -57,7 +57,7 @@ describe('CredentialDetailComponent', () => {
         email: 'john.doe@example.com',
         mobile_phone: '123-456-7890'
       },
-      powers: [
+      power: [
         {
           tmf_action: ['action1', 'action2'],
           tmf_domain: 'domain1',
