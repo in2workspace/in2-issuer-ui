@@ -68,7 +68,7 @@
 <div *ngIf="viewMode === 'detail'">
   <div *ngFor="let option of power; let i = index" class="option-container">
     <p>{{ option.tmf_function }}</p>
-    <ng-container *ngIf="option.tmf_function === 'Marketplace'">
+    <ng-container *ngIf="option.tmf_function === 'DomePlatform'">
       <mat-slide-toggle [(ngModel)]="option.operator" name="operator-{{ i }}" disabled>
         Operator
       </mat-slide-toggle>

@@ -63,7 +63,7 @@ export class FormCredentialService {
       } else {
         const tmf_action: string[] = [];
         switch(option.tmf_function) {
-          case 'Marketplace':
+          case 'DomePlatform':
             if (option.operator) tmf_action.push('Operator');
             if (option.customer) tmf_action.push('Customer');
             if (option.provider) tmf_action.push('Provider');
