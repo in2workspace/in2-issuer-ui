@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 export interface TempPower {
-  tmf_action: string[];
+  tmf_action: string | string[];
   tmf_domain: string;
   tmf_function: string;
   tmf_type: string;
@@ -44,7 +44,7 @@ export class PowerComponent {
     }
 
     const newOption: TempPower = {
-      tmf_action: [],
+      tmf_action: '',
       tmf_domain: 'DOME',
       tmf_function: this.selectedOption,
       tmf_type: 'Domain',
