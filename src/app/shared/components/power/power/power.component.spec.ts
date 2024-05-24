@@ -58,6 +58,10 @@ describe('PowerComponent', () => {
         create: false,
         update: false,
         delete: false,
+        operator: false,
+        customer: false,
+        provider: false,
+        marketplace: false,
       },
     ];
 
@@ -92,8 +96,12 @@ describe('PowerComponent', () => {
     component.addOption();
 
     expect(component.addedOptions.length).toBe(1);
-    expect(component.addedOptions[0].tmf_function).toBe('DomePlatform');
-    expect(component.addedOptions[0].tmf_action).toEqual(['Operator', 'Customer', 'Provider']);
+    const addedOption = component.addedOptions[0];
+    expect(addedOption.tmf_function).toBe('DomePlatform');
+    expect(addedOption.operator).toBe(false);
+    expect(addedOption.customer).toBe(false);
+    expect(addedOption.provider).toBe(false);
+    expect(addedOption.marketplace).toBe(false);
   });
 
   it('should emit addedOptionsChange when an option is added', () => {
@@ -150,6 +158,10 @@ describe('PowerComponent', () => {
         create: false,
         update: false,
         delete: false,
+        operator: false,
+        customer: false,
+        provider: false,
+        marketplace: false,
       },
     ];
 

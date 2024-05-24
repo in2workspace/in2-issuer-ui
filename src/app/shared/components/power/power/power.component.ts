@@ -9,6 +9,10 @@ export interface TempPower {
   create: boolean;
   update: boolean;
   delete: boolean;
+  operator: boolean;
+  customer: boolean;
+  provider: boolean;
+  marketplace: boolean;
 }
 
 @Component({
@@ -43,7 +47,7 @@ export class PowerComponent {
 
     if (this.selectedOption === 'DomePlatform') {
       newOption = {
-        tmf_action: ["Operator", "Customer", "Provider"],
+        tmf_action: [],
         tmf_domain: 'DOME',
         tmf_function: this.selectedOption,
         tmf_type: 'Domain',
@@ -51,10 +55,14 @@ export class PowerComponent {
         create: false,
         update: false,
         delete: false,
+        operator: false,
+        customer: false,
+        provider: false,
+        marketplace: false,
       };
     } else {
       newOption = {
-        tmf_action: ["Execute", "Create", "Update", "Delete"],
+        tmf_action: [],
         tmf_domain: 'DOME',
         tmf_function: this.selectedOption,
         tmf_type: 'Domain',
@@ -62,6 +70,10 @@ export class PowerComponent {
         create: false,
         update: false,
         delete: false,
+        operator: false,
+        customer: false,
+        provider: false,
+        marketplace: false,
       };
     }
 

@@ -86,6 +86,10 @@ describe('FormCredentialService', () => {
         create: false,
         update: false,
         delete: false,
+        operator: false,
+        customer: false,
+        provider: false,
+        marketplace: false,
       },
     ];
 
@@ -106,6 +110,10 @@ describe('FormCredentialService', () => {
         create: false,
         update: false,
         delete: false,
+        operator: false,
+        customer: false,
+        provider: false,
+        marketplace: false,
       },
     ];
 
@@ -136,10 +144,14 @@ describe('FormCredentialService', () => {
         tmf_domain: 'domain',
         tmf_function: 'function',
         tmf_type: 'type',
-        execute: true,
-        create: true,
-        update: true,
-        delete: true,
+        execute: false,
+        create: false,
+        update: false,
+        delete: false,
+        operator: false,
+        customer: false,
+        provider: false,
+        marketplace: false,
       },
     ];
     const mandator: Mandator = {

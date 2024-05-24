@@ -28,7 +28,14 @@ export class FormCredentialComponent implements OnInit {
     email: '',
     mobile_phone: '',
   };
-  @Input() public mandator: Mandator | null = null;
+  @Input() public mandator: Mandator | null = {
+    organizationIdentifier: 'VATES-B60645900',
+    organization: 'IN2, Ingeniería de la Información, S.L.',
+    commonName: 'IN2',
+    emailAddress: 'rrhh@in2.es',
+    serialNumber: 'B60645900',
+    country: 'ES',
+  };
   public selectedOption = '';
   public addedOptions: TempPower[] = [];
   public tempPowers: TempPower[] = [];

@@ -15,10 +15,14 @@ export class FormCredentialService {
       tmf_domain: power.tmf_domain,
       tmf_function: power.tmf_function,
       tmf_type: power.tmf_type,
-      execute: power.tmf_action.includes('Execute') || power.tmf_action.includes('Operator'),
-      create: power.tmf_action.includes('Create') || power.tmf_action.includes('Customer'),
-      update: power.tmf_action.includes('Update') || power.tmf_action.includes('Provider'),
-      delete: power.tmf_action.includes('Delete')
+      execute: power.tmf_action.includes('Execute'),
+      create: power.tmf_action.includes('Create'),
+      update: power.tmf_action.includes('Update'),
+      delete: power.tmf_action.includes('Delete'),
+      operator: power.tmf_action.includes('Operator'),
+      customer: power.tmf_action.includes('Customer'),
+      provider: power.tmf_action.includes('Provider'),
+      marketplace: power.tmf_action.includes('Marketplace')
     };
   }
 
@@ -49,18 +53,16 @@ export class FormCredentialService {
   ): void {
     credential.mobile_phone = `+${selectedCountry} ${credential.mobile_phone}`;
 
-    const power: Power[] = addedOptions.map(option => {
+    const powers: Power[] = addedOptions.map(option => {
       const tmf_action: string[] = [];
-      if (option.tmf_function === 'DomePlatform') {
-        if (option.execute) tmf_action.push('Operator');
-        if (option.create) tmf_action.push('Customer');
-        if (option.update) tmf_action.push('Provider');
-      } else {
-        if (option.execute) tmf_action.push('Execute');
-        if (option.create) tmf_action.push('Create');
-        if (option.update) tmf_action.push('Update');
-        if (option.delete) tmf_action.push('Delete');
-      }
+      if (option.execute) tmf_action.push('Execute');
+      if (option.create) tmf_action.push('Create');
+      if (option.update) tmf_action.push('Update');
+      if (option.delete) tmf_action.push('Delete');
+      if (option.operator) tmf_action.push('Operator');
+      if (option.customer) tmf_action.push('Customer');
+      if (option.provider) tmf_action.push('Provider');
+      if (option.marketplace) tmf_action.push('Marketplace');
 
       return {
         tmf_action,
@@ -74,7 +76,7 @@ export class FormCredentialService {
       credential: {
         mandatee: credential,
         mandator: mandator!,
-        power: power
+        powers: powers
       }
     };
 

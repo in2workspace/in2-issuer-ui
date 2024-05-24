@@ -33,14 +33,17 @@
   <div *ngFor="let option of addedOptions; let i = index" class="option-container">
     <p>{{ option.tmf_function }}</p>
     <ng-container *ngIf="option.tmf_function === 'DomePlatform'; else otherActions">
-      <mat-slide-toggle [(ngModel)]="option.execute" name="execute-{{ i }}" [disabled]="isDisabled">
+      <mat-slide-toggle [(ngModel)]="option.operator" name="operator-{{ i }}" [disabled]="isDisabled">
         Operator
       </mat-slide-toggle>
-      <mat-slide-toggle [(ngModel)]="option.create" name="create-{{ i }}" [disabled]="isDisabled">
+      <mat-slide-toggle [(ngModel)]="option.customer" name="customer-{{ i }}" [disabled]="isDisabled">
         Customer
       </mat-slide-toggle>
-      <mat-slide-toggle [(ngModel)]="option.update" name="update-{{ i }}" [disabled]="isDisabled">
+      <mat-slide-toggle [(ngModel)]="option.provider" name="provider-{{ i }}" [disabled]="isDisabled">
         Provider
+      </mat-slide-toggle>
+      <mat-slide-toggle [(ngModel)]="option.marketplace" name="marketplace-{{ i }}" [disabled]="isDisabled">
+        Marketplace
       </mat-slide-toggle>
     </ng-container>
     <ng-template #otherActions>
@@ -64,14 +67,17 @@
   <div *ngFor="let option of power; let i = index" class="option-container">
     <p>{{ option.tmf_function }}</p>
     <ng-container *ngIf="option.tmf_function === 'DomePlatform'; else otherActions">
-      <mat-slide-toggle [(ngModel)]="option.execute" name="execute-{{ i }}" disabled>
+      <mat-slide-toggle [(ngModel)]="option.operator" name="operator-{{ i }}" disabled>
         Operator
       </mat-slide-toggle>
-      <mat-slide-toggle [(ngModel)]="option.create" name="create-{{ i }}" disabled>
+      <mat-slide-toggle [(ngModel)]="option.customer" name="customer-{{ i }}" disabled>
         Customer
       </mat-slide-toggle>
-      <mat-slide-toggle [(ngModel)]="option.update" name="update-{{ i }}" disabled>
+      <mat-slide-toggle [(ngModel)]="option.provider" name="provider-{{ i }}" disabled>
         Provider
+      </mat-slide-toggle>
+      <mat-slide-toggle [(ngModel)]="option.marketplace" name="marketplace-{{ i }}" disabled>
+        Marketplace
       </mat-slide-toggle>
     </ng-container>
     <ng-template #otherActions>
