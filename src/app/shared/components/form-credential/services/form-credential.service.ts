@@ -10,19 +10,20 @@ import { Mandator } from 'src/app/core/models/madator.interface';
 export class FormCredentialService {
 
   public convertToTempPower(power: Power): TempPower {
+    const tmf_action = Array.isArray(power.tmf_action) ? power.tmf_action : [power.tmf_action];
     return {
-      tmf_action: Array.isArray(power.tmf_action) ? power.tmf_action : [power.tmf_action],
+      tmf_action: power.tmf_action,
       tmf_domain: power.tmf_domain,
       tmf_function: power.tmf_function,
       tmf_type: power.tmf_type,
-      execute: Array.isArray(power.tmf_action) ? power.tmf_action.includes('Execute') : false,
-      create: Array.isArray(power.tmf_action) ? power.tmf_action.includes('Create') : false,
-      update: Array.isArray(power.tmf_action) ? power.tmf_action.includes('Update') : false,
-      delete: Array.isArray(power.tmf_action) ? power.tmf_action.includes('Delete') : false,
-      operator: Array.isArray(power.tmf_action) ? power.tmf_action.includes('Operator') : false,
-      customer: Array.isArray(power.tmf_action) ? power.tmf_action.includes('Customer') : false,
-      provider: Array.isArray(power.tmf_action) ? power.tmf_action.includes('Provider') : false,
-      marketplace: Array.isArray(power.tmf_action) ? power.tmf_action.includes('Marketplace') : false
+      execute: tmf_action.includes('Execute'),
+      create: tmf_action.includes('Create'),
+      update: tmf_action.includes('Update'),
+      delete: tmf_action.includes('Delete'),
+      operator: tmf_action.includes('Operator'),
+      customer: tmf_action.includes('Customer'),
+      provider: tmf_action.includes('Provider'),
+      marketplace: tmf_action.includes('Marketplace')
     };
   }
 
@@ -52,32 +53,38 @@ export class FormCredentialService {
     credential.mobile_phone = `+${selectedCountry} ${credential.mobile_phone}`;
 
     const power: Power[] = addedOptions.map(option => {
-      const tmf_action: string[] = [];
-      switch(option.tmf_function) {
-        case 'Marketplace':
-          if (option.operator) tmf_action.push('Operator');
-          if (option.customer) tmf_action.push('Customer');
-          if (option.provider) tmf_action.push('Provider');
-          if (option.marketplace) tmf_action.push('Marketplace');
-          break;
-        case 'ProductOffering':
-          if (option.create) tmf_action.push('Create');
-          if (option.update) tmf_action.push('Update');
-          if (option.delete) tmf_action.push('Delete');
-          break;
-        case 'Onboarding':
-          if (option.execute) tmf_action.push('Execute');
-          break;
-        default:
-          break;
-      }
+      if (option.tmf_function === 'Onboarding') {
+        return {
+          tmf_action: option.execute ? 'Execute' : '',
+          tmf_domain: option.tmf_domain,
+          tmf_function: option.tmf_function,
+          tmf_type: option.tmf_type
+        };
+      } else {
+        const tmf_action: string[] = [];
+        switch(option.tmf_function) {
+          case 'Marketplace':
+            if (option.operator) tmf_action.push('Operator');
+            if (option.customer) tmf_action.push('Customer');
+            if (option.provider) tmf_action.push('Provider');
+            if (option.marketplace) tmf_action.push('Marketplace');
+            break;
+          case 'ProductOffering':
+            if (option.create) tmf_action.push('Create');
+            if (option.update) tmf_action.push('Update');
+            if (option.delete) tmf_action.push('Delete');
+            break;
+          default:
+            break;
+        }
 
-      return {
-        tmf_action,
-        tmf_domain: option.tmf_domain,
-        tmf_function: option.tmf_function,
-        tmf_type: option.tmf_type
-      };
+        return {
+          tmf_action,
+          tmf_domain: option.tmf_domain,
+          tmf_function: option.tmf_function,
+          tmf_type: option.tmf_type
+        };
+      }
     });
 
     const credentialProcedure = {
