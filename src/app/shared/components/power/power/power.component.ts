@@ -58,6 +58,25 @@ export class PowerComponent {
       marketplace: false,
     };
 
+    switch(this.selectedOption) {
+      case 'Marketplace':
+        newOption.operator ;
+        newOption.customer ;
+        newOption.provider ;
+        newOption.marketplace ;
+        break;
+      case 'ProductOffering':
+        newOption.create ;
+        newOption.update ;
+        newOption.delete ;
+        break;
+      case 'Onboarding':
+        newOption.execute ;
+        break;
+      default:
+        break;
+    }
+
     this.addedOptions.push(newOption);
     this.addedOptionsChange.emit(this.addedOptions);
     this.selectedOption = '';
