@@ -38,18 +38,86 @@ describe('ServeErrorInterceptor', () => {
   });
 
   describe('when HttpErrorResponse is received', () => {
-    it('should call showAlert with the proper message', (done: DoneFn) => {
-      const httpErrorResponse = new HttpErrorResponse({ status: 400, statusText: 'Bad Request' });
+    it('should call showAlert with the proper message for 404 error', (done: DoneFn) => {
+      const httpErrorResponse = new HttpErrorResponse({ status: 404, statusText: 'Not Found' });
 
       httpHandler.handle.and.returnValue(throwError(() => httpErrorResponse));
-      translateService.instant.and.returnValue('Error');
+      translateService.instant.and.returnValue('error.not_found');
 
       interceptor.intercept(httpRequest, httpHandler).subscribe({
         next: () => fail('expected an error, not a response'),
         error: (err: HttpErrorResponse) => {
-          expect(err.statusText).toBe('Bad Request');
-          expect(translateService.instant).toHaveBeenCalled();
-          expect(alertService.showAlert).toHaveBeenCalledWith('Error', 'error');
+          expect(err.status).toBe(404);
+          expect(translateService.instant).toHaveBeenCalledWith('error.not_found');
+          expect(alertService.showAlert).toHaveBeenCalledWith('error.not_found', 'error');
+          done();
+        }
+      });
+    });
+
+    it('should call showAlert with the proper message for 401 error', (done: DoneFn) => {
+      const httpErrorResponse = new HttpErrorResponse({ status: 401, statusText: 'Unauthorized' });
+
+      httpHandler.handle.and.returnValue(throwError(() => httpErrorResponse));
+      translateService.instant.and.returnValue('error.unauthorized');
+
+      interceptor.intercept(httpRequest, httpHandler).subscribe({
+        next: () => fail('expected an error, not a response'),
+        error: (err: HttpErrorResponse) => {
+          expect(err.status).toBe(401);
+          expect(translateService.instant).toHaveBeenCalledWith('error.unauthorized');
+          expect(alertService.showAlert).toHaveBeenCalledWith('error.unauthorized', 'error');
+          done();
+        }
+      });
+    });
+
+    it('should call showAlert with the proper message for 403 error', (done: DoneFn) => {
+      const httpErrorResponse = new HttpErrorResponse({ status: 403, statusText: 'Forbidden' });
+
+      httpHandler.handle.and.returnValue(throwError(() => httpErrorResponse));
+      translateService.instant.and.returnValue('error.forbidden');
+
+      interceptor.intercept(httpRequest, httpHandler).subscribe({
+        next: () => fail('expected an error, not a response'),
+        error: (err: HttpErrorResponse) => {
+          expect(err.status).toBe(403);
+          expect(translateService.instant).toHaveBeenCalledWith('error.forbidden');
+          expect(alertService.showAlert).toHaveBeenCalledWith('error.forbidden', 'error');
+          done();
+        }
+      });
+    });
+
+    it('should call showAlert with the proper message for 500 error', (done: DoneFn) => {
+      const httpErrorResponse = new HttpErrorResponse({ status: 500, statusText: 'Internal Server Error' });
+
+      httpHandler.handle.and.returnValue(throwError(() => httpErrorResponse));
+      translateService.instant.and.returnValue('error.internal_server');
+
+      interceptor.intercept(httpRequest, httpHandler).subscribe({
+        next: () => fail('expected an error, not a response'),
+        error: (err: HttpErrorResponse) => {
+          expect(err.status).toBe(500);
+          expect(translateService.instant).toHaveBeenCalledWith('error.internal_server');
+          expect(alertService.showAlert).toHaveBeenCalledWith('error.internal_server', 'error');
+          done();
+        }
+      });
+    });
+
+    it('should call showAlert with the proper message for unknown error', (done: DoneFn) => {
+      const httpErrorResponse = new HttpErrorResponse({ status: 0, statusText: 'Unknown Error' });
+
+      httpHandler.handle.and.returnValue(throwError(() => httpErrorResponse));
+      translateService.instant.and.returnValue('error.unknown_error');
+
+      interceptor.intercept(httpRequest, httpHandler).subscribe({
+        next: () => fail('expected an error, not a response'),
+        error: (err: HttpErrorResponse) => {
+          expect(err.status).toBe(0);
+          expect(translateService.instant).toHaveBeenCalledWith('error.unknown_error');
+          expect(alertService.showAlert).toHaveBeenCalledWith('error.unknown_error', 'error');
           done();
         }
       });
