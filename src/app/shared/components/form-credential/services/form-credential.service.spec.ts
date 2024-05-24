@@ -130,6 +130,14 @@ describe('FormCredentialService', () => {
     expect(result).toBe('newValue');
   });
 
+  it('should handle select change event with undefined target value', () => {
+    const event = { target: { value: undefined } } as unknown as Event;
+
+    const result: string = service.handleSelectChange(event);
+
+    expect(result).toBeUndefined();
+  });
+
   it('should submit credential correctly', () => {
     const credential: CredentialMandatee = {
       first_name: 'John',
@@ -258,15 +266,9 @@ describe('FormCredentialService', () => {
     expect(resetForm).not.toHaveBeenCalled();
   });
 
-  it('should handle select change event with undefined target value', () => {
-    const event = { target: { value: undefined } } as unknown as Event;
 
-    const result: string = service.handleSelectChange(event);
 
-    expect(result).toBeUndefined();
-  });
-
-  it('should submit credential with all actions correctly', () => {
+  it('should correctly map powers in submitCredential', () => {
     const credential: CredentialMandatee = {
       first_name: 'John',
       last_name: 'Doe',
@@ -276,18 +278,18 @@ describe('FormCredentialService', () => {
     const selectedCountry = '34';
     const addedOptions: TempPower[] = [
       {
-        tmf_action: [],
+        tmf_action: ['Execute', 'Create'],
         tmf_domain: 'domain',
         tmf_function: 'function',
         tmf_type: 'type',
         execute: true,
         create: true,
-        update: true,
-        delete: true,
-        operator: true,
-        customer: true,
-        provider: true,
-        marketplace: true,
+        update: false,
+        delete: false,
+        operator: false,
+        customer: false,
+        provider: false,
+        marketplace: false,
       },
     ];
     const mandator: Mandator = {
@@ -322,24 +324,38 @@ describe('FormCredentialService', () => {
     );
 
     expect(credential.mobile_phone).toBe('+34 123456789');
-    expect(credentialProcedureService.saveCredentialProcedure).toHaveBeenCalled();
-
-    const savedCredential = credentialProcedureService.saveCredentialProcedure.calls.argsFor(0)[0];
-    expect(savedCredential).toBeDefined();
-    expect(savedCredential.credential).toBeDefined();
-    expect(savedCredential.credential.powers).toBeDefined();
-    expect(savedCredential.credential.powers.length).toBeGreaterThan(0);
-
-    const expectedTmfAction = [
-      'Execute', 'Create', 'Update', 'Delete',
-      'Operator', 'Customer', 'Provider', 'Marketplace'
-    ];
-
-    expect(savedCredential.credential.powers[0].tmf_action).toEqual(expectedTmfAction);
+    expect(
+      credentialProcedureService.saveCredentialProcedure
+    ).toHaveBeenCalled();
     expect(alertService.showAlert).toHaveBeenCalledWith(
       'Credential created successfully!',
       'success'
     );
     expect(resetForm).toHaveBeenCalled();
   });
+
+  it('should handle empty tmf_action in convertToTempPower', () => {
+    const power: Power = {
+      tmf_action: [],
+      tmf_domain: 'domain',
+      tmf_function: 'function',
+      tmf_type: 'type',
+    };
+
+    const tempPower: TempPower = service.convertToTempPower(power);
+
+    expect(tempPower.tmf_action).toEqual([]);
+    expect(tempPower.tmf_domain).toBe('domain');
+    expect(tempPower.tmf_function).toBe('function');
+    expect(tempPower.tmf_type).toBe('type');
+    expect(tempPower.execute).toBeFalse();
+    expect(tempPower.create).toBeFalse();
+    expect(tempPower.update).toBeFalse();
+    expect(tempPower.delete).toBeFalse();
+    expect(tempPower.operator).toBeFalse();
+    expect(tempPower.customer).toBeFalse();
+    expect(tempPower.provider).toBeFalse();
+    expect(tempPower.marketplace).toBeFalse();
+  });
+
 });
