@@ -4,7 +4,7 @@ import { Power } from 'src/app/core/models/power.interface';
 import { TempPower } from '../../power/power/power.component';
 import { CredentialMandatee } from 'src/app/core/models/credendentialMandatee.interface';
 import { Mandator } from 'src/app/core/models/madator.interface';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -189,6 +189,153 @@ describe('FormCredentialService', () => {
     expect(
       credentialProcedureService.saveCredentialProcedure
     ).toHaveBeenCalled();
+    expect(alertService.showAlert).toHaveBeenCalledWith(
+      'Credential created successfully!',
+      'success'
+    );
+    expect(resetForm).toHaveBeenCalled();
+  });
+
+  it('should handle error when submitting credential', () => {
+    const credential: CredentialMandatee = {
+      first_name: 'John',
+      last_name: 'Doe',
+      email: 'john.doe@example.com',
+      mobile_phone: '123456789',
+    };
+    const selectedCountry = '34';
+    const addedOptions: TempPower[] = [
+      {
+        tmf_action: [],
+        tmf_domain: 'domain',
+        tmf_function: 'function',
+        tmf_type: 'type',
+        execute: false,
+        create: false,
+        update: false,
+        delete: false,
+        operator: false,
+        customer: false,
+        provider: false,
+        marketplace: false,
+      },
+    ];
+    const mandator: Mandator = {
+      organizationIdentifier: '1',
+      organization: 'MandatorOrg',
+      commonName: 'Mandator',
+      emailAddress: 'mandator@example.com',
+      serialNumber: '123456',
+      country: 'ES',
+    };
+
+    const credentialProcedureService = {
+      saveCredentialProcedure: jasmine
+        .createSpy('saveCredentialProcedure')
+        .and.returnValue(throwError('Error')),
+    };
+
+    const alertService = {
+      showAlert: jasmine.createSpy('showAlert'),
+    };
+
+    const resetForm = jasmine.createSpy('resetForm');
+
+    service.submitCredential(
+      credential,
+      selectedCountry,
+      addedOptions,
+      mandator,
+      credentialProcedureService,
+      alertService,
+      resetForm
+    );
+
+    expect(alertService.showAlert).toHaveBeenCalledWith(
+      'Error creating credential: Error',
+      'error'
+    );
+    expect(resetForm).not.toHaveBeenCalled();
+  });
+
+  it('should handle select change event with undefined target value', () => {
+    const event = { target: { value: undefined } } as unknown as Event;
+
+    const result: string = service.handleSelectChange(event);
+
+    expect(result).toBeUndefined();
+  });
+
+  it('should submit credential with all actions correctly', () => {
+    const credential: CredentialMandatee = {
+      first_name: 'John',
+      last_name: 'Doe',
+      email: 'john.doe@example.com',
+      mobile_phone: '123456789',
+    };
+    const selectedCountry = '34';
+    const addedOptions: TempPower[] = [
+      {
+        tmf_action: [],
+        tmf_domain: 'domain',
+        tmf_function: 'function',
+        tmf_type: 'type',
+        execute: true,
+        create: true,
+        update: true,
+        delete: true,
+        operator: true,
+        customer: true,
+        provider: true,
+        marketplace: true,
+      },
+    ];
+    const mandator: Mandator = {
+      organizationIdentifier: '1',
+      organization: 'MandatorOrg',
+      commonName: 'Mandator',
+      emailAddress: 'mandator@example.com',
+      serialNumber: '123456',
+      country: 'ES',
+    };
+
+    const credentialProcedureService = {
+      saveCredentialProcedure: jasmine
+        .createSpy('saveCredentialProcedure')
+        .and.returnValue(of({})),
+    };
+
+    const alertService = {
+      showAlert: jasmine.createSpy('showAlert'),
+    };
+
+    const resetForm = jasmine.createSpy('resetForm');
+
+    service.submitCredential(
+      credential,
+      selectedCountry,
+      addedOptions,
+      mandator,
+      credentialProcedureService,
+      alertService,
+      resetForm
+    );
+
+    expect(credential.mobile_phone).toBe('+34 123456789');
+    expect(credentialProcedureService.saveCredentialProcedure).toHaveBeenCalled();
+
+    const savedCredential = credentialProcedureService.saveCredentialProcedure.calls.argsFor(0)[0];
+    expect(savedCredential).toBeDefined();
+    expect(savedCredential.credential).toBeDefined();
+    expect(savedCredential.credential.powers).toBeDefined();
+    expect(savedCredential.credential.powers.length).toBeGreaterThan(0);
+
+    const expectedTmfAction = [
+      'Execute', 'Create', 'Update', 'Delete',
+      'Operator', 'Customer', 'Provider', 'Marketplace'
+    ];
+
+    expect(savedCredential.credential.powers[0].tmf_action).toEqual(expectedTmfAction);
     expect(alertService.showAlert).toHaveBeenCalledWith(
       'Credential created successfully!',
       'success'
