@@ -1,0 +1,65 @@
+<h2>{{ "powers.power" | translate }}</h2>
+<br />
+<div class="power">
+  <div class="domain">
+    <p>{{ "powers.domain" | translate }}</p>
+    <p>{{ "powers.dome" | translate }}</p>
+  </div>
+  <div class="function">
+    <p>{{ "powers.function" | translate }}</p>
+    <select
+      class="select-powers"
+      [(ngModel)]="selectedOption"
+      [disabled]="isDisabled"
+      name="selectedOption"
+      (change)="onHandleSelectChange($event)"
+    >
+      <option *ngIf="!selectedOption" [ngValue]="null" disabled selected>Select an option</option>
+      <option value="Onboarding">{{ "powers.onboarding" | translate }}</option>
+      <option value="ProductOffering">{{ "powers.productoffer" | translate }}</option>
+    </select>
+    <button
+      class="add-option-btn"
+      [disabled]="isDisabled || !selectedOption"
+      (click)="addOption()"
+    >
+      {{ "powers.add" | translate }}
+    </button>
+  </div>
+</div>
+
+<div *ngIf="viewMode === 'create'">
+  <div *ngFor="let option of addedOptions; let i = index" class="option-container">
+    <p>{{ option.tmf_function }}</p>
+    <mat-slide-toggle [(ngModel)]="option.execute" name="execute-{{ i }}" [disabled]="isDisabled">
+      {{ "powers.execute" | translate }}
+    </mat-slide-toggle>
+    <mat-slide-toggle [(ngModel)]="option.create" name="create-{{ i }}" [disabled]="isDisabled">
+      {{ "powers.create" | translate }}
+    </mat-slide-toggle>
+    <mat-slide-toggle [(ngModel)]="option.update" name="update-{{ i }}" [disabled]="isDisabled">
+      {{ "powers.update" | translate }}
+    </mat-slide-toggle>
+    <mat-slide-toggle [(ngModel)]="option.delete" name="delete-{{ i }}" [disabled]="isDisabled">
+      {{ "powers.delete" | translate }}
+    </mat-slide-toggle>
+  </div>
+</div>
+
+<div *ngIf="viewMode === 'detail'">
+  <div *ngFor="let option of powers; let i = index" class="option-container">
+    <p>{{ option.tmf_function }}</p>
+    <mat-slide-toggle [(ngModel)]="option.execute" name="execute-{{ i }}" disabled>
+      {{ "powers.execute" | translate }}
+    </mat-slide-toggle>
+    <mat-slide-toggle [(ngModel)]="option.create" name="create-{{ i }}" disabled>
+      {{ "powers.create" | translate }}
+    </mat-slide-toggle>
+    <mat-slide-toggle [(ngModel)]="option.update" name="update-{{ i }}" disabled>
+      {{ "powers.update" | translate }}
+    </mat-slide-toggle>
+    <mat-slide-toggle [(ngModel)]="option.delete" name="delete-{{ i }}" disabled>
+      {{ "powers.delete" | translate }}
+    </mat-slide-toggle>
+  </div>
+</div>

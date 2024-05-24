@@ -1,0 +1,101 @@
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+}
+
+@import url("https://fonts.googleapis.com/css2?family=Blinker:wght@400;600&display=swap");
+
+$Blue: #2d58a7;
+$Light-Blue-Primary: #00add3;
+$Dark-Blue: #14274a;
+$Light-Blue-Secondary: #dde6f6;
+$White: #ffffff;
+
+@font-face {
+  font-family: "Blinker";
+  font-weight: 400;
+  src: url("./assets/fonts/Blinker-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Blinker";
+  font-weight: 600;
+  src: url("./assets/fonts/Blinker-SemiBold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Blinker";
+  font-weight: 700;
+  src: url("./assets/fonts/Blinker-Bold.ttf") format("truetype");
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a {
+  font-family: "Blinker", sans-serif;
+}
+
+:root {
+  --Blue: #{$Blue};
+  --Light-Blue-Primary: #{$Light-Blue-Primary};
+  --Dark-Blue: #{$Dark-Blue};
+  --Light-Blue-Secondary: #{$Light-Blue-Secondary};
+  --white: #{$White};
+}
+
+.primary-bg {
+  background-color: var(--Blue);
+}
+
+.secondary-bg {
+  background-color: var(--Light-Blue-Primary);
+}
+
+.tertiary-bg {
+  background-color: var(--Dark-Blue);
+}
+
+.quaternary-bg {
+  background-color: var(--Light-Blue-Secondary);
+}
+.white-color {
+  background-color: var(--white);
+}
+
+.mdc-snackbar__surface {
+  color: red !important;
+  background-color: $Light-Blue-Secondary !important;
+  border: 1px solid black !important;
+  border-radius: 5px !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5), 0 6px 20px rgba(0, 0, 0, 0.19) !important;
+}
+.mat-mdc-snack-bar-label .mdc-snackbar__label {
+  color: red !important;
+}
+
+
+#mat-snack-bar-container-live-1 div simple-snack-bar div.mat-mdc-snack-bar-actions.mdc-snackbar__actions.ng-star-inserted > button {
+  background-color: #f2f2f2 !important;
+  border: 1px solid black !important;
+  border-radius: 5px !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5), 0 6px 20px rgba(0, 0, 0, 0.19) !important;
+}
+
+#mat-snack-bar-container-live-1 div simple-snack-bar div.mat-mdc-snack-bar-actions.mdc-snackbar__actions.ng-star-inserted > button:active {
+  transform: scale(0.9) !important;
+}
+
+#mat-snack-bar-container-live-1 div simple-snack-bar div.mat-mdc-snack-bar-actions.mdc-snackbar__actions.ng-star-inserted > button:hover {
+  background-color: darken(#f2f2f2, 10%) !important;
+}
+
+
