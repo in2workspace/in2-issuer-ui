@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+
 export interface TempPower {
-  tmf_action: string[];
+  tmf_action: string | string[];
   tmf_domain: string;
   tmf_function: string;
   tmf_type: string;
@@ -8,6 +9,10 @@ export interface TempPower {
   create: boolean;
   update: boolean;
   delete: boolean;
+  operator: boolean;
+  customer: boolean;
+  provider: boolean;
+  marketplace: boolean;
 }
 
 @Component({
@@ -18,7 +23,7 @@ export interface TempPower {
 export class PowerComponent {
   @Input() public isDisabled: boolean = false;
   @Input() public viewMode: 'create' | 'detail' = 'create';
-  @Input() public powers: TempPower[] = [];
+  @Input() public power: TempPower[] = [];
   @Input() public addedOptions: TempPower[] = [];
   @Output() public addedOptionsChange = new EventEmitter<TempPower[]>();
   @Output() public selectedOptionChange = new EventEmitter<string>();
@@ -39,7 +44,7 @@ export class PowerComponent {
     }
 
     const newOption: TempPower = {
-      tmf_action: [],
+      tmf_action: '',
       tmf_domain: 'DOME',
       tmf_function: this.selectedOption,
       tmf_type: 'Domain',
@@ -47,7 +52,31 @@ export class PowerComponent {
       create: false,
       update: false,
       delete: false,
+      operator: false,
+      customer: false,
+      provider: false,
+      marketplace: false,
     };
+
+    switch(this.selectedOption) {
+      case 'Marketplace':
+        newOption.operator = false;
+        newOption.customer = false;
+        newOption.provider = false;
+        newOption.marketplace = false;
+        break;
+      case 'ProductOffering':
+        newOption.create = false;
+        newOption.update = false;
+        newOption.delete = false;
+        break;
+      case 'Onboarding':
+        newOption.execute = false;
+        break;
+      default:
+        break;
+    }
+
     this.addedOptions.push(newOption);
     this.addedOptionsChange.emit(this.addedOptions);
     this.selectedOption = '';

@@ -9,6 +9,7 @@ export const environment = {
     scope: 'openid profile email offline_access',
     grant_type: 'code'
   },
-  base_url: 'https://localhost:8088',
-  wallet_url: 'https://localhost:4200'
+  base_url: 'http://localhost:8071',
+  wallet_url: 'http://localhost:4200',
+  api_base_url: '/api/v1/credentials?type=LEARCredentialEmployee'
 };

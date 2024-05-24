@@ -21,14 +21,21 @@ export class FormCredentialComponent implements OnInit {
   @Input() public title: string = '';
   @Input() public showButton: boolean = false;
   @Input() public hideButton: boolean = true;
-  @Input() public powers: Power[] = [];
+  @Input() public power: Power[] = [];
   @Input() public credential: CredentialMandatee = {
     first_name: '',
     last_name: '',
     email: '',
     mobile_phone: '',
   };
-  @Input() public mandator: Mandator | null = null;
+  @Input() public mandator: Mandator | null = {
+    organizationIdentifier: 'VATES-B60645900',
+    organization: 'IN2, Ingeniería de la Información, S.L.',
+    commonName: 'IN2',
+    emailAddress: 'rrhh@in2.es',
+    serialNumber: 'B60645900',
+    country: 'ES',
+  };
   public selectedOption = '';
   public addedOptions: TempPower[] = [];
   public tempPowers: TempPower[] = [];
@@ -66,7 +73,7 @@ export class FormCredentialComponent implements OnInit {
     });
 
     if (this.viewMode === 'detail') {
-      this.tempPowers = this.powers.map(power => this.formCredentialService.convertToTempPower(power));
+      this.tempPowers = this.power.map(power => this.formCredentialService.convertToTempPower(power));
     }
   }
 

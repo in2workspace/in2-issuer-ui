@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CredentialProcedure } from '../models/credentialProcedure.interface';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CredentialProcedureService {
 
-  private apiUrl = 'http://localhost:3000/credentialProcedures';
-
+  private apiUrl = `${environment.base_url}${environment.api_base_url}`;
   public constructor(private http: HttpClient) { }
 
   public getCredentialProcedures(): Observable<CredentialProcedure[]> {
