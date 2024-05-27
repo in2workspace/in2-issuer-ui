@@ -9,4 +9,5 @@
     window["env"]["base_url"] = "https://localhost:8071";
     window["env"]["wallet_url"] = "https://localhost:4200";
     window["env"]["api_base_url"] = "/api/v1/credentials?type=LEARCredentialEmployee";
+    window["env"]["credential_offer_url"] = "/api/v1/credential-offer";
   })(this);

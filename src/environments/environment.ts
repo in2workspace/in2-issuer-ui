@@ -1,9 +1,7 @@
-
 export const environment = {
   production: false,
   loginParams: {
     has_login: true,
-    // login_url: 'http://localhost:8088/realms/EAAProvider/protocol/openid-connect/token',
     login_url: 'http://localhost:8088/realms/EAAProvider',
     client_id: 'oidc4vci-wallet-client',
     scope: 'openid profile email offline_access',
@@ -11,5 +9,6 @@ export const environment = {
   },
   base_url: 'http://localhost:8071',
   wallet_url: 'http://localhost:4200',
-  api_base_url: '/api/v1/credentials?type=LEARCredentialEmployee'
+  api_base_url: '/api/v1/credentials?type=LEARCredentialEmployee',
+  credential_offer_url: '/api/v1/credential-offer'
 };

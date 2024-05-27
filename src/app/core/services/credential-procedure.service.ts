@@ -10,6 +10,8 @@ import { environment } from 'src/environments/environment';
 export class CredentialProcedureService {
 
   private apiUrl = `${environment.base_url}${environment.api_base_url}`;
+  private credentialOfferUrl = `${environment.base_url}${environment.credential_offer_url}`;
+
   public constructor(private http: HttpClient) { }
 
   public getCredentialProcedures(): Observable<CredentialProcedure[]> {
@@ -20,12 +22,15 @@ export class CredentialProcedureService {
     return this.http.get<CredentialProcedure[]>(`${this.apiUrl}?procedure_id=${procedureId}`);
   }
 
-
   public saveCredentialProcedure(credentialProcedure: CredentialProcedure): Observable<any> {
     return this.http.post(this.apiUrl, credentialProcedure);
   }
 
   public sendReminder(procedureId: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/${procedureId}/sendReminder`, {});
+  }
+
+  public getCredentialOffer(transactionCode: string): Observable<any> {
+    return this.http.get<any>(`${this.credentialOfferUrl}/${transactionCode}`);
   }
 }
