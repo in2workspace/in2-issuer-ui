@@ -34,8 +34,8 @@ export class CredencialOfferComponent implements OnInit {
     this.credentialProcedureService.getCredentialOffer(transactionCode).subscribe(
       data => {
         console.log('Data received from API:', data);
-        if (data.qrCode) {
-          this.qrCodeData = data.qrCode;
+        if (data) {
+          this.qrCodeData = data;
           console.log('QR Code Data:', this.qrCodeData);
           this.router.navigate([], {
             relativeTo: this.route,
