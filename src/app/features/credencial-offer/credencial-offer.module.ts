@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { TranslateModule } from '@ngx-translate/core';
+import { QRCodeModule } from 'angularx-qrcode';
 
 @NgModule({
   declarations: [CredencialOfferComponent],
@@ -17,7 +18,8 @@ import { TranslateModule } from '@ngx-translate/core';
     FormsModule,
     RouterModule,
     SharedModule,
-    TranslateModule
+    TranslateModule,
+    QRCodeModule
   ],
 })
 export class CredencialOfferModule {}
