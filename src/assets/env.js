@@ -2,7 +2,7 @@
     window["env"] = window["env"] || {};
 
     // Environment variables
-    window["env"]["login_url"] = "http://localhost:8081";
+    window["env"]["login_url"] = "http://localhost:8082";
     window["env"]["client_id"] = "auth-client";
     window["env"]["scope"] = "openid profile email offline_access";
     window["env"]["grant_type"] = "code";
