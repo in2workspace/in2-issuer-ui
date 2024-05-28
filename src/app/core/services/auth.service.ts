@@ -7,21 +7,6 @@ import { BehaviorSubject, Observable, map } from 'rxjs';
 })
 export class AuthService {
 
-  // private users = [
-  //   { username: 'issuer', password: '1234' }
-  // ];
-
-
-  // public register(username: string, password: string): boolean {
-  //   const userExists = this.users.some(u => u.username === username);
-  //   if (!userExists) {
-  //     this.users.push({ username, password });
-
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // }
 
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
 
