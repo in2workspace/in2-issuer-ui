@@ -2,7 +2,7 @@ export const environment = {
   production: false,
   loginParams: {
     has_login: true,
-    login_url: 'https://localhost:8443/realms/master/account/',
+    login_url: 'https://localhost:8443/realms/master',
     client_id: 'account-console',
     scope: 'openid profile email offline_access',
     grant_type: 'code'
