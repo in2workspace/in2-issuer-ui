@@ -10,5 +10,6 @@ export const environment = {
   base_url: 'http://localhost',
   wallet_url: 'http://localhost:4200',
   api_base_url: '/api/v1/credentials?type=LEARCredentialEmployee',
-  credential_offer_url: '/api/v1/credential-offer'
+  credential_offer_url: '/api/v1/credential-offer',
+  credential_management: '/api/v1/credentials',
 };

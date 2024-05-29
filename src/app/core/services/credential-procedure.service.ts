@@ -11,12 +11,13 @@ import { CredentialProcedure } from '../models/credentialProcedure.interface';
 export class CredentialProcedureService {
 
   private apiUrl = `${environment.base_url}${environment.api_base_url}`;
+  private credentialManagement = `${environment.base_url}${environment.credential_management}`;
   private credentialOfferUrl = `${environment.base_url}${environment.credential_offer_url}`;
 
   public constructor(private http: HttpClient) { }
 
   public getCredentialProcedures(): Observable<CredentialProcedure[]> {
-    return this.http.get<CredentialProcedure[]>(this.apiUrl).pipe(
+    return this.http.get<CredentialProcedure[]>(this.credentialManagement).pipe(
       catchError(this.handleError)
     );
   }
