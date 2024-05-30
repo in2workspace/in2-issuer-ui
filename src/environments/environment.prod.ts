@@ -10,5 +10,6 @@ export const environment = {
   base_url: window["env"]["base_url"] || 'https://localhost',
   wallet_url: window["env"]["wallet_url"] || 'https://localhost:4200',
   api_base_url: window["env"]["api_base_url"] || '/api/v1/credentials?type=LEARCredentialEmployee',
-  credential_offer_url: window["env"]["credential_offer_url"] || '/api/v1/credential-offer'
+  credential_offer_url: window["env"]["credential_offer_url"] || '/api/v1/credential-offer',
+  procedures_path: window["env"]["procedures_path"] || '/api/v1/procedures'
 };

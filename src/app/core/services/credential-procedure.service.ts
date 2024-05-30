@@ -12,17 +12,18 @@ export class CredentialProcedureService {
 
   private apiUrl = `${environment.base_url}${environment.api_base_url}`;
   private credentialOfferUrl = `${environment.base_url}${environment.credential_offer_url}`;
+  private proceduresURL : string = `${environment.base_url}${environment.procedures_path}`;
 
   public constructor(private http: HttpClient) { }
 
   public getCredentialProcedures(): Observable<CredentialProcedure[]> {
-    return this.http.get<CredentialProcedure[]>(this.apiUrl).pipe(
+    return this.http.get<CredentialProcedure[]>(this.proceduresURL).pipe(
       catchError(this.handleError)
     );
   }
 
   public getCredentialProcedureById(procedureId: string): Observable<CredentialProcedure[]> {
-    return this.http.get<CredentialProcedure[]>(`${this.apiUrl}?procedure_id=${procedureId}`).pipe(
+    return this.http.get<CredentialProcedure[]>(`${this.proceduresURL}/${procedureId}/credential-decoded`).pipe(
       catchError(this.handleError)
     );
   }
@@ -34,13 +35,13 @@ export class CredentialProcedureService {
   }
 
   public sendReminder(procedureId: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/${procedureId}/sendReminder`, {}).pipe(
+    return this.http.post(`${this.proceduresURL}/${procedureId}/sendReminder`, {}).pipe(
       catchError(this.handleError)
     );
   }
 
   public getCredentialOffer(transactionCode: string): Observable<string> {
-    return this.http.get(`${this.credentialOfferUrl}/${transactionCode}`, { responseType: 'text' }).pipe(
+    return this.http.get(`${this.credentialOfferUrl}/transaction-code/${transactionCode}`, { responseType: 'text' }).pipe(
       map(response => {
         try {
           const jsonResponse = JSON.parse(response);
