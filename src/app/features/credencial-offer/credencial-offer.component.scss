@@ -1,39 +1,42 @@
 :host {
   @import "../../../styles.scss";
-  .credendial-container {
+
+  .credential-card {
     display: flex;
-    flex-direction: column;
-    align-items: left;
-    margin-left: 4rem;
-
-    .title-credendial {
-      text-align: left;
-      margin: 2rem 0;
-    }
-
-    .content-container {
+    justify-content: center;
+    align-items: center;
+    margin-top: 5%;
+    padding-bottom: 2%;
+    .credendial-container {
       display: flex;
-      text-align: left;
-
-    }
-
-    .mandator-container, .mandatee-container {
-      text-align: left;
-      margin: 2rem 2rem;
-      padding: 0.5rem 2rem;
-      border-radius: 5px;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+      border-radius: 10px;
       background: $Light-Blue-Secondary;
       box-shadow: 8px 8px 10px #cacaca, -8px -8px 10px #f6f6f6;
-      p {
-        font-size: 1.35em;
-        font-weight: bold;
+
+      .title-credendial {
+        text-align: center;
+        margin: 0.5rem 0;
+        h2 {
+          font-size: 2rem;
+        }
       }
-      h6 {
-        font-size: 0.85em;
+
+      .content-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+
+        .qr-container {
+          margin: 0.5rem 0;
+          img{
+            margin-top: 1rem;
+          }
+        }
       }
-    }
-    .qr-container {
-      margin: 2rem 2rem;
     }
   }
 }

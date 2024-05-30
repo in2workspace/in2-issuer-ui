@@ -9,4 +9,6 @@
   window["env"]["base_url"] = "${base_url}";
   window["env"]["wallet_url"] = "${wallet_url}";
   window["env"]["api_base_url"] = "${api_base_url}";
+  window["env"]["credential_offer_url"] = "${credential_offer_url}";
+  window["env"]["procedures_path"] = "${procedures_path}";
 })(this);

@@ -34,7 +34,7 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'credentialOffer',
+    path: 'credential-offer',
     loadChildren: () =>
       import('./features/credencial-offer/credencial-offer.module').then(
         (m) => m.CredencialOfferModule
