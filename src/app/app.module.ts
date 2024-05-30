@@ -33,7 +33,7 @@ import { AlertService } from './core/services/alert.service';
     AuthModule.forRoot({
       config: {
         postLoginRoute: '/credentialManagement',
-        authority: environment.iam_url + environment.loginParams.iam_uri,
+        authority:  environment.loginParams.login_url,
         redirectUrl: `${window.location.origin}/callback`,
         postLogoutRedirectUri: window.location.origin,
         clientId: environment.loginParams.client_id,
