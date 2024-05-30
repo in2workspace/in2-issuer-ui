@@ -1,18 +1,19 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
+import { AutoLoginPartialRoutesGuard } from 'angular-auth-oidc-client';
+import { HomeComponent } from './features/home/home.component';
+import { CallbackComponent } from './features/callback/callback.component';
 
 const routes: Routes = [
-  {
-    path: 'home',
-    loadChildren: () =>
-      import('./features/home/home.module').then((m) => m.HomeModule),
-  },
+  { path: '', pathMatch: 'full', redirectTo: 'home' },
+  { path: 'home', component: HomeComponent },
   {
     path: 'credentialManagement',
     loadChildren: () =>
       import(
         './features/credential-management/credential-management.module'
       ).then((m) => m.CredentialManagementModule),
+    canActivate: [AutoLoginPartialRoutesGuard],
   },
   {
     path: 'credentialIssuance',
@@ -20,6 +21,7 @@ const routes: Routes = [
       import('./features/credentialIssuance/credentialIssuance.module').then(
         (m) => m.CredentialIssuanceModule
       ),
+    canActivate: [AutoLoginPartialRoutesGuard],
   },
   {
     path: 'credential-offer',
@@ -28,7 +30,8 @@ const routes: Routes = [
         (m) => m.CredencialOfferModule
       ),
   },
-  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: 'callback', component: CallbackComponent },
+  { path: '**', redirectTo: 'home' }
 ];
 
 @NgModule({

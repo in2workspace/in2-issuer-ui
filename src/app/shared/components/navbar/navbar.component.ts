@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-// import { Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from 'src/app/core/services/auth.service';
 
@@ -21,7 +21,7 @@ export class NavbarComponent implements OnInit {
   public constructor(
     public translate: TranslateService,
     private authService: AuthService,
-    // private router: Router,
+    private router: Router,
   ) {}
 
   public ngOnInit() {
@@ -31,8 +31,10 @@ export class NavbarComponent implements OnInit {
     // this.loadMandatorData();
   }
 
-  public logout(): void {
-    this.authService.logout();
+  public logout() {
+    this.authService.logout().subscribe(() => {
+      this.router.navigate(['/home'], {});
+    });
   }
 
   public changeLanguage(languageCode: string): void {

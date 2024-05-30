@@ -12,12 +12,7 @@ export class HomeComponent {
 
   public login() {
     console.log('HomeComponent: login button clicked');
-    this.authService.loginAndRedirect();
-  }
-
-  public navigateToPage(page: string) {
-    console.log(`Navigating to page: ${page}`);
-    this.router.navigate([`/${page}`]);
+    this.authService.login();
   }
 
   public logout() {

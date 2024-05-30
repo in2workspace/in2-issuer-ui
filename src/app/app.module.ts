@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AuthModule, LogLevel } from 'angular-auth-oidc-client';
+import { AuthModule, AuthInterceptor } from 'angular-auth-oidc-client';
 import { environment } from 'src/environments/environment';
 import { LoginModule } from './features/login/login.module';
 import { MaterialModule } from './material.module';
@@ -32,24 +32,23 @@ import { AlertService } from './core/services/alert.service';
     }),
     AuthModule.forRoot({
       config: {
-        authority: environment.loginParams.login_url,
-        redirectUrl: window.location.origin,
+        postLoginRoute: '/credentialManagement',
+        authority: environment.iam_url + environment.loginParams.iam_uri,
+        redirectUrl: `${window.location.origin}/callback`,
         postLogoutRedirectUri: window.location.origin,
         clientId: environment.loginParams.client_id,
         scope: environment.loginParams.scope,
         responseType: environment.loginParams.grant_type,
         silentRenew: true,
         useRefreshToken: true,
-        logLevel: LogLevel.Debug,
+        ignoreNonceAfterRefresh: true,
+        triggerRefreshWhenIdTokenExpired: false,
       },
     }),
   ],
   providers: [
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: ServeErrorInterceptor,
-      multi: true
-    },
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ServeErrorInterceptor, multi: true },
     AlertService,
   ],
   bootstrap: [AppComponent]
