@@ -65,7 +65,7 @@ describe('CredentialProcedureService', () => {
     service.saveCredentialProcedure(mockData).subscribe(data => {
       expect(data).toEqual(mockData);
     });
-    const req = httpMock.expectOne(proceduresURL);
+    const req = httpMock.expectOne(apiUrl);
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual(mockData);
     req.flush(mockData);

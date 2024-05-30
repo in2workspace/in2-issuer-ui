@@ -29,7 +29,7 @@ export class CredentialProcedureService {
   }
 
   public saveCredentialProcedure(credentialProcedure: CredentialProcedure): Observable<any> {
-    return this.http.post(this.proceduresURL, credentialProcedure).pipe(
+    return this.http.post(this.apiUrl, credentialProcedure).pipe(
       catchError(this.handleError)
     );
   }
