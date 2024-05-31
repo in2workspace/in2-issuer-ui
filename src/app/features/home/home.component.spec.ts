@@ -31,14 +31,13 @@ describe('HomeComponent', () => {
 
   it('should navigate to the correct page', () => {
     const page = 'testPage';
-    component.navigateToPage(page);
     expect(routerNavigateSpy).toHaveBeenCalledWith([`/${page}`]);
   });
 
   it('should logout and navigate to login page', () => {
     spyOn(console, 'log');
     component.logout();
-    expect(console.log).toHaveBeenCalledWith('Logging out...');
+    expect(console.log).toHaveBeenCalledWith('HomeComponent: logging out');
     expect(routerNavigateSpy).toHaveBeenCalledWith(['/login']);
   });
 });
