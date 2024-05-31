@@ -8,6 +8,7 @@ describe('CredentialProcedureService', () => {
   let service: CredentialProcedureService;
   let httpMock: HttpTestingController;
   const apiUrl = `${environment.base_url}${environment.api_base_url}`;
+  const proceduresURL = `${environment.base_url}${environment.procedures_path}`;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -38,7 +39,7 @@ describe('CredentialProcedureService', () => {
       expect(data).toEqual(mockData);
     });
 
-    const req = httpMock.expectOne(apiUrl);
+    const req = httpMock.expectOne(proceduresURL);
     expect(req.request.method).toBe('GET');
     req.flush(mockData);
   });
@@ -48,13 +49,11 @@ describe('CredentialProcedureService', () => {
     const mockData: CredentialProcedure[] = [
       { procedure_id: '1', status: 'completed', full_name: 'John Doe', updated: '2023-01-01', credential: { mandatee: {}, mandator: {}, power: [] } as any }
     ];
-
     service.getCredentialProcedureById(procedureId).subscribe(data => {
       expect(data.length).toBe(1);
       expect(data).toEqual(mockData);
     });
-
-    const req = httpMock.expectOne(`${apiUrl}?procedure_id=${procedureId}`);
+    const req = httpMock.expectOne(`${proceduresURL}/${procedureId}/credential-decoded`);
     expect(req.request.method).toBe('GET');
     req.flush(mockData);
   });
@@ -63,11 +62,9 @@ describe('CredentialProcedureService', () => {
     const mockData: CredentialProcedure = {
       procedure_id: '1', status: 'completed', full_name: 'John Doe', updated: '2023-01-01', credential: { mandatee: {}, mandator: {}, power: [] } as any
     };
-
     service.saveCredentialProcedure(mockData).subscribe(data => {
       expect(data).toEqual(mockData);
     });
-
     const req = httpMock.expectOne(apiUrl);
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual(mockData);
@@ -81,8 +78,9 @@ describe('CredentialProcedureService', () => {
       expect(data).toBeTruthy();
     });
 
-    const req = httpMock.expectOne(`${apiUrl}/${procedureId}/sendReminder`);
+    const req = httpMock.expectOne(`${proceduresURL}/${procedureId}/sendReminder`);
     expect(req.request.method).toBe('POST');
     req.flush({});
   });
+
 });
