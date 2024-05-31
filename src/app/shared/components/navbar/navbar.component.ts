@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { Mandator } from 'src/app/core/models/madator.interface';
 
 @Component({
   selector: 'app-navbar',
@@ -9,6 +10,7 @@ import { AuthService } from 'src/app/core/services/auth.service';
   styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent implements OnInit {
+  @Input() public mandator: Mandator | null = null;
   public userName: string = 'User Name';
   public companyName: string = '';
   public languages = [
@@ -28,7 +30,16 @@ export class NavbarComponent implements OnInit {
     this.translate.addLangs(['en', 'es', 'ca']);
     this.translate.setDefaultLang('en');
     this.selectedLanguage = this.translate.getDefaultLang();
-    // this.loadMandatorData();
+    this.authService.getMandator().subscribe(mandator => {
+      if (mandator) {
+        this.mandator = mandator;
+      }
+    });
+    this.authService.getFirstName().subscribe(firstName => {
+      if (firstName) {
+        this.userName = firstName;
+      }
+    });
   }
 
   public logout() {
@@ -41,11 +52,4 @@ export class NavbarComponent implements OnInit {
     this.translate.use(languageCode);
     this.selectedLanguage = languageCode;
   }
-
-  // public loadMandatorData(): void {
-
-  //       this.userName = mandator.commonName;
-  //       this.companyName = mandator.organization;
-  //     }
-  // }
 }

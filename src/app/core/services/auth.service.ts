@@ -12,14 +12,17 @@ export class AuthService {
   private isAuthenticatedSubject: BehaviorSubject<boolean>;
   private userDataSubject: BehaviorSubject<any>;
   private tokenSubject: BehaviorSubject<string>;
-  private nameSubject: BehaviorSubject<string>;
+  private mandatorSubject: BehaviorSubject<any>;
+  private firstNameSubject: BehaviorSubject<string>;
 
   public constructor(private oidcSecurityService: OidcSecurityService, private router: Router) {
     this.isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
     this.isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
     this.userDataSubject = new BehaviorSubject<any>(null);
     this.tokenSubject = new BehaviorSubject<string>('');
-    this.nameSubject = new BehaviorSubject<string>('');
+    this.mandatorSubject = new BehaviorSubject<any>(null);
+    this.firstNameSubject = new BehaviorSubject<string>('');
+
 
     this.checkAuth().subscribe();
   }
@@ -29,11 +32,25 @@ export class AuthService {
       this.isAuthenticatedSubject.next(isAuthenticated);
       if (isAuthenticated) {
         this.userDataSubject.next(userData);
-        this.nameSubject.next(userData.name);
         this.tokenSubject.next(accessToken);
+
+        const mandator = {
+          organizationIdentifier: userData.organizationIdentifier,
+          organization: userData.organization,
+          commonName: userData.commonName,
+          emailAddress: userData.emailAddress,
+          serialNumber: userData.serialNumber,
+          country: userData.country
+        };
+        this.mandatorSubject.next(mandator);
+        this.firstNameSubject.next(userData.firstName);
       }
       return isAuthenticated;
     }));
+  }
+
+  public getMandator(): Observable<any> {
+    return this.mandatorSubject.asObservable();
   }
 
   public login(): void {
@@ -45,7 +62,6 @@ export class AuthService {
       if (isAuthenticated) {
         this.isAuthenticatedSubject.next(true);
         this.userDataSubject.next(userData);
-        this.nameSubject.next(userData.name);
         this.tokenSubject.next(accessToken);
       } else {
         console.log('Authentication failed or not completed yet.');
@@ -64,9 +80,8 @@ export class AuthService {
   public getUserData(): Observable<any> {
     return this.userDataSubject.asObservable();
   }
-
-  public getName(): Observable<string> {
-    return this.nameSubject.asObservable();
+  public getFirstName(): Observable<string> {
+    return this.firstNameSubject.asObservable();
   }
 
   public getToken(): Observable<string> {

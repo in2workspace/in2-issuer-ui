@@ -8,6 +8,7 @@ import { CredentialProcedureService } from 'src/app/core/services/credential-pro
 import { TempPower } from '../power/power/power.component';
 import { Country, CountryService } from './services/country.service';
 import { FormCredentialService } from './services/form-credential.service';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-form-credential',
@@ -28,14 +29,8 @@ export class FormCredentialComponent implements OnInit {
     email: '',
     mobile_phone: '',
   };
-  @Input() public mandator: Mandator | null = {
-    organizationIdentifier: 'VATES-B60645900',
-    organization: 'IN2, Ingeniería de la Información, S.L.',
-    commonName: 'IN2',
-    emailAddress: 'rrhh@in2.es',
-    serialNumber: 'B60645900',
-    country: 'ES',
-  };
+  @Input() public mandator: Mandator | null = null;
+
   public selectedOption = '';
   public addedOptions: TempPower[] = [];
   public tempPowers: TempPower[] = [];
@@ -50,7 +45,8 @@ export class FormCredentialComponent implements OnInit {
     private alertService: AlertService,
     private fb: FormBuilder,
     private countryService: CountryService,
-    private formCredentialService: FormCredentialService
+    private formCredentialService: FormCredentialService,
+    private authService: AuthService
   ) {
     this.countries = this.countryService.getCountries();
   }
@@ -70,6 +66,12 @@ export class FormCredentialComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       mobile_phone: ['', [Validators.required, Validators.pattern('[0-9 ]*')]],
       country: ['', Validators.required]
+    });
+
+    this.authService.getMandator().subscribe(mandator => {
+      if (mandator) {
+        this.mandator = mandator;
+      }
     });
 
     if (this.viewMode === 'detail') {
