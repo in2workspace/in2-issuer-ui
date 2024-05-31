@@ -8,5 +8,6 @@ export const environment = {
   },
   base_url: 'http://localhost',
   api_base_url: '/api/v1/credentials?type=LEARCredentialEmployee',
-  credential_offer_url: '/api/v1/credential-offer'
+  credential_offer_url: '/api/v1/credential-offer',
+  procedures_path: '/api/v1/procedures'
 };
