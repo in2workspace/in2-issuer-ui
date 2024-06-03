@@ -51,7 +51,10 @@ export class FormCredentialService {
     popupComponent: PopupComponent,
     resetForm: () => void
   ): void {
-    credential.mobile_phone = `+${selectedCountry} ${credential.mobile_phone}`;
+    const countryPrefix = `+${selectedCountry}`;
+    if (!credential.mobile_phone.startsWith(countryPrefix)) {
+      credential.mobile_phone = `${countryPrefix} ${credential.mobile_phone}`;
+    }
 
     const power: Power[] = addedOptions.map(option => {
       if (option.tmf_function === 'Onboarding') {

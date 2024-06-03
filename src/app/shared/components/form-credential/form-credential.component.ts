@@ -92,15 +92,18 @@ export class FormCredentialComponent implements OnInit {
   }
 
   public submitCredential(): void {
-    this.formCredentialService.submitCredential(
-      this.credential,
-      this.selectedCountry,
-      this.addedOptions,
-      this.mandator,
-      this.credentialProcedureService,
-      this.popupComponent,
-      this.resetForm.bind(this)
-    );
+
+    if (this.credentialForm.valid) {
+      this.formCredentialService.submitCredential(
+        this.credential,
+        this.selectedCountry,
+        this.addedOptions,
+        this.mandator,
+        this.credentialProcedureService,
+        this.popupComponent,
+        this.resetForm.bind(this)
+      );
+    }
   }
 
   public triggerSendReminder(): void {
