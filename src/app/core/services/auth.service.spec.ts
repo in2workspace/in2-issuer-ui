@@ -69,4 +69,65 @@ describe('AuthService', () => {
       done();
     });
   });
+
+  it('should handle login callback and update subjects accordingly', (done: DoneFn) => {
+    const authResponse = {
+      isAuthenticated: true,
+      userData: { name: 'John Doe' },
+      accessToken: 'dummyAccessToken',
+      idToken: 'dummyIdToken'
+    };
+    oidcSecurityService.checkAuth.and.returnValue(of(authResponse));
+
+    service.handleLoginCallback();
+    service.isLoggedIn().subscribe(isLoggedIn => {
+      expect(isLoggedIn).toBeTrue();
+      service.getUserData().subscribe(userData => {
+        expect(userData).toEqual(authResponse.userData);
+        service.getToken().subscribe(token => {
+          expect(token).toEqual(authResponse.accessToken);
+          done();
+        });
+      });
+    });
+  });
+
+  it('should log a message if authentication fails or is not completed', (done: DoneFn) => {
+    spyOn(console, 'log');
+    const authResponse = {
+      isAuthenticated: false,
+      userData: null,
+      accessToken: '',
+      idToken: ''
+    };
+    oidcSecurityService.checkAuth.and.returnValue(of(authResponse));
+
+    service.handleLoginCallback();
+    service.isLoggedIn().subscribe(isLoggedIn => {
+      expect(isLoggedIn).toBeFalse();
+      expect(console.log).toHaveBeenCalledWith('Authentication failed or not completed yet.');
+      done();
+    });
+  });
+
+  it('should return user data as observable when getUserData is called', (done: DoneFn) => {
+    service.getUserData().subscribe(userData => {
+      expect(userData).toBeNull();
+      done();
+    });
+  });
+
+  it('should return first name as observable when getFirstName is called', (done: DoneFn) => {
+    service.getFirstName().subscribe(firstName => {
+      expect(firstName).toBe('');
+      done();
+    });
+  });
+
+  it('should return token as observable when getToken is called', (done: DoneFn) => {
+    service.getToken().subscribe(token => {
+      expect(token).toBe('');
+      done();
+    });
+  });
 });

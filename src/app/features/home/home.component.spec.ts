@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from 'src/app/core/services/auth.service';
-import { of } from 'rxjs';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -37,10 +36,18 @@ describe('HomeComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should call login on authService and log message to console', () => {
+    spyOn(console, 'log');
+    component.login();
+    expect(console.log).toHaveBeenCalledWith('HomeComponent: login button clicked');
+    expect(mockAuthService.login).toHaveBeenCalled();
+  });
+
   it('should logout and navigate to login page', () => {
     spyOn(console, 'log');
     component.logout();
     expect(console.log).toHaveBeenCalledWith('HomeComponent: logging out');
+    expect(mockAuthService.logout).toHaveBeenCalled();
     expect(routerNavigateSpy).toHaveBeenCalledWith(['/login']);
   });
 });
