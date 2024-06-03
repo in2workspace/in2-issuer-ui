@@ -1,14 +1,14 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CredentialMandatee } from 'src/app/core/models/credendentialMandatee.interface';
 import { Mandator } from 'src/app/core/models/madator.interface';
 import { Power } from 'src/app/core/models/power.interface';
-import { AlertService } from 'src/app/core/services/alert.service';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { TempPower } from '../power/power/power.component';
 import { Country, CountryService } from './services/country.service';
 import { FormCredentialService } from './services/form-credential.service';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { PopupComponent } from '../popup/popup.component';
 
 @Component({
   selector: 'app-form-credential',
@@ -16,6 +16,7 @@ import { AuthService } from 'src/app/core/services/auth.service';
   styleUrls: ['./form-credential.component.scss'],
 })
 export class FormCredentialComponent implements OnInit {
+  @ViewChild(PopupComponent) public popupComponent!: PopupComponent;
   @Output() public sendReminder = new EventEmitter<void>();
   @Input() public viewMode: 'create' | 'detail' = 'create';
   @Input() public isDisabled: boolean = false;
@@ -34,15 +35,18 @@ export class FormCredentialComponent implements OnInit {
   public selectedOption = '';
   public addedOptions: TempPower[] = [];
   public tempPowers: TempPower[] = [];
-
   public countries: Country[] = [];
   public selectedCountry: string = '';
   public actualMobilePhone: string = '';
   public credentialForm!: FormGroup;
 
+  public popupMessage: string = '';
+  public isPopupVisible: boolean = false;
+
+
+
   public constructor(
     private credentialProcedureService: CredentialProcedureService,
-    private alertService: AlertService,
     private fb: FormBuilder,
     private countryService: CountryService,
     private formCredentialService: FormCredentialService,
@@ -94,7 +98,7 @@ export class FormCredentialComponent implements OnInit {
       this.addedOptions,
       this.mandator,
       this.credentialProcedureService,
-      this.alertService,
+      this.popupComponent,
       this.resetForm.bind(this)
     );
   }
@@ -107,5 +111,10 @@ export class FormCredentialComponent implements OnInit {
     this.credential = this.formCredentialService.resetForm();
     this.addedOptions = [];
     this.credentialForm.reset();
+  }
+
+  private showPopup(message: string): void {
+    this.popupMessage = message;
+    this.isPopupVisible = true;
   }
 }

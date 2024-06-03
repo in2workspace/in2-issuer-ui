@@ -29,9 +29,6 @@ export class CredentialManagementComponent implements AfterViewInit {
     this.credentialProcedureService.getCredentialProcedures().subscribe({
       next: (data) => {
         this.dataSource.data = data;
-      },
-      error: (error) => {
-        console.error('Error fetching credentials', error);
       }
     });
   }

@@ -3,6 +3,7 @@ import { TempPower } from '../../power/power/power.component';
 import { Power } from 'src/app/core/models/power.interface';
 import { CredentialMandatee } from 'src/app/core/models/credendentialMandatee.interface';
 import { Mandator } from 'src/app/core/models/madator.interface';
+import { PopupComponent } from '../../popup/popup.component';
 
 @Injectable({
   providedIn: 'root'
@@ -47,7 +48,7 @@ export class FormCredentialService {
     addedOptions: TempPower[],
     mandator: Mandator | null,
     credentialProcedureService: any,
-    alertService: any,
+    popupComponent: PopupComponent,
     resetForm: () => void
   ): void {
     credential.mobile_phone = `+${selectedCountry} ${credential.mobile_phone}`;
@@ -97,11 +98,8 @@ export class FormCredentialService {
 
     credentialProcedureService.saveCredentialProcedure(credentialProcedure).subscribe({
       next: () => {
-        alertService.showAlert('Credential created successfully!', 'success');
+        popupComponent.showPopup();
         resetForm();
-      },
-      error: (error: unknown) => {
-        alertService.showAlert('Error creating credential: ' + error, 'error');
       },
     });
   }

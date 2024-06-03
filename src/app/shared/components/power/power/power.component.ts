@@ -30,16 +30,18 @@ export class PowerComponent {
   @Output() public handleSelectChange = new EventEmitter<Event>();
 
   public selectedOption: string = '';
+  public popupMessage: string = '';
+  public isPopupVisible: boolean = false;
 
   public addOption(): void {
     if (this.isDisabled) return;
 
     if (this.addedOptions.some((option) => option.tmf_function === this.selectedOption)) {
-      alert('This option has already been added.');
+      this.showPopup('This option has already been added.');
       return;
     }
     if (!this.selectedOption) {
-      alert('Please select an option.');
+      this.showPopup('Please select an option.');
       return;
     }
 
@@ -84,5 +86,10 @@ export class PowerComponent {
 
   public onHandleSelectChange(event: Event): void {
     this.handleSelectChange.emit(event);
+  }
+
+  private showPopup(message: string): void {
+    this.popupMessage = message;
+    this.isPopupVisible = true;
   }
 }
