@@ -112,9 +112,4 @@ export class FormCredentialComponent implements OnInit {
     this.addedOptions = [];
     this.credentialForm.reset();
   }
-
-  private showPopup(message: string): void {
-    this.popupMessage = message;
-    this.isPopupVisible = true;
-  }
 }
