@@ -36,7 +36,7 @@ describe('AuthService', () => {
   it('should set isAuthenticatedSubject based on OidcSecurityService checkAuth response', (done: DoneFn) => {
     const authResponse = {
       isAuthenticated: true,
-      userData: {},
+      userData: { emailAddress: 'test@example.com' },
       accessToken: 'dummyAccessToken',
       idToken: 'dummyIdToken'
     };
@@ -73,7 +73,7 @@ describe('AuthService', () => {
   it('should handle login callback and update subjects accordingly', (done: DoneFn) => {
     const authResponse = {
       isAuthenticated: true,
-      userData: { name: 'John Doe' },
+      userData: { emailAddress: 'john.doe@example.com' },
       accessToken: 'dummyAccessToken',
       idToken: 'dummyIdToken'
     };
@@ -86,7 +86,10 @@ describe('AuthService', () => {
         expect(userData).toEqual(authResponse.userData);
         service.getToken().subscribe(token => {
           expect(token).toEqual(authResponse.accessToken);
-          done();
+          service.getEmailName().subscribe(emailName => {
+            expect(emailName).toEqual('');
+            done();
+          });
         });
       });
     });
@@ -117,9 +120,9 @@ describe('AuthService', () => {
     });
   });
 
-  it('should return first name as observable when getFirstName is called', (done: DoneFn) => {
-    service.getFirstName().subscribe(firstName => {
-      expect(firstName).toBe('');
+  it('should return email name as observable when getEmailName is called', (done: DoneFn) => {
+    service.getEmailName().subscribe(emailName => {
+      expect(emailName).toBe('');
       done();
     });
   });

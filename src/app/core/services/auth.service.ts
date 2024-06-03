@@ -13,7 +13,7 @@ export class AuthService {
   private userDataSubject: BehaviorSubject<any>;
   private tokenSubject: BehaviorSubject<string>;
   private mandatorSubject: BehaviorSubject<any>;
-  private firstNameSubject: BehaviorSubject<string>;
+  private emailSubject: BehaviorSubject<string>;
 
   public constructor(private oidcSecurityService: OidcSecurityService, private router: Router) {
     this.isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
@@ -21,8 +21,7 @@ export class AuthService {
     this.userDataSubject = new BehaviorSubject<any>(null);
     this.tokenSubject = new BehaviorSubject<string>('');
     this.mandatorSubject = new BehaviorSubject<any>(null);
-    this.firstNameSubject = new BehaviorSubject<string>('');
-
+    this.emailSubject = new BehaviorSubject<string>('');
 
     this.checkAuth().subscribe();
   }
@@ -43,7 +42,8 @@ export class AuthService {
           country: userData.country
         };
         this.mandatorSubject.next(mandator);
-        this.firstNameSubject.next(userData.firstName);
+        const emailName = userData.emailAddress.split('@')[0];
+        this.emailSubject.next(emailName);
       }
       return isAuthenticated;
     }));
@@ -70,7 +70,7 @@ export class AuthService {
   }
 
   public logout() {
-    localStorage.clear()
+    localStorage.clear();
     return this.oidcSecurityService.logoff();
   }
 
@@ -81,8 +81,9 @@ export class AuthService {
   public getUserData(): Observable<any> {
     return this.userDataSubject.asObservable();
   }
-  public getFirstName(): Observable<string> {
-    return this.firstNameSubject.asObservable();
+
+  public getEmailName(): Observable<string> {
+    return this.emailSubject.asObservable();
   }
 
   public getToken(): Observable<string> {

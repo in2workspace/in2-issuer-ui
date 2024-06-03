@@ -10,7 +10,7 @@ class MockAuthService {
   getMandator() {
     return of(null);
   }
-  getFirstName() {
+  getEmailName() {
     return of('User Name');
   }
   logout() {
