@@ -41,7 +41,7 @@ export class CredentialProcedureService {
   }
 
   public getCredentialOffer(transactionCode: string): Observable<string> {
-    return this.http.get(`${this.credentialOfferUrl}/${transactionCode}`, { responseType: 'text' }).pipe(
+    return this.http.get(`${this.credentialOfferUrl}/transaction-code/${transactionCode}`, { responseType: 'text' }).pipe(
       map(response => {
         try {
           const jsonResponse = JSON.parse(response);

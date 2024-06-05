@@ -46,6 +46,13 @@
     },
     "credentialIssuance":{
       "create": "Create Credential"
+    },
+    "error": {
+      "not_found": "The requested resource was not found.",
+      "unauthorized": "You are not authorized to perform this action.",
+      "forbidden": "You do not have permission to access this resource.",
+      "internal_server": "An error occurred on the server. Please try again later.",
+      "unknown_error": "An unknown error occurred. Please try again."
     }
   }
 

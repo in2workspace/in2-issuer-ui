@@ -3,11 +3,14 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { CredentialProcedureService } from './credential-procedure.service';
 import { CredentialData, CredentialProcedure, CredentialProcedureResponse } from '../models/credentialProcedure.interface';
 import { environment } from 'src/environments/environment';
+import { HttpErrorResponse } from '@angular/common/http';
 
 describe('CredentialProcedureService', () => {
   let service: CredentialProcedureService;
   let httpMock: HttpTestingController;
-  const apiUrl = `${environment.base_url}${environment.procedures}`;
+  const apiUrl = `${environment.base_url}${environment.base_url}`;
+  const proceduresURL = `${environment.base_url}${environment.procedures}`;
+  const credentialOfferUrl = `${environment.base_url}${environment.credential_offer_url}`;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -38,9 +41,26 @@ describe('CredentialProcedureService', () => {
       expect(data).toEqual(mockData);
     });
 
-    const req = httpMock.expectOne(apiUrl);
+    const req = httpMock.expectOne(proceduresURL);
     expect(req.request.method).toBe('GET');
     req.flush(mockData);
+  });
+
+  it('should handle error when fetching credential procedures', () => {
+    const errorResponse = new HttpErrorResponse({
+      error: '404 error',
+      status: 404, statusText: 'Not Found'
+    });
+
+    service.getCredentialProcedures().subscribe(
+      data => fail('should have failed with 404 error'),
+      (error: string) => {
+        expect(error).toContain('Server-side error: 404');
+      }
+    );
+
+    const req = httpMock.expectOne(proceduresURL);
+    req.flush('404 error', errorResponse);
   });
 
   it('should fetch credential procedure by id successfully', () => {
@@ -52,10 +72,27 @@ describe('CredentialProcedureService', () => {
     service.getCredentialProcedureById(procedureId).subscribe(data => {
       expect(data).toEqual(mockData);
     });
-
-    const req = httpMock.expectOne(`${apiUrl}?procedure_id=${procedureId}`);
+    const req = httpMock.expectOne(`${proceduresURL}/${procedureId}/credential-decoded`);
     expect(req.request.method).toBe('GET');
     req.flush(mockData);
+  });
+
+  it('should handle error when fetching credential procedure by id', () => {
+    const procedureId = '1';
+    const errorResponse = new HttpErrorResponse({
+      error: '404 error',
+      status: 404, statusText: 'Not Found'
+    });
+
+    service.getCredentialProcedureById(procedureId).subscribe(
+      data => fail('should have failed with 404 error'),
+      (error: string) => {
+        expect(error).toContain('Server-side error: 404');
+      }
+    );
+
+    const req = httpMock.expectOne(`${proceduresURL}/${procedureId}/credential-decoded`);
+    req.flush('404 error', errorResponse);
   });
 
   it('should save credential procedure successfully', () => {
@@ -66,11 +103,30 @@ describe('CredentialProcedureService', () => {
     service.saveCredentialProcedure(mockData).subscribe(data => {
       expect(data).toEqual(mockData);
     });
-
     const req = httpMock.expectOne(apiUrl);
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual(mockData);
     req.flush(mockData);
+  });
+
+  it('should handle error when saving credential procedure', () => {
+    const mockData: CredentialProcedure = {
+      procedure_id: '1', status: 'completed', full_name: 'John Doe', updated: '2023-01-01', credential: { mandatee: {}, mandator: {}, power: [] } as any
+    };
+    const errorResponse = new HttpErrorResponse({
+      error: '500 error',
+      status: 500, statusText: 'Server Error'
+    });
+
+    service.saveCredentialProcedure(mockData).subscribe(
+      data => fail('should have failed with 500 error'),
+      (error: string) => {
+        expect(error).toContain('Server-side error: 500');
+      }
+    );
+
+    const req = httpMock.expectOne(apiUrl);
+    req.flush('500 error', errorResponse);
   });
 
   it('should send reminder successfully', () => {
@@ -80,8 +136,70 @@ describe('CredentialProcedureService', () => {
       expect(data).toBeTruthy();
     });
 
-    const req = httpMock.expectOne(`${apiUrl}/${procedureId}/sendReminder`);
+    const req = httpMock.expectOne(`${proceduresURL}/${procedureId}/sendReminder`);
     expect(req.request.method).toBe('POST');
     req.flush({});
+  });
+
+  it('should handle error when sending reminder', () => {
+    const procedureId = '1';
+    const errorResponse = new HttpErrorResponse({
+      error: '500 error',
+      status: 500, statusText: 'Server Error'
+    });
+
+    service.sendReminder(procedureId).subscribe(
+      data => fail('should have failed with 500 error'),
+      (error: string) => {
+        expect(error).toContain('Server-side error: 500');
+      }
+    );
+
+    const req = httpMock.expectOne(`${proceduresURL}/${procedureId}/sendReminder`);
+    req.flush('500 error', errorResponse);
+  });
+
+  it('should get credential offer successfully', () => {
+    const transactionCode = 'abc123';
+    const mockResponse = JSON.stringify({ qrCode: 'mockQRCode' });
+
+    service.getCredentialOffer(transactionCode).subscribe(data => {
+      expect(data).toBe('mockQRCode');
+    });
+
+    const req = httpMock.expectOne(`${credentialOfferUrl}/transaction-code/${transactionCode}`);
+    expect(req.request.method).toBe('GET');
+    req.flush(mockResponse);
+  });
+
+  it('should handle error when getting credential offer', () => {
+    const transactionCode = 'abc123';
+    const errorResponse = new HttpErrorResponse({
+      error: '500 error',
+      status: 500, statusText: 'Server Error'
+    });
+
+    service.getCredentialOffer(transactionCode).subscribe(
+      data => fail('should have failed with 500 error'),
+      (error: string) => {
+        expect(error).toContain('Server-side error: 500');
+      }
+    );
+
+    const req = httpMock.expectOne(`${credentialOfferUrl}/transaction-code/${transactionCode}`);
+    req.flush('500 error', errorResponse);
+  });
+
+  it('should return raw response when qrCode is not present in getCredentialOffer', () => {
+    const transactionCode = 'abc123';
+    const mockResponse = 'raw response';
+
+    service.getCredentialOffer(transactionCode).subscribe(data => {
+      expect(data).toBe(mockResponse);
+    });
+
+    const req = httpMock.expectOne(`${credentialOfferUrl}/transaction-code/${transactionCode}`);
+    expect(req.request.method).toBe('GET');
+    req.flush(mockResponse);
   });
 });

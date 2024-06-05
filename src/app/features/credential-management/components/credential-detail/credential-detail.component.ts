@@ -5,8 +5,7 @@ import { CredentialProcedureService } from 'src/app/core/services/credential-pro
 
 @Component({
   selector: 'app-credential-detail',
-  templateUrl: './credential-detail.component.html',
-  styleUrls: ['./credential-detail.component.scss'],
+  templateUrl: './credential-detail.component.html'
 })
 export class CredentialDetailComponent implements OnInit {
   public credentialId: string | null = null;

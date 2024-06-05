@@ -11,13 +11,13 @@ export class HomeComponent {
   public constructor(private router: Router, public authService: AuthService) {}
 
   public login() {
+    console.log('HomeComponent: login button clicked');
     this.authService.login();
   }
-  public navigateToPage(page: string) {
-    this.router.navigate([`/${page}`]);
-  }
+
   public logout() {
-    console.log('Logging out...');
+    console.log('HomeComponent: logging out');
+    this.authService.logout();
     this.router.navigate(['/login']);
   }
 }

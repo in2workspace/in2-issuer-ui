@@ -13,7 +13,7 @@ import { AlertService } from 'src/app/core/services/alert.service';
 import { ActivatedRoute } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
-import { AuthModule, StsConfigLoader, StsConfigStaticLoader } from 'angular-auth-oidc-client';
+import { AuthModule } from 'angular-auth-oidc-client';
 
 describe('CredencialOfferComponent', () => {
   let component: CredencialOfferComponent;
@@ -35,9 +35,7 @@ describe('CredencialOfferComponent', () => {
         HttpClientTestingModule,
         MaterialModule,
         SharedModule,
-        AuthModule.forRoot({
-
-        }),
+        AuthModule.forRoot({})
       ],
       providers: [
         AuthService,
@@ -50,8 +48,7 @@ describe('CredencialOfferComponent', () => {
           }
         }
       ]
-    })
-    .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(CredencialOfferComponent);
     component = fixture.componentInstance;
@@ -91,18 +88,6 @@ describe('CredencialOfferComponent', () => {
 
     expect(spyAlertService).toHaveBeenCalledWith('No transaction code found in URL.', 'error');
   });
-
-  // it('should show alert when no QR code is available', () => {
-  //   spyOn(credentialProcedureService, 'getCredentialOffer').and.returnValue(of(''));
-  //   const spyAlertService = spyOn(alertService, 'showAlert');
-
-  //   component.ngOnInit();
-  //   fixture.detectChanges();
-
-  //   expect(credentialProcedureService.getCredentialOffer).toHaveBeenCalledWith('testTransactionCode');
-  //   expect(component.qrCodeData).toBe('');
-  //   expect(spyAlertService).toHaveBeenCalledWith('No QR code available.', 'error');
-  // });
 
   it('should show alert when there is an error fetching credential offer', () => {
     const errorResponse = new HttpErrorResponse({ status: 500, statusText: 'Server Error' });
