@@ -3,39 +3,39 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { CredentialProcedure } from '../models/credentialProcedure.interface';
+import { CredentialProcedure, CredentialProcedureResponse,CredentialData } from '../models/credentialProcedure.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CredentialProcedureService {
 
-  private apiUrl = `${environment.base_url}${environment.api_base_url}`;
-  private credentialManagement = `${environment.base_url}${environment.credential_management}`;
+  private saveCredential = `${environment.base_url}${environment.save_credential}`;
+  private organizationProcedures = `${environment.base_url}${environment.procedures}`;
   private credentialOfferUrl = `${environment.base_url}${environment.credential_offer_url}`;
-
+  private notificationProcedure =`${environment.base_url}${environment.notification}`;
   public constructor(private http: HttpClient) { }
 
-  public getCredentialProcedures(): Observable<CredentialProcedure[]> {
-    return this.http.get<CredentialProcedure[]>(this.credentialManagement).pipe(
+  public getCredentialProcedures(): Observable<CredentialProcedureResponse> {
+    return this.http.get<CredentialProcedureResponse>(this.organizationProcedures,{headers:{"Authorization":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJvcmdhbml6YXRpb25JZGVudGlmaWVyIjoiVkFURVMtQjYwNjQ1OTAwIn0.-4DEmZ1TJpFUOwoyJNiBA-U-RIY1FLzwJTRNrCpPriQ"}}).pipe(
       catchError(this.handleError)
     );
   }
 
-  public getCredentialProcedureById(procedureId: string): Observable<CredentialProcedure[]> {
-    return this.http.get<CredentialProcedure[]>(`${this.apiUrl}?procedure_id=${procedureId}`).pipe(
+  public getCredentialProcedureById(procedureId: string): Observable<CredentialData> {
+    return this.http.get<CredentialData>(`${this.organizationProcedures}/${procedureId}/credential-decoded`,{headers:{"Authorization":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJvcmdhbml6YXRpb25JZGVudGlmaWVyIjoiVkFURVMtQjYwNjQ1OTAwIn0.-4DEmZ1TJpFUOwoyJNiBA-U-RIY1FLzwJTRNrCpPriQ"}}).pipe(
       catchError(this.handleError)
     );
   }
 
   public saveCredentialProcedure(credentialProcedure: CredentialProcedure): Observable<any> {
-    return this.http.post(this.apiUrl, credentialProcedure).pipe(
+    return this.http.post(this.saveCredential, credentialProcedure).pipe(
       catchError(this.handleError)
     );
   }
 
   public sendReminder(procedureId: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/${procedureId}/sendReminder`, {}).pipe(
+    return this.http.post(`${this.notificationProcedure}/${procedureId}`,{} ).pipe(
       catchError(this.handleError)
     );
   }

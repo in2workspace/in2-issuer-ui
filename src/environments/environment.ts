@@ -7,9 +7,10 @@ export const environment = {
     scope: 'openid profile email offline_access',
     grant_type: 'code'
   },
-  base_url: 'http://localhost',
+  base_url: 'http://localhost:8081',
   wallet_url: 'http://localhost:4200',
-  api_base_url: '/api/v1/credentials?type=LEARCredentialEmployee',
+  procedures: '/api/v1/procedures',
+  save_credential: '/api/v1/credentials?type=LEARCredentialEmployee',
   credential_offer_url: '/api/v1/credential-offer',
-  credential_management: '/api/v1/credentials',
+  notification: '/api/v1/notification',
 };

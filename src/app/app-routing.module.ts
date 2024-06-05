@@ -20,14 +20,14 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'credentialManagement',
+    path: 'organization/credentials',
     loadChildren: () =>
       import(
         './features/credential-management/credential-management.module'
       ).then((m) => m.CredentialManagementModule),
   },
   {
-    path: 'credentialIssuance',
+    path: 'organization/credentials/create',
     loadChildren: () =>
       import('./features/credentialIssuance/credentialIssuance.module').then(
         (m) => m.CredentialIssuanceModule

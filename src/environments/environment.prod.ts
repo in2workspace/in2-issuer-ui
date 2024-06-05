@@ -8,7 +8,9 @@ export const environment = {
     grant_type: window["env"]["grant_type"] || 'code'
   },
   base_url: window["env"]["base_url"] || 'https://localhost',
-  wallet_url: window["env"]["wallet_url"] || 'https://localhost:4200',
-  api_base_url: window["env"]["api_base_url"] || '/api/v1/credentials?type=LEARCredentialEmployee',
-  credential_offer_url: window["env"]["credential_offer_url"] || '/api/v1/credential-offer'
+  wallet_url: window["env"]["wallet_url"] || 'http://localhost:4200',
+  procedures: window["env"]["procedures"] || '/api/v1/procedures',
+  save_credential: window["env"]["saveCredential"] || 'https://localhost:4200',
+  credential_offer_url: window["env"]["credential_offer_url"] || '/api/v1/credentials?type=LEARCredentialEmployee',
+  notification: window["env"]["notification"] || '/api/v1/credential-offer'
 };
