@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PowerComponent } from './power.component';
-import { DebugElement } from '@angular/core';
+import { DebugElement, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -22,6 +22,7 @@ describe('PowerComponent', () => {
         MaterialModule,
         RouterModule.forRoot([]),
       ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
   });
 
@@ -65,18 +66,24 @@ describe('PowerComponent', () => {
       },
     ];
 
+    spyOn<any>(component, 'showPopup');
+
     component.addOption();
 
     expect(component.addedOptions.length).toBe(1);
+    expect((component as any).showPopup).toHaveBeenCalledWith('This option has already been added.');
   });
 
   it('should not add an option if selectedOption is empty', () => {
     component.isDisabled = false;
     component.selectedOption = '';
 
+    spyOn<any>(component, 'showPopup');
+
     component.addOption();
 
     expect(component.addedOptions.length).toBe(0);
+    expect((component as any).showPopup).toHaveBeenCalledWith('Please select an option.');
   });
 
   it('should add an option if it does not already exist', () => {
@@ -157,43 +164,5 @@ describe('PowerComponent', () => {
     component.addOption();
 
     expect(component.selectedOption).toBe('');
-  });
-
-  it('should not add an option and show alert if selectedOption is empty', () => {
-    spyOn(window, 'alert');
-    component.isDisabled = false;
-    component.selectedOption = '';
-
-    component.addOption();
-
-    expect(window.alert).toHaveBeenCalledWith('Please select an option.');
-    expect(component.addedOptions.length).toBe(0);
-  });
-
-  it('should not add an option and show alert if option already exists', () => {
-    spyOn(window, 'alert');
-    component.isDisabled = false;
-    component.selectedOption = 'TestOption';
-    component.addedOptions = [
-      {
-        tmf_action: [],
-        tmf_domain: 'DOME',
-        tmf_function: 'TestOption',
-        tmf_type: 'Domain',
-        execute: false,
-        create: false,
-        update: false,
-        delete: false,
-        operator: false,
-        customer: false,
-        provider: false,
-        marketplace: false,
-      },
-    ];
-
-    component.addOption();
-
-    expect(window.alert).toHaveBeenCalledWith('This option has already been added.');
-    expect(component.addedOptions.length).toBe(1);
   });
 });

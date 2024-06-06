@@ -47,7 +47,7 @@ export class ServeErrorInterceptor implements HttpInterceptor {
       case 500:
         return 'error.internal_server';
       default:
-        return '';
+        return 'error.unknown_error';
     }
   }
 }

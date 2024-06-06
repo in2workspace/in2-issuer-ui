@@ -5,7 +5,7 @@ import { CredentialProcedureService } from 'src/app/core/services/credential-pro
 
 @Component({
   selector: 'app-credential-detail',
-  templateUrl: './credential-detail.component.html'
+  templateUrl: './credential-detail.component.html',
 })
 export class CredentialDetailComponent implements OnInit {
   public credentialId: string | null = null;
@@ -29,6 +29,9 @@ export class CredentialDetailComponent implements OnInit {
     this.credentialProcedureService.getCredentialProcedureById(procedureId).subscribe({
       next: (credentials: CredentialProcedure[]) => {
         this.credential = credentials.length > 0 ? credentials[0] : null;
+      },
+      error: (error: any) => {
+        console.error('Error fetching credential details', error);
       }
     });
   }
