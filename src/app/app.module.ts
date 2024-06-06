@@ -32,7 +32,7 @@ import { AlertService } from './core/services/alert.service';
     }),
     AuthModule.forRoot({
       config: {
-        postLoginRoute: '/credentialManagement',
+        postLoginRoute: '/organization/credentials',
         authority:  environment.loginParams.login_url,
         redirectUrl: `${window.location.origin}`,
         postLogoutRedirectUri: window.location.origin,
@@ -44,6 +44,7 @@ import { AlertService } from './core/services/alert.service';
         historyCleanupOff: false,
         ignoreNonceAfterRefresh: true,
         triggerRefreshWhenIdTokenExpired: false,
+        secureRoutes:[environment.base_url]
       },
     }),
   ],
@@ -52,7 +53,8 @@ import { AlertService } from './core/services/alert.service';
     { provide: HTTP_INTERCEPTORS, useClass: ServeErrorInterceptor, multi: true },
     AlertService,
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  
 })
 export class AppModule { }
 

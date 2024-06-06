@@ -30,8 +30,8 @@ export class CredencialOfferComponent implements OnInit {
   }
 
   private getCredentialOffer(transactionCode: string): void {
-    this.credentialProcedureService.getCredentialOffer(transactionCode).subscribe(
-      data => {
+    this.credentialProcedureService.getCredentialOffer(transactionCode).subscribe({
+      next: (data) => {
         if (data) {
           this.qrCodeData = data;
           console.log('QR Code Data:', this.qrCodeData);
@@ -43,7 +43,10 @@ export class CredencialOfferComponent implements OnInit {
         } else {
           this.alertService.showAlert('No QR code available.', 'error');
         }
+      },
+      error: () => {
+        this.alertService.showAlert('Error fetching credential offer.', 'error');
       }
-    );
+    });
   }
 }

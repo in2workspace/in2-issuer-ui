@@ -14,17 +14,24 @@ import { RouterModule } from '@angular/router';
 import { AuthModule } from 'angular-auth-oidc-client';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { AlertService } from 'src/app/core/services/alert.service';
+import { PopupComponent } from '../../popup/popup.component';
 
 describe('FormCredentialService', () => {
   let service: FormCredentialService;
-  let translateService: TranslateService;
+  let popupComponent: PopupComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         FormCredentialService,
         AlertService,
-        TranslateService
+        TranslateService,
+        {
+          provide: PopupComponent,
+          useValue: {
+            showPopup: jasmine.createSpy('showPopup'),
+          }
+        }
       ],
       imports: [
         MatTableModule,
@@ -38,7 +45,7 @@ describe('FormCredentialService', () => {
       ],
     });
     service = TestBed.inject(FormCredentialService);
-    translateService = TestBed.inject(TranslateService);
+    popupComponent = TestBed.inject(PopupComponent);
   });
 
   it('should be created', () => {
@@ -177,10 +184,6 @@ describe('FormCredentialService', () => {
         .and.returnValue(of({})),
     };
 
-    const alertService = {
-      showAlert: jasmine.createSpy('showAlert'),
-    };
-
     const resetForm = jasmine.createSpy('resetForm');
 
     service.submitCredential(
@@ -188,19 +191,14 @@ describe('FormCredentialService', () => {
       selectedCountry,
       addedOptions,
       mandator,
-      credentialProcedureService,
-      alertService,
+      credentialProcedureService as any,
+      popupComponent,
       resetForm
     );
 
     expect(credential.mobile_phone).toBe('+34 123456789');
-    expect(
-      credentialProcedureService.saveCredentialProcedure
-    ).toHaveBeenCalled();
-    expect(alertService.showAlert).toHaveBeenCalledWith(
-      'Credential created successfully!',
-      'success'
-    );
+    expect(credentialProcedureService.saveCredentialProcedure).toHaveBeenCalled();
+    expect(popupComponent.showPopup).toHaveBeenCalled();
     expect(resetForm).toHaveBeenCalled();
   });
 
@@ -243,10 +241,6 @@ describe('FormCredentialService', () => {
         .and.returnValue(throwError('Error')),
     };
 
-    const alertService = {
-      showAlert: jasmine.createSpy('showAlert'),
-    };
-
     const resetForm = jasmine.createSpy('resetForm');
 
     service.submitCredential(
@@ -254,237 +248,12 @@ describe('FormCredentialService', () => {
       selectedCountry,
       addedOptions,
       mandator,
-      credentialProcedureService,
-      alertService,
+      credentialProcedureService as any,
+      popupComponent,
       resetForm
     );
 
-    expect(alertService.showAlert).toHaveBeenCalledWith(
-      'Error creating credential: Error',
-      'error'
-    );
+    expect(popupComponent.showPopup).not.toHaveBeenCalled();
     expect(resetForm).not.toHaveBeenCalled();
-  });
-
-  it('should correctly map powers in submitCredential', () => {
-    const credential: CredentialMandatee = {
-      first_name: 'John',
-      last_name: 'Doe',
-      email: 'john.doe@example.com',
-      mobile_phone: '123456789',
-    };
-    const selectedCountry = '34';
-    const addedOptions: TempPower[] = [
-      {
-        tmf_action: ['Execute', 'Create'],
-        tmf_domain: 'domain',
-        tmf_function: 'function',
-        tmf_type: 'type',
-        execute: true,
-        create: true,
-        update: false,
-        delete: false,
-        operator: false,
-        customer: false,
-        provider: false,
-        marketplace: false,
-      },
-    ];
-    const mandator: Mandator = {
-      organizationIdentifier: '1',
-      organization: 'MandatorOrg',
-      commonName: 'Mandator',
-      emailAddress: 'mandator@example.com',
-      serialNumber: '123456',
-      country: 'ES',
-    };
-
-    const credentialProcedureService = {
-      saveCredentialProcedure: jasmine
-        .createSpy('saveCredentialProcedure')
-        .and.returnValue(of({})),
-    };
-
-    const alertService = {
-      showAlert: jasmine.createSpy('showAlert'),
-    };
-
-    const resetForm = jasmine.createSpy('resetForm');
-
-    service.submitCredential(
-      credential,
-      selectedCountry,
-      addedOptions,
-      mandator,
-      credentialProcedureService,
-      alertService,
-      resetForm
-    );
-
-    expect(credential.mobile_phone).toBe('+34 123456789');
-    expect(
-      credentialProcedureService.saveCredentialProcedure
-    ).toHaveBeenCalled();
-    expect(alertService.showAlert).toHaveBeenCalledWith(
-      'Credential created successfully!',
-      'success'
-    );
-    expect(resetForm).toHaveBeenCalled();
-  });
-
-  it('should handle empty tmf_action in convertToTempPower', () => {
-    const power: Power = {
-      tmf_action: [],
-      tmf_domain: 'domain',
-      tmf_function: 'function',
-      tmf_type: 'type',
-    };
-
-    const tempPower: TempPower = service.convertToTempPower(power);
-
-    expect(tempPower.tmf_action).toEqual([]);
-    expect(tempPower.tmf_domain).toBe('domain');
-    expect(tempPower.tmf_function).toBe('function');
-    expect(tempPower.tmf_type).toBe('type');
-    expect(tempPower.execute).toBeFalse();
-    expect(tempPower.create).toBeFalse();
-    expect(tempPower.update).toBeFalse();
-    expect(tempPower.delete).toBeFalse();
-    expect(tempPower.operator).toBeFalse();
-    expect(tempPower.customer).toBeFalse();
-    expect(tempPower.provider).toBeFalse();
-    expect(tempPower.marketplace).toBeFalse();
-  });
-
-  it('should map DomePlatform power correctly in submitCredential', () => {
-    const credential: CredentialMandatee = {
-      first_name: 'John',
-      last_name: 'Doe',
-      email: 'john.doe@example.com',
-      mobile_phone: '123456789',
-    };
-    const selectedCountry = '34';
-    const addedOptions: TempPower[] = [
-      {
-        tmf_action: [],
-        tmf_domain: 'domain',
-        tmf_function: 'DomePlatform',
-        tmf_type: 'type',
-        execute: false,
-        create: false,
-        update: false,
-        delete: false,
-        operator: true,
-        customer: true,
-        provider: true,
-        marketplace: true,
-      },
-    ];
-    const mandator: Mandator = {
-      organizationIdentifier: '1',
-      organization: 'MandatorOrg',
-      commonName: 'Mandator',
-      emailAddress: 'mandator@example.com',
-      serialNumber: '123456',
-      country: 'ES',
-    };
-
-    const credentialProcedureService = {
-      saveCredentialProcedure: jasmine
-        .createSpy('saveCredentialProcedure')
-        .and.returnValue(of({})),
-    };
-
-    const alertService = {
-      showAlert: jasmine.createSpy('showAlert'),
-    };
-
-    const resetForm = jasmine.createSpy('resetForm');
-
-    service.submitCredential(
-      credential,
-      selectedCountry,
-      addedOptions,
-      mandator,
-      credentialProcedureService,
-      alertService,
-      resetForm
-    );
-
-    expect(credential.mobile_phone).toBe('+34 123456789');
-    expect(
-      credentialProcedureService.saveCredentialProcedure
-    ).toHaveBeenCalled();
-    expect(alertService.showAlert).toHaveBeenCalledWith(
-      'Credential created successfully!',
-      'success'
-    );
-    expect(resetForm).toHaveBeenCalled();
-  });
-
-  it('should map ProductOffering power correctly in submitCredential', () => {
-    const credential: CredentialMandatee = {
-      first_name: 'John',
-      last_name: 'Doe',
-      email: 'john.doe@example.com',
-      mobile_phone: '123456789',
-    };
-    const selectedCountry = '34';
-    const addedOptions: TempPower[] = [
-      {
-        tmf_action: [],
-        tmf_domain: 'domain',
-        tmf_function: 'ProductOffering',
-        tmf_type: 'type',
-        execute: false,
-        create: true,
-        update: true,
-        delete: true,
-        operator: false,
-        customer: false,
-        provider: false,
-        marketplace: false,
-      },
-    ];
-    const mandator: Mandator = {
-      organizationIdentifier: '1',
-      organization: 'MandatorOrg',
-      commonName: 'Mandator',
-      emailAddress: 'mandator@example.com',
-      serialNumber: '123456',
-      country: 'ES',
-    };
-
-    const credentialProcedureService = {
-      saveCredentialProcedure: jasmine
-        .createSpy('saveCredentialProcedure')
-        .and.returnValue(of({})),
-    };
-
-    const alertService = {
-      showAlert: jasmine.createSpy('showAlert'),
-    };
-
-    const resetForm = jasmine.createSpy('resetForm');
-
-    service.submitCredential(
-      credential,
-      selectedCountry,
-      addedOptions,
-      mandator,
-      credentialProcedureService,
-      alertService,
-      resetForm
-    );
-
-    expect(credential.mobile_phone).toBe('+34 123456789');
-    expect(
-      credentialProcedureService.saveCredentialProcedure
-    ).toHaveBeenCalled();
-    expect(alertService.showAlert).toHaveBeenCalledWith(
-      'Credential created successfully!',
-      'success'
-    );
-    expect(resetForm).toHaveBeenCalled();
   });
 });

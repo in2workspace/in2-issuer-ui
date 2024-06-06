@@ -13,7 +13,7 @@ export class CallbackComponent implements OnInit {
   public ngOnInit() {
     this.oidcSecurityService.checkAuth().subscribe(({ isAuthenticated }) => {
       if (isAuthenticated) {
-        this.router.navigate(['/credentialManagement']);
+        this.router.navigate(['/organization/credentials']);
       } else {
         this.router.navigate(['/home']);
       }
