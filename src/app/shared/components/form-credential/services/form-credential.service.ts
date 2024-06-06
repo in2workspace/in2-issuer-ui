@@ -104,6 +104,9 @@ export class FormCredentialService {
         popupComponent.showPopup();
         resetForm();
       },
+      error: () => {
+        popupComponent.showPopup();
+      }
     });
   }
 }

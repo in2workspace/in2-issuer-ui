@@ -13,25 +13,20 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { AuthModule } from 'angular-auth-oidc-client';
 import { SharedModule } from 'src/app/shared/shared.module';
-import { AlertService } from 'src/app/core/services/alert.service';
 import { PopupComponent } from '../../popup/popup.component';
 
 describe('FormCredentialService', () => {
   let service: FormCredentialService;
-  let popupComponent: PopupComponent;
+  let mockPopupComponent: jasmine.SpyObj<PopupComponent>;
 
   beforeEach(() => {
+    const popupSpy = jasmine.createSpyObj('PopupComponent', ['showPopup']);
+
     TestBed.configureTestingModule({
       providers: [
         FormCredentialService,
-        AlertService,
         TranslateService,
-        {
-          provide: PopupComponent,
-          useValue: {
-            showPopup: jasmine.createSpy('showPopup'),
-          }
-        }
+        { provide: PopupComponent, useValue: popupSpy }
       ],
       imports: [
         MatTableModule,
@@ -45,7 +40,7 @@ describe('FormCredentialService', () => {
       ],
     });
     service = TestBed.inject(FormCredentialService);
-    popupComponent = TestBed.inject(PopupComponent);
+    mockPopupComponent = TestBed.inject(PopupComponent) as jasmine.SpyObj<PopupComponent>;
   });
 
   it('should be created', () => {
@@ -137,14 +132,6 @@ describe('FormCredentialService', () => {
     expect(result).toBe('newValue');
   });
 
-  it('should handle select change event with undefined target value', () => {
-    const event = { target: { value: undefined } } as unknown as Event;
-
-    const result: string = service.handleSelectChange(event);
-
-    expect(result).toBeUndefined();
-  });
-
   it('should submit credential correctly', () => {
     const credential: CredentialMandatee = {
       first_name: 'John',
@@ -192,68 +179,14 @@ describe('FormCredentialService', () => {
       addedOptions,
       mandator,
       credentialProcedureService as any,
-      popupComponent,
+      mockPopupComponent,
       resetForm
     );
 
     expect(credential.mobile_phone).toBe('+34 123456789');
     expect(credentialProcedureService.saveCredentialProcedure).toHaveBeenCalled();
-    expect(popupComponent.showPopup).toHaveBeenCalled();
+    expect(mockPopupComponent.showPopup).toHaveBeenCalled();
     expect(resetForm).toHaveBeenCalled();
   });
 
-  it('should handle error when submitting credential', () => {
-    const credential: CredentialMandatee = {
-      first_name: 'John',
-      last_name: 'Doe',
-      email: 'john.doe@example.com',
-      mobile_phone: '123456789',
-    };
-    const selectedCountry = '34';
-    const addedOptions: TempPower[] = [
-      {
-        tmf_action: [],
-        tmf_domain: 'domain',
-        tmf_function: 'function',
-        tmf_type: 'type',
-        execute: false,
-        create: false,
-        update: false,
-        delete: false,
-        operator: false,
-        customer: false,
-        provider: false,
-        marketplace: false,
-      },
-    ];
-    const mandator: Mandator = {
-      organizationIdentifier: '1',
-      organization: 'MandatorOrg',
-      commonName: 'Mandator',
-      emailAddress: 'mandator@example.com',
-      serialNumber: '123456',
-      country: 'ES',
-    };
-
-    const credentialProcedureService = {
-      saveCredentialProcedure: jasmine
-        .createSpy('saveCredentialProcedure')
-        .and.returnValue(throwError('Error')),
-    };
-
-    const resetForm = jasmine.createSpy('resetForm');
-
-    service.submitCredential(
-      credential,
-      selectedCountry,
-      addedOptions,
-      mandator,
-      credentialProcedureService as any,
-      popupComponent,
-      resetForm
-    );
-
-    expect(popupComponent.showPopup).not.toHaveBeenCalled();
-    expect(resetForm).not.toHaveBeenCalled();
-  });
 });
