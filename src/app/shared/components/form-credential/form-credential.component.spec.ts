@@ -11,6 +11,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { RouterModule } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { of } from 'rxjs';
+import { PopupComponent } from '../popup/popup.component';
 
 describe('FormCredentialComponent', () => {
   let component: FormCredentialComponent;
@@ -30,7 +31,7 @@ describe('FormCredentialComponent', () => {
     mockAuthService = jasmine.createSpyObj('AuthService', ['getMandator']);
 
     await TestBed.configureTestingModule({
-      declarations: [FormCredentialComponent],
+      declarations: [FormCredentialComponent, PopupComponent],
       imports: [
         ReactiveFormsModule,
         FormsModule,
@@ -55,6 +56,10 @@ describe('FormCredentialComponent', () => {
     mockCountryService.getCountries.and.returnValue([{ name: 'USA', code: 'US' }]);
     mockAuthService.getMandator.and.returnValue(of(null));
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    TestBed.resetTestingModule();
   });
 
   it('should create', () => {
@@ -91,6 +96,16 @@ describe('FormCredentialComponent', () => {
   });
 
   it('should submit credential when submitCredential is called', () => {
+    component.credentialForm.setValue({
+      first_name: 'John',
+      last_name: 'Doe',
+      email: 'john.doe@example.com',
+      mobile_phone: '1234567890',
+      country: 'US'
+    });
+    component.selectedCountry = 'US';
+    component.addedOptions = [];
+
     component.submitCredential();
     expect(mockFormCredentialService.submitCredential).toHaveBeenCalledWith(
       component.credential,
@@ -98,7 +113,7 @@ describe('FormCredentialComponent', () => {
       component.addedOptions,
       component.mandator,
       mockCredentialProcedureService,
-      mockAlertService,
+      component.popupComponent,
       jasmine.any(Function)
     );
   });
