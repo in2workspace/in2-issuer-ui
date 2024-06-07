@@ -9,7 +9,7 @@ const routes: Routes = [
     component: CredentialManagementComponent,
   },
   {
-    path: 'credentials/details/:id',
+    path: 'details/:id',
     component: CredentialDetailComponent,
   },
 ];

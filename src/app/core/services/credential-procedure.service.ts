@@ -17,13 +17,13 @@ export class CredentialProcedureService {
   public constructor(private http: HttpClient) { }
 
   public getCredentialProcedures(): Observable<CredentialProcedureResponse> {
-    return this.http.get<CredentialProcedureResponse>(this.organizationProcedures,{headers:{"Authorization":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJvcmdhbml6YXRpb25JZGVudGlmaWVyIjoiVkFURVMtQjYwNjQ1OTAwIn0.-4DEmZ1TJpFUOwoyJNiBA-U-RIY1FLzwJTRNrCpPriQ"}}).pipe(
+    return this.http.get<CredentialProcedureResponse>(this.organizationProcedures).pipe(
       catchError(this.handleError)
     );
   }
 
   public getCredentialProcedureById(procedureId: string): Observable<CredentialData> {
-    return this.http.get<CredentialData>(`${this.organizationProcedures}/${procedureId}/credential-decoded`,{headers:{"Authorization":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJvcmdhbml6YXRpb25JZGVudGlmaWVyIjoiVkFURVMtQjYwNjQ1OTAwIn0.-4DEmZ1TJpFUOwoyJNiBA-U-RIY1FLzwJTRNrCpPriQ"}}).pipe(
+    return this.http.get<CredentialData>(`${this.organizationProcedures}/${procedureId}/credential-decoded`).pipe(
       catchError(this.handleError)
     );
   }

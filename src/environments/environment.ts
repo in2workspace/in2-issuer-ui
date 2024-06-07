@@ -12,5 +12,5 @@ export const environment = {
   procedures: '/api/v1/procedures',
   save_credential: '/api/v1/credentials?type=LEARCredentialEmployee',
   credential_offer_url: '/api/v1/credential-offer',
-  notification: '/api/v1/notification',
+  notification: '/api/v1/notifications',
 };

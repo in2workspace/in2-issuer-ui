@@ -93,7 +93,6 @@ export class FormCredentialComponent implements OnInit {
 
   public submitCredential(): void {
 
-    if (this.credentialForm.valid) {
       this.formCredentialService.submitCredential(
         this.credential,
         this.selectedCountry,
@@ -103,7 +102,6 @@ export class FormCredentialComponent implements OnInit {
         this.popupComponent,
         this.resetForm.bind(this)
       );
-    }
   }
 
   public triggerSendReminder(): void {
