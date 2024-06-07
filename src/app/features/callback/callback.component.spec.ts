@@ -39,7 +39,7 @@ describe('CallbackComponent', () => {
 
   it('should navigate to /credentialManagement if authenticated', () => {
     fixture.detectChanges();
-    expect(mockRouter.navigate).toHaveBeenCalledWith(['/credentialManagement']);
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/organization/credentials']);
   });
 
   it('should navigate to /home if not authenticated', () => {

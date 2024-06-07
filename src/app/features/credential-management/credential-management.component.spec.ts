@@ -195,7 +195,7 @@ describe('CredentialManagementComponent', () => {
 
     const mockElement: CredentialProcedure = {
       credential_procedure:{
-        procedure_id:'',
+        procedure_id:'1',
       status: 'completed',
       full_name: 'John Doe',
       updated: '2023-01-01',
@@ -205,7 +205,7 @@ describe('CredentialManagementComponent', () => {
     component.goToCredentialDetails(mockElement);
 
     expect(router.navigate).toHaveBeenCalledWith([
-      '/organization/details',
+      '/organization/credentials/details',
       '1',
     ]);
   });

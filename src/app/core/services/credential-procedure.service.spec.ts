@@ -8,8 +8,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 describe('CredentialProcedureService', () => {
   let service: CredentialProcedureService;
   let httpMock: HttpTestingController;
-  const apiUrl = `${environment.base_url}${environment.base_url}`;
+  const apiUrl = `${environment.base_url}${environment.save_credential}`;
   const proceduresURL = `${environment.base_url}${environment.procedures}`;
+  const notificationUrl = `${environment.base_url}${environment.notification}`;
   const credentialOfferUrl = `${environment.base_url}${environment.credential_offer_url}`;
 
   beforeEach(() => {
@@ -136,7 +137,7 @@ describe('CredentialProcedureService', () => {
       expect(data).toBeTruthy();
     });
 
-    const req = httpMock.expectOne(`${proceduresURL}/${procedureId}/sendReminder`);
+    const req = httpMock.expectOne(`${notificationUrl}/${procedureId}`);
     expect(req.request.method).toBe('POST');
     req.flush({});
   });
@@ -155,7 +156,7 @@ describe('CredentialProcedureService', () => {
       }
     );
 
-    const req = httpMock.expectOne(`${proceduresURL}/${procedureId}/sendReminder`);
+    const req = httpMock.expectOne(`${notificationUrl}/${procedureId}`);
     req.flush('500 error', errorResponse);
   });
 
