@@ -111,8 +111,8 @@ describe('CredentialProcedureService', () => {
 
   it('should handle error when saving credential procedure', () => {
     const mockData: CredentialProcedure = {
-      procedure_id: '1', status: 'completed', full_name: 'John Doe', updated: '2023-01-01', credential: { mandatee: {}, mandator: {}, power: [] } as any
-    };
+      credential_procedure:{procedure_id: '1', status: 'completed', full_name: 'John Doe', updated: '2023-01-01', credential: { mandatee: {}, mandator: {}, power: [] } as any
+    }};
     const errorResponse = new HttpErrorResponse({
       error: '500 error',
       status: 500, statusText: 'Server Error'
