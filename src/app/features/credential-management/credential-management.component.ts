@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { Router } from '@angular/router';
-import { CredentialProcedure } from 'src/app/core/models/credentialProcedure.interface';
+import { CredentialProcedure, CredentialProcedureResponse } from 'src/app/core/models/credentialProcedure.interface';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 
 @Component({
@@ -27,8 +27,9 @@ export class CredentialManagementComponent implements AfterViewInit {
 
   public loadCredentialData(): void {
     this.credentialProcedureService.getCredentialProcedures().subscribe({
-      next: (data) => {
-        this.dataSource.data = data;
+      next: (data:CredentialProcedureResponse) => {
+        console.log(data)
+        this.dataSource.data = data.credential_procedures;
       },
       error: (error) => {
         console.error('Error fetching credentials', error);
@@ -37,10 +38,10 @@ export class CredentialManagementComponent implements AfterViewInit {
   }
 
   public createNewCredential(): void {
-    this.router.navigate(['/credentialIssuance']);
+    this.router.navigate(['/organization/credentials/create']);
   }
 
   public goToCredentialDetails(element: CredentialProcedure): void {
-    this.router.navigate(['/credentialManagement/details', element.procedure_id]);
+    this.router.navigate(['/organization/credentials/details', element.credential_procedure?.procedure_id]);
   }
 }

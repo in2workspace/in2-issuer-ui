@@ -14,7 +14,7 @@ export class ServeErrorInterceptor implements HttpInterceptor {
     private translate: TranslateService
   ) {}
 
-  public  intercept(
+  public intercept(
     request: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
@@ -22,10 +22,8 @@ export class ServeErrorInterceptor implements HttpInterceptor {
       catchError((error: HttpErrorResponse) => {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) {
-
           errorMessage = `Error: ${error.error.message}`;
         } else {
-
           errorMessage = this.getServerErrorMessage(error);
         }
 

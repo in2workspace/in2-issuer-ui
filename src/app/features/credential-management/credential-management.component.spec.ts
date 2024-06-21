@@ -6,7 +6,7 @@ import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { CredentialManagementComponent } from './credential-management.component';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
-import { CredentialProcedure } from 'src/app/core/models/credentialProcedure.interface';
+import { CredentialProcedure,CredentialProcedureResponse } from 'src/app/core/models/credentialProcedure.interface';
 import { SharedModule } from 'src/app/shared/shared.module';
 import {
   TranslateModule,
@@ -79,7 +79,7 @@ describe('CredentialManagementComponent', () => {
     fixture = TestBed.createComponent(CredentialManagementComponent);
     component = fixture.componentInstance;
 
-    credentialProcedureService.getCredentialProcedures.and.returnValue(of([]));
+    credentialProcedureService.getCredentialProcedures.and.returnValue(of());
 
     fixture.detectChanges();
   });
@@ -121,29 +121,31 @@ describe('CredentialManagementComponent', () => {
       ],
     };
 
-    const mockData: CredentialProcedure[] = [
+    const mockData: CredentialProcedureResponse = {credential_procedures:[
       {
-        procedure_id: '1',
+        credential_procedure:{
+          procedure_id:'',
         status: 'completed',
         full_name: 'John Doe',
         updated: '2023-01-01',
-        credential: mockCredential,
+        credential: mockCredential,}
       },
       {
-        procedure_id: '2',
+        credential_procedure:{
+          procedure_id:'',
         status: 'pending',
         full_name: 'Jane Doe',
         updated: '2023-01-02',
-        credential: mockCredential,
+        credential: mockCredential,}
       },
-    ];
+    ]};
     credentialProcedureService.getCredentialProcedures.and.returnValue(
       of(mockData)
     );
 
     component.loadCredentialData();
 
-    expect(component.dataSource.data).toEqual(mockData);
+    expect(component.dataSource.data).toEqual(mockData.credential_procedures);
   });
 
   it('should log an error when loading credential data fails', () => {
@@ -162,7 +164,7 @@ describe('CredentialManagementComponent', () => {
 
   it('should navigate to credential issuance page', () => {
     component.createNewCredential();
-    expect(router.navigate).toHaveBeenCalledWith(['/credentialIssuance']);
+    expect(router.navigate).toHaveBeenCalledWith(['/organization/credentials/create']);
   });
 
   it('should navigate to credential details page', () => {
@@ -192,17 +194,18 @@ describe('CredentialManagementComponent', () => {
     };
 
     const mockElement: CredentialProcedure = {
-      procedure_id: '1',
+      credential_procedure:{
+        procedure_id:'1',
       status: 'completed',
       full_name: 'John Doe',
       updated: '2023-01-01',
-      credential: mockCredential,
+      credential: mockCredential,}
     };
 
     component.goToCredentialDetails(mockElement);
 
     expect(router.navigate).toHaveBeenCalledWith([
-      '/credentialManagement/details',
+      '/organization/credentials/details',
       '1',
     ]);
   });

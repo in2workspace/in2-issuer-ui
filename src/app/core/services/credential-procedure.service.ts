@@ -3,39 +3,39 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { CredentialProcedure } from '../models/credentialProcedure.interface';
+import { CredentialProcedure, CredentialProcedureResponse,CredentialData } from '../models/credentialProcedure.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CredentialProcedureService {
 
-  private apiUrl = `${environment.base_url}${environment.api_base_url}`;
+  private saveCredential = `${environment.base_url}${environment.save_credential}`;
+  private organizationProcedures = `${environment.base_url}${environment.procedures}`;
   private credentialOfferUrl = `${environment.base_url}${environment.credential_offer_url}`;
-  private proceduresURL : string = `${environment.base_url}${environment.procedures_path}`;
-
+  private notificationProcedure =`${environment.base_url}${environment.notification}`;
   public constructor(private http: HttpClient) { }
 
-  public getCredentialProcedures(): Observable<CredentialProcedure[]> {
-    return this.http.get<CredentialProcedure[]>(this.proceduresURL).pipe(
+  public getCredentialProcedures(): Observable<CredentialProcedureResponse> {
+    return this.http.get<CredentialProcedureResponse>(this.organizationProcedures).pipe(
       catchError(this.handleError)
     );
   }
 
-  public getCredentialProcedureById(procedureId: string): Observable<CredentialProcedure[]> {
-    return this.http.get<CredentialProcedure[]>(`${this.proceduresURL}/${procedureId}/credential-decoded`).pipe(
+  public getCredentialProcedureById(procedureId: string): Observable<CredentialData> {
+    return this.http.get<CredentialData>(`${this.organizationProcedures}/${procedureId}/credential-decoded`).pipe(
       catchError(this.handleError)
     );
   }
 
   public saveCredentialProcedure(credentialProcedure: CredentialProcedure): Observable<any> {
-    return this.http.post(this.apiUrl, credentialProcedure).pipe(
+    return this.http.post(this.saveCredential, credentialProcedure).pipe(
       catchError(this.handleError)
     );
   }
 
   public sendReminder(procedureId: string): Observable<any> {
-    return this.http.post(`${this.proceduresURL}/${procedureId}/sendReminder`, {}).pipe(
+    return this.http.post(`${this.notificationProcedure}/${procedureId}`,{} ).pipe(
       catchError(this.handleError)
     );
   }
@@ -55,13 +55,13 @@ export class CredentialProcedureService {
   }
 
   private handleError(error: HttpErrorResponse) {
-    let errorMessage = 'Unknown error!';
+    let errorMessage;
     if (error.error instanceof ErrorEvent) {
       errorMessage = `Client-side error: ${error.error.message}`;
     } else {
       errorMessage = `Server-side error: ${error.status} ${error.message}`;
     }
     console.error('Error response body:', error.error);
-    return throwError(errorMessage);
+    return throwError(()=>errorMessage);
   }
 }

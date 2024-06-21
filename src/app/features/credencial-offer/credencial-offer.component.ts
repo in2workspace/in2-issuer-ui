@@ -21,7 +21,6 @@ export class CredencialOfferComponent implements OnInit {
   public ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       const transactionCode = params['transaction_code'];
-      console.log('Transaction Code:', transactionCode);
       if (transactionCode) {
         this.getCredentialOffer(transactionCode);
       } else {
@@ -31,9 +30,8 @@ export class CredencialOfferComponent implements OnInit {
   }
 
   private getCredentialOffer(transactionCode: string): void {
-    this.credentialProcedureService.getCredentialOffer(transactionCode).subscribe(
-      data => {
-        console.log('Data received from API:', data);
+    this.credentialProcedureService.getCredentialOffer(transactionCode).subscribe({
+      next: (data) => {
         if (data) {
           this.qrCodeData = data;
           console.log('QR Code Data:', this.qrCodeData);
@@ -46,10 +44,9 @@ export class CredencialOfferComponent implements OnInit {
           this.alertService.showAlert('No QR code available.', 'error');
         }
       },
-      error => {
+      error: () => {
         this.alertService.showAlert('Error fetching credential offer.', 'error');
-        console.error('Error fetching credential offer', error);
       }
-    );
+    });
   }
 }

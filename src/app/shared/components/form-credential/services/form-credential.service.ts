@@ -3,6 +3,7 @@ import { TempPower } from '../../power/power/power.component';
 import { Power } from 'src/app/core/models/power.interface';
 import { CredentialMandatee } from 'src/app/core/models/credendentialMandatee.interface';
 import { Mandator } from 'src/app/core/models/madator.interface';
+import { PopupComponent } from '../../popup/popup.component';
 
 @Injectable({
   providedIn: 'root'
@@ -47,44 +48,16 @@ export class FormCredentialService {
     addedOptions: TempPower[],
     mandator: Mandator | null,
     credentialProcedureService: any,
-    alertService: any,
+    popupComponent: PopupComponent,
     resetForm: () => void
   ): void {
-    credential.mobile_phone = `+${selectedCountry} ${credential.mobile_phone}`;
+    const countryPrefix = `+${selectedCountry}`;
+    if (!credential.mobile_phone.startsWith(countryPrefix)) {
+      credential.mobile_phone = `${countryPrefix} ${credential.mobile_phone}`;
+    }
 
     const power: Power[] = addedOptions.map(option => {
-      if (option.tmf_function === 'Onboarding') {
-        return {
-          tmf_action: option.execute ? 'Execute' : '',
-          tmf_domain: option.tmf_domain,
-          tmf_function: option.tmf_function,
-          tmf_type: option.tmf_type
-        };
-      } else {
-        const tmf_action: string[] = [];
-        switch(option.tmf_function) {
-          case 'DomePlatform':
-            if (option.operator) tmf_action.push('Operator');
-            if (option.customer) tmf_action.push('Customer');
-            if (option.provider) tmf_action.push('Provider');
-            if (option.marketplace) tmf_action.push('Marketplace');
-            break;
-          case 'ProductOffering':
-            if (option.create) tmf_action.push('Create');
-            if (option.update) tmf_action.push('Update');
-            if (option.delete) tmf_action.push('Delete');
-            break;
-          default:
-            break;
-        }
-
-        return {
-          tmf_action,
-          tmf_domain: option.tmf_domain,
-          tmf_function: option.tmf_function,
-          tmf_type: option.tmf_type
-        };
-      }
+      return checkTmfFunction(option);
     });
 
     const credentialProcedure = {
@@ -97,12 +70,57 @@ export class FormCredentialService {
 
     credentialProcedureService.saveCredentialProcedure(credentialProcedure).subscribe({
       next: () => {
-        alertService.showAlert('Credential created successfully!', 'success');
+        popupComponent.showPopup();
         resetForm();
       },
-      error: (error: unknown) => {
-        alertService.showAlert('Error creating credential: ' + error, 'error');
-      },
+      error: () => {
+        popupComponent.showPopup();
+      }
     });
   }
 }
+function isDomePlatform(option: TempPower,tmf_action: string[]) {
+  const tmf_action2=tmf_action;
+  if (option.operator) tmf_action2.push('Operator');
+  if (option.customer) tmf_action2.push('Customer');
+  if (option.provider) tmf_action2.push('Provider');
+  if (option.marketplace) tmf_action2.push('Marketplace');
+  return tmf_action2;
+}
+function isProductOffering(option: TempPower,tmf_action: string[]) {
+  const tmf_action2=tmf_action;
+  if (option.create) tmf_action2.push('Create');
+  if (option.update) tmf_action2.push('Update');
+  if (option.delete) tmf_action2.push('Delete');
+  return tmf_action2;
+}
+function checkTmfFunction(option: TempPower): any {
+  if (option.tmf_function === 'Onboarding') {
+    return {
+      tmf_action: option.execute ? 'Execute' : '',
+      tmf_domain: option.tmf_domain,
+      tmf_function: option.tmf_function,
+      tmf_type: option.tmf_type
+    };
+  }
+  let tmf_action: string[] = [];
+  switch (option.tmf_function) {
+    case 'DomePlatform':
+      tmf_action=isDomePlatform(option,tmf_action)
+      break;
+    case 'ProductOffering':
+      tmf_action=isProductOffering(option,tmf_action)
+      break;
+    default:
+      break;
+  }
+
+  return {
+    tmf_action,
+    tmf_domain: option.tmf_domain,
+    tmf_function: option.tmf_function,
+    tmf_type: option.tmf_type
+  };
+
+}
+

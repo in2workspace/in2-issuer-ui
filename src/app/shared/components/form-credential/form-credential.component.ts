@@ -1,13 +1,14 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CredentialMandatee } from 'src/app/core/models/credendentialMandatee.interface';
 import { Mandator } from 'src/app/core/models/madator.interface';
 import { Power } from 'src/app/core/models/power.interface';
-import { AlertService } from 'src/app/core/services/alert.service';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { TempPower } from '../power/power/power.component';
 import { Country, CountryService } from './services/country.service';
 import { FormCredentialService } from './services/form-credential.service';
+import { AuthService } from 'src/app/core/services/auth.service';
+import { PopupComponent } from '../popup/popup.component';
 
 @Component({
   selector: 'app-form-credential',
@@ -15,6 +16,7 @@ import { FormCredentialService } from './services/form-credential.service';
   styleUrls: ['./form-credential.component.scss'],
 })
 export class FormCredentialComponent implements OnInit {
+  @ViewChild(PopupComponent) public popupComponent!: PopupComponent;
   @Output() public sendReminder = new EventEmitter<void>();
   @Input() public viewMode: 'create' | 'detail' = 'create';
   @Input() public isDisabled: boolean = false;
@@ -28,29 +30,27 @@ export class FormCredentialComponent implements OnInit {
     email: '',
     mobile_phone: '',
   };
-  @Input() public mandator: Mandator | null = {
-    organizationIdentifier: 'VATES-B60645900',
-    organization: 'IN2, Ingeniería de la Información, S.L.',
-    commonName: 'IN2',
-    emailAddress: 'rrhh@in2.es',
-    serialNumber: 'B60645900',
-    country: 'ES',
-  };
+  @Input() public mandator: Mandator | null = null;
+
   public selectedOption = '';
   public addedOptions: TempPower[] = [];
   public tempPowers: TempPower[] = [];
-
   public countries: Country[] = [];
   public selectedCountry: string = '';
   public actualMobilePhone: string = '';
   public credentialForm!: FormGroup;
 
+  public popupMessage: string = '';
+  public isPopupVisible: boolean = false;
+
+
+
   public constructor(
     private credentialProcedureService: CredentialProcedureService,
-    private alertService: AlertService,
     private fb: FormBuilder,
     private countryService: CountryService,
-    private formCredentialService: FormCredentialService
+    private formCredentialService: FormCredentialService,
+    private authService: AuthService
   ) {
     this.countries = this.countryService.getCountries();
   }
@@ -72,6 +72,12 @@ export class FormCredentialComponent implements OnInit {
       country: ['', Validators.required]
     });
 
+    this.authService.getMandator().subscribe(mandator => {
+      if (mandator) {
+        this.mandator = mandator;
+      }
+    });
+
     if (this.viewMode === 'detail') {
       this.tempPowers = this.power.map(power => this.formCredentialService.convertToTempPower(power));
     }
@@ -86,15 +92,16 @@ export class FormCredentialComponent implements OnInit {
   }
 
   public submitCredential(): void {
-    this.formCredentialService.submitCredential(
-      this.credential,
-      this.selectedCountry,
-      this.addedOptions,
-      this.mandator,
-      this.credentialProcedureService,
-      this.alertService,
-      this.resetForm.bind(this)
-    );
+
+      this.formCredentialService.submitCredential(
+        this.credential,
+        this.selectedCountry,
+        this.addedOptions,
+        this.mandator,
+        this.credentialProcedureService,
+        this.popupComponent,
+        this.resetForm.bind(this)
+      );
   }
 
   public triggerSendReminder(): void {

@@ -1,14 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 import { FormCredentialComponent } from './form-credential.component';
 import { AlertService } from 'src/app/core/services/alert.service';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { CountryService } from './services/country.service';
 import { FormCredentialService } from './services/form-credential.service';
-import { TempPower } from '../power/power/power.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterModule } from '@angular/router';
+import { AuthService } from 'src/app/core/services/auth.service';
+import { of } from 'rxjs';
+import { PopupComponent } from '../popup/popup.component';
 
 describe('FormCredentialComponent', () => {
   let component: FormCredentialComponent;
@@ -18,26 +21,30 @@ describe('FormCredentialComponent', () => {
   let mockAlertService: jasmine.SpyObj<AlertService>;
   let mockCountryService: jasmine.SpyObj<CountryService>;
   let mockFormCredentialService: jasmine.SpyObj<FormCredentialService>;
+  let mockAuthService: jasmine.SpyObj<AuthService>;
 
   beforeEach(async () => {
     mockCredentialProcedureService = jasmine.createSpyObj('CredentialProcedureService', ['']);
     mockAlertService = jasmine.createSpyObj('AlertService', ['']);
     mockCountryService = jasmine.createSpyObj('CountryService', ['getCountries']);
     mockFormCredentialService = jasmine.createSpyObj('FormCredentialService', ['addOption', 'handleSelectChange', 'submitCredential', 'resetForm', 'convertToTempPower']);
+    mockAuthService = jasmine.createSpyObj('AuthService', ['getMandator']);
 
     await TestBed.configureTestingModule({
-      declarations: [FormCredentialComponent],
+      declarations: [FormCredentialComponent, PopupComponent],
       imports: [
         ReactiveFormsModule,
         FormsModule,
         TranslateModule.forRoot({}),
         RouterModule.forRoot([]),
+        HttpClientModule,
       ],
       providers: [
         { provide: CredentialProcedureService, useValue: mockCredentialProcedureService },
         { provide: AlertService, useValue: mockAlertService },
         { provide: CountryService, useValue: mockCountryService },
-        { provide: FormCredentialService, useValue: mockFormCredentialService }
+        { provide: FormCredentialService, useValue: mockFormCredentialService },
+        { provide: AuthService, useValue: mockAuthService },
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
@@ -47,7 +54,12 @@ describe('FormCredentialComponent', () => {
     fixture = TestBed.createComponent(FormCredentialComponent);
     component = fixture.componentInstance;
     mockCountryService.getCountries.and.returnValue([{ name: 'USA', code: 'US' }]);
+    mockAuthService.getMandator.and.returnValue(of(null));
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    TestBed.resetTestingModule();
   });
 
   it('should create', () => {
@@ -77,7 +89,6 @@ describe('FormCredentialComponent', () => {
     expect(emailControl?.valid).toBeTrue();
   });
 
-
   it('should emit sendReminder event when triggerSendReminder is called', () => {
     spyOn(component.sendReminder, 'emit');
     component.triggerSendReminder();
@@ -85,6 +96,16 @@ describe('FormCredentialComponent', () => {
   });
 
   it('should submit credential when submitCredential is called', () => {
+    component.credentialForm.setValue({
+      first_name: 'John',
+      last_name: 'Doe',
+      email: 'john.doe@example.com',
+      mobile_phone: '1234567890',
+      country: 'US'
+    });
+    component.selectedCountry = 'US';
+    component.addedOptions = [];
+
     component.submitCredential();
     expect(mockFormCredentialService.submitCredential).toHaveBeenCalledWith(
       component.credential,
@@ -92,7 +113,7 @@ describe('FormCredentialComponent', () => {
       component.addedOptions,
       component.mandator,
       mockCredentialProcedureService,
-      mockAlertService,
+      component.popupComponent,
       jasmine.any(Function)
     );
   });

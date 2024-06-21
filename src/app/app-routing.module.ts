@@ -1,37 +1,27 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
+import { AutoLoginPartialRoutesGuard } from 'angular-auth-oidc-client';
+import { HomeComponent } from './features/home/home.component';
+import { CallbackComponent } from './features/callback/callback.component';
 
 const routes: Routes = [
-  // {
-  //   path: 'login',
-  //   loadChildren: () =>
-  //     import('./features/login/login.module').then((m) => m.LoginModule),
-  // },
+  { path: '', pathMatch: 'full', redirectTo: 'home' },
+  { path: 'home', component: HomeComponent },
   {
-    path: '',
-    loadChildren: () =>
-      import('./features/home/home.module').then((m) => m.HomeModule),
-  },
-  {
-    path: 'register',
-    loadChildren: () =>
-      import('./features/register/register.module').then(
-        (m) => m.RegisterModule
-      ),
-  },
-  {
-    path: 'credentialManagement',
+    path: 'organization/credentials',
     loadChildren: () =>
       import(
         './features/credential-management/credential-management.module'
       ).then((m) => m.CredentialManagementModule),
+    canActivate: [AutoLoginPartialRoutesGuard],
   },
   {
-    path: 'credentialIssuance',
+    path: 'organization/credentials/create',
     loadChildren: () =>
       import('./features/credentialIssuance/credentialIssuance.module').then(
         (m) => m.CredentialIssuanceModule
       ),
+    canActivate: [AutoLoginPartialRoutesGuard],
   },
   {
     path: 'credential-offer',
@@ -40,7 +30,8 @@ const routes: Routes = [
         (m) => m.CredencialOfferModule
       ),
   },
-  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: 'callback', component: CallbackComponent },
+  { path: '**', redirectTo: 'home' }
 ];
 
 @NgModule({

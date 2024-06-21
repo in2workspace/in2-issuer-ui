@@ -2,14 +2,15 @@ export const environment = {
   production: true,
   loginParams: {
     has_login: true,
-    login_url: window["env"]["login_url"] || 'http://localhost:8088/realms/EAAProvider',
-    client_id: window["env"]["client_id"] || 'auth-client',
+    login_url: window["env"]["login_url"] || 'https://localhost:8443/realms/CredentialIssuer',
+    client_id: window["env"]["client_id"] || 'account-console',
     scope: window["env"]["scope"] || 'openid profile email offline_access',
     grant_type: window["env"]["grant_type"] || 'code'
   },
-  base_url: window["env"]["base_url"] || 'https://localhost',
-  wallet_url: window["env"]["wallet_url"] || 'https://localhost:4200',
-  api_base_url: window["env"]["api_base_url"] || '/api/v1/credentials?type=LEARCredentialEmployee',
+  base_url: window["env"]["base_url"] || 'http://localhost:8081',
+  wallet_url: window["env"]["wallet_url"] || 'http://localhost:4200',
+  procedures: window["env"]["procedures"] || '/api/v1/procedures',
+  save_credential: window["env"]["saveCredential"] || '/api/v1/credentials?type=LEARCredentialEmployee',
   credential_offer_url: window["env"]["credential_offer_url"] || '/api/v1/credential-offer',
-  procedures_path: window["env"]["procedures_path"] || '/api/v1/procedures'
+  notification: window["env"]["notification"] || '/api/v1/notifications'
 };

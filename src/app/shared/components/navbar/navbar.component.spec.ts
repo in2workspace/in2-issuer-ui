@@ -3,11 +3,23 @@ import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { NavbarComponent } from './navbar.component';
 import { MatIconModule } from '@angular/material/icon';
-import { RouterTestingModule } from '@angular/router/testing';
+import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 
 class MockAuthService {
-  logout() {}
+  getMandator() {
+    return of(null);
+  }
+  getEmailName() {
+    return of('User Name');
+  }
+  logout() {
+    return of(void 0);
+  }
+}
+
+class MockRouter {
+  navigate = jasmine.createSpy('navigate');
 }
 
 describe('NavbarComponent', () => {
@@ -15,6 +27,7 @@ describe('NavbarComponent', () => {
   let fixture: ComponentFixture<NavbarComponent>;
   let authService: AuthService;
   let translateService: TranslateService;
+  let router: Router;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -22,10 +35,12 @@ describe('NavbarComponent', () => {
       imports: [
         TranslateModule.forRoot(),
         MatIconModule,
-        RouterTestingModule
+        RouterModule.forRoot([]),
       ],
       providers: [
         { provide: AuthService, useClass: MockAuthService },
+        { provide: Router, useClass: MockRouter },
+        { provide: ActivatedRoute, useValue: {} },
       ],
     }).compileComponents();
   });
@@ -35,6 +50,7 @@ describe('NavbarComponent', () => {
     component = fixture.componentInstance;
     authService = TestBed.inject(AuthService);
     translateService = TestBed.inject(TranslateService);
+    router = TestBed.inject(Router);
     fixture.detectChanges();
   });
 
@@ -53,8 +69,9 @@ describe('NavbarComponent', () => {
   });
 
   it('should call logout on authService', () => {
-    spyOn(authService, 'logout');
+    spyOn(authService, 'logout').and.callThrough();
     component.logout();
     expect(authService.logout).toHaveBeenCalled();
+    expect(router.navigate).toHaveBeenCalledWith(['/home'], {});
   });
 });
