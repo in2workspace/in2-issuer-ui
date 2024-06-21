@@ -1,0 +1,170 @@
+<div class="landing-page">
+  <div class="container-nav">
+    <header class="main-header">
+      <nav class="navbar">
+        <div class="navbar-brand" href="/">
+          <a href="/">
+            <img
+              class="logo"
+              src="../../../assets/logo/logo-dome-issuer.png"
+              alt="DOME Logo"
+            />
+          </a>
+        </div>
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="https://dome.mycredential.eu/docs/" target="_blank" rel="noopener noreferrer" tabindex="0">Docs</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <section class="cover" id="cover">
+      <div class="cover-content">
+        <h1>Welcome to the DOME Issuer for LEARCredentials</h1>
+        <div class="scroll-indicator">
+          <a class="btn btn-primary" href="https://dome.mycredential.eu/docs/" target="_blank" rel="noopener noreferrer" tabindex="0">
+            Learn More
+            <img src="../../../assets/icon/fletxa_dreta.png" alt="arrow">
+          </a>
+          <p class="scroller">Scroll to see more</p>
+          <a class="btn btn-link" href="#about-section" tabindex="0">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="64"
+              height="64"
+              viewBox="0 0 24 24"
+            >
+              <defs>
+                <pattern
+                  id="image-bg"
+                  patternUnits="userSpaceOnUse"
+                  width="24"
+                  height="24"
+                >
+                  <image
+                    href="/assets/background/fondoIssuer.png"
+                    x="0"
+                    y="0"
+                    width="24"
+                    height="24"
+                  />
+                </pattern>
+              </defs>
+              <circle cx="12" cy="12" r="10" fill="#DDE6F6" />
+              <path
+                fill="none"
+                stroke="url(#image-bg)"
+                stroke-width="2"
+                d="M8 10l4 4 4-4"
+              />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section id="about-section" class="content-section">
+    <div class="content-wrapper">
+      <p>
+        This site is intended for Legal Representatives of companies who want to
+        issue one or more LEARCredentials to one or more employees of the
+        company. A LEARCredential is a type of Verifiable Credential which
+        enables an employee, nominated by a legal representative, to act on
+        behalf of an organisation with restricted power with respect to
+        third-parties.
+      </p>
+      <ul>
+        <li>
+          The issuer of the LEARCredential
+          <strong>must be a legal representative</strong> of the company. The
+          legal representative will sign the LEARCredential with an eIDAS
+          digital certificate, which can be either a personal one or a
+          certificate of representation.
+        </li>
+        <li>
+          The receiver of the LEARCredential (both the subject and holder of the
+          credential) <strong>can be any employee (or contractor)</strong> of
+          the company. The legal representative will delegate a restricted set
+          of power to that person. Those restricted power are included inside
+          the credential and can be verified by any Relying party to whom the
+          holder presents the LEARCredential.
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="content-section">
+    <div class="legal-representative">
+      <p>
+        You must be a legal representative of the company, to be able to
+        delegate the restricted power required for DOME.
+      </p>
+      <p>
+        You need an eIDAS certificate to be able to use the system. In addition
+        you will have to register your company email.
+      </p>
+      <p>
+        Note: if you are reading this in your mobile, most probably the button
+        will not work, unless you have installed your eIDAS certificate in the
+        mobile. You typically need to use a PC, with the certificate installed
+        in the browser.
+      </p>
+      <a class="btn-secondary" tabindex="0" (click)="login()">Login as Legal Representative</a>
+
+    </div>
+  </section>
+
+  <section class="content-section wallet-section">
+    <div class="wallet-description">
+      <p>
+        In addition, you can obtain the DOME Wallet to store the credentials,
+        and test them to authenticate to a test Verifier (acting as Relying
+        Party).
+      </p>
+    </div>
+    <div class="wallet-info-container">
+      <div class="wallet-info-qr">
+        <img class="wallet-logo" src="../../../assets/icon/wallet.png" alt="wallet">
+        <h2>Obtain your wallet</h2>
+        <p>
+          You need a wallet to store your LEARCredentials and present them to
+          Relaying parties like DOME Marketplace.
+        </p>
+        <p>
+          DOME provides a simple wallet enough for authenticating to the DOME
+          Marketplace and performing all needed processes.
+        </p>
+        <img
+          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEAAQMAAABmvDolAAAABlBMVEX///8AAABVwtN+AAABoElEQVR42uyYPXKEMAyFn4eCkiNwFI5mH81H4QiUFIxf5snALhvSZtYaVGSC8jWR9fMkPPbYY19rA2UrpmQfOb5croAZQLcOTIFcRqaw7i5nwMQigMJmRAHmcgnkyA3Y4+AWwJTCpqwGnQJ7CsfjA7dp3zpQG9KQY9j6ZczK6rsm1jhwcqmgJwX8MXiaBo5WnLEXL3rOsEpuCWD9E6IecCSLYd4AYGKgnrF0PF7TtIIrQKOyAEM+uk6gKtQdIH3X1Tis+0BhvnRaF8AMWPNJBcCYo7XZFOgLUFabFtCjo45PuS5p3z4gyWP6R21JQanPfZVJ7QP2r3dcJupXaVouZ1D8AMNcN80MLWKYpIjI9L5vugBqpQ4ZpdLFsvqiaT0A81mp5ovlCI03IJl0B6QDq5j4zIevB17KnFuvpDUVxDvp3jJwLlVV+Exp35q9AfuKLJ/tWaya9tda3Tpw3EBKJzULiws/itcNgGgDBbH0+vm+kHoCbJJI/4QaCHfAeb7qFAcUO/jcHO7aBo6LlsmDuqjUG4Ir4LHHHvt3+wkAAP//DQRXndz8xuAAAAAASUVORK5CYII="
+          alt="Wallet QR Code"
+        />
+        <p>
+          Scan this QR code or go in your mobile to
+          <a href="https://dome-wallet.eu/" target="_blank" rel="noopener noreferrer" tabindex="0">wallet.mycredential.eu</a>
+        </p>
+      </div>
+      <div class="wallet-info-text">
+        <img class="verifier-logo" src="../../../assets/icon/verifier.png" alt="wallet">
+        <h2>Test the credential with a Verifier</h2>
+        <p>
+          Use your LEARCredential in your wallet to authenticate to a test
+          Verifier, without user or password.
+        </p>
+        <p>
+          In this way you can see how everything works and will become familiar
+          with the flows.
+        </p>
+        <a class="btn-verifier" href="https://demo.mycredential.eu/" target="_blank" rel="noopener noreferrer" tabindex="0">Go to the test Verifier</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="main-footer">
+    <span>
+      <p>© 2024–2024 DOME Marketplace Authors&nbsp; | &nbsp;<a href="https://creativecommons.org/licenses/by/4.0" target="_blank" rel="noopener noreferrer" tabindex="0">CC BY 4.0</a>&nbsp; | &nbsp;<a href="https://dome-marketplace.eu/" target="_blank" rel="noopener noreferrer" tabindex="0">Privacy Policy</a></p>
+    </span>
+    <span><a href="https://github.com/evidenceledger/domeissuer" target="_blank" rel="noopener noreferrer" tabindex="0"><img class="footer-logo" src="assets/icon/github.png" alt="GitHub"></a></span>
+  </footer>
+</div>

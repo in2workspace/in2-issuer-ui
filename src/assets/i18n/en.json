@@ -1,0 +1,58 @@
+{
+  "mandator": {
+    "organizationid": "Organization id",
+    "organization": "Organization",
+    "name": "Name",
+    "email": "Email address",
+    "serialNumber": "Serial number",
+    "country": "Country"
+  },
+  "mandatee": {
+    "firstnameid": "First name",
+    "last_name": "Last name",
+    "email": "Email address",
+    "mobile_phone": " mobile phone"
+  },
+  "credentialDetail": {
+    "credentialDetail": "Credential detail",
+    "textinformation": "A new Dome credential has been issued for you with the following information"
+  },
+  "scaner": {
+    "textinformation": "OrganizationScan with your wallet to download the credential"
+  },
+  "credentialManagement": {
+    "title": "List of issued credentials",
+    "button": "Create new credential",
+    "status": "Status",
+    "name": "Name",
+    "updated": "Updated",
+    "sendReminder": "Send Reminder",
+    "cancel": "Cancel",
+    "create" : "Create Credential"
+  },
+    "power": {
+      "power": "Powers",
+      "domain": "Domain",
+      "dome": "dome",
+      "function": "Function",
+      "onboarding": "Onboarding",
+      "marketplace": "Marketplace",
+      "productoffer": "Product offer",
+      "add": "Add",
+      "execute": "Execute",
+      "create": "Create",
+      "update": "Update",
+      "delete": "Delete"
+    },
+    "credentialIssuance":{
+      "create": "Create Credential"
+    },
+    "error": {
+      "not_found": "The requested resource was not found.",
+      "unauthorized": "You are not authorized to perform this action.",
+      "forbidden": "You do not have permission to access this resource.",
+      "internal_server": "An error occurred on the server. Please try again later.",
+      "unknown_error": "An unknown error occurred. Please try again."
+    }
+  }
+

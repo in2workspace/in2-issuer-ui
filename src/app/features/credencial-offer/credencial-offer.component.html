@@ -1,0 +1,15 @@
+<app-navbar></app-navbar>
+<div class="credential-card">
+  <div class="credendial-container">
+    <div class="title-credendial">
+      <h2>{{"credentialDetail.credentialDetail" | translate}}</h2>
+      <p>{{"credentialDetail.textinformation" | translate}}</p>
+    </div>
+    <div class="content-container">
+      <div class="qr-container">
+        <p>{{"scaner.textinformation" | translate}}</p>
+        <qrcode *ngIf="qrCodeData" [qrdata]="qrCodeData" [width]="256" [errorCorrectionLevel]="'M'"></qrcode>
+      </div>
+    </div>
+  </div>
+</div>

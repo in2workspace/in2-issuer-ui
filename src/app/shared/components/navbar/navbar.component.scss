@@ -1,0 +1,69 @@
+@import "../../../../styles.scss";
+
+.main-header {
+  position: relative;
+  top: 0;
+  background: $Blue;
+  padding: 1.5rem 0;
+  margin-top: 0;
+  width: 100%;
+
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+    position: relative;
+
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+
+      .logo {
+        height: 30px;
+        margin-right: 0.5rem;
+        cursor: pointer;
+      }
+
+      span {
+        color: $White;
+        font-weight: bold;
+        font-size: 1.2rem;
+        padding-bottom: 3.5px;
+      }
+    }
+
+    .navbar-nav {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      align-items: baseline;
+
+      .nav-item {
+        span {
+          padding-left: 0.5rem;
+        }
+
+        mat-form-field {
+          width: 6.625rem;
+        }
+
+        .nav-link {
+          color: $White;
+          text-decoration: none;
+          display: flex;
+          align-items: center;
+          margin-left: 0.5rem;
+
+          mat-icon {
+            color: $White;
+            margin-right: 0.5rem;
+            margin-left: 0.5rem;
+          }
+
+        }
+      }
+    }
+  }
+}
