@@ -5,7 +5,6 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthModule, AuthInterceptor } from 'angular-auth-oidc-client';
 import { environment } from 'src/environments/environment';
-import { LoginModule } from './features/login/login.module';
 import { MaterialModule } from './material.module';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -21,7 +20,6 @@ import { AlertService } from './core/services/alert.service';
     BrowserModule,
     MaterialModule,
     AppRoutingModule,
-    LoginModule,
     BrowserAnimationsModule,
     TranslateModule.forRoot({
       loader: {
