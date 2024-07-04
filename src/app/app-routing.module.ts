@@ -24,6 +24,14 @@ const routes: Routes = [
     canActivate: [AutoLoginPartialRoutesGuard],
   },
   {
+    path: 'organization/credentials/create2/:id',
+    loadChildren: () =>
+      import('./features/credentialIssuanceAdmin/credentialIssuanceAdmin.module').then(
+        (m) => m.CredentialIssuanceAdminModule
+      ),
+    canActivate: [AutoLoginPartialRoutesGuard],
+  },
+  {
     path: 'credential-offer',
     loadChildren: () =>
       import('./features/credencial-offer/credencial-offer.module').then(

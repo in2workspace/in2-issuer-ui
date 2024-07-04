@@ -12,5 +12,7 @@ export const environment = {
   procedures: window["env"]["procedures"] || '/api/v1/procedures',
   save_credential: window["env"]["saveCredential"] || '/api/v1/credentials?type=LEARCredentialEmployee',
   credential_offer_url: window["env"]["credential_offer_url"] || '/api/v1/credential-offer',
-  notification: window["env"]["notification"] || '/api/v1/notifications'
+  notification: window["env"]["notification"] || '/api/v1/notifications',
+  firma_credential: window["env"]["firma_credential"] || '/api/v1/sign-credential'
+
 };
