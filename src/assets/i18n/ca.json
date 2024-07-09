@@ -16,6 +16,15 @@
   "credentialDetail": {
     "credentialDetail": "Detall de la credencial",
     "textinformation": "S'ha emès una nova credencial Dome per a vostè amb la següent informació"
+  },  
+  "credentialOffer": {
+    "credentialDetail": "Credential Offer",
+    "textinformation": "You have a new credential offer. Please follow the next steps:",
+    "first-step":"1. Register and log into the ",
+    "second-step":"2. Click the button below to get the QR code.",
+    "third-step":"3. Scan the QR code with the ",
+    "fourth-step":"4. Enter the pin that you'll receive in your email.",
+    "button-text":"Get QR code"
   },
   "scaner": {
     "textinformation": "Escaneig de l'organització amb la seva cartera per descarregar la credencial"
