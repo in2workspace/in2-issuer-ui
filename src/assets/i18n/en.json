@@ -31,13 +31,14 @@
   },
   "credentialManagement": {
     "title": "List of issued credentials",
-    "button": "Create new credential",
+    "button": "New credential",
     "status": "Status",
     "name": "Name",
     "updated": "Updated",
     "sendReminder": "Send Reminder",
     "cancel": "Cancel",
-    "create" : "Create Credential"
+    "create" : "Create Credential",
+    "buttonAdmin":"New credential as Signer"
   },
     "power": {
       "power": "Powers",
