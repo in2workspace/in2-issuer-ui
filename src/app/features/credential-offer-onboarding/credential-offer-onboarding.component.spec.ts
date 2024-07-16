@@ -1,3 +1,5 @@
+// TODO this test class needs to be fixed
+
 // import { ComponentFixture, TestBed } from '@angular/core/testing';
 //
 // import { CredentialOfferOnboardingComponent } from './credential-offer-onboarding.component';

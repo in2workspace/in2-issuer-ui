@@ -33,6 +33,7 @@ describe('AuthService', () => {
     expect(service).toBeTruthy();
   });
 
+  // TODO this test needs to be fixed
 
   // it('should set isAuthenticatedSubject based on OidcSecurityService checkAuth response', (done: DoneFn) => {
   //   const authResponse = {
