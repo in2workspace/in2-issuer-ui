@@ -13,4 +13,5 @@ export const environment = {
   save_credential: '/api/v1/credentials?type=LEARCredentialEmployee',
   credential_offer_url: '/api/v1/credential-offer',
   notification: '/api/v1/notifications',
+  firma_credential: '/api/v1/sign-credential'
 };

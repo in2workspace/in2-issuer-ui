@@ -17,18 +17,28 @@
     "credentialDetail": "Credential detail",
     "textinformation": "A new Dome credential has been issued for you with the following information"
   },
+  "credentialOffer": {
+    "credentialDetail": "Credential Offer",
+    "textinformation": "You have a new credential offer. Please follow the next steps:",
+    "first-step":"1. Register and log into the ",
+    "second-step":"2. Click the button below to get the QR code.",
+    "third-step":"3. Scan the QR code with the ",
+    "fourth-step":"4. Enter the pin that you'll receive in your email.",
+    "button-text":"Get QR code"
+  },
   "scaner": {
     "textinformation": "OrganizationScan with your wallet to download the credential"
   },
   "credentialManagement": {
     "title": "List of issued credentials",
-    "button": "Create new credential",
+    "button": "New credential",
     "status": "Status",
     "name": "Name",
     "updated": "Updated",
     "sendReminder": "Send Reminder",
     "cancel": "Cancel",
-    "create" : "Create Credential"
+    "create" : "Create Credential",
+    "buttonAdmin":"New credential as Signer"
   },
     "power": {
       "power": "Powers",

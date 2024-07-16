@@ -11,6 +11,7 @@ import { CredentialProcedure, CredentialProcedureResponse,CredentialData } from 
 export class CredentialProcedureService {
 
   private saveCredential = `${environment.base_url}${environment.save_credential}`;
+  private sendFirma = `${environment.base_url}${environment.firma_credential}`;
   private organizationProcedures = `${environment.base_url}${environment.procedures}`;
   private credentialOfferUrl = `${environment.base_url}${environment.credential_offer_url}`;
   private notificationProcedure =`${environment.base_url}${environment.notification}`;
@@ -64,4 +65,10 @@ export class CredentialProcedureService {
     console.error('Error response body:', error.error);
     return throwError(()=>errorMessage);
   }
+  public signCredential(id: string): Observable<any> {
+    return this.http.post(this.sendFirma, {'procedure-id':id}).pipe(
+      catchError(this.handleError)
+    );
+  }
+
 }

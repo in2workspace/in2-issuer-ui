@@ -9,11 +9,11 @@ export interface CredentialProcedure {
   status: string;
   updated: string;
   credential: CredentialManagement;}
-  
+
 }
 
 export interface CredentialProcedureResponse {
-  credential_procedures: CredentialProcedure[];  
+  credential_procedures: CredentialProcedure[];
 }
 
 export interface LifeSpan {
@@ -28,6 +28,15 @@ export interface Mandate {
   mandator: Mandator;
   power: Power[];
 }
+export interface Signer {
+  commonName: string;
+  country: string;
+  emailAddress: string;
+  organization: string;
+  organizationIdentifier: string;
+  serialNumber: string;
+}
+
 
 export interface CredentialSubject {
   mandate: Mandate;

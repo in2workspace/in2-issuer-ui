@@ -23,6 +23,7 @@ export class FormCredentialComponent implements OnInit {
   @Input() public title: string = '';
   @Input() public showButton: boolean = false;
   @Input() public hideButton: boolean = true;
+  @Input() public role: string = "";
   @Input() public power: Power[] = [];
   @Input() public credential: CredentialMandatee = {
     first_name: '',
@@ -30,7 +31,15 @@ export class FormCredentialComponent implements OnInit {
     email: '',
     mobile_phone: '',
   };
-  @Input() public mandator: Mandator | null = null;
+  public signer : any ={};
+  @Input() public mandator: Mandator = {
+    organizationIdentifier: "",
+    organization: "",
+    commonName: "",
+    emailAddress: "",
+    serialNumber: "",
+    country: "",
+  }
 
   public selectedOption = '';
   public addedOptions: TempPower[] = [];
@@ -69,12 +78,24 @@ export class FormCredentialComponent implements OnInit {
       last_name: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*')]],
       email: ['', [Validators.required, Validators.email]],
       mobile_phone: ['', [Validators.required, Validators.pattern('[0-9 ]*')]],
-      country: ['', Validators.required]
+      country: ['', Validators.required],
+
     });
 
-    this.authService.getMandator().subscribe(mandator => {
-      if (mandator) {
-        this.mandator = mandator;
+    this.authService.getMandator().subscribe(mandator2 => {
+      if (mandator2) {
+        this.mandator ={ 'organizationIdentifier': mandator2.organizationIdentifier,
+          'organization': mandator2.organization,
+          'commonName':mandator2.commonName,
+          'emailAddress':mandator2.emailAddress,
+          'serialNumber':mandator2.serialNumber,
+          'country':mandator2.country}
+        this.signer = { 'organizationIdentifier': mandator2.organizationIdentifier,
+                        'organization': mandator2.organization,
+                        'commonName':mandator2.commonName,
+                        'emailAddress':mandator2.emailAddress,
+                        'serialNumber':mandator2.serialNumber,
+                        'country':mandator2.country}
       }
     });
 
@@ -98,6 +119,7 @@ export class FormCredentialComponent implements OnInit {
         this.selectedCountry,
         this.addedOptions,
         this.mandator,
+        this.signer,
         this.credentialProcedureService,
         this.popupComponent,
         this.resetForm.bind(this)
@@ -112,5 +134,16 @@ export class FormCredentialComponent implements OnInit {
     this.credential = this.formCredentialService.resetForm();
     this.addedOptions = [];
     this.credentialForm.reset();
+    this.authService.getMandator().subscribe(mandator2 => {
+      if (mandator2) {
+        this.mandator = mandator2;
+        this.signer = { 'organizationIdentifier': mandator2.organizationIdentifier,
+                        'organization': mandator2.organization,
+                        'commonName':mandator2.commonName,
+                        'emailAddress':mandator2.emailAddress,
+                        'serialNumber':mandator2.serialNumber,
+                        'country':mandator2.country}
+      }
+    });
   }
 }
