@@ -1,4 +1,8 @@
 // TODO this test class needs to be fixed
+// The error occurred because the TestBed was trying to add a standalone component
+// to the 'declarations' array instead of the 'imports' array. Standalone components
+// should be added to the 'imports' array. Additionally, 'ActivatedRoute' needs to be
+// mocked to avoid 'NullInjectorError'.
 
 // import { ComponentFixture, TestBed } from '@angular/core/testing';
 //

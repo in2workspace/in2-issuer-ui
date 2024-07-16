@@ -34,6 +34,9 @@ describe('AuthService', () => {
   });
 
   // TODO this test needs to be fixed
+  // The error occurs because there is a timeout issue. This can happen if the asynchronous
+  // code does not complete within the set timeout interval. Ensure that all observables
+  // and asynchronous calls are properly handled and that the test completes within the timeout.
 
   // it('should set isAuthenticatedSubject based on OidcSecurityService checkAuth response', (done: DoneFn) => {
   //   const authResponse = {
