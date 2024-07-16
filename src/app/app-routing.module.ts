@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AutoLoginPartialRoutesGuard } from 'angular-auth-oidc-client';
 import { HomeComponent } from './features/home/home.component';
 import { CallbackComponent } from './features/callback/callback.component';
+import { CredentialOfferOnboardingComponent } from './features/credential-offer-onboarding/credential-offer-onboarding.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'home' },
@@ -24,11 +25,26 @@ const routes: Routes = [
     canActivate: [AutoLoginPartialRoutesGuard],
   },
   {
+    path: 'organization/credentials/create2/:id',
+    loadChildren: () =>
+      import('./features/credentialIssuanceAdmin/credentialIssuanceAdmin.module').then(
+        (m) => m.CredentialIssuanceAdminModule
+      ),
+    canActivate: [AutoLoginPartialRoutesGuard],
+  },
+  {
     path: 'credential-offer',
+    component:CredentialOfferOnboardingComponent,
+    
+      
+  },  
+  {
+    path: 'credential-offer-detail',
     loadChildren: () =>
       import('./features/credencial-offer/credencial-offer.module').then(
         (m) => m.CredencialOfferModule
       ),
+      
   },
   { path: 'callback', component: CallbackComponent },
   { path: '**', redirectTo: 'home' }

@@ -47,6 +47,7 @@ export class FormCredentialService {
     selectedCountry: string,
     addedOptions: TempPower[],
     mandator: Mandator | null,
+    signer:any,
     credentialProcedureService: any,
     popupComponent: PopupComponent,
     resetForm: () => void
@@ -64,6 +65,7 @@ export class FormCredentialService {
       credential: {
         mandatee: credential,
         mandator: mandator!,
+        signer:signer,
         power: power
       }
     };

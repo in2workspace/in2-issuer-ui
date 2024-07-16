@@ -17,7 +17,52 @@
     "credentialDetail": "Detalle de la credencial",
     "textinformation": "Se ha emitido una nueva credencial Dome para usted con la siguiente información"
   },
+  "credentialOffer": {
+    "credentialDetail": "Credential Offer",
+    "textinformation": "You have a new credential offer. Please follow the next steps:",
+    "first-step":"1. Register and log into the ",
+    "second-step":"2. Click the button below to get the QR code.",
+    "third-step":"3. Scan the QR code with the ",
+    "fourth-step":"4. Enter the pin that you'll receive in your email.",
+    "button-text":"Get QR code"
+  },
   "scaner": {
     "textinformation": "Escaneo de la organización con su cartera para descargar la credencial"
-  }
+  },
+  
+  "credentialManagement": {
+    "title": "List of issued credentials",
+    "button": "New credential",
+    "status": "Status",
+    "name": "Name",
+    "updated": "Updated",
+    "sendReminder": "Send Reminder",
+    "cancel": "Cancel",
+    "create" : "Create Credential",
+    "buttonAdmin":"New credential as Signer"
+  },
+    "power": {
+      "power": "Powers",
+      "domain": "Domain",
+      "dome": "dome",
+      "function": "Function",
+      "onboarding": "Onboarding",
+      "marketplace": "Marketplace",
+      "productoffer": "Product offer",
+      "add": "Add",
+      "execute": "Execute",
+      "create": "Create",
+      "update": "Update",
+      "delete": "Delete"
+    },
+    "credentialIssuance":{
+      "create": "Create Credential"
+    },
+    "error": {
+      "not_found": "The requested resource was not found.",
+      "unauthorized": "You are not authorized to perform this action.",
+      "forbidden": "You do not have permission to access this resource.",
+      "internal_server": "An error occurred on the server. Please try again later.",
+      "unknown_error": "An unknown error occurred. Please try again."
+    }
 }
