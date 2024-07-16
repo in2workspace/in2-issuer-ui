@@ -112,6 +112,7 @@ describe('FormCredentialComponent', () => {
       component.selectedCountry,
       component.addedOptions,
       component.mandator,
+      component.signer,
       mockCredentialProcedureService,
       component.popupComponent,
       jasmine.any(Function)

@@ -6,22 +6,12 @@ import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { CredentialManagementComponent } from './credential-management.component';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
-import { CredentialProcedure,CredentialProcedureResponse } from 'src/app/core/models/credentialProcedure.interface';
+import { CredentialProcedure, CredentialProcedureResponse } from 'src/app/core/models/credentialProcedure.interface';
 import { SharedModule } from 'src/app/shared/shared.module';
-import {
-  TranslateModule,
-  TranslateLoader,
-  TranslateService,
-} from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { AuthModule } from 'angular-auth-oidc-client';
-import { HttpClient } from '@angular/common/http';
-
-export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http);
-}
 
 describe('CredentialManagementComponent', () => {
   let component: CredentialManagementComponent;
@@ -111,6 +101,14 @@ describe('CredentialManagementComponent', () => {
         serialNumber: 'SN123456',
         country: 'CountryA',
       },
+      signer: {
+        organizationIdentifier: 'org-123',
+        organization: 'Test Organization',
+        commonName: 'Test Common Name',
+        emailAddress: 'test@example.com',
+        serialNumber: 'SN123456',
+        country: 'CountryA',
+      },
       power: [
         {
           tmf_action: ['action1', 'action2'],
@@ -121,27 +119,30 @@ describe('CredentialManagementComponent', () => {
       ],
     };
 
-    const mockData: CredentialProcedureResponse = {credential_procedures:[
-      {
-        credential_procedure:{
-          procedure_id:'',
-        status: 'completed',
-        full_name: 'John Doe',
-        updated: '2023-01-01',
-        credential: mockCredential,}
-      },
-      {
-        credential_procedure:{
-          procedure_id:'',
-        status: 'pending',
-        full_name: 'Jane Doe',
-        updated: '2023-01-02',
-        credential: mockCredential,}
-      },
-    ]};
-    credentialProcedureService.getCredentialProcedures.and.returnValue(
-      of(mockData)
-    );
+    const mockData: CredentialProcedureResponse = {
+      credential_procedures: [
+        {
+          credential_procedure: {
+            procedure_id: '',
+            status: 'completed',
+            full_name: 'John Doe',
+            updated: '2023-01-01',
+            credential: mockCredential,
+          },
+        },
+        {
+          credential_procedure: {
+            procedure_id: '',
+            status: 'pending',
+            full_name: 'Jane Doe',
+            updated: '2023-01-02',
+            credential: mockCredential,
+          },
+        },
+      ],
+    };
+
+    credentialProcedureService.getCredentialProcedures.and.returnValue(of(mockData));
 
     component.loadCredentialData();
 
@@ -183,6 +184,14 @@ describe('CredentialManagementComponent', () => {
         serialNumber: 'SN123456',
         country: 'CountryA',
       },
+      signer: {
+        organizationIdentifier: 'org-123',
+        organization: 'Test Organization',
+        commonName: 'Test Common Name',
+        emailAddress: 'test@example.com',
+        serialNumber: 'SN123456',
+        country: 'CountryA',
+      },
       power: [
         {
           tmf_action: ['action1', 'action2'],
@@ -194,19 +203,17 @@ describe('CredentialManagementComponent', () => {
     };
 
     const mockElement: CredentialProcedure = {
-      credential_procedure:{
-        procedure_id:'1',
-      status: 'completed',
-      full_name: 'John Doe',
-      updated: '2023-01-01',
-      credential: mockCredential,}
+      credential_procedure: {
+        procedure_id: '1',
+        status: 'completed',
+        full_name: 'John Doe',
+        updated: '2023-01-01',
+        credential: mockCredential,
+      },
     };
 
     component.goToCredentialDetails(mockElement);
 
-    expect(router.navigate).toHaveBeenCalledWith([
-      '/organization/credentials/details',
-      '1',
-    ]);
+    expect(router.navigate).toHaveBeenCalledWith(['/organization/credentials/details', '1']);
   });
 });

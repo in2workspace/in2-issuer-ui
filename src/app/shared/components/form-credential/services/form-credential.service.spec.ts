@@ -1,19 +1,20 @@
-import { TestBed } from '@angular/core/testing';
-import { FormCredentialService } from './form-credential.service';
-import { Power } from 'src/app/core/models/power.interface';
-import { TempPower } from '../../power/power/power.component';
-import { CredentialMandatee } from 'src/app/core/models/credendentialMandatee.interface';
-import { Mandator } from 'src/app/core/models/madator.interface';
-import { of, throwError } from 'rxjs';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatTableModule } from '@angular/material/table';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterModule } from '@angular/router';
-import { AuthModule } from 'angular-auth-oidc-client';
-import { SharedModule } from 'src/app/shared/shared.module';
-import { PopupComponent } from '../../popup/popup.component';
+import {TestBed} from '@angular/core/testing';
+import {FormCredentialService} from './form-credential.service';
+import {Power} from 'src/app/core/models/power.interface';
+import {TempPower} from '../../power/power/power.component';
+import {CredentialMandatee} from 'src/app/core/models/credendentialMandatee.interface';
+import {Mandator} from 'src/app/core/models/madator.interface';
+import {of} from 'rxjs';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatTableModule} from '@angular/material/table';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {RouterModule} from '@angular/router';
+import {AuthModule} from 'angular-auth-oidc-client';
+import {SharedModule} from 'src/app/shared/shared.module';
+import {PopupComponent} from '../../popup/popup.component';
+import {Signer} from "../../../../core/models/credentialProcedure.interface";
 
 describe('FormCredentialService', () => {
   let service: FormCredentialService;
@@ -164,6 +165,14 @@ describe('FormCredentialService', () => {
       serialNumber: '123456',
       country: 'ES',
     };
+    const signer: Signer = {
+      organizationIdentifier: '1',
+      organization: 'MandatorOrg',
+      commonName: 'Mandator',
+      emailAddress: 'mandator@example.com',
+      serialNumber: '123456',
+      country: 'ES',
+    };
 
     const credentialProcedureService = {
       saveCredentialProcedure: jasmine
@@ -178,6 +187,7 @@ describe('FormCredentialService', () => {
       selectedCountry,
       addedOptions,
       mandator,
+      signer,
       credentialProcedureService as any,
       mockPopupComponent,
       resetForm
