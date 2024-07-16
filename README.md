@@ -21,42 +21,85 @@
 
 </div>
 
-# Introduction 
-IN2 Issuer UI is the presentation side application for the IN2 Issuer project. It is a Angular application. 
-
-## Architecture
-The application is based on the following architecture:
-### Issuer UI 
+# Introduction
+IN2 Issuer UI is the presentation side application for the IN2 Issuer project. It is a Angular application.
 
 ## Main Features
-// TODO: Add the main features of the application
-·Landing Page
+- Landing Page
+- Login and register with conventional login
+- Login and register with digital certificate
+- Issued Credentials list view
+- New Credential and New Credential as Signer forms
+- Credential Details view
 
-# Getting Started
-This aplication is developed, builded and tested in Visual Studio Code 
-1. Clone the repository:
-```git clone https://github.com/in2workspace/issuer-ui.git```
-2. Install dependencies:
-```npm install```
-1. Start aplication in local development
-```npm start```
-1. Build docker image
-```docker build -t issuer-ui .```
-1. Run docker image
-```docker run -p 4200:8088 -e login_url=http://yourdomain.com -e wallet_url=http://yourdomain.com issuer-ui```
-# Customization
+# Installation
+As key part of the Credential Issuer solution the Issuer UI is designed to work with the following dependencies:
+## Dependencies
+To utilize the Credential Issuer, you will need the following components:
 
+- **Issuer-UI**
+- **Issuer-API**
+- **Issuer Keycloak Plugin**
+- **Postgres Database**
+- **SMTP Email Server**
 
+For each dependency, you can refer to their respective repositories for detailed setup instructions.
+We offer a Docker image to run the application. You can find it in [Docker Hub](https://hub.docker.com/u/in2workspace).
 
-# Build and Test
-We have 3 different ways to build and test the project depending on the selected Spring Boot profile.
-- `test` profile: This profile is used for unit testing. It uses an in-memory database and does not require any external dependencies.
-- `local` profile: This profile is used for local development. It uses an in-memory database and generates default data to test the application. You need to run a set of docker containers to run the application (Orion Context Broker and MongoDb).
-- `local-docker` profile: This profile is used for local development. It uses a dockerized database and generates default data to test the application.
-- `dev` profile: This profile is used for development. It uses a dockerized database and generates default data to test the application.
-- `docker` you can set environment variables dinamicaly using '-e WCA_URL=http://yourdomain.com' all the diferent environment variables are WCA_URL, DATA_URL, LOGIN_URL, REGISTER_URL, EXECCONT_URI, VP_URL, CRED_URI, CREDID_URI, USER_URI
-# Contribute
+Here, you can find an example of how to run the application with all the required services and configuration.
+### Issuer UI
+The application needs key custom environment variables to be configured
+- LOGIN_URL: login url for your Keycloak realm
+- CLIENT_ID: Keycloak client responsible for the registration
+- WALLET_URL: Url of the Wallet application intended to be used to retrieve the credentials
+- BASE_URL: base url of the Issuer
 
-# License
+#### Example of a typical configuration:
+```
+docker run -d \
+  --name issuer-ui \
+  -e LOGIN_URL=http://keycloak-external.org/realms/CredentialIssuer \
+  -e CLIENT_ID=account-console \
+  -e SCOPE="openid profile email offline_access" \
+  -e GRANT_TYPE=code \
+  -e BASE_URL=http://issuer-api.com/ \
+  -e WALLET_URL=http://wallet.com/ \
+  -p 4201:8080 \
+  in2workspace/issuer-ui:v1.0.0
+```
 
-# Documentation
+### Issuer API
+The Server application of the Credential Issuer. Refer to the [Issuer API Documentation](https://github.com/in2workspace/issuer-api) for more information on configuration variables.
+
+### Issuer Keycloak Plugin
+Keycloak is used for identity and access management, as well as for other OpenID4VCI DOME profile requirements.
+It's an implementation of the official quay.io keycloak image with a custom layer.
+Refer to the [Keycloak Plugin Documentation](https://github.com/in2workspace/issuer-keycloak-plugin) for more information on setup and configuration variables.
+
+### Postgres Database
+Separate instances of Postgres are used as the database for Keycloak and the Issuer API.
+You can find more information in the [official documentation](https://www.postgresql.org/docs/).
+
+### SMTP Email Server
+An SMTP Email Server of your choice. It must support StartTLS for a secure connection. Refer to the [Issuer API Documentation](https://github.com/in2workspace/issuer-api) for more information
+
+## Contribution
+
+### How to contribute
+If you want to contribute to this project, please read the [CONTRIBUTING.md](CONTRIBUTING.md) file.
+
+## License
+This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
+
+## Project/Component Status
+This project is currently in development.
+
+## Contact
+For any inquiries or further information, feel free to reach out to us:
+
+- **Email:** [Oriol Canadés](mailto:oriol.canades@in2.es)
+- **Name:** IN2, Ingeniería de la Información
+- **Website:** [https://in2.es](https://in2.es)
+
+## Acknowledgments
+This project is part of the IN2 strategic R&D, which has received funding from the [DOME](https://dome-marketplace.eu/) project within the European Union’s Horizon Europe Research and Innovation programme under the Grant Agreement No 101084071.
