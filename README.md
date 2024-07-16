@@ -52,7 +52,7 @@ The application needs key custom environment variables to be configured
 - LOGIN_URL: login url for your Keycloak realm
 - CLIENT_ID: Keycloak client responsible for the registration
 - WALLET_URL: Url of the Wallet application intended to be used to retrieve the credentials
-- BASE_URL: base url of the Issuer
+- BASE_URL: base url of the Issuer API
 
 #### Example of a typical configuration:
 ```
