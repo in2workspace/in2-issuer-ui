@@ -97,6 +97,6 @@ describe('CredencialOfferComponent', () => {
     component.ngOnInit();
 
     expect(credentialProcedureService.getCredentialOffer).toHaveBeenCalledWith('testTransactionCode');
-    expect(spyAlertService).toHaveBeenCalledWith('Error fetching credential offer.', 'error');
+    expect(spyAlertService).toHaveBeenCalledWith('The credential offer is expired or already used.', 'error');
   });
 });

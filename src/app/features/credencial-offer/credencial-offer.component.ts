@@ -45,7 +45,7 @@ export class CredencialOfferComponent implements OnInit {
         }
       },
       error: () => {
-        this.alertService.showAlert('Error fetching credential offer.', 'error');
+        this.alertService.showAlert('The credential offer is expired or already used.', 'error');
       }
     });
   }
