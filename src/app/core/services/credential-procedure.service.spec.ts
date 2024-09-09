@@ -4,6 +4,7 @@ import { CredentialProcedureService } from './credential-procedure.service';
 import { CredentialData, CredentialProcedure, CredentialProcedureResponse } from '../models/credentialProcedure.interface';
 import { environment } from 'src/environments/environment';
 import { HttpErrorResponse } from '@angular/common/http';
+import { CredentialProcedureEmision } from '../models/credentialProcedureEmision.interface';
 
 describe('CredentialProcedureService', () => {
   let service: CredentialProcedureService;
@@ -100,13 +101,20 @@ describe('CredentialProcedureService', () => {
     const mockData: CredentialProcedure ={credential_procedure: {
       procedure_id: '1', status: 'completed', full_name: 'John Doe', updated: '2023-01-01', credential: { mandatee: {}, mandator: {}, power: [] } as any
     }};
-
+    const credentialProcedureEmisionMock:CredentialProcedureEmision = {
+      schema: "LEARCredentialEmployee",
+      format: "jwt_vc_json",
+      payload: {
+          "credentialSubject": mockData.credential_procedure.credential
+      },
+      operationMode: "S"
+    };
     service.saveCredentialProcedure(mockData).subscribe(data => {
       expect(data).toEqual(mockData);
     });
     const req = httpMock.expectOne(apiUrl);
     expect(req.request.method).toBe('POST');
-    expect(req.request.body).toEqual(mockData);
+    expect(req.request.body).toEqual(credentialProcedureEmisionMock);
     req.flush(mockData);
   });
 
