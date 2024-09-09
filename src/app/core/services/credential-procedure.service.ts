@@ -4,6 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { CredentialProcedure, CredentialProcedureResponse,CredentialData } from '../models/credentialProcedure.interface';
+import { CredentialProcedureEmision } from '../models/credentialProcedureEmision.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +31,15 @@ export class CredentialProcedureService {
   }
 
   public saveCredentialProcedure(credentialProcedure: CredentialProcedure): Observable<any> {
-    return this.http.post(this.saveCredential, credentialProcedure).pipe(
+    const credentialProcedureEmision:CredentialProcedureEmision = {
+      schema: "LEARCredentialEmployee",
+      format: "jwt_vc_json",
+      payload: {
+          "credentialSubject": credentialProcedure.credential_procedure.credential
+      },
+      operationMode: "S"
+    };
+    return this.http.post(this.saveCredential, credentialProcedureEmision).pipe(
       catchError(this.handleError)
     );
   }
