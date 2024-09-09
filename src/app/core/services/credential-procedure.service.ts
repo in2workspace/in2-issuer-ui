@@ -35,7 +35,7 @@ export class CredentialProcedureService {
       schema: "LEARCredentialEmployee",
       format: "jwt_vc_json",
       payload: {
-          "credentialSubject": credentialProcedure.credential_procedure.credential
+          "credentialSubject": credentialProcedure.credential
       },
       operationMode: "S"
     };
