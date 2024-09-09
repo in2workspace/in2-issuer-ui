@@ -30,15 +30,8 @@ export class CredentialProcedureService {
     );
   }
 
-  public saveCredentialProcedure(credentialProcedure: CredentialProcedure): Observable<any> {
-    const credentialProcedureEmision:CredentialProcedureEmision = {
-      schema: "LEARCredentialEmployee",
-      format: "jwt_vc_json",
-      payload: {
-          "credentialSubject": credentialProcedure.credential
-      },
-      operationMode: "S"
-    };
+  public saveCredentialProcedure(credentialProcedureEmision: CredentialProcedureEmision): Observable<any> {
+
     return this.http.post(this.saveCredential, credentialProcedureEmision).pipe(
       catchError(this.handleError)
     );

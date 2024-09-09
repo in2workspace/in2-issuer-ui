@@ -4,6 +4,7 @@ import { Power } from 'src/app/core/models/power.interface';
 import { CredentialMandatee } from 'src/app/core/models/credendentialMandatee.interface';
 import { Mandator } from 'src/app/core/models/madator.interface';
 import { PopupComponent } from '../../popup/popup.component';
+import { CredentialProcedureEmision } from 'src/app/core/models/credentialProcedureEmision.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -61,14 +62,18 @@ export class FormCredentialService {
       return checkTmfFunction(option);
     });
 
-    const credentialProcedure = {
-      credential: {
+    const credentialProcedure:CredentialProcedureEmision =  {
+      schema: "LEARCredentialEmployee",
+      format: "jwt_vc_json",
+      payload: {
         mandatee: credential,
         mandator: mandator!,
         signer:signer,
         power: power
-      }
+      },
+      operationMode: "S"
     };
+    
 
     credentialProcedureService.saveCredentialProcedure(credentialProcedure).subscribe({
       next: () => {

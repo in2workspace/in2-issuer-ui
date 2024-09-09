@@ -98,36 +98,78 @@ describe('CredentialProcedureService', () => {
   });
 
   it('should save credential procedure successfully', () => {
-    const mockData: CredentialProcedure ={credential_procedure: {
-      procedure_id: '1', status: 'completed', full_name: 'John Doe', updated: '2023-01-01', credential: { mandatee: {}, mandator: {}, power: [] } as any
-    }};
     const credentialProcedureEmisionMock:CredentialProcedureEmision = {
       schema: "LEARCredentialEmployee",
       format: "jwt_vc_json",
       payload: {
-          "credentialSubject": mockData.credential_procedure.credential
+        mandatee: {
+          first_name: '',
+          last_name: '',
+          email: '',
+          mobile_phone: ''
+        }, mandator: {
+          organizationIdentifier: '',
+          organization: '',
+          commonName: '',
+          emailAddress: '',
+          serialNumber: '',
+          country: ''
+        }, power: [],
+        signer: {
+          commonName: '',
+          country: '',
+          emailAddress: '',
+          organization: '',
+          organizationIdentifier: '',
+          serialNumber: ''
+        }
       },
       operationMode: "S"
     };
-    service.saveCredentialProcedure(mockData).subscribe(data => {
-      expect(data).toEqual(mockData);
+    service.saveCredentialProcedure(credentialProcedureEmisionMock).subscribe(data => {
+      expect(data).toEqual(credentialProcedureEmisionMock);
     });
     const req = httpMock.expectOne(apiUrl);
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual(credentialProcedureEmisionMock);
-    req.flush(mockData);
+    req.flush(credentialProcedureEmisionMock);
   });
 
   it('should handle error when saving credential procedure', () => {
-    const mockData: CredentialProcedure = {
-      credential_procedure:{procedure_id: '1', status: 'completed', full_name: 'John Doe', updated: '2023-01-01', credential: { mandatee: {}, mandator: {}, power: [] } as any
-    }};
+    const credentialProcedureEmisionMock:CredentialProcedureEmision = {
+      schema: "LEARCredentialEmployee",
+      format: "jwt_vc_json",
+      payload: {
+        mandatee: {
+          first_name: '',
+          last_name: '',
+          email: '',
+          mobile_phone: ''
+        }, mandator: {
+          organizationIdentifier: '',
+          organization: '',
+          commonName: '',
+          emailAddress: '',
+          serialNumber: '',
+          country: ''
+        }, power: [],
+        signer: {
+          commonName: '',
+          country: '',
+          emailAddress: '',
+          organization: '',
+          organizationIdentifier: '',
+          serialNumber: ''
+        }
+      },
+      operationMode: "S"
+    };
     const errorResponse = new HttpErrorResponse({
       error: '500 error',
       status: 500, statusText: 'Server Error'
     });
 
-    service.saveCredentialProcedure(mockData).subscribe(
+    service.saveCredentialProcedure(credentialProcedureEmisionMock).subscribe(
       data => fail('should have failed with 500 error'),
       (error: string) => {
         expect(error).toContain('Server-side error: 500');
