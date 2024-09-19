@@ -3,7 +3,7 @@ export interface CredentialProcedureEmision {
     schema: string,
     format: string,
     payload:CredentialManagement,
-    operationMode: string
+    operation_mode: string
   }
 
 

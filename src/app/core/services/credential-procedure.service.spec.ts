@@ -124,7 +124,7 @@ describe('CredentialProcedureService', () => {
           serialNumber: ''
         }
       },
-      operationMode: "S"
+      operation_mode: "S"
     };
     service.saveCredentialProcedure(credentialProcedureEmisionMock).subscribe(data => {
       expect(data).toEqual(credentialProcedureEmisionMock);
@@ -162,7 +162,7 @@ describe('CredentialProcedureService', () => {
           serialNumber: ''
         }
       },
-      operationMode: "S"
+      operation_mode: "S"
     };
     const errorResponse = new HttpErrorResponse({
       error: '500 error',

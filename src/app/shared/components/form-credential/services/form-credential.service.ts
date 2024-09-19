@@ -71,7 +71,7 @@ export class FormCredentialService {
         signer:signer,
         power: power
       },
-      operationMode: "S"
+      operation_mode: "S"
     };
     
 
