@@ -1,6 +1,6 @@
 {
-  "name": "Issuer-ui",
-  "version": "1.0.1",
+  "name": "in2-issuer-ui",
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -27,7 +27,6 @@
     "@ngx-translate/http-loader": "^8.0.0",
     "angular-auth-oidc-client": "^17.0.0",
     "angularx-qrcode": "^17.0.1",
-    "Issuer-ui": "file:",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.4"

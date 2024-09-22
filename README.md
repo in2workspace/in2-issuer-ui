@@ -5,19 +5,19 @@
 <p><p>
 
 
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_credential-issuer-ui&metric=alert_status)](https://sonarcloud.io/dashboard?id=in2workspace_credential-issuer-ui)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_in2-issuer-ui&metric=alert_status)](https://sonarcloud.io/dashboard?id=in2workspace_in2-issuer-ui)
 
-[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_credential-issuer-ui&metric=bugs)](https://sonarcloud.io/summary/new_code?id=in2workspace_credential-issuer-ui)
-[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_credential-issuer-ui&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=in2workspace_credential-issuer-ui)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_credential-issuer-ui&metric=security_rating)](https://sonarcloud.io/dashboard?id=in2workspace_credential-issuer-ui)
-[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_credential-issuer-ui&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=in2workspace_credential-issuer-ui)
-[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_credential-issuer-ui&metric=ncloc)](https://sonarcloud.io/dashboard?id=in2workspace_credential-issuer-ui)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_in2-issuer-ui&metric=bugs)](https://sonarcloud.io/summary/new_code?id=in2workspace_in2-issuer-ui)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_in2-issuer-ui&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=in2workspace_in2-issuer-ui)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_in2-issuer-ui&metric=security_rating)](https://sonarcloud.io/dashboard?id=in2workspace_in2-issuer-ui)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_in2-issuer-ui&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=in2workspace_in2-issuer-ui)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_in2-issuer-ui&metric=ncloc)](https://sonarcloud.io/dashboard?id=in2workspace_in2-issuer-ui)
 
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_credential-issuer-ui&metric=coverage)](https://sonarcloud.io/summary/new_code?id=in2workspace_credential-issuer-ui)
-[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_credential-issuer-ui&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=in2workspace_credential-issuer-ui)
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_credential-issuer-ui&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=in2workspace_credential-issuer-ui)
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_credential-issuer-ui&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=in2workspace_credential-issuer-ui)
-[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_credential-issuer-ui&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=in2workspace_credential-issuer-ui)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_in2-issuer-ui&metric=coverage)](https://sonarcloud.io/summary/new_code?id=in2workspace_in2-issuer-ui)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_in2-issuer-ui&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=in2workspace_in2-issuer-ui)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_in2-issuer-ui&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=in2workspace_in2-issuer-ui)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_in2-issuer-ui&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=in2workspace_in2-issuer-ui)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_in2-issuer-ui&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=in2workspace_in2-issuer-ui)
 
 </div>
 
@@ -102,4 +102,4 @@ For any inquiries or further information, feel free to reach out to us:
 - **Website:** [https://in2.es](https://in2.es)
 
 ## Acknowledgments
-This project is part of the IN2 strategic R&D, which has received funding from the [DOME](https://dome-marketplace.eu/) project within the European Union’s Horizon Europe Research and Innovation programme under the Grant Agreement No 101084071.
+This project is part of the IN2 strategic R&D, which has received funding from the [DOME](https://dome-marketplace.eu/) project within the European Union’s Horizon Europe Research and Innovation program under the Grant Agreement No 101084071.

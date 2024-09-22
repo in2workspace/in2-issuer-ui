@@ -12,13 +12,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0] - 2024-06-21
 ### Added
-
 -Authentication configuration
 -Credential Creation
 -Credential Managment
 -Credential Issuance
 
 ## [0.6.0] - 2024-05-23
-
 ### Added
 - Landing Page
