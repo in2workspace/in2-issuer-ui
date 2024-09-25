@@ -54,7 +54,7 @@ export class FormCredentialService {
     resetForm: () => void
   ): void {
     const countryPrefix = `+${selectedCountry}`;
-    if (!credential.mobile_phone.startsWith(countryPrefix)) {
+    if (credential.mobile_phone != '' && !credential.mobile_phone?.startsWith(countryPrefix)) {
       credential.mobile_phone = `${countryPrefix} ${credential.mobile_phone}`;
     }
 
