@@ -30,7 +30,7 @@ export class CredentialProcedureService {
     );
   }
 
-  public saveCredentialProcedure(IssuanceRequest: IssuanceRequest): Observable<any> {
+  public createProcedure(IssuanceRequest: IssuanceRequest): Observable<any> {
 
     return this.http.post(this.saveCredential, IssuanceRequest).pipe(
       catchError(this.handleError)

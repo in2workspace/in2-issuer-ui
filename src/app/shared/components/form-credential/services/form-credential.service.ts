@@ -75,7 +75,7 @@ export class FormCredentialService {
     };
     
 
-    credentialProcedureService.saveCredentialProcedure(credentialProcedure).subscribe({
+    credentialProcedureService.createProcedure(credentialProcedure).subscribe({
       next: () => {
         popupComponent.showPopup();
         resetForm();

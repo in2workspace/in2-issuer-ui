@@ -175,8 +175,8 @@ describe('FormCredentialService', () => {
     };
 
     const credentialProcedureService = {
-      saveCredentialProcedure: jasmine
-        .createSpy('saveCredentialProcedure')
+      createProcedure: jasmine
+        .createSpy('createProcedure')
         .and.returnValue(of({})),
     };
 
@@ -194,7 +194,7 @@ describe('FormCredentialService', () => {
     );
 
     expect(credential.mobile_phone).toBe('+34 123456789');
-    expect(credentialProcedureService.saveCredentialProcedure).toHaveBeenCalled();
+    expect(credentialProcedureService.createProcedure).toHaveBeenCalled();
     expect(mockPopupComponent.showPopup).toHaveBeenCalled();
     expect(resetForm).toHaveBeenCalled();
   });

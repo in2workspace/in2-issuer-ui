@@ -126,7 +126,7 @@ describe('CredentialProcedureService', () => {
       },
       operation_mode: "S"
     };
-    service.saveCredentialProcedure(IssuanceRequestMock).subscribe(data => {
+    service.createProcedure(IssuanceRequestMock).subscribe(data => {
       expect(data).toEqual(IssuanceRequestMock);
     });
     const req = httpMock.expectOne(apiUrl);
@@ -169,7 +169,7 @@ describe('CredentialProcedureService', () => {
       status: 500, statusText: 'Server Error'
     });
 
-    service.saveCredentialProcedure(IssuanceRequestMock).subscribe(
+    service.createProcedure(IssuanceRequestMock).subscribe(
       data => fail('should have failed with 500 error'),
       (error: string) => {
         expect(error).toContain('Server-side error: 500');
