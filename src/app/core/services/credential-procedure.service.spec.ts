@@ -4,7 +4,7 @@ import { CredentialProcedureService } from './credential-procedure.service';
 import { CredentialData, CredentialProcedure, CredentialProcedureResponse } from '../models/credentialProcedure.interface';
 import { environment } from 'src/environments/environment';
 import { HttpErrorResponse } from '@angular/common/http';
-import { CredentialProcedureEmision } from '../models/credentialProcedureEmision.interface';
+import { CredentialProcedureEmision } from '../models/issuanceRequest.interface';
 
 describe('CredentialProcedureService', () => {
   let service: CredentialProcedureService;

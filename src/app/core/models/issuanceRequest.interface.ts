@@ -1,5 +1,5 @@
 import { CredentialManagement } from "./credentialManagement.interface";
-export interface CredentialProcedureEmision {
+export interface IssuanceRequest {
     schema: string,
     format: string,
     payload:CredentialManagement,
