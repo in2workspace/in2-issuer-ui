@@ -1,10 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { CredentialProcedureService } from './credential-procedure.service';
-import { CredentialData, CredentialProcedure, CredentialProcedureResponse } from '../models/credentialProcedure.interface';
+import { CredentialData, CredentialProcedureResponse } from '../models/credentialProcedure.interface';
 import { environment } from 'src/environments/environment';
 import { HttpErrorResponse } from '@angular/common/http';
-import { CredentialProcedureEmision } from '../models/issuanceRequest.interface';
+import { IssuanceRequest } from '../models/issuanceRequest.interface';
 
 describe('CredentialProcedureService', () => {
   let service: CredentialProcedureService;
@@ -98,7 +98,7 @@ describe('CredentialProcedureService', () => {
   });
 
   it('should save credential procedure successfully', () => {
-    const credentialProcedureEmisionMock:CredentialProcedureEmision = {
+    const IssuanceRequestMock:IssuanceRequest = {
       schema: "LEARCredentialEmployee",
       format: "jwt_vc_json",
       payload: {
@@ -126,17 +126,17 @@ describe('CredentialProcedureService', () => {
       },
       operation_mode: "S"
     };
-    service.saveCredentialProcedure(credentialProcedureEmisionMock).subscribe(data => {
-      expect(data).toEqual(credentialProcedureEmisionMock);
+    service.saveCredentialProcedure(IssuanceRequestMock).subscribe(data => {
+      expect(data).toEqual(IssuanceRequestMock);
     });
     const req = httpMock.expectOne(apiUrl);
     expect(req.request.method).toBe('POST');
-    expect(req.request.body).toEqual(credentialProcedureEmisionMock);
-    req.flush(credentialProcedureEmisionMock);
+    expect(req.request.body).toEqual(IssuanceRequestMock);
+    req.flush(IssuanceRequestMock);
   });
 
   it('should handle error when saving credential procedure', () => {
-    const credentialProcedureEmisionMock:CredentialProcedureEmision = {
+    const IssuanceRequestMock:IssuanceRequest = {
       schema: "LEARCredentialEmployee",
       format: "jwt_vc_json",
       payload: {
@@ -169,7 +169,7 @@ describe('CredentialProcedureService', () => {
       status: 500, statusText: 'Server Error'
     });
 
-    service.saveCredentialProcedure(credentialProcedureEmisionMock).subscribe(
+    service.saveCredentialProcedure(IssuanceRequestMock).subscribe(
       data => fail('should have failed with 500 error'),
       (error: string) => {
         expect(error).toContain('Server-side error: 500');
