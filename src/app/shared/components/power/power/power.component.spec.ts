@@ -63,10 +63,10 @@ describe('PowerComponent', () => {
         customer: false,
         provider: false,
         marketplace: false,
-      },
+      }
     ];
 
-    spyOn<any>(component, 'showPopup');
+    const spy=jest.spyOn(component as any, 'showPopup');
 
     component.addOption();
 
@@ -78,12 +78,12 @@ describe('PowerComponent', () => {
     component.isDisabled = false;
     component.selectedOption = '';
 
-    spyOn<any>(component, 'showPopup');
+    const spy = jest.spyOn(component as any, 'showPopup');
 
     component.addOption();
 
     expect(component.addedOptions.length).toBe(0);
-    expect((component as any).showPopup).toHaveBeenCalledWith('Please select an option.');
+    expect(spy).toHaveBeenCalledWith('Please select an option.');
   });
 
   it('should add an option if it does not already exist', () => {
@@ -138,23 +138,23 @@ describe('PowerComponent', () => {
   });
 
   it('should emit addedOptionsChange when an option is added', () => {
-    spyOn(component.addedOptionsChange, 'emit');
+    const spy = jest.spyOn(component.addedOptionsChange, 'emit');
 
     component.isDisabled = false;
     component.selectedOption = 'NewOption';
 
     component.addOption();
 
-    expect(component.addedOptionsChange.emit).toHaveBeenCalledWith(component.addedOptions);
+    expect(spy).toHaveBeenCalledWith(component.addedOptions);
   });
 
   it('should emit handleSelectChange when onHandleSelectChange is called', () => {
     const event = new Event('change');
-    spyOn(component.handleSelectChange, 'emit');
+    const spy = jest.spyOn(component.handleSelectChange, 'emit');
 
     component.onHandleSelectChange(event);
 
-    expect(component.handleSelectChange.emit).toHaveBeenCalledWith(event);
+    expect(spy).toHaveBeenCalledWith(event);
   });
 
   it('should reset selectedOption after adding an option', () => {

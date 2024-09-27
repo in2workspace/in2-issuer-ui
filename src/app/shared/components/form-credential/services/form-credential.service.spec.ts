@@ -18,16 +18,15 @@ import {Signer} from "../../../../core/models/credentialProcedure.interface";
 
 describe('FormCredentialService', () => {
   let service: FormCredentialService;
-  let mockPopupComponent: jasmine.SpyObj<PopupComponent>;
+  let popupComponent: PopupComponent;
 
   beforeEach(() => {
-    const popupSpy = jasmine.createSpyObj('PopupComponent', ['showPopup']);
 
     TestBed.configureTestingModule({
       providers: [
         FormCredentialService,
         TranslateService,
-        { provide: PopupComponent, useValue: popupSpy }
+        PopupComponent
       ],
       imports: [
         MatTableModule,
@@ -41,7 +40,7 @@ describe('FormCredentialService', () => {
       ],
     });
     service = TestBed.inject(FormCredentialService);
-    mockPopupComponent = TestBed.inject(PopupComponent) as jasmine.SpyObj<PopupComponent>;
+    popupComponent = TestBed.inject(PopupComponent);
   });
 
   it('should be created', () => {
@@ -62,10 +61,10 @@ describe('FormCredentialService', () => {
     expect(tempPower.tmf_domain).toBe('domain');
     expect(tempPower.tmf_function).toBe('function');
     expect(tempPower.tmf_type).toBe('type');
-    expect(tempPower.execute).toBeTrue();
-    expect(tempPower.create).toBeTrue();
-    expect(tempPower.update).toBeFalse();
-    expect(tempPower.delete).toBeFalse();
+    expect(tempPower.execute).toBeTruthy();
+    expect(tempPower.create).toBeTruthy();
+    expect(tempPower.update).toBeFalsy();
+    expect(tempPower.delete).toBeFalsy();
   });
 
   it('should reset the form correctly', () => {
@@ -175,12 +174,11 @@ describe('FormCredentialService', () => {
     };
 
     const credentialProcedureService = {
-      createProcedure: jasmine
-        .createSpy('createProcedure')
-        .and.returnValue(of({})),
+      createProcedure: jest.fn().mockReturnValue(of({})),
     };
 
-    const resetForm = jasmine.createSpy('resetForm');
+    const resetForm = jest.spyOn(service, 'resetForm');
+    const popupSpy = jest.spyOn(popupComponent, 'showPopup');
 
     service.submitCredential(
       credential,
@@ -189,13 +187,13 @@ describe('FormCredentialService', () => {
       mandator,
       signer,
       credentialProcedureService as any,
-      mockPopupComponent,
-      resetForm
+      popupComponent,
+      service.resetForm
     );
 
     expect(credential.mobile_phone).toBe('+34 123456789');
     expect(credentialProcedureService.createProcedure).toHaveBeenCalled();
-    expect(mockPopupComponent.showPopup).toHaveBeenCalled();
+    expect(popupSpy).toHaveBeenCalled();
     expect(resetForm).toHaveBeenCalled();
   });
 

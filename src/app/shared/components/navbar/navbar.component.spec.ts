@@ -18,8 +18,8 @@ class MockAuthService {
   }
 }
 
-class MockRouter {
-  navigate = jasmine.createSpy('navigate');
+export class MockRouter implements Partial<Router> {
+  navigate = jest.fn();
 }
 
 describe('NavbarComponent', () => {
@@ -69,9 +69,9 @@ describe('NavbarComponent', () => {
   });
 
   it('should call logout on authService', () => {
-    spyOn(authService, 'logout').and.callThrough();
+    const spy = jest.spyOn(authService, 'logout');
     component.logout();
-    expect(authService.logout).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled();
     expect(router.navigate).toHaveBeenCalledWith(['/home'], {});
   });
 });
