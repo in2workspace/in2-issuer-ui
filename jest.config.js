@@ -21,10 +21,10 @@ module.exports = {
     testPathIgnorePatterns: [
       '/node_modules/',
       '/dist/',
-      '/src/app/core',
+      '/src/app/core/(?!services/credential-procedure)',
       '/src/app/features',
       '/src/app/shared/components/navbar',
-      '/src/app/shared/components/form-credential/services/country.service.spec.ts',
+      '/src/app/shared/components/form-credential',
       '/src/app/shared/components/form-credential/form-credential.component.spec.ts',
       '/src/app/shared/components/popup',
       '/src/app/shared/components/power',

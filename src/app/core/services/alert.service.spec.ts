@@ -9,8 +9,8 @@ describe('AlertService', () => {
   let service: AlertService;
   let snackbarService: MatSnackBar;
   let translateService: TranslateService;
-  let snackbarSpy: jasmine.Spy;
-  let translateSpy: jasmine.Spy;
+  let snackbarSpy: jest.SpyInstance;
+  let translateSpy: jest.SpyInstance;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -22,8 +22,9 @@ describe('AlertService', () => {
     snackbarService = TestBed.inject(MatSnackBar);
     translateService = TestBed.inject(TranslateService);
 
-    snackbarSpy = spyOn(snackbarService, 'open').and.callThrough();
-    translateSpy = spyOn(translateService, 'get').and.callFake((key: string) => of(key));
+    snackbarSpy = jest.spyOn(snackbarService, 'open');
+    translateSpy = jest.spyOn(translateService, 'get');
+    translateSpy.mockImplementation((key: string) => of(key));
   });
 
   it('should be created', () => {

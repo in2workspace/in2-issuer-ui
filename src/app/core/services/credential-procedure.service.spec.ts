@@ -54,12 +54,12 @@ describe('CredentialProcedureService', () => {
       status: 404, statusText: 'Not Found'
     });
 
-    service.getCredentialProcedures().subscribe(
-      data => fail('should have failed with 404 error'),
-      (error: string) => {
+    service.getCredentialProcedures().subscribe({
+      next: data => fail('should have failed with 404 error'),
+      error: (error: string) => {
         expect(error).toContain('Server-side error: 404');
       }
-    );
+  });
 
     const req = httpMock.expectOne(proceduresURL);
     req.flush('404 error', errorResponse);
