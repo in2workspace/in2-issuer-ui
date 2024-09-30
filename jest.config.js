@@ -21,7 +21,7 @@ module.exports = {
     testPathIgnorePatterns: [
       '/node_modules/',
       '/dist/',
-      '/src/app/core/(?!services/credential-procedure)',
+      '/src/app/core/(?!services/auth)',
       '/src/app/features',
       '/src/app/shared/components/navbar',
       '/src/app/shared/components/form-credential',

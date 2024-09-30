@@ -48,28 +48,24 @@ describe('AuthService', () => {
     expect(oidcSecurityService.authorize).toHaveBeenCalled();
   });
   
-    // TODO this test needs to be fixed
-    // The error occurs because there is a timeout issue. This can happen if the asynchronous
-    // code does not complete within the set timeout interval. Ensure that all observables
-    // and asynchronous calls are properly handled and that the test completes within the timeout.
-  
-    // it('should set isAuthenticatedSubject based on OidcSecurityService checkAuth response', done => {
-    //   const authResponse = {
-    //     isAuthenticated: true,
-    //     userData: { emailAddress: 'test@example.com' },
-    //     accessToken: 'dummyAccessToken',
-    //     idToken: 'dummyIdToken'
-    //   };
-    //   oidcSecurityService.checkAuth.and.returnValue(of(authResponse));
-    //
-    //   service.checkAuth().subscribe(isAuthenticated => {
-    //     expect(isAuthenticated).toBeTrue();
-    //     service.isLoggedIn().subscribe(isLoggedIn => {
-    //       expect(isLoggedIn).toBeTrue();
-    //       done();
-    //     });
-    //   });
-    // });
+    it('should set isAuthenticatedSubject based on OidcSecurityService checkAuth response', done => {
+      const dummyToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQtY29uc29sZSI6eyJyb2xlcyI6WyJhZG1pbiJdfX0sImlhdCI6MTUxNjIzOTAyMn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+      const authResponse = {
+        isAuthenticated: true,
+        userData: { emailAddress: 'test@example.com' },
+        accessToken: dummyToken,
+        idToken: 'dummyIdToken'
+      };
+      oidcSecurityService.checkAuth.mockReturnValue(of(authResponse));
+    
+      service.checkAuth().subscribe(isAuthenticated => {
+        expect(isAuthenticated).toBeTruthy();
+        service.isLoggedIn().subscribe(isLoggedIn => {
+          expect(isLoggedIn).toBeTruthy();
+          done();
+        });
+      });
+    });
 
   it('should clear localStorage and call logoff on OidcSecurityService when logout is called', () => {
     service.logout();
