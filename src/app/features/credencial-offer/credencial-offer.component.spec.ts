@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CredencialOfferComponent } from './credencial-offer.component';
 import { CommonModule } from '@angular/common';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { MaterialModule } from 'src/app/material.module';
@@ -18,18 +18,26 @@ import { AuthModule } from 'angular-auth-oidc-client';
 describe('CredencialOfferComponent', () => {
   let component: CredencialOfferComponent;
   let fixture: ComponentFixture<CredencialOfferComponent>;
-  let credentialProcedureService: CredentialProcedureService;
-  let alertService: AlertService;
-  let route: ActivatedRoute;
+  let credentialProcedureService: {
+    getCredentialOffer: jest.Mock
+  };
+  let alertService: Partial<AlertService>;
   let router: Router;
+  let route: ActivatedRoute;
   let httpMock: HttpTestingController;
 
   beforeEach(async () => {
+    alertService = {
+      showAlert:jest.fn()
+    };
+    credentialProcedureService = {
+      getCredentialOffer: jest.fn()
+    }
     await TestBed.configureTestingModule({
       declarations: [CredencialOfferComponent],
       imports: [
         CommonModule,
-        BrowserAnimationsModule,
+        NoopAnimationsModule,
         RouterModule.forRoot([]),
         TranslateModule.forRoot(),
         HttpClientTestingModule,
@@ -39,8 +47,8 @@ describe('CredencialOfferComponent', () => {
       ],
       providers: [
         AuthService,
-        CredentialProcedureService,
-        AlertService,
+        {provide: CredentialProcedureService, useValue: credentialProcedureService},
+        { provide: AlertService, useValue:alertService },
         {
           provide: ActivatedRoute,
           useValue: {
@@ -52,7 +60,6 @@ describe('CredencialOfferComponent', () => {
 
     fixture = TestBed.createComponent(CredencialOfferComponent);
     component = fixture.componentInstance;
-    credentialProcedureService = TestBed.inject(CredentialProcedureService);
     alertService = TestBed.inject(AlertService);
     route = TestBed.inject(ActivatedRoute);
     router = TestBed.inject(Router);
@@ -65,9 +72,9 @@ describe('CredencialOfferComponent', () => {
   });
 
   it('should fetch credential offer and set qrCodeData when transaction code is present and response is valid', () => {
-    const spyRouterNavigate = spyOn(router, 'navigate');
+    const spyRouterNavigate = jest.spyOn(router, 'navigate');
     const mockResponse = 'mockQRCodeData';
-    spyOn(credentialProcedureService, 'getCredentialOffer').and.returnValue(of(mockResponse));
+    credentialProcedureService.getCredentialOffer!.mockReturnValue(of(mockResponse));
 
     component.ngOnInit();
 
@@ -81,22 +88,20 @@ describe('CredencialOfferComponent', () => {
   });
 
   it('should show alert when transaction code is not present', () => {
-    const spyAlertService = spyOn(alertService, 'showAlert');
     (route.queryParams as any) = of({});
 
     component.ngOnInit();
 
-    expect(spyAlertService).toHaveBeenCalledWith('No transaction code found in URL.', 'error');
+    expect(alertService.showAlert).toHaveBeenCalledWith('No transaction code found in URL.', 'error');
   });
 
   it('should show alert when there is an error fetching credential offer', () => {
     const errorResponse = new HttpErrorResponse({ status: 500, statusText: 'Server Error' });
-    spyOn(credentialProcedureService, 'getCredentialOffer').and.returnValue(throwError(() => errorResponse));
-    const spyAlertService = spyOn(alertService, 'showAlert');
+    credentialProcedureService.getCredentialOffer.mockReturnValue(throwError(() => errorResponse));
 
     component.ngOnInit();
 
     expect(credentialProcedureService.getCredentialOffer).toHaveBeenCalledWith('testTransactionCode');
-    expect(spyAlertService).toHaveBeenCalledWith('The credential offer is expired or already used.', 'error');
+    expect(alertService.showAlert).toHaveBeenCalledWith('The credential offer is expired or already used.', 'error');
   });
 });
