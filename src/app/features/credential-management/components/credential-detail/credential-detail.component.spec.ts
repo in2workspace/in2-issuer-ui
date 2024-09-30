@@ -11,10 +11,16 @@ import { CredentialManagement } from 'src/app/core/models/credentialManagement.i
 describe('CredentialDetailComponent', () => {
   let component: CredentialDetailComponent;
   let fixture: ComponentFixture<CredentialDetailComponent>;
-  let mockCredentialProcedureService: jasmine.SpyObj<CredentialProcedureService>;
+  let mockCredentialProcedureService: {
+    getCredentialProcedureById: jest.Mock;
+    sendReminder: jest.Mock;
+  };
 
   beforeEach(async () => {
-    mockCredentialProcedureService = jasmine.createSpyObj('CredentialProcedureService', ['getCredentialProcedureById', 'sendReminder']);
+    mockCredentialProcedureService = {
+      getCredentialProcedureById: jest.fn(),
+      sendReminder: jest.fn()
+    };
 
     await TestBed.configureTestingModule({
       declarations: [CredentialDetailComponent],
@@ -34,6 +40,8 @@ describe('CredentialDetailComponent', () => {
 
     fixture = TestBed.createComponent(CredentialDetailComponent);
     component = fixture.componentInstance;
+    jest.spyOn(console, 'error');
+    jest.spyOn(console, 'log');
     fixture.detectChanges();
   });
 
@@ -95,7 +103,7 @@ describe('CredentialDetailComponent', () => {
       credential: mockCredentialManagement,
     };
 
-    mockCredentialProcedureService.getCredentialProcedureById.and.returnValue(of(mockCredential));
+    mockCredentialProcedureService.getCredentialProcedureById.mockReturnValue(of(mockCredential));
 
     component.ngOnInit();
 
@@ -105,8 +113,7 @@ describe('CredentialDetailComponent', () => {
   });
 
   it('should handle error while loading credential details', () => {
-    spyOn(console, 'error');
-    mockCredentialProcedureService.getCredentialProcedureById.and.returnValue(throwError('Error'));
+    mockCredentialProcedureService.getCredentialProcedureById.mockReturnValue(throwError(()=>'Error'));
 
     component.ngOnInit();
 
@@ -116,9 +123,8 @@ describe('CredentialDetailComponent', () => {
 
   it('should send reminder', () => {
     component.credentialId = '1';
-    mockCredentialProcedureService.sendReminder.and.returnValue(of('Reminder sent'));
+    mockCredentialProcedureService.sendReminder.mockReturnValue(of('Reminder sent'));
 
-    spyOn(console, 'log');
     component.sendReminder();
 
     expect(mockCredentialProcedureService.sendReminder).toHaveBeenCalledWith('1');
@@ -127,9 +133,8 @@ describe('CredentialDetailComponent', () => {
 
   it('should handle error while sending reminder', () => {
     component.credentialId = '1';
-    mockCredentialProcedureService.sendReminder.and.returnValue(throwError('Error'));
+    mockCredentialProcedureService.sendReminder.mockReturnValue(throwError(()=>'Error'));
 
-    spyOn(console, 'error');
     component.sendReminder();
 
     expect(console.error).toHaveBeenCalledWith('Error sending reminder', 'Error');

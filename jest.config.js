@@ -22,7 +22,7 @@ module.exports = {
       '/node_modules/',
       '/dist/',
       '/src/app/core/',
-      '/src/app/features/(?!credential-management/credential-management.component)',
+      '/src/app/features/(?!credential-offer-onboarding)',
       '/src/app/shared/components/navbar',
       '/src/app/shared/components/form-credential',
       '/src/app/shared/components/form-credential/form-credential.component.spec.ts',
