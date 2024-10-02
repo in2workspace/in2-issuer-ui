@@ -86,7 +86,7 @@ export class FormCredentialService {
     });
   }
 }
-function isDomePlatform(option: TempPower,tmf_action: string[]) {
+export function isDomePlatform(option: TempPower,tmf_action: string[]) {
   const tmf_action2=tmf_action;
   if (option.operator) tmf_action2.push('Operator');
   if (option.customer) tmf_action2.push('Customer');
@@ -94,7 +94,7 @@ function isDomePlatform(option: TempPower,tmf_action: string[]) {
   if (option.marketplace) tmf_action2.push('Marketplace');
   return tmf_action2;
 }
-function isProductOffering(option: TempPower,tmf_action: string[]) {
+export function isProductOffering(option: TempPower,tmf_action: string[]) {
   const tmf_action2=tmf_action;
   if (option.create) tmf_action2.push('Create');
   if (option.update) tmf_action2.push('Update');

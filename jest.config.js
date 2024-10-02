@@ -26,10 +26,9 @@ module.exports = {
       '/node_modules/',
       '/dist/',
       // '/src/app/core/',
-      // '/src/app/features/(?!credential-offer-onboarding)',
+      // '/src/app/features/',
       // '/src/app/shared/components/navbar',
-      // '/src/app/shared/components/form-credential',
-      // '/src/app/shared/components/form-credential/form-credential.component.spec.ts',
+      // '/src/app/shared/components/form-credential/(?!services/form-credential.service)',
       // '/src/app/shared/components/popup',
       // '/src/app/shared/components/power',
     ]
