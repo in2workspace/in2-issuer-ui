@@ -1,5 +1,5 @@
 import {TestBed} from '@angular/core/testing';
-import {FormCredentialService, isDomePlatform, isProductOffering} from './form-credential.service';
+import {checkTmfFunction, FormCredentialService, isDomePlatform, isProductOffering} from './form-credential.service';
 import {Power} from 'src/app/core/models/power.interface';
 import {TempPower} from '../../power/power/power.component';
 import {CredentialMandatee} from 'src/app/core/models/credendentialMandatee.interface';
@@ -334,11 +334,19 @@ describe('FormCredentialService', () => {
   //       marketplace: false
   //     }
   //   ];
- 
+  
   //   const resetForm = jest.fn();
-
+  
   //   credentialProcedureService.createProcedure.mockReturnValue(of({}));
 
+  //   const spy = jest.spyOn(require('./form-credential.service'), 'checkTmfFunction')
+  //   .mockReturnValue({
+  //     tmf_action: ['Create', 'Update'],
+  //     tmf_domain: 'domain',
+  //     tmf_function: 'DomePlatform',
+  //     tmf_type: 'type'
+  //   });
+  
   //   service.submitCredential(
   //     mockCredential,
   //     mockSelectedCountry,
@@ -349,7 +357,7 @@ describe('FormCredentialService', () => {
   //     popupComponent,
   //     resetForm
   //   );
-
+  
   //   const expectedPower = [
   //     {
   //       tmf_action: ['Create', 'Update'],
@@ -358,7 +366,7 @@ describe('FormCredentialService', () => {
   //       tmf_type: 'type'
   //     }
   //   ];
-
+  
   //   expect(credentialProcedureService.createProcedure).toHaveBeenCalledWith(
   //     expect.objectContaining({
   //       payload: expect.objectContaining({
@@ -366,7 +374,9 @@ describe('FormCredentialService', () => {
   //       })
   //     })
   //   );
+  //   spy.mockRestore();
   // });
+  
 
   it('should add "Operator" to tmf_action if option.operator is true', () => {
     const option: TempPower = {
@@ -460,6 +470,199 @@ describe('isProductOffering', () => {
     expect(result).toEqual([]);
   });
 
+  it('should add the correct actions based on TempPower properties', () => {
+    const tempPower: TempPower = {
+      tmf_action: '',
+      tmf_domain: '',
+      tmf_function: '',
+      tmf_type: '',
+      execute: false,
+      create: false,
+      update: false,
+      delete: false,
+      operator: true,
+      customer: false,
+      provider: true,
+      marketplace: false
+    };
+    const tmf_action = ['InitialAction'];
+  
+    const result = isDomePlatform(tempPower, tmf_action);
+  
+    expect(result).toEqual(['InitialAction', 'Operator', 'Provider']);
+  });
+  
+  it('should return tmf_action unchanged if no TempPower properties are true', () => {
+    const tempPower: TempPower = {
+      tmf_action: '',
+      tmf_domain: '',
+      tmf_function: '',
+      tmf_type: '',
+      execute: false,
+      create: false,
+      update: false,
+      delete: false,
+      operator: false,
+      customer: false,
+      provider: false,
+      marketplace: false
+    };
+    const tmf_action = ['InitialAction'];
+  
+    const result = isDomePlatform(tempPower, tmf_action);
+  
+    expect(result).toEqual(['InitialAction']);
+  });
+
+  it('should add the correct actions based on TempPower properties for create, update, and delete', () => {
+    const tempPower: TempPower = {
+      tmf_action: '',
+      tmf_domain: '',
+      tmf_function: '',
+      tmf_type: '',
+      execute: false,
+      create: true,
+      update: true,
+      delete: true,
+      operator: false,
+      customer: false,
+      provider: false,
+      marketplace: false
+    };
+    const tmf_action = ['InitialAction'];
+  
+    const result = isProductOffering(tempPower, tmf_action);
+  
+    expect(result).toEqual(['InitialAction', 'Create', 'Update', 'Delete']);
+  });
+  
+  it('should return tmf_action unchanged if create, update, and delete are false', () => {
+    const tempPower: TempPower = {
+      tmf_action: '',
+      tmf_domain: '',
+      tmf_function: '',
+      tmf_type: '',
+      execute: false,
+      create: false,
+      update: false,
+      delete: false,
+      operator: false,
+      customer: false,
+      provider: false,
+      marketplace: false
+    };
+    const tmf_action = ['InitialAction'];
+  
+    const result = isProductOffering(tempPower, tmf_action);
+  
+    expect(result).toEqual(['InitialAction']);
+  });
+  
+  it('should return the correct object when tmf_function is Onboarding', () => {
+    const tempPower: TempPower = {
+      tmf_action: '',
+      tmf_domain: 'domain1',
+      tmf_function: 'Onboarding',
+      tmf_type: 'type1',
+      execute: true,
+      create: false,
+      update: false,
+      delete: false,
+      operator: false,
+      customer: false,
+      provider: false,
+      marketplace: false
+    };
+  
+    const result = checkTmfFunction(tempPower);
+  
+    expect(result).toEqual({
+      tmf_action: 'Execute',
+      tmf_domain: 'domain1',
+      tmf_function: 'Onboarding',
+      tmf_type: 'type1'
+    });
+  });
+  
+  it('should call isDomePlatform and return the correct object when tmf_function is DomePlatform', () => {
+    const tempPower: TempPower = {
+      tmf_action: '',
+      tmf_domain: 'domain2',
+      tmf_function: 'DomePlatform',
+      tmf_type: 'type2',
+      execute: false,
+      create: false,
+      update: false,
+      delete: false,
+      operator: true,
+      customer: false,
+      provider: true,
+      marketplace: false
+    };
+    
+    const result = checkTmfFunction(tempPower);
+  
+    expect(result).toEqual({
+      tmf_action: ['Operator', 'Provider'],
+      tmf_domain: 'domain2',
+      tmf_function: 'DomePlatform',
+      tmf_type: 'type2'
+    });
+  });
+  
+  it('should call isProductOffering and return the correct object when tmf_function is ProductOffering', () => {
+    const tempPower: TempPower = {
+      tmf_action: '',
+      tmf_domain: 'domain3',
+      tmf_function: 'ProductOffering',
+      tmf_type: 'type3',
+      execute: false,
+      create: true,
+      update: true,
+      delete: false,
+      operator: false,
+      customer: false,
+      provider: false,
+      marketplace: false
+    };
+    
+    const result = checkTmfFunction(tempPower);
+  
+    expect(result).toEqual({
+      tmf_action: ['Create', 'Update'],
+      tmf_domain: 'domain3',
+      tmf_function: 'ProductOffering',
+      tmf_type: 'type3'
+    });
+  });
+  
+  it('should return the correct object when tmf_function does not match any case', () => {
+    const tempPower: TempPower = {
+      tmf_action: '',
+      tmf_domain: 'domain4',
+      tmf_function: 'UnknownFunction',
+      tmf_type: 'type4',
+      execute: false,
+      create: false,
+      update: false,
+      delete: false,
+      operator: false,
+      customer: false,
+      provider: false,
+      marketplace: false
+    };
+  
+    const result = checkTmfFunction(tempPower);
+  
+    expect(result).toEqual({
+      tmf_action: [],
+      tmf_domain: 'domain4',
+      tmf_function: 'UnknownFunction',
+      tmf_type: 'type4'
+    });
+  });
+  
+
 });
 
 const mockTempPower: TempPower = {
@@ -476,3 +679,5 @@ const mockTempPower: TempPower = {
   provider: false,
   marketplace: false
 };
+
+

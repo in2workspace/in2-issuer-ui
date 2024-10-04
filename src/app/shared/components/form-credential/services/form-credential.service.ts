@@ -101,7 +101,7 @@ export function isProductOffering(option: TempPower,tmf_action: string[]) {
   if (option.delete) tmf_action2.push('Delete');
   return tmf_action2;
 }
-function checkTmfFunction(option: TempPower): any {
+export function checkTmfFunction(option: TempPower): any {
   if (option.tmf_function === 'Onboarding') {
     return {
       tmf_action: option.execute ? 'Execute' : '',
