@@ -58,9 +58,40 @@ describe('NavbarComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should initialize with mandator', () => {
+    const mockMandator = { name: 'Test Mandator' };
+    jest.spyOn(authService, 'getMandator').mockReturnValue(of(mockMandator));
+
+    component.ngOnInit();
+    fixture.detectChanges();
+
+    expect(component.mandator).toEqual(mockMandator);
+  });
+
+  it('should initialize with username', () => {
+    const mockUserName = 'Test User';
+    jest.spyOn(authService, 'getEmailName').mockReturnValue(of(mockUserName));
+
+    component.ngOnInit();
+    fixture.detectChanges();
+
+    expect(component.userName).toEqual(mockUserName);
+  });
+
   it('should initialize with default language', () => {
     component.ngOnInit();
     expect(component.selectedLanguage).toBe('en');
+  });
+
+  it('should initialize languages', ()=>{
+    jest.spyOn(translateService, 'setDefaultLang');
+    jest.spyOn(translateService, 'addLangs');
+
+    component.ngOnInit();
+    fixture.detectChanges();
+
+    expect(translateService.setDefaultLang).toHaveBeenCalled();
+    expect(translateService.addLangs).toHaveBeenCalled();
   });
 
   it('should change language', () => {
@@ -74,4 +105,35 @@ describe('NavbarComponent', () => {
     expect(spy).toHaveBeenCalled();
     expect(router.navigate).toHaveBeenCalledWith(['/home'], {});
   });
+
+  it('should call logout on click', () => {
+    const logoutLink = fixture.nativeElement.querySelector('[test-id="logout-link"]');
+    
+    jest.spyOn(component, 'logout');
+    logoutLink.click();
+    
+    expect(component.logout).toHaveBeenCalled();
+  });
+
+  it('should display the correct username and mandator', () => {
+    const mockUserName = 'Test User';
+    const mockMandator = {
+      organization: 'Test Organization',
+      organizationIdentifier: '12345',
+      commonName: 'Test Common Name',
+      emailAddress: 'test@test.com',
+      serialNumber: 'SN123456',
+      country: 'ES'
+    };
+    component.userName = mockUserName;
+    component.mandator = mockMandator;
+    fixture.detectChanges();
+  
+    const userNameElement: HTMLElement = fixture.nativeElement.querySelector('[test-id="username"]');
+    const mandatorElement: HTMLElement = fixture.nativeElement.querySelector('[test-id="mandator"]');
+  
+    expect(userNameElement.textContent).toContain(mockUserName);
+    expect(mandatorElement.textContent).toContain(mockMandator.organization);
+  });
+  
 });
