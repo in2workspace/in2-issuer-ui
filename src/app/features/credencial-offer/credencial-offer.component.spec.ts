@@ -104,4 +104,30 @@ describe('CredencialOfferComponent', () => {
     expect(credentialProcedureService.getCredentialOffer).toHaveBeenCalledWith('testTransactionCode');
     expect(alertService.showAlert).toHaveBeenCalledWith('The credential offer is expired or already used.', 'error');
   });
+
+  it('should fetch credential offer and set qrCodeData when transaction code is present and response is valid', () => {
+    const spyRouterNavigate = jest.spyOn(router, 'navigate');
+    const mockResponse = 'mockQRCodeData';
+    
+    credentialProcedureService.getCredentialOffer!.mockReturnValue(of(mockResponse));
+  
+    component.ngOnInit();
+  
+    expect(credentialProcedureService.getCredentialOffer).toHaveBeenCalledWith('testTransactionCode');
+    expect(component.qrCodeData).toBe(mockResponse);
+    expect(spyRouterNavigate).toHaveBeenCalledWith([], {
+      relativeTo: route,
+      queryParams: { transaction_code: 'testTransactionCode' },
+      queryParamsHandling: 'merge'
+    });
+  });
+  
+  it('should show alert when no data is returned from getCredentialOffer', () => {
+    credentialProcedureService.getCredentialOffer!.mockReturnValue(of(null));
+  
+    component.ngOnInit();
+  
+    expect(credentialProcedureService.getCredentialOffer).toHaveBeenCalledWith('testTransactionCode');
+    expect(alertService.showAlert).toHaveBeenCalledWith('No QR code available.', 'error');
+  });
 });

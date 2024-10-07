@@ -223,6 +223,32 @@ describe('CredentialProcedureService', () => {
     req.flush(mockResponse);
   });
 
+  it('should return raw response if qrCode is not present in JSON response', () => {
+    const transactionCode = 'abc123';
+    const mockResponse = JSON.stringify({});
+  
+    service.getCredentialOffer(transactionCode).subscribe(data => {
+      expect(data).toBe(mockResponse);
+    });
+  
+    const req = httpMock.expectOne(`${credentialOfferUrl}/transaction-code/${transactionCode}`);
+    expect(req.request.method).toBe('GET');
+    req.flush(mockResponse);
+  });
+  
+  it('should return raw response if JSON.parse fails', () => {
+    const transactionCode = 'abc123';
+    const invalidJSONResponse = 'Invalid JSON string';
+  
+    service.getCredentialOffer(transactionCode).subscribe(data => {
+      expect(data).toBe(invalidJSONResponse);
+    });
+  
+    const req = httpMock.expectOne(`${credentialOfferUrl}/transaction-code/${transactionCode}`);
+    expect(req.request.method).toBe('GET');
+    req.flush(invalidJSONResponse);  
+  });
+
   it('should handle error when getting credential offer', () => {
     const transactionCode = 'abc123';
     const errorResponse = new HttpErrorResponse({
@@ -252,5 +278,47 @@ describe('CredentialProcedureService', () => {
     const req = httpMock.expectOne(`${credentialOfferUrl}/transaction-code/${transactionCode}`);
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
+  });
+
+  it('should return client-side error message if error is an ErrorEvent', () => {
+    const mockErrorEvent = new ErrorEvent('Network error', {
+      message: 'Client-side error occurred',
+    });
+  
+    const mockErrorResponse = new HttpErrorResponse({
+      error: mockErrorEvent,
+      status: 0,
+      statusText: 'Client-side error'
+    });
+  
+    const errorMessage = service['handleError'](mockErrorResponse);
+  
+    errorMessage.subscribe({
+      error: (error: string) => {
+        expect(error).toBe('Client-side error: Client-side error occurred');
+      }
+    });
+  });
+  
+  it('should return server-side error message if error is not an ErrorEvent', () => {
+    const mockServerError = {
+      status: 500,
+      message: 'Internal Server Error',
+      error: 'Server failure'
+    };
+  
+    const mockErrorResponse = new HttpErrorResponse({
+      error: mockServerError,
+      status: 500,
+      statusText: 'Internal Server Error'
+    });
+  
+    const errorMessage = service['handleError'](mockErrorResponse);
+  
+    errorMessage.subscribe({
+      error: (error: string) => {
+        expect(error).toBe('Server-side error: 500 Internal Server Error');
+      }
+    });
   });
 });

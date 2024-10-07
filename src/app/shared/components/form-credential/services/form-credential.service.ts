@@ -57,9 +57,12 @@ export class FormCredentialService {
     if (credential.mobile_phone != '' && !credential.mobile_phone?.startsWith(countryPrefix)) {
       credential.mobile_phone = `${countryPrefix} ${credential.mobile_phone}`;
     }
-
+    console.log("submit credentials: map addedOptions to power")
     const power: Power[] = addedOptions.map(option => {
-      return checkTmfFunction(option);
+      console.log("power mapped: ");
+      const val = checkTmfFunction(option);
+      console.log(val);
+      return val;
     });
 
     const credentialProcedure:IssuanceRequest =  {
@@ -102,6 +105,8 @@ export function isProductOffering(option: TempPower,tmf_action: string[]) {
   return tmf_action2;
 }
 export function checkTmfFunction(option: TempPower): any {
+  console.log("checktmf with opotion: ");
+  console.log(option);
   if (option.tmf_function === 'Onboarding') {
     return {
       tmf_action: option.execute ? 'Execute' : '',

@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -12,12 +12,15 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { AuthModule } from 'angular-auth-oidc-client';
+import { By } from '@angular/platform-browser';
 
 describe('CredentialManagementComponent', () => {
   let component: CredentialManagementComponent;
   let fixture: ComponentFixture<CredentialManagementComponent>;
   let credentialProcedureService: CredentialProcedureService;
   let credentialProcedureSpy: jest.SpyInstance;
+  let authService: AuthService;
+  let authServiceRoleSpy: jest.SpyInstance;
   let router: Router;
 
   beforeEach(async () => {
@@ -57,6 +60,8 @@ describe('CredentialManagementComponent', () => {
     credentialProcedureSpy = jest.spyOn(credentialProcedureService, 'getCredentialProcedures');
     router = TestBed.inject(Router);
     jest.spyOn(router, 'navigate');
+    authService = TestBed.inject(AuthService);
+    authServiceRoleSpy = jest.spyOn(authService, 'getRol');
   });
 
   beforeEach(() => {
@@ -72,11 +77,26 @@ describe('CredentialManagementComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize paginator and load credential data on ngAfterViewInit', () => {
+  it('should initialize paginator and role, and load credential data on ngAfterViewInit', () => {
     jest.spyOn(component, 'loadCredentialData');
+    authServiceRoleSpy.mockReturnValue('mockRole');
     component.ngAfterViewInit();
+
     expect(component.dataSource.paginator).toBe(component.paginator);
     expect(component.loadCredentialData).toHaveBeenCalled();
+    expect(authServiceRoleSpy).toHaveBeenCalled();
+    expect(component.rol).toBe('mockRole');
+  });
+
+  it('should add "actions" to displayedColumns if role is "admin"', ()=>{
+    authServiceRoleSpy.mockReturnValue('admin');
+    component.ngAfterViewInit();
+    expect(component.displayedColumns).toContain('actions');
+  });
+
+  it('should not add "actions" to displayedColumns if role is not "admin"', () => {
+    component.ngAfterViewInit();
+    expect(component.displayedColumns).not.toContain('actions');
   });
 
   it('should load credential data successfully', () => {
@@ -156,11 +176,18 @@ describe('CredentialManagementComponent', () => {
       'Error fetching credentials',
       expect.any(Error)
     );
+
+    credentialProcedureSpy.mockRestore();
   });
 
   it('should navigate to credential issuance page', () => {
     component.createNewCredential();
     expect(router.navigate).toHaveBeenCalledWith(['/organization/credentials/create']);
+  });
+
+  it('should navigate to credential issuance page 2', () => {
+    component.createNewCredential2();
+    expect(router.navigate).toHaveBeenCalledWith(['/organization/credentials/create2',component.rol]);
   });
 
   it('should navigate to credential details page', () => {
@@ -211,4 +238,91 @@ describe('CredentialManagementComponent', () => {
 
     expect(router.navigate).toHaveBeenCalledWith(['/organization/credentials/details', '1']);
   });
+
+  it('should call signCredential and log "firma enviada" on success', () => {
+    const mockElement = {
+      credential_procedure: {
+        procedure_id: '12345'
+      }
+    };
+    
+    const signCredentialSpy = jest.spyOn(credentialProcedureService, 'signCredential').mockReturnValue(of({}));
+  
+    const consoleLogSpy = jest.spyOn(console, 'log');
+  
+    component.performAction(mockElement);
+  
+    expect(signCredentialSpy).toHaveBeenCalledWith('12345');
+    expect(consoleLogSpy).toHaveBeenCalledWith('firma enviada');
+  });
+
+  it('should call signCredential and log "firma no enviada" on error', () => {
+    const mockElement = {
+      credential_procedure: {
+        procedure_id: '12345'
+      }
+    };
+    
+    const signCredentialSpy = jest.spyOn(credentialProcedureService, 'signCredential').mockReturnValue(
+      throwError(() => new Error('Error en el servei'))
+    );
+  
+    const consoleLogSpy = jest.spyOn(console, 'log');
+  
+    component.performAction(mockElement);
+  
+    expect(signCredentialSpy).toHaveBeenCalledWith('12345');
+    expect(consoleLogSpy).toHaveBeenCalledWith('firma no enviada');
+  });
+
+  //TEMPLATE
+  it('should show the admin button and column when role is "admin"', async () => {
+    component.rol = 'admin';
+    component.displayedColumns.push('actions');
+    fixture.detectChanges();
+  
+    await fixture.whenStable(); // Esperar que el cicle de canvi estigui complet
+  
+    const adminButton = fixture.debugElement.query(By.css('[test-id="admin-button"]'));
+    expect(adminButton).toBeTruthy();
+  
+    const adminColumn = fixture.debugElement.query(By.css('[test-id="actions-column"]'));
+    expect(adminColumn).toBeTruthy();
+  });
+  
+  it('should not show the admin button when role is not "admin"', () => {
+    component.rol = 'user';
+    fixture.detectChanges();
+  
+    const adminButton = fixture.debugElement.query(By.css('[test-id="admin-button"]'));
+    expect(adminButton).toBeNull();
+
+    const adminColumn = fixture.debugElement.query(By.css('[test-id="admin-column"]'));
+    expect(adminColumn).toBeNull();
+  });
+
+  it('should call createNewCredential when the regular button is clicked', () => {
+    const createNewCredentialSpy = jest.spyOn(component, 'createNewCredential');
+    fixture.detectChanges();
+  
+    const createButton = fixture.debugElement.query(By.css('[test-id="create-button"]')).nativeElement;
+    createButton.click();
+  
+    expect(createNewCredentialSpy).toHaveBeenCalled();
+  });
+  
+  it('should call createNewCredential2 when the admin button is clicked', () => {
+    component.rol = 'admin';
+    fixture.detectChanges();
+  
+    const createNewCredential2Spy = jest.spyOn(component, 'createNewCredential2');
+    const adminButton = fixture.debugElement.query(By.css('[test-id="admin-button"]')).nativeElement;
+    adminButton.click();
+  
+    expect(createNewCredential2Spy).toHaveBeenCalled();
+  });
+
+  // it('should call performActions when the actions button is  created', ()=>{
+
+  // });
 });
