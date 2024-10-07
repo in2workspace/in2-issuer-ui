@@ -25,12 +25,12 @@ module.exports = {
     testPathIgnorePatterns: [
       '/node_modules/',
       '/dist/',
+      // '/src/app/app',
       // '/src/app/core/',
       // '/src/app/features/',
-      // '/src/app/shared/components/navbar',
-      // '/src/app/shared/components/form-credential/(?!services/form-credential.service)',
-      // '/src/app/shared/components/popup',
-      // '/src/app/shared/components/power',
+      // '/src/app/features/(?!credencial-offer)',
+      // '/src/app/features/(?!credential-offer-onboarding)',
+      // '/src/app/shared/',
     ]
    };
    

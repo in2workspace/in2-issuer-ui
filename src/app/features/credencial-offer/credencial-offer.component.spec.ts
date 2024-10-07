@@ -43,7 +43,7 @@ describe('CredencialOfferComponent', () => {
         HttpClientTestingModule,
         MaterialModule,
         SharedModule,
-        AuthModule.forRoot({})
+        AuthModule.forRoot({config:{}})
       ],
       providers: [
         AuthService,
@@ -65,6 +65,11 @@ describe('CredencialOfferComponent', () => {
     router = TestBed.inject(Router);
     httpMock = TestBed.inject(HttpTestingController);
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    TestBed.resetTestingModule();
+    jest.clearAllMocks();
   });
 
   it('should create', () => {

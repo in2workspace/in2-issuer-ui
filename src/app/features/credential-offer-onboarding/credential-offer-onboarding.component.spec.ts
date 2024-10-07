@@ -18,7 +18,7 @@ describe('CredentialOfferOnboardingComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CredentialOfferOnboardingComponent, AuthModule.forRoot({})],
+      imports: [CredentialOfferOnboardingComponent, AuthModule.forRoot({config:{}})],
       providers:[
         {
             provide: ActivatedRoute,
@@ -49,6 +49,11 @@ describe('CredentialOfferOnboardingComponent', () => {
     router = TestBed.inject(Router);
     jest.spyOn(router, 'navigate');
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    TestBed.resetTestingModule();
+    jest.clearAllMocks();
   });
 
   it('should create', () => {

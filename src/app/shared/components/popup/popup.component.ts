@@ -24,4 +24,5 @@ export class PopupComponent implements OnChanges {
   public closePopup(): void {
     this.isVisible = false;
   }
+
 }

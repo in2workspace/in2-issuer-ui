@@ -33,6 +33,10 @@ describe('PowerComponent', () => {
     fixture.detectChanges();
   });
 
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should create', () => {
     expect(component).toBeTruthy();
   });

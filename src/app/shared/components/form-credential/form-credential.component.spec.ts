@@ -105,7 +105,9 @@ describe('FormCredentialComponent', () => {
 
   afterEach(() => {
     TestBed.resetTestingModule();
+    jest.clearAllMocks();
   });
+  
 
   it('should create', () => {
     expect(component).toBeTruthy();

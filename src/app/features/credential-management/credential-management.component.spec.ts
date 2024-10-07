@@ -13,6 +13,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { AuthModule } from 'angular-auth-oidc-client';
 import { By } from '@angular/platform-browser';
+import { environment } from 'src/environments/environment';
 
 const mockCredential = {
   mandatee: {
@@ -67,7 +68,7 @@ describe('CredentialManagementComponent', () => {
         BrowserAnimationsModule,
         RouterModule.forRoot([]),
         TranslateModule.forRoot({}),
-        AuthModule.forRoot({}),
+        AuthModule.forRoot({config:{}}),
       ],
       providers: [
         CredentialProcedureService,
@@ -104,6 +105,11 @@ describe('CredentialManagementComponent', () => {
     credentialProcedureSpy.mockReturnValue(of());
 
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    TestBed.resetTestingModule();
+    jest.clearAllMocks();
   });
 
   it('should create', () => {

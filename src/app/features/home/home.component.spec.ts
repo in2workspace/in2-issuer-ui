@@ -37,6 +37,11 @@ describe('HomeComponent', () => {
     fixture.detectChanges();
   });
 
+  afterEach(() => {
+    TestBed.resetTestingModule();
+    jest.clearAllMocks();
+  });
+
   it('should create', () => {
     expect(component).toBeTruthy();
   });

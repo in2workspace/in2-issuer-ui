@@ -41,6 +41,11 @@ describe('AuthService', () => {
     });
   });
 
+  afterEach(() => {
+    TestBed.resetTestingModule();
+    jest.clearAllMocks();
+  });
+
   it('should be created', () => {
     expect(service).toBeTruthy();
   });

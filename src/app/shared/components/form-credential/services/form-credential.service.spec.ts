@@ -43,7 +43,7 @@ describe('FormCredentialService', () => {
         BrowserAnimationsModule,
         RouterModule.forRoot([]),
         TranslateModule.forRoot({}),
-        AuthModule.forRoot({}),
+        AuthModule.forRoot({config:{}}),
       ],
     });
     service = TestBed.inject(FormCredentialService);

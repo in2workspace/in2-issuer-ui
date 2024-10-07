@@ -37,6 +37,7 @@ describe('CredentialProcedureService', () => {
 
   afterEach(() => {
     httpMock.verify();
+    jest.clearAllMocks();
   });
 
   it('should be created', () => {

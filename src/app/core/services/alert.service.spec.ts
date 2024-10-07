@@ -27,6 +27,11 @@ describe('AlertService', () => {
     translateSpy.mockImplementation((key: string) => of(key));
   });
 
+  afterEach(() => {
+    TestBed.resetTestingModule();
+    jest.clearAllMocks();
+  });
+
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
