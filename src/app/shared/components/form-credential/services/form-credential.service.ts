@@ -57,11 +57,8 @@ export class FormCredentialService {
     if (credential.mobile_phone != '' && !credential.mobile_phone?.startsWith(countryPrefix)) {
       credential.mobile_phone = `${countryPrefix} ${credential.mobile_phone}`;
     }
-    console.log("submit credentials: map addedOptions to power")
     const power: Power[] = addedOptions.map(option => {
-      console.log("power mapped: ");
-      const val = checkTmfFunction(option);
-      console.log(val);
+      const val = this.checkTmfFunction(option);
       return val;
     });
 
@@ -88,6 +85,37 @@ export class FormCredentialService {
       }
     });
   }
+
+  public checkTmfFunction(option: TempPower): any {
+    if (option.tmf_function === 'Onboarding') {
+      return {
+        tmf_action: option.execute ? 'Execute' : '',
+        tmf_domain: option.tmf_domain,
+        tmf_function: option.tmf_function,
+        tmf_type: option.tmf_type
+      };
+    }
+    let tmf_action: string[] = [];
+    switch (option.tmf_function) {
+      case 'DomePlatform':
+        tmf_action=isDomePlatform(option,tmf_action)
+        break;
+      case 'ProductOffering':
+        tmf_action=isProductOffering(option,tmf_action)
+        break;
+      default:
+        break;
+    }
+  
+    return {
+      tmf_action,
+      tmf_domain: option.tmf_domain,
+      tmf_function: option.tmf_function,
+      tmf_type: option.tmf_type
+    };
+  
+  }
+
 }
 export function isDomePlatform(option: TempPower,tmf_action: string[]) {
   const tmf_action2=tmf_action;
@@ -103,36 +131,5 @@ export function isProductOffering(option: TempPower,tmf_action: string[]) {
   if (option.update) tmf_action2.push('Update');
   if (option.delete) tmf_action2.push('Delete');
   return tmf_action2;
-}
-export function checkTmfFunction(option: TempPower): any {
-  console.log("checktmf with opotion: ");
-  console.log(option);
-  if (option.tmf_function === 'Onboarding') {
-    return {
-      tmf_action: option.execute ? 'Execute' : '',
-      tmf_domain: option.tmf_domain,
-      tmf_function: option.tmf_function,
-      tmf_type: option.tmf_type
-    };
-  }
-  let tmf_action: string[] = [];
-  switch (option.tmf_function) {
-    case 'DomePlatform':
-      tmf_action=isDomePlatform(option,tmf_action)
-      break;
-    case 'ProductOffering':
-      tmf_action=isProductOffering(option,tmf_action)
-      break;
-    default:
-      break;
-  }
-
-  return {
-    tmf_action,
-    tmf_domain: option.tmf_domain,
-    tmf_function: option.tmf_function,
-    tmf_type: option.tmf_type
-  };
-
 }
 

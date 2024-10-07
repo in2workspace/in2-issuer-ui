@@ -6,6 +6,17 @@ import { environment } from 'src/environments/environment';
 import { HttpErrorResponse } from '@angular/common/http';
 import { IssuanceRequest } from '../models/issuanceRequest.interface';
 
+const notFoundErrorResp = new HttpErrorResponse({
+  error: '404 error',
+  status: 404, statusText: 'Not Found'
+});
+
+const serverErrorResp = new HttpErrorResponse({
+  error: '500 error',
+  status: 500, 
+  statusText: 'Server Error'
+});
+
 describe('CredentialProcedureService', () => {
   let service: CredentialProcedureService;
   let httpMock: HttpTestingController;
@@ -34,8 +45,8 @@ describe('CredentialProcedureService', () => {
 
   it('should fetch credential procedures successfully', () => {
     const mockData: CredentialProcedureResponse = {credential_procedures:[
-      { credential_procedure:{procedure_id: '1', status: 'completed', full_name: 'John Doe', updated: '2023-01-01', credential: { mandatee: {}, mandator: {}, power: [] } as any} },
-      {credential_procedure:{ procedure_id: '2', status: 'pending', full_name: 'Jane Doe', updated: '2023-01-02', credential: { mandatee: {}, mandator: {}, power: [] } as any }}
+      { credential_procedure:{procedure_id: '1', status: 'completed', full_name: 'John Doe', updated: '2023-01-01', credential: { mandatee: {}, mandator: {}, power: [] } as any}},
+      { credential_procedure:{ procedure_id: '2', status: 'pending', full_name: 'Jane Doe', updated: '2023-01-02', credential: { mandatee: {}, mandator: {}, power: [] } as any }}
     ]};
 
     service.getCredentialProcedures().subscribe(data => {
@@ -49,10 +60,7 @@ describe('CredentialProcedureService', () => {
   });
 
   it('should handle error when fetching credential procedures', () => {
-    const errorResponse = new HttpErrorResponse({
-      error: '404 error',
-      status: 404, statusText: 'Not Found'
-    });
+    const errorResponse = notFoundErrorResp;
 
     service.getCredentialProcedures().subscribe({
       next: data => fail('should have failed with 404 error'),
@@ -81,10 +89,7 @@ describe('CredentialProcedureService', () => {
 
   it('should handle error when fetching credential procedure by id', () => {
     const procedureId = '1';
-    const errorResponse = new HttpErrorResponse({
-      error: '404 error',
-      status: 404, statusText: 'Not Found'
-    });
+    const errorResponse = notFoundErrorResp;
 
     service.getCredentialProcedureById(procedureId).subscribe(
       data => fail('should have failed with 404 error'),
@@ -166,7 +171,8 @@ describe('CredentialProcedureService', () => {
     };
     const errorResponse = new HttpErrorResponse({
       error: '500 error',
-      status: 500, statusText: 'Server Error'
+      status: 500, 
+      statusText: 'Server Error'
     });
 
     service.createProcedure(IssuanceRequestMock).subscribe(
@@ -196,7 +202,8 @@ describe('CredentialProcedureService', () => {
     const procedureId = '1';
     const errorResponse = new HttpErrorResponse({
       error: '500 error',
-      status: 500, statusText: 'Server Error'
+      status: 500, 
+      statusText: 'Server Error'
     });
 
     service.sendReminder(procedureId).subscribe(
@@ -251,10 +258,7 @@ describe('CredentialProcedureService', () => {
 
   it('should handle error when getting credential offer', () => {
     const transactionCode = 'abc123';
-    const errorResponse = new HttpErrorResponse({
-      error: '500 error',
-      status: 500, statusText: 'Server Error'
-    });
+    const errorResponse = serverErrorResp;
 
     service.getCredentialOffer(transactionCode).subscribe(
       data => fail('should have failed with 500 error'),
@@ -301,17 +305,8 @@ describe('CredentialProcedureService', () => {
   });
   
   it('should return server-side error message if error is not an ErrorEvent', () => {
-    const mockServerError = {
-      status: 500,
-      message: 'Internal Server Error',
-      error: 'Server failure'
-    };
-  
-    const mockErrorResponse = new HttpErrorResponse({
-      error: mockServerError,
-      status: 500,
-      statusText: 'Internal Server Error'
-    });
+    
+    const mockErrorResponse = serverErrorResp;
   
     const errorMessage = service['handleError'](mockErrorResponse);
   

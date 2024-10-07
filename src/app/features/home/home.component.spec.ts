@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HomeComponent } from './home.component';
 import { Router } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from 'src/app/core/services/auth.service';
 
@@ -9,7 +8,6 @@ describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
   let router: Router;
-  let routerNavigateSpy: jasmine.Spy;
   let mockAuthService: {
     login:jest.Mock,
     logout: jest.Mock

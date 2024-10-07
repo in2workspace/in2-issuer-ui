@@ -51,6 +51,9 @@ describe('NavbarComponent', () => {
     authService = TestBed.inject(AuthService);
     translateService = TestBed.inject(TranslateService);
     router = TestBed.inject(Router);
+
+    jest.spyOn(component, 'logout');
+
     fixture.detectChanges();
   });
 
@@ -100,16 +103,14 @@ describe('NavbarComponent', () => {
   });
 
   it('should call logout on authService', () => {
-    const spy = jest.spyOn(authService, 'logout');
     component.logout();
-    expect(spy).toHaveBeenCalled();
+    expect(component.logout).toHaveBeenCalled();
     expect(router.navigate).toHaveBeenCalledWith(['/home'], {});
   });
 
   it('should call logout on click', () => {
     const logoutLink = fixture.nativeElement.querySelector('[test-id="logout-link"]');
     
-    jest.spyOn(component, 'logout');
     logoutLink.click();
     
     expect(component.logout).toHaveBeenCalled();

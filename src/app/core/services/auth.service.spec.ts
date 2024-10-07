@@ -3,6 +3,13 @@ import { AuthService } from './auth.service';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { of } from 'rxjs';
 
+const mockAuthResponse = {
+  isAuthenticated: false,
+  userData: { emailAddress: 'test@example.com' },
+  accessToken: 'dummyAccessToken',
+  idToken: 'dummyIdToken'
+};
+
 describe('AuthService', () => {
   let service: AuthService;
   let oidcSecurityService: {
@@ -13,12 +20,7 @@ describe('AuthService', () => {
 
   beforeEach(() => {
     oidcSecurityService = {
-      checkAuth: jest.fn().mockReturnValue(of({
-        isAuthenticated: false,
-        userData: null,
-        accessToken: '',
-        idToken: ''
-      })),
+      checkAuth: jest.fn().mockReturnValue(of(mockAuthResponse)),
       authorize: jest.fn(),
       logoff: jest.fn()
     };
@@ -51,10 +53,9 @@ describe('AuthService', () => {
     it('should set isAuthenticatedSubject based on OidcSecurityService checkAuth response', done => {
       const dummyToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQtY29uc29sZSI6eyJyb2xlcyI6WyJhZG1pbiJdfX0sImlhdCI6MTUxNjIzOTAyMn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
       const authResponse = {
+        ...mockAuthResponse,
         isAuthenticated: true,
-        userData: { emailAddress: 'test@example.com' },
         accessToken: dummyToken,
-        idToken: 'dummyIdToken'
       };
       oidcSecurityService.checkAuth.mockReturnValue(of(authResponse));
     
@@ -82,10 +83,8 @@ describe('AuthService', () => {
 
   it('should handle login callback and update subjects accordingly', done => {
     const authResponse = {
-      isAuthenticated: true,
-      userData: { emailAddress: 'john.doe@example.com' },
-      accessToken: 'dummyAccessToken',
-      idToken: 'dummyIdToken'
+      ...mockAuthResponse,
+      isAuthenticated: true
     };
     oidcSecurityService.checkAuth.mockReturnValue(of(authResponse));
 
@@ -108,7 +107,7 @@ describe('AuthService', () => {
   it('should log a message if authentication fails or is not completed', done => {
     jest.spyOn(console, 'log');
     const authResponse = {
-      isAuthenticated: false,
+      ...mockAuthResponse,
       userData: null,
       accessToken: '',
       idToken: ''

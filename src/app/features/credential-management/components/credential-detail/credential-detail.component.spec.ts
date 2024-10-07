@@ -5,8 +5,7 @@ import { of, throwError } from 'rxjs';
 import { CredentialDetailComponent } from './credential-detail.component';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
-import { CredentialData, CredentialProcedure,Credential } from 'src/app/core/models/credentialProcedure.interface';
-import { CredentialManagement } from 'src/app/core/models/credentialManagement.interface';
+import { CredentialData, Credential } from 'src/app/core/models/credentialProcedure.interface';
 
 describe('CredentialDetailComponent', () => {
   let component: CredentialDetailComponent;

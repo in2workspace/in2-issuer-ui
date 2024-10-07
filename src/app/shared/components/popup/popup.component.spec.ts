@@ -41,7 +41,6 @@ describe('PopupComponent', () => {
   });
 
   it('should call showPopupMethod when isVisible changes', ()=>{
-    //TODO ideally should be done with a wrapper component
     const spy = jest.spyOn(component, 'showPopup');
     component.isVisible=true;
     component.ngOnChanges({

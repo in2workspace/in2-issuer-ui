@@ -5,7 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormCredentialComponent } from './form-credential.component';
 import { AlertService } from 'src/app/core/services/alert.service';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
-import { Country, CountryService } from './services/country.service';
+import { CountryService } from './services/country.service';
 import { FormCredentialService } from './services/form-credential.service';
 import { CUSTOM_ELEMENTS_SCHEMA, inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
@@ -30,6 +30,10 @@ const mockTempPower: TempPower = {
   provider: true,
   marketplace: false,
 };
+const mockPowers: Power[] = [
+  { tmf_action: 'action1', tmf_domain: 'domain1', tmf_function: 'function1', tmf_type: 'type1' },
+  { tmf_action: 'action2', tmf_domain: 'domain2', tmf_function: 'function2', tmf_type: 'type2' }
+];
 
 describe('FormCredentialComponent', () => {
   let component: FormCredentialComponent;
@@ -54,6 +58,7 @@ describe('FormCredentialComponent', () => {
       submitCredential: jest.fn(),
       resetForm: jest.fn(),
       convertToTempPower: jest.fn(),
+      checkTmfFunction: jest.fn()
     } as jest.Mocked<FormCredentialService>;
 
     mockCountryService = {
@@ -95,8 +100,6 @@ describe('FormCredentialComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(FormCredentialComponent);
     component = fixture.componentInstance;
-    // inject(CountryService).getCountries();
-    // inject(AuthService).getMandator();
     fixture.detectChanges();
   });
 
@@ -181,11 +184,6 @@ describe('FormCredentialComponent', () => {
   });
 
   it('should map power to tempPowers if viewMode is "detail"', () => {
-    const mockPowers: Power[] = [
-      { tmf_action: 'action1', tmf_domain: 'domain1', tmf_function: 'function1', tmf_type: 'type1' },
-      { tmf_action: 'action2', tmf_domain: 'domain2', tmf_function: 'function2', tmf_type: 'type2' }
-    ];
-
     component.viewMode = 'detail';
     component.power = mockPowers;
 
@@ -198,11 +196,6 @@ describe('FormCredentialComponent', () => {
   });
 
   it('should not map power to tempPowers if viewMode is not "detail"', () => {
-    const mockPowers: Power[] = [
-      { tmf_action: 'action1', tmf_domain: 'domain1', tmf_function: 'function1', tmf_type: 'type1' },
-      { tmf_action: 'action2', tmf_domain: 'domain2', tmf_function: 'function2', tmf_type: 'type2' }
-    ];
-
     component.viewMode = 'create';
     component.power = mockPowers;
 
@@ -231,18 +224,16 @@ describe('FormCredentialComponent', () => {
 
     component.submitCredential();
     expect(mockFormCredentialService.submitCredential).toHaveBeenCalled();
-    //TODO 
-    // expect(mockFormCredentialService.submitCredential).toHaveBeenCalledWith(
-    //   component.credential,
-    //   component.credential,
-    //   component.selectedCountry,
-    //   component.addedOptions,
-    //   component.mandator,
-    //   component.signer,
-    //   mockCredentialProcedureService,
-    //   component.popupComponent,
-    //   (component as any).resetForm.bind(mockFormCredentialService.submitCredential)
-    // );
+    expect(mockFormCredentialService.submitCredential).toHaveBeenCalledWith(
+      component.credential,
+      component.selectedCountry,
+      component.addedOptions,
+      component.mandator,
+      component.signer,
+      mockCredentialProcedureService,
+      expect.any(PopupComponent),
+      expect.any(Function)
+    );
   });
 
   it('should reset the form when resetForm is called', () => {

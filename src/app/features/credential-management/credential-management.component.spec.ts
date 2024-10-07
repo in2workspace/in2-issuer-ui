@@ -1,4 +1,4 @@
-import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -13,6 +13,39 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { AuthModule } from 'angular-auth-oidc-client';
 import { By } from '@angular/platform-browser';
+
+const mockCredential = {
+  mandatee: {
+    first_name: 'John',
+    last_name: 'Doe',
+    email: 'john.doe@example.com',
+    mobile_phone: '123-456-7890',
+  },
+  mandator: {
+    organizationIdentifier: 'org-123',
+    organization: 'Test Organization',
+    commonName: 'Test Common Name',
+    emailAddress: 'test@example.com',
+    serialNumber: 'SN123456',
+    country: 'CountryA',
+  },
+  signer: {
+    organizationIdentifier: 'org-123',
+    organization: 'Test Organization',
+    commonName: 'Test Common Name',
+    emailAddress: 'test@example.com',
+    serialNumber: 'SN123456',
+    country: 'CountryA',
+  },
+  power: [
+    {
+      tmf_action: ['action1', 'action2'],
+      tmf_domain: 'domain1',
+      tmf_function: 'function1',
+      tmf_type: 'type1',
+    },
+  ],
+};
 
 describe('CredentialManagementComponent', () => {
   let component: CredentialManagementComponent;
@@ -100,38 +133,6 @@ describe('CredentialManagementComponent', () => {
   });
 
   it('should load credential data successfully', () => {
-    const mockCredential = {
-      mandatee: {
-        first_name: 'John',
-        last_name: 'Doe',
-        email: 'john.doe@example.com',
-        mobile_phone: '123-456-7890',
-      },
-      mandator: {
-        organizationIdentifier: 'org-123',
-        organization: 'Test Organization',
-        commonName: 'Test Common Name',
-        emailAddress: 'test@example.com',
-        serialNumber: 'SN123456',
-        country: 'CountryA',
-      },
-      signer: {
-        organizationIdentifier: 'org-123',
-        organization: 'Test Organization',
-        commonName: 'Test Common Name',
-        emailAddress: 'test@example.com',
-        serialNumber: 'SN123456',
-        country: 'CountryA',
-      },
-      power: [
-        {
-          tmf_action: ['action1', 'action2'],
-          tmf_domain: 'domain1',
-          tmf_function: 'function1',
-          tmf_type: 'type1',
-        },
-      ],
-    };
 
     const mockData: CredentialProcedureResponse = {
       credential_procedures: [
@@ -191,38 +192,6 @@ describe('CredentialManagementComponent', () => {
   });
 
   it('should navigate to credential details page', () => {
-    const mockCredential = {
-      mandatee: {
-        first_name: 'John',
-        last_name: 'Doe',
-        email: 'john.doe@example.com',
-        mobile_phone: '123-456-7890',
-      },
-      mandator: {
-        organizationIdentifier: 'org-123',
-        organization: 'Test Organization',
-        commonName: 'Test Common Name',
-        emailAddress: 'test@example.com',
-        serialNumber: 'SN123456',
-        country: 'CountryA',
-      },
-      signer: {
-        organizationIdentifier: 'org-123',
-        organization: 'Test Organization',
-        commonName: 'Test Common Name',
-        emailAddress: 'test@example.com',
-        serialNumber: 'SN123456',
-        country: 'CountryA',
-      },
-      power: [
-        {
-          tmf_action: ['action1', 'action2'],
-          tmf_domain: 'domain1',
-          tmf_function: 'function1',
-          tmf_type: 'type1',
-        },
-      ],
-    };
 
     const mockElement: CredentialProcedure = {
       credential_procedure: {

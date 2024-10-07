@@ -1,6 +1,5 @@
-import {fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
-import * as formCredentialModule from './form-credential.service';
-import {checkTmfFunction, FormCredentialService, isDomePlatform, isProductOffering} from './form-credential.service';
+import { TestBed } from '@angular/core/testing';
+import {FormCredentialService, isDomePlatform, isProductOffering} from './form-credential.service';
 import {Power} from 'src/app/core/models/power.interface';
 import {TempPower} from '../../power/power/power.component';
 import {CredentialMandatee} from 'src/app/core/models/credendentialMandatee.interface';
@@ -17,17 +16,16 @@ import {SharedModule} from 'src/app/shared/shared.module';
 import {PopupComponent} from '../../popup/popup.component';
 import {Signer} from "../../../../core/models/credentialProcedure.interface";
 
-
 describe('FormCredentialService', () => {
   let service: FormCredentialService;
   let popupComponent: PopupComponent;
   let credentialProcedureService: any;
   let mockCredential: CredentialMandatee;;
   let mockSelectedCountry: string;
-  let mockAddedOptions: TempPower[];
   let mockMandator: Mandator;
   let mockSigner: Signer;
   let mockTempPower: TempPower;
+  let mockAddedOptions: TempPower[];
 
   beforeEach(() => {
 
@@ -61,22 +59,6 @@ describe('FormCredentialService', () => {
       mobile_phone: '123456789',
     };
     mockSelectedCountry = '34';
-    mockAddedOptions = [
-      {
-        tmf_action: [],
-        tmf_domain: 'domain',
-        tmf_function: 'function',
-        tmf_type: 'type',
-        execute: false,
-        create: false,
-        update: false,
-        delete: false,
-        operator: false,
-        customer: false,
-        provider: false,
-        marketplace: false,
-      },
-    ];
     mockMandator = {
       organizationIdentifier: '1',
       organization: 'MandatorOrg',
@@ -107,6 +89,10 @@ describe('FormCredentialService', () => {
       provider: false,
       marketplace: false
     };
+    mockAddedOptions = [
+      {...mockTempPower},
+      {...mockTempPower}
+    ];
   });
 
   it('should be created', () => {
@@ -315,66 +301,43 @@ describe('FormCredentialService', () => {
     expect(popupSpy).toHaveBeenCalled();
   });
 
-  //TODO 
-  // it('should map addedOptions to Power objects correctly', fakeAsync(() => {
-  //   const addedOptions: TempPower[] = [
-  //     {
-  //       ...mockTempPower,
-  //       tmf_domain: 'domain',
-  //       tmf_function: 'DomePlatform',
-  //       tmf_type: 'type',
-  //       create: true,
-  //       update: true
-  //     },
-  //     {
-  //       ...mockTempPower,
-  //       tmf_domain: 'domain',
-  //       tmf_function: 'DomePlatform',
-  //       tmf_type: 'type',
-  //       create: true,
-  //       update: true
-  //     }
-  //   ];
+  //TODO
+  it('should map addedOptions to Power objects correctly',() => {
 
-  //   const expectedPower = {
-  //     tmf_action:'expectedAction',
-  //     tmf_domain: 'expectedDomain',
-  //     tmf_function: 'expectedFn',
-  //     tmf_type: 'expectedType',
-  //   };
+    const expectedPower = {
+      tmf_action:'expectedAction',
+      tmf_domain: 'expectedDomain',
+      tmf_function: 'expectedFn',
+      tmf_type: 'expectedType',
+      execute: true,
+    };
   
-  //   jest.spyOn(service, 'resetForm');
-  //   jest.spyOn(popupComponent, 'showPopup');
-  //   const spy = jest.spyOn(formCredentialModule, 'checkTmfFunction')
-  //   .mockReturnValue(expectedPower);
-  //   credentialProcedureService.createProcedure.mockReturnValue(of({}));
+    const checkTmfSpy = jest.spyOn(service, 'checkTmfFunction').mockReturnValue(expectedPower);
+    credentialProcedureService.createProcedure.mockReturnValue(of({}));
 
-  
-  //   service.submitCredential(
-  //     mockCredential,
-  //     mockSelectedCountry,
-  //     addedOptions,
-  //     mockMandator,
-  //     mockSigner,
-  //     credentialProcedureService,
-  //     popupComponent,
-  //     service.resetForm
-  //   );
-  
-  //  tick();
-  //  flush();
-  //   expect(spy).toHaveBeenCalled();
-  //   expect(credentialProcedureService.createProcedure).toHaveBeenCalled();
+    service.submitCredential(
+      mockCredential,
+      mockSelectedCountry,
+      mockAddedOptions,
+      mockMandator,
+      mockSigner,
+      credentialProcedureService,
+      popupComponent,
+      service.resetForm
+    );
+
+   expect(credentialProcedureService.createProcedure).toHaveBeenCalled();
+    expect(checkTmfSpy).toHaveBeenCalled();
       
-    // expect(credentialProcedureService.createProcedure).toHaveBeenCalledWith(
-    //   expect.objectContaining({
-    //     payload: expect.objectContaining({
-    //       power: [expectedPower, expectedPower]
-    //     })
-    //   })
-    // );
-  //   spy.mockRestore();
-  // }));
+    expect(credentialProcedureService.createProcedure).toHaveBeenCalledWith(
+      expect.objectContaining({
+        payload: expect.objectContaining({
+          power: [expectedPower, expectedPower]
+        })
+      })
+    );
+    checkTmfSpy.mockRestore();
+  });
   
 
   it('should add "Operator" to tmf_action if option.operator is true', () => {
@@ -544,7 +507,7 @@ describe('FormCredentialService', () => {
       execute: true
     };
   
-    const result = checkTmfFunction(tempPower);
+    const result = service.checkTmfFunction(tempPower);
   
     expect(result).toEqual({
       tmf_action: 'Execute',
@@ -565,7 +528,7 @@ describe('FormCredentialService', () => {
       provider: true
     };
     
-    const result = checkTmfFunction(tempPower);
+    const result = service.checkTmfFunction(tempPower);
   
     expect(result).toEqual({
       tmf_action: ['Operator', 'Provider'],
@@ -586,7 +549,7 @@ describe('FormCredentialService', () => {
       update: true
     };
     
-    const result = checkTmfFunction(tempPower);
+    const result = service.checkTmfFunction(tempPower);
   
     expect(result).toEqual({
       tmf_action: ['Create', 'Update'],
@@ -605,7 +568,7 @@ describe('FormCredentialService', () => {
       tmf_type: 'type4'
     };
   
-    const result = checkTmfFunction(tempPower);
+    const result = service.checkTmfFunction(tempPower);
   
     expect(result).toEqual({
       tmf_action: [],

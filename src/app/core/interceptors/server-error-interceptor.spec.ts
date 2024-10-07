@@ -1,10 +1,9 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpErrorResponse, HttpResponse, HttpStatusCode, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse, HttpStatusCode, HttpRequest, HttpEvent } from '@angular/common/http';
 import { of, throwError } from 'rxjs';
 import { AlertService } from '../services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
 import { ServeErrorInterceptor } from './server-error-interceptor';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 describe('ServeErrorInterceptor', () => {
   let interceptor: ServeErrorInterceptor;

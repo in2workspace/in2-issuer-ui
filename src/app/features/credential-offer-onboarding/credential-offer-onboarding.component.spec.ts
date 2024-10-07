@@ -1,19 +1,12 @@
-// TODO this test class needs to be fixed
-// The error occurred because the TestBed was trying to add a standalone component
-// to the 'declarations' array instead of the 'imports' array. Standalone components
-// should be added to the 'imports' array. Additionally, 'ActivatedRoute' needs to be
-// mocked to avoid 'NullInjectorError'.
-
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CredentialOfferOnboardingComponent } from './credential-offer-onboarding.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { importProvidersFrom, NO_ERRORS_SCHEMA } from '@angular/core';
 import { HttpLoaderFactory } from 'src/app/app.module';
 import { HttpClient, HttpHandler } from '@angular/common/http';
-import { SharedModule } from 'src/app/shared/shared.module';
-import { AuthModule, OidcSecurityService } from 'angular-auth-oidc-client';
+import { AuthModule } from 'angular-auth-oidc-client';
 import { of } from 'rxjs';
 
 describe('CredentialOfferOnboardingComponent', () => {

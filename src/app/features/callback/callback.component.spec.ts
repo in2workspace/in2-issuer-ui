@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CallbackComponent } from './callback.component';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
-import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
 import { Router } from '@angular/router';
 
