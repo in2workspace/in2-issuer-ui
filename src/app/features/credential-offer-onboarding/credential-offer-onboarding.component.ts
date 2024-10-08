@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-credential-offer-onboarding',
   standalone: true,
-  imports: [SharedModule,    TranslateModule,
+  imports: [SharedModule, TranslateModule,
   ],
   templateUrl: './credential-offer-onboarding.component.html',
   styleUrl: './credential-offer-onboarding.component.scss'

@@ -9,6 +9,10 @@ describe('CountryService', () => {
     service = TestBed.inject(CountryService);
   });
 
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should be created', () => {
     expect(service).toBeTruthy();
   });

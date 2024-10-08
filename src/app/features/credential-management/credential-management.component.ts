@@ -34,7 +34,6 @@ export class CredentialManagementComponent implements AfterViewInit {
         console.log("firma no enviada")
       }
     });
-  
   }
   public ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
@@ -59,7 +58,9 @@ export class CredentialManagementComponent implements AfterViewInit {
 
   public createNewCredential(): void {
     this.router.navigate(['/organization/credentials/create']);
-  }  public createNewCredential2(): void {
+  }  
+  
+  public createNewCredential2(): void {
     this.router.navigate(['/organization/credentials/create2',this.rol]);
   }
 
