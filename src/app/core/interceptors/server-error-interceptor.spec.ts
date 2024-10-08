@@ -33,7 +33,7 @@ describe('ServeErrorInterceptor', () => {
 
   afterEach(() => {
     TestBed.resetTestingModule();
-    jest.clearAllMocks();
+    jest.clearAllMocks(); 
   });
 
   it('should be created', () => {
