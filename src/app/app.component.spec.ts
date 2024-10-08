@@ -2,6 +2,7 @@ import { DebugElement } from '@angular/core';
 import { AppComponent } from './app.component';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { RouterOutlet } from '@angular/router';
 
 describe('AppComponent', () => {
   let component: AppComponent;
@@ -11,7 +12,7 @@ describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [AppComponent],
-      imports: [],
+      imports: [RouterOutlet],
       schemas: []
     }).compileComponents();
   });
