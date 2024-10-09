@@ -15,7 +15,7 @@ module.exports = {
     },
     collectCoverage:true,
     coverageDirectory: "./coverage",
-    coverageReporters: ["lcov", "text-summary"],
+    coverageReporters: ["lcov", "text-summary", "cobertura", "html"],
     collectCoverageFrom: [
       "src/app/**/*.ts",
       "!<rootDir>/node_modules/",
