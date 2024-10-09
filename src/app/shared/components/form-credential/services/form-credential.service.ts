@@ -58,8 +58,8 @@ export class FormCredentialService {
       credential.mobile_phone = `${countryPrefix} ${credential.mobile_phone}`;
     }
     const power: Power[] = addedOptions.map(option => {
-      const val = this.checkTmfFunction(option);
-      return val;
+      const tmfPower = this.checkTmfFunction(option);
+      return tmfPower;
     });
 
     const credentialProcedure:IssuanceRequest =  {

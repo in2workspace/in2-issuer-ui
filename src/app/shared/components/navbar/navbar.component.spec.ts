@@ -113,7 +113,7 @@ describe('NavbarComponent', () => {
   });
 
   it('should call logout on click', () => {
-    const logoutLink = fixture.nativeElement.querySelector('[test-id="logout-link"]');
+    const logoutLink = fixture.nativeElement.querySelector('#logout-link');
     
     logoutLink.click();
     
@@ -134,8 +134,8 @@ describe('NavbarComponent', () => {
     component.mandator = mockMandator;
     fixture.detectChanges();
   
-    const userNameElement: HTMLElement = fixture.nativeElement.querySelector('[test-id="username"]');
-    const mandatorElement: HTMLElement = fixture.nativeElement.querySelector('[test-id="mandator"]');
+    const userNameElement: HTMLElement = fixture.nativeElement.querySelector('#username');
+    const mandatorElement: HTMLElement = fixture.nativeElement.querySelector('#mandator');
   
     expect(userNameElement.textContent).toContain(mockUserName);
     expect(mandatorElement.textContent).toContain(mockMandator.organization);

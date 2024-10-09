@@ -258,10 +258,10 @@ describe('CredentialManagementComponent', () => {
   
     await fixture.whenStable(); // Esperar que el cicle de canvi estigui complet
   
-    const adminButton = fixture.debugElement.query(By.css('[test-id="admin-button"]'));
+    const adminButton = fixture.debugElement.query(By.css("#admin-button"));
     expect(adminButton).toBeTruthy();
   
-    const adminColumn = fixture.debugElement.query(By.css('[test-id="actions-column"]'));
+    const adminColumn = fixture.debugElement.query(By.css('#actions-column'));
     expect(adminColumn).toBeTruthy();
   });
   
@@ -269,10 +269,10 @@ describe('CredentialManagementComponent', () => {
     component.rol = 'user';
     fixture.detectChanges();
   
-    const adminButton = fixture.debugElement.query(By.css('[test-id="admin-button"]'));
+    const adminButton = fixture.debugElement.query(By.css('#actions-column'));
     expect(adminButton).toBeNull();
 
-    const adminColumn = fixture.debugElement.query(By.css('[test-id="admin-column"]'));
+    const adminColumn = fixture.debugElement.query(By.css('#admin-column'));
     expect(adminColumn).toBeNull();
   });
 
@@ -280,7 +280,7 @@ describe('CredentialManagementComponent', () => {
     const createNewCredentialSpy = jest.spyOn(component, 'createNewCredential');
     fixture.detectChanges();
   
-    const createButton = fixture.debugElement.query(By.css('[test-id="create-button"]')).nativeElement;
+    const createButton = fixture.debugElement.query(By.css('#create-button')).nativeElement;
     createButton.click();
   
     expect(createNewCredentialSpy).toHaveBeenCalled();
@@ -291,7 +291,7 @@ describe('CredentialManagementComponent', () => {
     fixture.detectChanges();
   
     const createNewCredential2Spy = jest.spyOn(component, 'createNewCredential2');
-    const adminButton = fixture.debugElement.query(By.css('[test-id="admin-button"]')).nativeElement;
+    const adminButton = fixture.debugElement.query(By.css('#admin-button')).nativeElement;
     adminButton.click();
   
     expect(createNewCredential2Spy).toHaveBeenCalled();
