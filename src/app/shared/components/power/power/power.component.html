@@ -22,7 +22,8 @@
     <button
       class="add-option-btn"
       [disabled]="isDisabled || !selectedOption"
-      (click)="addOption()"
+      (click)="addOption()" 
+      type="button"
     >
       {{ "power.add" | translate }}
     </button>

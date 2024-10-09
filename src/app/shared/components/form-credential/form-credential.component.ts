@@ -77,7 +77,7 @@ export class FormCredentialComponent implements OnInit {
       first_name: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*')]],
       last_name: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*')]],
       email: ['', [Validators.required, Validators.email]],
-      mobile_phone: ['', [Validators.required, Validators.pattern('[0-9 ]*')]],
+      mobile_phone: ['', [Validators.pattern('[0-9 ]*')]],
       country: ['', Validators.required],
 
     });

@@ -4,6 +4,7 @@ import { Power } from 'src/app/core/models/power.interface';
 import { CredentialMandatee } from 'src/app/core/models/credendentialMandatee.interface';
 import { Mandator } from 'src/app/core/models/madator.interface';
 import { PopupComponent } from '../../popup/popup.component';
+import { IssuanceRequest } from 'src/app/core/models/issuanceRequest.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -53,7 +54,7 @@ export class FormCredentialService {
     resetForm: () => void
   ): void {
     const countryPrefix = `+${selectedCountry}`;
-    if (!credential.mobile_phone.startsWith(countryPrefix)) {
+    if (credential.mobile_phone != '' && !credential.mobile_phone?.startsWith(countryPrefix)) {
       credential.mobile_phone = `${countryPrefix} ${credential.mobile_phone}`;
     }
 
@@ -61,16 +62,20 @@ export class FormCredentialService {
       return checkTmfFunction(option);
     });
 
-    const credentialProcedure = {
-      credential: {
+    const credentialProcedure:IssuanceRequest =  {
+      schema: "LEARCredentialEmployee",
+      format: "jwt_vc_json",
+      payload: {
         mandatee: credential,
         mandator: mandator!,
         signer:signer,
         power: power
-      }
+      },
+      operation_mode: "S"
     };
+    
 
-    credentialProcedureService.saveCredentialProcedure(credentialProcedure).subscribe({
+    credentialProcedureService.createProcedure(credentialProcedure).subscribe({
       next: () => {
         popupComponent.showPopup();
         resetForm();
