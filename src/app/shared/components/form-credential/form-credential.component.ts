@@ -82,22 +82,24 @@ export class FormCredentialComponent implements OnInit {
 
     });
 
-    this.authService.getMandator().subscribe(mandator2 => {
-      if (mandator2) {
-        this.mandator ={ 'organizationIdentifier': mandator2.organizationIdentifier,
-          'organization': mandator2.organization,
-          'commonName':mandator2.commonName,
-          'emailAddress':mandator2.emailAddress,
-          'serialNumber':mandator2.serialNumber,
-          'country':mandator2.country}
-        this.signer = { 'organizationIdentifier': mandator2.organizationIdentifier,
-                        'organization': mandator2.organization,
-                        'commonName':mandator2.commonName,
-                        'emailAddress':mandator2.emailAddress,
-                        'serialNumber':mandator2.serialNumber,
-                        'country':mandator2.country}
-      }
-    });
+    if (this.viewMode === 'create') {
+      this.authService.getMandator().subscribe(mandator2 => {
+        if (mandator2) {
+          this.mandator ={ 'organizationIdentifier': mandator2.organizationIdentifier,
+            'organization': mandator2.organization,
+            'commonName':mandator2.commonName,
+            'emailAddress':mandator2.emailAddress,
+            'serialNumber':mandator2.serialNumber,
+            'country':mandator2.country}
+          this.signer = { 'organizationIdentifier': mandator2.organizationIdentifier,
+                          'organization': mandator2.organization,
+                          'commonName':mandator2.commonName,
+                          'emailAddress':mandator2.emailAddress,
+                          'serialNumber':mandator2.serialNumber,
+                          'country':mandator2.country}
+        }
+      });
+    }
 
     if (this.viewMode === 'detail') {
       this.tempPowers = this.power.map(power => this.formCredentialService.convertToTempPower(power));
@@ -136,7 +138,7 @@ export class FormCredentialComponent implements OnInit {
     this.credentialForm.reset();
     this.authService.getMandator().subscribe(mandator2 => {
       if (mandator2) {
-        this.mandator = mandator2;
+        // this.mandator = mandator2;
         this.signer = { 'organizationIdentifier': mandator2.organizationIdentifier,
                         'organization': mandator2.organization,
                         'commonName':mandator2.commonName,
