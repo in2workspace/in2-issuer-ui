@@ -79,6 +79,9 @@ export class FormCredentialComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       mobile_phone: ['', [Validators.pattern('[0-9 ]*')]],
       country: ['', Validators.required],
+      roles: this.authService.getRoles() || []
+
+
 
     });
 
@@ -150,15 +153,15 @@ export class FormCredentialComponent implements OnInit {
     this.credential = this.formCredentialService.resetForm();
     this.addedOptions = [];
     this.credentialForm.reset();
-    this.authService.getUserDetails().subscribe(mandator2 => {
-      if (mandator2) {
-        this.mandator = mandator2;
-        this.signer = { 'organizationIdentifier': mandator2.organizationIdentifier,
-                        'organization': mandator2.organization,
-                        'commonName':mandator2.commonName,
-                        'emailAddress':mandator2.emailAddress,
-                        'serialNumber':mandator2.serialNumber,
-                        'country':mandator2.country}
+    this.authService.getUserDetails().subscribe(userDetails => {
+      if (userDetails) {
+        this.mandator = userDetails;
+        this.signer = { 'organizationIdentifier': userDetails.organizationIdentifier,
+                        'organization': userDetails.organization,
+                        'commonName':userDetails.commonName,
+                        'emailAddress':userDetails.emailAddress,
+                        'serialNumber':userDetails.serialNumber,
+                        'country':userDetails.country}
       }
     });
   }

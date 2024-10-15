@@ -165,7 +165,7 @@ describe('CredentialManagementComponent', () => {
 
   it('should navigate to credential issuance page', () => {
     component.createNewCredential();
-    expect(router.navigate).toHaveBeenCalledWith(['/organization/credentials/create']);
+    expect(router.navigate).toHaveBeenCalledWith(['/organization/credentials/createCredential']);
   });
 
   it('should navigate to credential details page', () => {

@@ -7,7 +7,7 @@ import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 
 class MockAuthService {
-  getMandator() {
+  getUserDetails() {
     return of(null);
   }
   getEmailName() {
