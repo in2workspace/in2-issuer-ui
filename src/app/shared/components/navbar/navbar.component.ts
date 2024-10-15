@@ -30,7 +30,7 @@ export class NavbarComponent implements OnInit {
     this.translate.addLangs(['en', 'es', 'ca']);
     this.translate.setDefaultLang('en');
     this.selectedLanguage = this.translate.getDefaultLang();
-    this.authService.getMandator().subscribe(mandator => {
+    this.authService.getUserDetails().subscribe(mandator => {
       if (mandator) {
         this.mandator = mandator;
       }

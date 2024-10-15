@@ -29,7 +29,7 @@
   "scaner": {
     "textinformation": "Escaneo de la organización con su cartera para descargar la credencial"
   },
-  
+
   "credentialManagement": {
     "title": "List of issued credentials",
     "button": "New credential",
@@ -39,7 +39,7 @@
     "sendReminder": "Send Reminder",
     "cancel": "Cancel",
     "create" : "Create Credential",
-    "buttonAdmin":"New credential as Signer"
+    "signerButton":"New credential as Signer"
   },
     "power": {
       "power": "Powers",

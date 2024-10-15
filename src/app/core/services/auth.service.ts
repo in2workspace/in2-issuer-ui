@@ -12,16 +12,17 @@ export class AuthService {
   private isAuthenticatedSubject: BehaviorSubject<boolean>;
   private userDataSubject: BehaviorSubject<any>;
   private tokenSubject: BehaviorSubject<string>;
-  private mandatorSubject: BehaviorSubject<any>;
+  private userDetailsSubject: BehaviorSubject<any>;
   private emailSubject: BehaviorSubject<string>;
-  private rol="";
+  private roles: string[];
   public constructor(private oidcSecurityService: OidcSecurityService, private router: Router) {
     this.isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
     this.isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
     this.userDataSubject = new BehaviorSubject<any>(null);
     this.tokenSubject = new BehaviorSubject<string>('');
-    this.mandatorSubject = new BehaviorSubject<any>(null);
+    this.userDetailsSubject = new BehaviorSubject<any>(null);
     this.emailSubject = new BehaviorSubject<string>('');
+    this.roles = [];
 
     this.checkAuth().subscribe();
   }
@@ -38,12 +39,12 @@ export class AuthService {
         const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
             return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
         }).join(''));
-    
-        this.rol= JSON.parse(jsonPayload)['resource_access']['account-console']['roles'][0]
+
+        this.roles = JSON.parse(jsonPayload)['resource_access']['account-console']['roles'];
 
 
 
-        const mandator = {
+        const userDetails = {
           organizationIdentifier: userData.organizationIdentifier,
           organization: userData.organization,
           commonName: userData.commonName,
@@ -51,7 +52,7 @@ export class AuthService {
           serialNumber: userData.serialNumber,
           country: userData.country
         };
-        this.mandatorSubject.next(mandator);
+        this.userDetailsSubject.next(userDetails);
         const emailName = userData.emailAddress.split('@')[0];
         this.emailSubject.next(emailName);
       }
@@ -59,8 +60,8 @@ export class AuthService {
     }));
   }
 
-  public getMandator(): Observable<any> {
-    return this.mandatorSubject.asObservable();
+  public getUserDetails(): Observable<any> {
+    return this.userDetailsSubject.asObservable();
   }
 
   public login(): void {
@@ -99,7 +100,7 @@ export class AuthService {
   public getToken(): Observable<string> {
     return this.tokenSubject.asObservable();
   }
-  public getRol(): any{
-    return this.rol;
+  public getRoles(): string[] {
+    return this.roles;
   }
 }

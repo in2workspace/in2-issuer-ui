@@ -38,7 +38,7 @@
     "sendReminder": "Send Reminder",
     "cancel": "Cancel",
     "create" : "Create Credential",
-    "buttonAdmin":"New credential as Signer"
+    "signerButton":"New credential as Signer"
   },
     "power": {
       "power": "Powers",

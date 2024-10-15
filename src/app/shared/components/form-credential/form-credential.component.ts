@@ -1,14 +1,14 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CredentialMandatee } from 'src/app/core/models/credendentialMandatee.interface';
-import { Mandator } from 'src/app/core/models/madator.interface';
-import { Power } from 'src/app/core/models/power.interface';
-import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
-import { TempPower } from '../power/power/power.component';
-import { Country, CountryService } from './services/country.service';
-import { FormCredentialService } from './services/form-credential.service';
-import { AuthService } from 'src/app/core/services/auth.service';
-import { PopupComponent } from '../popup/popup.component';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {CredentialMandatee} from 'src/app/core/models/credendentialMandatee.interface';
+import {Mandator} from 'src/app/core/models/madator.interface';
+import {Power} from 'src/app/core/models/power.interface';
+import {CredentialProcedureService} from 'src/app/core/services/credential-procedure.service';
+import {TempPower} from '../power/power/power.component';
+import {Country, CountryService} from './services/country.service';
+import {FormCredentialService} from './services/form-credential.service';
+import {AuthService} from 'src/app/core/services/auth.service';
+import {PopupComponent} from '../popup/popup.component';
 
 @Component({
   selector: 'app-form-credential',
@@ -23,7 +23,6 @@ export class FormCredentialComponent implements OnInit {
   @Input() public title: string = '';
   @Input() public showButton: boolean = false;
   @Input() public hideButton: boolean = true;
-  @Input() public role: string = "";
   @Input() public power: Power[] = [];
   @Input() public credential: CredentialMandatee = {
     first_name: '',
@@ -51,6 +50,7 @@ export class FormCredentialComponent implements OnInit {
 
   public popupMessage: string = '';
   public isPopupVisible: boolean = false;
+  public roles: string[] = [];
 
 
 
@@ -62,14 +62,14 @@ export class FormCredentialComponent implements OnInit {
     private authService: AuthService
   ) {
     this.countries = this.countryService.getCountries();
+    this.roles = this.authService.getRoles();
   }
 
   public get mobilePhone(): string {
     return `${this.selectedCountry} ${this.credential.mobile_phone}`;
   }
   public set mobilePhone(value: string) {
-    const numberPart = value.replace(`${this.selectedCountry} `, '').trim();
-    this.credential.mobile_phone = numberPart;
+    this.credential.mobile_phone = value.replace(`${this.selectedCountry} `, '').trim();
   }
 
   public ngOnInit(): void {
@@ -82,20 +82,36 @@ export class FormCredentialComponent implements OnInit {
 
     });
 
-    this.authService.getMandator().subscribe(mandator2 => {
-      if (mandator2) {
-        this.mandator ={ 'organizationIdentifier': mandator2.organizationIdentifier,
-          'organization': mandator2.organization,
-          'commonName':mandator2.commonName,
-          'emailAddress':mandator2.emailAddress,
-          'serialNumber':mandator2.serialNumber,
-          'country':mandator2.country}
-        this.signer = { 'organizationIdentifier': mandator2.organizationIdentifier,
-                        'organization': mandator2.organization,
-                        'commonName':mandator2.commonName,
-                        'emailAddress':mandator2.emailAddress,
-                        'serialNumber':mandator2.serialNumber,
-                        'country':mandator2.country}
+    this.authService.getUserDetails().subscribe(userDetails => {
+      if (userDetails) {
+        this.signer = {
+          organizationIdentifier: userDetails.organizationIdentifier,
+          organization: userDetails.organization,
+          commonName: userDetails.commonName,
+          emailAddress: userDetails.emailAddress,
+          serialNumber: userDetails.serialNumber,
+          country: userDetails.country
+        };
+
+        if (!this.roles.includes('signer')) {
+          this.mandator = {
+            organizationIdentifier: userDetails.organizationIdentifier,
+            organization: userDetails.organization,
+            commonName: userDetails.commonName,
+            emailAddress: userDetails.emailAddress,
+            serialNumber: userDetails.serialNumber,
+            country: userDetails.country
+          };
+        } else {
+          this.mandator = {
+            organizationIdentifier: "",
+            organization: "",
+            commonName: "",
+            emailAddress: "",
+            serialNumber: "",
+            country: ""
+          };
+        }
       }
     });
 
@@ -134,7 +150,7 @@ export class FormCredentialComponent implements OnInit {
     this.credential = this.formCredentialService.resetForm();
     this.addedOptions = [];
     this.credentialForm.reset();
-    this.authService.getMandator().subscribe(mandator2 => {
+    this.authService.getUserDetails().subscribe(mandator2 => {
       if (mandator2) {
         this.mandator = mandator2;
         this.signer = { 'organizationIdentifier': mandator2.organizationIdentifier,

@@ -16,7 +16,7 @@
   "credentialDetail": {
     "credentialDetail": "Detall de la credencial",
     "textinformation": "S'ha emès una nova credencial Dome per a vostè amb la següent informació"
-  },  
+  },
   "credentialOffer": {
     "credentialDetail": "Credential Offer",
     "textinformation": "You have a new credential offer. Please follow the next steps:",
@@ -29,7 +29,7 @@
   "scaner": {
     "textinformation": "Escaneig de l'organització amb la seva cartera per descarregar la credencial"
   },
-  
+
   "credentialManagement": {
     "title": "List of issued credentials",
     "button": "New credential",
@@ -39,7 +39,7 @@
     "sendReminder": "Send Reminder",
     "cancel": "Cancel",
     "create" : "Create Credential",
-    "buttonAdmin":"New credential as Signer"
+    "signerButton":"New credential as Signer"
   },
     "power": {
       "power": "Powers",

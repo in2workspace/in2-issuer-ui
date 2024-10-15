@@ -15,7 +15,7 @@ export class CredentialManagementComponent implements AfterViewInit {
   @ViewChild(MatPaginator) public paginator!: MatPaginator;
   public displayedColumns: string[] = ['status', 'full_name', 'updated'];
   public dataSource = new MatTableDataSource<CredentialProcedure>();
-  public rol = "";
+  public roles: string[] = [];
   public constructor(
     private credentialProcedureService: CredentialProcedureService,
     private authService: AuthService,
@@ -34,13 +34,13 @@ export class CredentialManagementComponent implements AfterViewInit {
         console.log("firma no enviada")
       }
     });
-  
+
   }
   public ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
-    this.rol= this.authService.getRol();
+    this.roles= this.authService.getRoles();
     this.loadCredentialData();
-    if (this.rol === 'admin') {
+    if (this.roles.includes('signer')) {
       this.displayedColumns.push('actions');
     }
   }
@@ -58,9 +58,9 @@ export class CredentialManagementComponent implements AfterViewInit {
   }
 
   public createNewCredential(): void {
-    this.router.navigate(['/organization/credentials/create']);
-  }  public createNewCredential2(): void {
-    this.router.navigate(['/organization/credentials/create2',this.rol]);
+    this.router.navigate(['/organization/credentials/createCredential']);
+  }  public createNewcredentialAsSigner(): void {
+    this.router.navigate(['/organization/credentials/createCredentialAsSigner']);
   }
 
   public goToCredentialDetails(element: CredentialProcedure): void {

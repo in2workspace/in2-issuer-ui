@@ -17,7 +17,7 @@ const routes: Routes = [
     canActivate: [AutoLoginPartialRoutesGuard],
   },
   {
-    path: 'organization/credentials/create',
+    path: 'organization/credentials/createCredential',
     loadChildren: () =>
       import('./features/credentialIssuance/credentialIssuance.module').then(
         (m) => m.CredentialIssuanceModule
@@ -25,26 +25,26 @@ const routes: Routes = [
     canActivate: [AutoLoginPartialRoutesGuard],
   },
   {
-    path: 'organization/credentials/create2/:id',
+    path: 'organization/credentials/createCredentialAsSigner',
     loadChildren: () =>
-      import('./features/credentialIssuanceAdmin/credentialIssuanceAdmin.module').then(
-        (m) => m.CredentialIssuanceAdminModule
+      import('./features/credentialIssuance/credentialIssuance.module').then(
+        (m) => m.CredentialIssuanceModule
       ),
     canActivate: [AutoLoginPartialRoutesGuard],
   },
   {
     path: 'credential-offer',
     component:CredentialOfferOnboardingComponent,
-    
-      
-  },  
+
+
+  },
   {
     path: 'credential-offer-detail',
     loadChildren: () =>
       import('./features/credencial-offer/credencial-offer.module').then(
         (m) => m.CredencialOfferModule
       ),
-      
+
   },
   { path: 'callback', component: CallbackComponent },
   { path: '**', redirectTo: 'home' }
