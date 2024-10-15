@@ -1,9 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { CredentialProcedureService } from './credential-procedure.service';
-import { CredentialData, CredentialProcedure, CredentialProcedureResponse } from '../models/credentialProcedure.interface';
+import { CredentialData, CredentialProcedureResponse } from '../models/credentialProcedure.interface';
 import { environment } from 'src/environments/environment';
 import { HttpErrorResponse } from '@angular/common/http';
+import { IssuanceRequest } from '../models/issuanceRequest.interface';
 
 describe('CredentialProcedureService', () => {
   let service: CredentialProcedureService;
@@ -97,29 +98,78 @@ describe('CredentialProcedureService', () => {
   });
 
   it('should save credential procedure successfully', () => {
-    const mockData: CredentialProcedure ={credential_procedure: {
-      procedure_id: '1', status: 'completed', full_name: 'John Doe', updated: '2023-01-01', credential: { mandatee: {}, mandator: {}, power: [] } as any
-    }};
-
-    service.saveCredentialProcedure(mockData).subscribe(data => {
-      expect(data).toEqual(mockData);
+    const IssuanceRequestMock:IssuanceRequest = {
+      schema: "LEARCredentialEmployee",
+      format: "jwt_vc_json",
+      payload: {
+        mandatee: {
+          first_name: '',
+          last_name: '',
+          email: '',
+          mobile_phone: ''
+        }, mandator: {
+          organizationIdentifier: '',
+          organization: '',
+          commonName: '',
+          emailAddress: '',
+          serialNumber: '',
+          country: ''
+        }, power: [],
+        signer: {
+          commonName: '',
+          country: '',
+          emailAddress: '',
+          organization: '',
+          organizationIdentifier: '',
+          serialNumber: ''
+        }
+      },
+      operation_mode: "S"
+    };
+    service.createProcedure(IssuanceRequestMock).subscribe(data => {
+      expect(data).toEqual(IssuanceRequestMock);
     });
     const req = httpMock.expectOne(apiUrl);
     expect(req.request.method).toBe('POST');
-    expect(req.request.body).toEqual(mockData);
-    req.flush(mockData);
+    expect(req.request.body).toEqual(IssuanceRequestMock);
+    req.flush(IssuanceRequestMock);
   });
 
   it('should handle error when saving credential procedure', () => {
-    const mockData: CredentialProcedure = {
-      credential_procedure:{procedure_id: '1', status: 'completed', full_name: 'John Doe', updated: '2023-01-01', credential: { mandatee: {}, mandator: {}, power: [] } as any
-    }};
+    const IssuanceRequestMock:IssuanceRequest = {
+      schema: "LEARCredentialEmployee",
+      format: "jwt_vc_json",
+      payload: {
+        mandatee: {
+          first_name: '',
+          last_name: '',
+          email: '',
+          mobile_phone: ''
+        }, mandator: {
+          organizationIdentifier: '',
+          organization: '',
+          commonName: '',
+          emailAddress: '',
+          serialNumber: '',
+          country: ''
+        }, power: [],
+        signer: {
+          commonName: '',
+          country: '',
+          emailAddress: '',
+          organization: '',
+          organizationIdentifier: '',
+          serialNumber: ''
+        }
+      },
+      operation_mode: "S"
+    };
     const errorResponse = new HttpErrorResponse({
       error: '500 error',
       status: 500, statusText: 'Server Error'
     });
 
-    service.saveCredentialProcedure(mockData).subscribe(
+    service.createProcedure(IssuanceRequestMock).subscribe(
       data => fail('should have failed with 500 error'),
       (error: string) => {
         expect(error).toContain('Server-side error: 500');

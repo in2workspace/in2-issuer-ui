@@ -10,7 +10,7 @@ export const environment = {
   base_url: 'http://localhost:8081',
   wallet_url: 'http://localhost:4200',
   procedures: '/api/v1/procedures',
-  save_credential: '/api/v1/credentials?type=LEARCredentialEmployee',
+  save_credential: '/vci/v1/issuances',
   credential_offer_url: '/api/v1/credential-offer',
   notification: '/api/v1/notifications',
   firma_credential: '/api/v1/sign-credential'
