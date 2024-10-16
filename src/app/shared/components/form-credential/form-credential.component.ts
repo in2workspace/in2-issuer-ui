@@ -9,6 +9,7 @@ import { Country, CountryService } from './services/country.service';
 import { FormCredentialService } from './services/form-credential.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { PopupComponent } from '../popup/popup.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-form-credential',
@@ -51,7 +52,7 @@ export class FormCredentialComponent implements OnInit {
 
   public popupMessage: string = '';
   public isPopupVisible: boolean = false;
-
+  public currentPath = '';
 
 
   public constructor(
@@ -59,7 +60,8 @@ export class FormCredentialComponent implements OnInit {
     private fb: FormBuilder,
     private countryService: CountryService,
     private formCredentialService: FormCredentialService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {
     this.countries = this.countryService.getCountries();
   }
@@ -73,6 +75,7 @@ export class FormCredentialComponent implements OnInit {
   }
 
   public ngOnInit(): void {
+    this.currentPath = this.router.url.split('/').pop() || '';
     this.credentialForm = this.fb.group({
       first_name: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*')]],
       last_name: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*')]],
@@ -82,18 +85,27 @@ export class FormCredentialComponent implements OnInit {
 
     });
 
-    if (this.viewMode === 'create') {
-      this.authService.getMandator().subscribe(mandator2 => {
-        if (mandator2) {
-          this.signer = { 'organizationIdentifier': mandator2.organizationIdentifier,
-                          'organization': mandator2.organization,
-                          'commonName':mandator2.commonName,
-                          'emailAddress':mandator2.emailAddress,
-                          'serialNumber':mandator2.serialNumber,
-                          'country':mandator2.country}
+    
+    this.authService.getMandator().subscribe(mandator2 => {
+      if (mandator2) {
+        if (this.currentPath === 'create') {
+          this.mandator = {
+            organizationIdentifier: mandator2.organizationIdentifier,
+            organization: mandator2.organization,
+            commonName: mandator2.commonName,
+            emailAddress: mandator2.emailAddress,
+            serialNumber: mandator2.serialNumber,
+            country: mandator2.country
+          };
         }
-      });
-    }
+        this.signer = { 'organizationIdentifier': mandator2.organizationIdentifier,
+                        'organization': mandator2.organization,
+                        'commonName':mandator2.commonName,
+                        'emailAddress':mandator2.emailAddress,
+                        'serialNumber':mandator2.serialNumber,
+                        'country':mandator2.country}
+      }
+    });
 
     if (this.viewMode === 'detail') {
       this.tempPowers = this.power.map(power => this.formCredentialService.convertToTempPower(power));
@@ -150,7 +162,18 @@ export class FormCredentialComponent implements OnInit {
     this.credentialForm.reset();
     this.authService.getMandator().subscribe(mandator2 => {
       if (mandator2) {
-        // this.mandator = mandator2;
+        if (this.currentPath === 'create') {
+          this.mandator = mandator2;
+        } else {
+          this.mandator = {
+            organizationIdentifier: "",
+            organization: "",
+            commonName: "",
+            emailAddress: "",
+            serialNumber: "",
+            country: ""
+          };
+        }
         this.signer = { 'organizationIdentifier': mandator2.organizationIdentifier,
                         'organization': mandator2.organization,
                         'commonName':mandator2.commonName,
