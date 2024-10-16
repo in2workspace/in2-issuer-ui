@@ -114,7 +114,25 @@ export class FormCredentialComponent implements OnInit {
     this.selectedOption = this.formCredentialService.handleSelectChange(event);
   }
 
+  public validateAtLeastOnePower(): boolean {
+    return this.addedOptions.some(option => {
+      if (option.tmf_function === 'DomePlatform') {
+        return option.operator || option.customer || option.provider || option.marketplace;
+      } else if (option.tmf_function === 'ProductOffering') {
+        return option.create || option.update || option.delete;
+      } else if (option.tmf_function === 'Onboarding') {
+        return option.execute;
+      }
+      return false;
+    });
+  }
+
   public submitCredential(): void {
+    if (!this.validateAtLeastOnePower()) {
+      this.popupMessage = "At least one power set must be selected.";
+      this.isPopupVisible = true;
+      return;
+    }
 
       this.formCredentialService.submitCredential(
         this.credential,
