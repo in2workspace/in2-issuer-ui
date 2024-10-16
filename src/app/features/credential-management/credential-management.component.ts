@@ -40,7 +40,7 @@ export class CredentialManagementComponent implements AfterViewInit {
     this.dataSource.paginator = this.paginator;
     this.rol= this.authService.getRol();
     this.loadCredentialData();
-    if (this.rol === 'admin') {
+    if (this.rol !== 'admin') {
       this.displayedColumns.push('actions');
     }
   }
