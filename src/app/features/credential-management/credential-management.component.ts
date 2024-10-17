@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { CredentialProcedure, CredentialProcedureResponse } from 'src/app/core/models/credentialProcedure.interface';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-credential-management',
@@ -13,6 +14,7 @@ import { AuthService } from 'src/app/core/services/auth.service';
 })
 export class CredentialManagementComponent implements AfterViewInit {
   @ViewChild(MatPaginator) public paginator!: MatPaginator;
+  @ViewChild(MatSort) public sort!: MatSort;
   public displayedColumns: string[] = ['status', 'full_name', 'updated'];
   public dataSource = new MatTableDataSource<CredentialProcedure>();
   public rol = "";
@@ -38,8 +40,23 @@ export class CredentialManagementComponent implements AfterViewInit {
   }
   public ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
     this.rol= this.authService.getRol();
     this.loadCredentialData();
+
+    this.dataSource.sortingDataAccessor = (item: CredentialProcedure, property: string) => {
+      switch (property) {
+        case 'status': 
+          return item.credential_procedure.status;
+        case 'full_name': 
+          return item.credential_procedure.full_name;
+        case 'updated': 
+          return item.credential_procedure.updated;
+        default: 
+          return '';
+      }
+    };
+
     if (this.rol !== 'admin') {
       this.displayedColumns.push('actions');
     }

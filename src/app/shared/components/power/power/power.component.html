@@ -1,6 +1,5 @@
 <h2>{{ "power.power" | translate }}</h2>
-<br />
-<div class="power">
+<div *ngIf="viewMode === 'create'" class="power">
   <div class="domain">
     <p>{{ "power.domain" | translate }}</p>
     <p>{{ "power.dome" | translate }}</p>
