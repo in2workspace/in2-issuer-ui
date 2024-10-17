@@ -17,11 +17,12 @@ export class PopupComponent implements OnChanges {
 
   public showPopup(): void {
     setTimeout(() => {
-      this.isVisible = false;
+      this.isVisible = false; //? this.closePopup()?
     }, 3000);
   }
 
   public closePopup(): void {
     this.isVisible = false;
   }
+
 }
