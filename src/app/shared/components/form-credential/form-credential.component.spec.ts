@@ -104,9 +104,23 @@ describe('FormCredentialComponent', () => {
       country: 'US'
     });
     component.selectedCountry = 'US';
-    component.addedOptions = [];
-
+    component.addedOptions = [{
+      tmf_function: 'DomePlatform',
+      tmf_action: 'SomeAction',
+      tmf_domain: 'SomeDomain',
+      tmf_type: 'SomeType',
+      operator: true,
+      customer: false,
+      provider: false,
+      marketplace: false,
+      execute: false, 
+      create: false,
+      update: false,
+      delete: false
+    }];
+  
     component.submitCredential();
+    
     expect(mockFormCredentialService.submitCredential).toHaveBeenCalledWith(
       component.credential,
       component.selectedCountry,
