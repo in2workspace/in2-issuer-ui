@@ -84,7 +84,7 @@ export class FormCredentialComponent implements OnInit {
 
     this.authService.getMandator().subscribe(mandator2 => {
       if (mandator2) {
-        if(this.role!=="admin"){
+        if(this.viewMode === "create" && this.role!=="admin"){
           this.mandator ={ 'organizationIdentifier': mandator2.organizationIdentifier,
             'organization': mandator2.organization,
             'commonName':mandator2.commonName,
