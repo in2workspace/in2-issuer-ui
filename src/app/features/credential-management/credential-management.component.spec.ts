@@ -127,10 +127,10 @@ describe('CredentialManagementComponent', () => {
     expect(component.rol).toBe('mockRole');
   });
 
-  it('should add "actions" to displayedColumns if role is "admin"', ()=>{
+  it('should not add "actions" to displayedColumns if role is "admin"', ()=>{
     authServiceRoleSpy.mockReturnValue('admin');
     component.ngAfterViewInit();
-    expect(component.displayedColumns).toContain('actions');
+    expect(component.displayedColumns).not.toContain('actions');
   });
 
   it('should not add "actions" to displayedColumns if role is not "admin"', () => {
@@ -251,9 +251,9 @@ describe('CredentialManagementComponent', () => {
   });
 
   //TEMPLATE
-  it('should show the admin button and column when role is "admin"', async () => {
+  it('should show the admin button and not show column when role is "admin"', async () => {
     component.rol = 'admin';
-    component.displayedColumns.push('actions');
+    //component.displayedColumns.push('actions');
     fixture.detectChanges();
   
     await fixture.whenStable(); // Esperar que el cicle de canvi estigui complet
@@ -262,9 +262,20 @@ describe('CredentialManagementComponent', () => {
     expect(adminButton).toBeTruthy();
   
     const adminColumn = fixture.debugElement.query(By.css('#actions-column'));
-    expect(adminColumn).toBeTruthy();
+    expect(adminColumn).toBeNull();
   });
   
+  it('should show the admin column when role is "local-signer"', async () => {
+    component.rol = 'local-signer';
+    component.displayedColumns.push('actions');
+    fixture.detectChanges();
+  
+    await fixture.whenStable(); // Esperar que el cicle de canvi estigui complet
+  
+    const adminColumn = fixture.debugElement.query(By.css('#actions-column'));
+    expect(adminColumn).toBeTruthy();
+  });
+
   it('should not show the admin button when role is not "admin"', () => {
     component.rol = 'user';
     fixture.detectChanges();
