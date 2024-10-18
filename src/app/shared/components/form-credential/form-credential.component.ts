@@ -84,12 +84,14 @@ export class FormCredentialComponent implements OnInit {
 
     this.authService.getMandator().subscribe(mandator2 => {
       if (mandator2) {
-        this.mandator ={ 'organizationIdentifier': mandator2.organizationIdentifier,
-          'organization': mandator2.organization,
-          'commonName':mandator2.commonName,
-          'emailAddress':mandator2.emailAddress,
-          'serialNumber':mandator2.serialNumber,
-          'country':mandator2.country}
+        if(this.viewMode === "create" && this.role!=="admin"){
+          this.mandator ={ 'organizationIdentifier': mandator2.organizationIdentifier,
+            'organization': mandator2.organization,
+            'commonName':mandator2.commonName,
+            'emailAddress':mandator2.emailAddress,
+            'serialNumber':mandator2.serialNumber,
+            'country':mandator2.country}
+        }
         this.signer = { 'organizationIdentifier': mandator2.organizationIdentifier,
                         'organization': mandator2.organization,
                         'commonName':mandator2.commonName,
@@ -112,18 +114,37 @@ export class FormCredentialComponent implements OnInit {
     this.selectedOption = this.formCredentialService.handleSelectChange(event);
   }
 
-  public submitCredential(): void {
+  public validateAtLeastOnePower(): boolean {
+    return this.addedOptions.some(option => {
+      if (option.tmf_function === 'DomePlatform') {
+        return option.operator || option.customer || option.provider || option.marketplace;
+      } else if (option.tmf_function === 'ProductOffering') {
+        return option.create || option.update || option.delete;
+      } else if (option.tmf_function === 'Onboarding') {
+        return option.execute;
+      }
+      return false;
+    });
+  }
 
-      this.formCredentialService.submitCredential(
-        this.credential,
-        this.selectedCountry,
-        this.addedOptions,
-        this.mandator,
-        this.signer,
-        this.credentialProcedureService,
-        this.popupComponent,
-        this.resetForm.bind(this)
-      );
+  public submitCredential(): void {
+      //if(this.addedOptions.length!==0){
+      if(this.validateAtLeastOnePower()){
+        this.formCredentialService.submitCredential(
+          this.credential,
+          this.selectedCountry,
+          this.addedOptions,
+          this.mandator,
+          this.signer,
+          this.credentialProcedureService,
+          this.popupComponent,
+          this.resetForm.bind(this)
+        );
+      } else {
+        this.popupMessage = "At least one power set must be selected.";
+        this.isPopupVisible = true;
+        return;
+      }
   }
 
   public triggerSendReminder(): void {

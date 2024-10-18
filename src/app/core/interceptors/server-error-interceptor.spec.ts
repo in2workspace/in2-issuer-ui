@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpErrorResponse, HttpResponse, HttpStatusCode, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse, HttpStatusCode, HttpRequest, HttpEvent } from '@angular/common/http';
 import { of, throwError } from 'rxjs';
 import { AlertService } from '../services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -7,16 +7,17 @@ import { ServeErrorInterceptor } from './server-error-interceptor';
 
 describe('ServeErrorInterceptor', () => {
   let interceptor: ServeErrorInterceptor;
-  let alertService: jasmine.SpyObj<AlertService>;
-  let translateService: jasmine.SpyObj<TranslateService>;
-  let httpRequest: jasmine.SpyObj<HttpRequest<any>>;
-  let httpHandler: jasmine.SpyObj<HttpHandler>;
+
+  let alertServiceSpy: { showAlert: jest.Mock };
+  let translateServiceSpy: { instant: jest.Mock };
+  let httpRequest: Partial<HttpRequest<any>>;
+  let httpHandler: { handle: jest.Mock };
 
   beforeEach(() => {
-    const alertServiceSpy = jasmine.createSpyObj('AlertService', ['showAlert']);
-    const translateServiceSpy = jasmine.createSpyObj('TranslateService', ['instant']);
-    const httpRequestSpy = jasmine.createSpyObj('HttpRequest', ['noMethod']);
-    const httpHandlerSpy = jasmine.createSpyObj('HttpHandler', ['handle']);
+    httpRequest = { url: 'mocked-url', method: 'GET' } as Partial<HttpRequest<any>>;
+    httpHandler = { handle: jest.fn() };
+    alertServiceSpy = { showAlert: jest.fn() };
+    translateServiceSpy = { instant: jest.fn() };
 
     TestBed.configureTestingModule({
       providers: [
@@ -27,10 +28,12 @@ describe('ServeErrorInterceptor', () => {
     });
 
     interceptor = TestBed.inject(ServeErrorInterceptor);
-    alertService = TestBed.inject(AlertService) as jasmine.SpyObj<AlertService>;
-    translateService = TestBed.inject(TranslateService) as jasmine.SpyObj<TranslateService>;
-    httpRequest = httpRequestSpy;
-    httpHandler = httpHandlerSpy;
+
+  });
+
+  afterEach(() => {
+    TestBed.resetTestingModule();
+    jest.clearAllMocks(); 
   });
 
   it('should be created', () => {
@@ -38,86 +41,86 @@ describe('ServeErrorInterceptor', () => {
   });
 
   describe('when HttpErrorResponse is received', () => {
-    it('should call showAlert with the proper message for 404 error', (done: DoneFn) => {
+    it('should call showAlert with the proper message for 404 error', done => {
       const httpErrorResponse = new HttpErrorResponse({ status: 404, statusText: 'Not Found' });
 
-      httpHandler.handle.and.returnValue(throwError(() => httpErrorResponse));
-      translateService.instant.and.returnValue('error.not_found');
+      httpHandler.handle.mockReturnValue(throwError(() => httpErrorResponse));
+      translateServiceSpy.instant.mockReturnValue('error.not_found');
 
-      interceptor.intercept(httpRequest, httpHandler).subscribe({
+      interceptor.intercept(httpRequest as HttpRequest<any>, httpHandler).subscribe({
         next: () => fail('expected an error, not a response'),
         error: (err: HttpErrorResponse) => {
           expect(err.status).toBe(404);
-          expect(translateService.instant).toHaveBeenCalledWith('error.not_found');
-          expect(alertService.showAlert).toHaveBeenCalledWith('error.not_found', 'error');
+          expect(translateServiceSpy.instant).toHaveBeenCalledWith('error.not_found');
+          expect(alertServiceSpy.showAlert).toHaveBeenCalledWith('error.not_found', 'error');
           done();
         }
       });
     });
 
-    it('should call showAlert with the proper message for 401 error', (done: DoneFn) => {
+    it('should call showAlert with the proper message for 401 error', done => {
       const httpErrorResponse = new HttpErrorResponse({ status: 401, statusText: 'Unauthorized' });
 
-      httpHandler.handle.and.returnValue(throwError(() => httpErrorResponse));
-      translateService.instant.and.returnValue('error.unauthorized');
+      httpHandler.handle.mockReturnValue(throwError(() => httpErrorResponse));
+      translateServiceSpy.instant.mockReturnValue('error.unauthorized');
 
-      interceptor.intercept(httpRequest, httpHandler).subscribe({
+      interceptor.intercept(httpRequest as HttpRequest<any>, httpHandler).subscribe({
         next: () => fail('expected an error, not a response'),
         error: (err: HttpErrorResponse) => {
           expect(err.status).toBe(401);
-          expect(translateService.instant).toHaveBeenCalledWith('error.unauthorized');
-          expect(alertService.showAlert).toHaveBeenCalledWith('error.unauthorized', 'error');
+          expect(translateServiceSpy.instant).toHaveBeenCalledWith('error.unauthorized');
+          expect(alertServiceSpy.showAlert).toHaveBeenCalledWith('error.unauthorized', 'error');
           done();
         }
       });
     });
 
-    it('should call showAlert with the proper message for 403 error', (done: DoneFn) => {
+    it('should call showAlert with the proper message for 403 error', done => {
       const httpErrorResponse = new HttpErrorResponse({ status: 403, statusText: 'Forbidden' });
 
-      httpHandler.handle.and.returnValue(throwError(() => httpErrorResponse));
-      translateService.instant.and.returnValue('error.forbidden');
+      httpHandler.handle.mockReturnValue(throwError(() => httpErrorResponse));
+      translateServiceSpy.instant.mockReturnValue('error.forbidden');
 
-      interceptor.intercept(httpRequest, httpHandler).subscribe({
+      interceptor.intercept(httpRequest as HttpRequest<any>, httpHandler).subscribe({
         next: () => fail('expected an error, not a response'),
         error: (err: HttpErrorResponse) => {
           expect(err.status).toBe(403);
-          expect(translateService.instant).toHaveBeenCalledWith('error.forbidden');
-          expect(alertService.showAlert).toHaveBeenCalledWith('error.forbidden', 'error');
+          expect(translateServiceSpy.instant).toHaveBeenCalledWith('error.forbidden');
+          expect(alertServiceSpy.showAlert).toHaveBeenCalledWith('error.forbidden', 'error');
           done();
         }
       });
     });
 
-    it('should call showAlert with the proper message for 500 error', (done: DoneFn) => {
+    it('should call showAlert with the proper message for 500 error', done => {
       const httpErrorResponse = new HttpErrorResponse({ status: 500, statusText: 'Internal Server Error' });
 
-      httpHandler.handle.and.returnValue(throwError(() => httpErrorResponse));
-      translateService.instant.and.returnValue('error.internal_server');
+      httpHandler.handle.mockReturnValue(throwError(() => httpErrorResponse));
+      translateServiceSpy.instant.mockReturnValue('error.internal_server');
 
-      interceptor.intercept(httpRequest, httpHandler).subscribe({
+      interceptor.intercept(httpRequest as HttpRequest<any>, httpHandler).subscribe({
         next: () => fail('expected an error, not a response'),
         error: (err: HttpErrorResponse) => {
           expect(err.status).toBe(500);
-          expect(translateService.instant).toHaveBeenCalledWith('error.internal_server');
-          expect(alertService.showAlert).toHaveBeenCalledWith('error.internal_server', 'error');
+          expect(translateServiceSpy.instant).toHaveBeenCalledWith('error.internal_server');
+          expect(alertServiceSpy.showAlert).toHaveBeenCalledWith('error.internal_server', 'error');
           done();
         }
       });
     });
 
-    it('should call showAlert with the proper message for unknown error', (done: DoneFn) => {
+    it('should call showAlert with the proper message for unknown error', done => {
       const httpErrorResponse = new HttpErrorResponse({ status: 0, statusText: 'Unknown Error' });
 
-      httpHandler.handle.and.returnValue(throwError(() => httpErrorResponse));
-      translateService.instant.and.returnValue('error.unknown_error');
+      httpHandler.handle.mockReturnValue(throwError(() => httpErrorResponse));
+      translateServiceSpy.instant.mockReturnValue('error.unknown_error');
 
-      interceptor.intercept(httpRequest, httpHandler).subscribe({
+      interceptor.intercept(httpRequest as HttpRequest<any>, httpHandler).subscribe({
         next: () => fail('expected an error, not a response'),
         error: (err: HttpErrorResponse) => {
           expect(err.status).toBe(0);
-          expect(translateService.instant).toHaveBeenCalledWith('error.unknown_error');
-          expect(alertService.showAlert).toHaveBeenCalledWith('error.unknown_error', 'error');
+          expect(translateServiceSpy.instant).toHaveBeenCalledWith('error.unknown_error');
+          expect(alertServiceSpy.showAlert).toHaveBeenCalledWith('error.unknown_error', 'error');
           done();
         }
       });
@@ -125,13 +128,13 @@ describe('ServeErrorInterceptor', () => {
   });
 
   describe('when an empty body is received', () => {
-    it('should handle an empty body response gracefully', (done: DoneFn) => {
+    it('should handle an empty body response gracefully', done => {
       const httpResponse = new HttpResponse<unknown>({ body: null, status: HttpStatusCode.Ok });
 
-      httpHandler.handle.and.returnValue(of(httpResponse));
-      translateService.instant.and.returnValue('Empty Body');
+      httpHandler.handle.mockReturnValue(of(httpResponse));
+      translateServiceSpy.instant.mockReturnValue('Empty Body');
 
-      interceptor.intercept(httpRequest, httpHandler).subscribe({
+      interceptor.intercept(httpRequest as HttpRequest<any>, httpHandler).subscribe({
         next: (result: HttpEvent<unknown>) => {
           if (result instanceof HttpResponse) {
             expect(result.body).toBeNull();
@@ -144,13 +147,13 @@ describe('ServeErrorInterceptor', () => {
   });
 
   describe('when a correct response is received', () => {
-    it('should pass the response through', (done: DoneFn) => {
+    it('should pass the response through', done => {
       const expectedBody = { message: 'Correct Body' };
       const httpResponse = new HttpResponse({ body: expectedBody, status: HttpStatusCode.Ok });
 
-      httpHandler.handle.and.returnValue(of(httpResponse));
+      httpHandler.handle.mockReturnValue(of(httpResponse));
 
-      interceptor.intercept(httpRequest, httpHandler).subscribe({
+      interceptor.intercept(httpRequest as HttpRequest<any>, httpHandler).subscribe({
         next: (result: HttpEvent<unknown>) => {
           if (result instanceof HttpResponse) {
             expect(result.body).toEqual(expectedBody);
