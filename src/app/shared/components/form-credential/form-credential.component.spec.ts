@@ -65,16 +65,14 @@ describe('FormCredentialComponent', () => {
       getCountries: jest.fn()
     };
     mockAuthService = {
-      getMandator() {
-        return of(null);
-      },
+      getMandator:()=> of(null),
       getEmailName() {
         return of('User Name');
       },
       logout() {
         return of(void 0);
       }
-    } as jest.Mocked<AuthService>
+    } as jest.Mocked<any>
 
 
     await TestBed.configureTestingModule({
@@ -213,7 +211,9 @@ describe('FormCredentialComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should submit credential when submitCredential is called', () => {
+  it('it should submit credential when submitCredential is called with selected power', () => {
+    component.role = "user";
+
     component.credentialForm.setValue({
       first_name: 'John',
       last_name: 'Doe',
@@ -222,7 +222,20 @@ describe('FormCredentialComponent', () => {
       country: 'US'
     });
     component.selectedCountry = 'US';
-    component.addedOptions = [];
+    component.addedOptions = [{
+      tmf_function: 'DomePlatform',
+      tmf_action: 'SomeAction',
+      tmf_domain: 'SomeDomain',
+      tmf_type: 'SomeType',
+      operator: true,
+      customer: false,
+      provider: false,
+      marketplace: false,
+      execute: false, 
+      create: false,
+      update: false,
+      delete: false
+    }];
 
     component.submitCredential();
     expect(mockFormCredentialService.submitCredential).toHaveBeenCalled();
@@ -236,6 +249,27 @@ describe('FormCredentialComponent', () => {
       expect.any(PopupComponent),
       expect.any(Function)
     );
+  });
+
+  it('it should not submit credential when submitCredential is called with empty addedOptions', () => {
+    component.role = "user";
+  
+    component.credentialForm.setValue({
+      first_name: 'John',
+      last_name: 'Doe',
+      email: 'john.doe@example.com',
+      mobile_phone: '1234567890',
+      country: 'US'
+    });
+    component.selectedCountry = 'US';
+    component.addedOptions = [];
+  
+    component.submitCredential();
+
+    expect(mockFormCredentialService.submitCredential).not.toHaveBeenCalled();
+  
+    expect(component.popupMessage).toBe("At least one power set must be selected.");
+    expect(component.isPopupVisible).toBe(true);
   });
 
   it('should reset the form when resetForm is called', () => {
