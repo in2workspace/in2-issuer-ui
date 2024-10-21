@@ -8,6 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Issuance API contract
 - Phone number optional
+### Added
+- Sorting by status, name, and updated date in the credentials list
+- Eequirement at least one power in the credential creation form.
+- Linked the knowledge base in the docs link in homepage
+### Fixed
+- All the row is clikable
+- Hide signer row and buttons depending of user role
+- The mandator of the credential in the credential details view
+- Removed the power combo box from the credential details view
+- Replaced dummy data with placeholders in the credential creation form
 
 ## [1.0.1] - 2024-09-09
 
