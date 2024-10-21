@@ -17,7 +17,7 @@ export class PopupComponent implements OnChanges {
 
   public showPopup(): void {
     setTimeout(() => {
-      this.isVisible = false; //? this.closePopup()?
+      this.isVisible = false;
     }, 3000);
   }
 

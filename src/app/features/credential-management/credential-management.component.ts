@@ -25,10 +25,10 @@ export class CredentialManagementComponent implements AfterViewInit {
   ) {
 
   }
-  performAction(element: any): void {
+  performAction(credential_procedures: any): void {
     // Lógica del botón de acción
-    console.log('Acción realizada en:', element);
-    this.credentialProcedureService.signCredential(element.credential_procedure.procedure_id).subscribe({
+    console.log('Acción realizada en:', credential_procedures);
+    this.credentialProcedureService.signCredential(credential_procedures.credential_procedure.procedure_id).subscribe({
       next: () => {
         console.log("firma enviada")
       },
@@ -81,7 +81,7 @@ export class CredentialManagementComponent implements AfterViewInit {
     this.router.navigate(['/organization/credentials/create2',this.rol]);
   }
 
-  public goToCredentialDetails(element: CredentialProcedure): void {
-    this.router.navigate(['/organization/credentials/details', element.credential_procedure?.procedure_id]);
+  public goToCredentialDetails(credential_procedures: CredentialProcedure): void {
+    this.router.navigate(['/organization/credentials/details', credential_procedures.credential_procedure?.procedure_id]);
   }
 }
