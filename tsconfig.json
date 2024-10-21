@@ -32,5 +32,6 @@
     "strictTemplates": true,
     "suppressImplicitAnyIndexErrors": true
 
-  }
+  },
+  "esModuleInterop": true
 }

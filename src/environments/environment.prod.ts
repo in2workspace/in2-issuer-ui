@@ -10,7 +10,7 @@ export const environment = {
   base_url: window["env"]["base_url"] || 'http://localhost:8081',
   wallet_url: window["env"]["wallet_url"] || 'http://localhost:4200',
   procedures: window["env"]["procedures"] || '/api/v1/procedures',
-  save_credential: window["env"]["saveCredential"] || '/api/v1/credentials?type=LEARCredentialEmployee',
+  save_credential: window["env"]["saveCredential"] || '/vci/v1/issuances',
   credential_offer_url: window["env"]["credential_offer_url"] || '/api/v1/credential-offer',
   notification: window["env"]["notification"] || '/api/v1/notifications',
   firma_credential: window["env"]["firma_credential"] || '/api/v1/sign-credential'

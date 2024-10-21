@@ -3,7 +3,7 @@ import { CredentialMandatee } from "./credendentialMandatee.interface";
 import { Mandator } from "./madator.interface";
 import { Power } from "./power.interface";
 export interface CredentialProcedure {
-  credential_procedure:{
+  credential_procedure: {
     procedure_id: string;
   full_name: string;
   status: string;
