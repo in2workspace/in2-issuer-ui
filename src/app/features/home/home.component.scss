@@ -167,6 +167,7 @@
           font-size: 1.25rem;
           margin-left: auto;
           margin-right: auto;
+          margin-top: 1.25em;
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -208,33 +209,22 @@
         align-items: center;
         height: 100vh;
       }
-      .wallet-description {
-        width: 40%;
-        text-align: center;
-        justify-content: center;
-        font-size: 1.5rem;
-        margin-top: 0;
-        margin-bottom: 0.5rem;
-        font-weight: 500;
-        line-height: 1.2;
-      }
       .wallet-info-container {
         display: flex;
-        justify-content: space-evenly;
+        justify-content: center;
         align-items: flex-start;
         text-align: center;
         width: 60%;
         z-index: 5;
       }
 
-      .wallet-info-qr,
-      .wallet-info-text {
+      .wallet-info-qr{
         flex: 1;
         display: flex;
         flex-direction: column;
         justify-content: start;
         align-items: center;
-        padding: 2rem;
+        box-sizing: border-box;
         h2 {
           font-size: 1.5rem;
         }
@@ -243,6 +233,8 @@
         }
         .wallet-logo, .verifier-logo {
           width: 4rem;
+          max-width: 100%;
+          display: block;
         }
         .btn-verifier {
           background-color: $Blue;
@@ -296,5 +288,11 @@
       width: 1.5rem;
       height: auto;
     }
+  }
+}
+
+@media (max-width: 768px){
+  .content-section p{
+    text-align: center;
   }
 }
