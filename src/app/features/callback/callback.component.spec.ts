@@ -1,29 +1,31 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CallbackComponent } from './callback.component';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
-import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
 import { Router } from '@angular/router';
-
-class MockOidcSecurityService {
-  checkAuth() {
-    return of({ isAuthenticated: true });
-  }
-}
 
 describe('CallbackComponent', () => {
   let component: CallbackComponent;
   let fixture: ComponentFixture<CallbackComponent>;
-  let mockRouter: jasmine.SpyObj<Router>;
+  let mockRouter: {
+    navigate: jest.Mock;
+  };
+  let mockOidcSecurityService: {
+    checkAuth: jest.Mock;
+  } 
 
   beforeEach(async () => {
-    mockRouter = jasmine.createSpyObj('Router', ['navigate']);
+    mockRouter = {
+      navigate: jest.fn()
+    };
+    mockOidcSecurityService = {
+      checkAuth: jest.fn().mockReturnValue(of({ isAuthenticated: true }))
+    }
 
     await TestBed.configureTestingModule({
       declarations: [CallbackComponent],
-      imports: [RouterTestingModule],
       providers: [
-        { provide: OidcSecurityService, useClass: MockOidcSecurityService },
+        { provide: OidcSecurityService, useValue: mockOidcSecurityService },
         { provide: Router, useValue: mockRouter }
       ]
     }).compileComponents();
@@ -33,19 +35,22 @@ describe('CallbackComponent', () => {
     fixture.detectChanges();
   });
 
+  afterEach(() => {
+    TestBed.resetTestingModule();
+    jest.clearAllMocks();
+  });
+
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
   it('should navigate to /credentialManagement if authenticated', () => {
-    fixture.detectChanges();
     expect(mockRouter.navigate).toHaveBeenCalledWith(['/organization/credentials']);
   });
 
   it('should navigate to /home if not authenticated', () => {
-    (component as any).oidcSecurityService.checkAuth = () => of({ isAuthenticated: false });
+    mockOidcSecurityService.checkAuth.mockReturnValue(of({ isAuthenticated: false }));
     component.ngOnInit();
-    fixture.detectChanges();
     expect(mockRouter.navigate).toHaveBeenCalledWith(['/home']);
   });
 });
