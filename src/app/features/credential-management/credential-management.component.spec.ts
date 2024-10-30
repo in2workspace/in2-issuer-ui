@@ -310,25 +310,25 @@ describe('CredentialManagementComponent', () => {
 
   it('should set data sorting accessor', ()=>{
     component.ngAfterViewInit();
-    const credentialProcedure = {
+    const item = {
       credential_procedure: {
-        procedure_id: 'id',
-      full_name: 'name',
-      status: 'status',
-      updated: 'updated',
+        procedure_id: 'Id',
+      full_name: 'Name',
+      status: 'Status',
+      updated: 'Updated',
       credential: 'credential'
       }
     } as any;
-    const resStatus = component.dataSource.sortingDataAccessor(credentialProcedure, 'status');
-    expect(resStatus).toBe(credentialProcedure.status.toLowerCase());
+    const resStatus = component.dataSource.sortingDataAccessor(item, 'status');
+    expect(resStatus).toBe(item.credential_procedure.status.toLowerCase());
 
-    const resName = component.dataSource.sortingDataAccessor(credentialProcedure, 'full_name');
-    expect(resName).toBe(credentialProcedure.full_name.toLowerCase());
+    const resName = component.dataSource.sortingDataAccessor(item, 'full_name');
+    expect(resName).toBe(item.credential_procedure.full_name.toLowerCase());
 
-    const resUpdated = component.dataSource.sortingDataAccessor(credentialProcedure, 'updated');
-    expect(resUpdated).toBe(credentialProcedure.updated.toLowerCase());
+    const resUpdated = component.dataSource.sortingDataAccessor(item, 'updated');
+    expect(resUpdated).toBe(item.credential_procedure.updated.toLowerCase());
 
-    const resDefault = component.dataSource.sortingDataAccessor(credentialProcedure, 'random');
+    const resDefault = component.dataSource.sortingDataAccessor(item, 'random');
     expect(resDefault).toBe('');
   });
 
