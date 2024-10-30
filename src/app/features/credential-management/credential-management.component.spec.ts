@@ -308,6 +308,30 @@ describe('CredentialManagementComponent', () => {
     expect(createNewCredential2Spy).toHaveBeenCalled();
   });
 
+  it('should set data sorting accessor', ()=>{
+    component.ngAfterViewInit();
+    const credentialProcedure = {
+      credential_procedure: {
+        procedure_id: 'id',
+      full_name: 'name',
+      status: 'status',
+      updated: 'updated',
+      credential: 'credential'
+      }
+    } as any;
+    const resStatus = component.dataSource.sortingDataAccessor(credentialProcedure, 'status');
+    expect(resStatus).toBe(credentialProcedure.status.toLowerCase());
+
+    const resName = component.dataSource.sortingDataAccessor(credentialProcedure, 'full_name');
+    expect(resName).toBe(credentialProcedure.full_name.toLowerCase());
+
+    const resUpdated = component.dataSource.sortingDataAccessor(credentialProcedure, 'updated');
+    expect(resUpdated).toBe(credentialProcedure.updated.toLowerCase());
+
+    const resDefault = component.dataSource.sortingDataAccessor(credentialProcedure, 'random');
+    expect(resDefault).toBe('');
+  });
+
   // it('should call performActions when the actions button is  created', ()=>{
 
   // });

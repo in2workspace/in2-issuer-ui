@@ -46,11 +46,11 @@ export class CredentialManagementComponent implements AfterViewInit {
     this.dataSource.sortingDataAccessor = (item: CredentialProcedure, property: string) => {
       switch (property) {
         case 'status': 
-          return item.credential_procedure.status;
+          return item.credential_procedure.status.toLowerCase();
         case 'full_name': 
-          return item.credential_procedure.full_name;
+          return item.credential_procedure.full_name.toLowerCase();
         case 'updated': 
-          return item.credential_procedure.updated;
+          return item.credential_procedure.updated.toLowerCase();
         default: 
           return '';
       }
