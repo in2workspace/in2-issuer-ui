@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Issuance API contract
 - Phone number optional
+- Change DomePlatform power to Certification ("Upload") power 
 ### Added
 - Sorting by status, name, and updated date in the credentials list
 - Eequirement at least one power in the credential creation form.
