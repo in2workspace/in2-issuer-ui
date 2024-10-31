@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HomeComponent } from './home.component';
 import { MaterialModule } from 'src/app/material.module';
 import { HomeRoutingModule } from './home-routing.module';
+import { QRCodeModule } from 'angularx-qrcode';
 
 
 
@@ -11,7 +12,7 @@ import { HomeRoutingModule } from './home-routing.module';
     HomeComponent
   ],
   imports: [
-    CommonModule, HomeRoutingModule, MaterialModule
+    CommonModule, HomeRoutingModule, MaterialModule, QRCodeModule
   ]
 })
 export class HomeModule { }
