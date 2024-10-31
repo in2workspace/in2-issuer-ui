@@ -63,10 +63,7 @@ describe('PowerComponent', () => {
         create: false,
         update: false,
         delete: false,
-        operator: false,
-        customer: false,
-        provider: false,
-        marketplace: false,
+        upload: false
       }
     ];
 
@@ -100,19 +97,16 @@ describe('PowerComponent', () => {
     expect(component.addedOptions[0].tmf_function).toBe('NewOption');
   });
 
-  it('should add a "Marketplace" option with correct properties', () => {
+  it('should add a "Certification" option with correct properties', () => {
     component.isDisabled = false;
-    component.selectedOption = 'Marketplace';
+    component.selectedOption = 'Certification';
 
     component.addOption();
 
     expect(component.addedOptions.length).toBe(1);
     const addedOption = component.addedOptions[0];
-    expect(addedOption.tmf_function).toBe('Marketplace');
-    expect(addedOption.operator).toBe(false);
-    expect(addedOption.customer).toBe(false);
-    expect(addedOption.provider).toBe(false);
-    expect(addedOption.marketplace).toBe(false);
+    expect(addedOption.tmf_function).toBe('Certification');
+    expect(addedOption.upload).toBe(false);
   });
 
   it('should add a "ProductOffering" option with correct properties', () => {
