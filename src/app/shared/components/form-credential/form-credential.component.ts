@@ -116,8 +116,8 @@ export class FormCredentialComponent implements OnInit {
 
   public validateAtLeastOnePower(): boolean {
     return this.addedOptions.some(option => {
-      if (option.tmf_function === 'DomePlatform') {
-        return option.operator || option.customer || option.provider || option.marketplace;
+      if (option.tmf_function === 'Certification') {
+        return option.upload
       } else if (option.tmf_function === 'ProductOffering') {
         return option.create || option.update || option.delete;
       } else if (option.tmf_function === 'Onboarding') {

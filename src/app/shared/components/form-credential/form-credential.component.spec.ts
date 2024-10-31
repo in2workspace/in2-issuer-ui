@@ -25,10 +25,7 @@ const mockTempPower: TempPower = {
   create: false,
   update: false,
   delete: true,
-  operator: true,
-  customer: false,
-  provider: true,
-  marketplace: false,
+  upload: true
 };
 const mockPowers: Power[] = [
   { tmf_action: 'action1', tmf_domain: 'domain1', tmf_function: 'function1', tmf_type: 'type1' },
@@ -223,14 +220,11 @@ describe('FormCredentialComponent', () => {
     });
     component.selectedCountry = 'US';
     component.addedOptions = [{
-      tmf_function: 'DomePlatform',
+      tmf_function: 'Certification',
       tmf_action: 'SomeAction',
       tmf_domain: 'SomeDomain',
       tmf_type: 'SomeType',
-      operator: true,
-      customer: false,
-      provider: false,
-      marketplace: false,
+      upload: true,
       execute: false, 
       create: false,
       update: false,

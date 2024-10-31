@@ -9,10 +9,7 @@ export interface TempPower {
   create: boolean;
   update: boolean;
   delete: boolean;
-  operator: boolean;
-  customer: boolean;
-  provider: boolean;
-  marketplace: boolean;
+  upload: boolean;
 }
 
 @Component({
@@ -54,18 +51,12 @@ export class PowerComponent {
       create: false,
       update: false,
       delete: false,
-      operator: false,
-      customer: false,
-      provider: false,
-      marketplace: false,
+      upload: false,
     };
 
     switch(this.selectedOption) {
-      case 'Marketplace':
-        newOption.operator = false;
-        newOption.customer = false;
-        newOption.provider = false;
-        newOption.marketplace = false;
+      case 'Certification':
+        newOption.upload = false;
         break;
       case 'ProductOffering':
         newOption.create = false;

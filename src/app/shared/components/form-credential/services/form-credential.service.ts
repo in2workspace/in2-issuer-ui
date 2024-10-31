@@ -22,10 +22,7 @@ export class FormCredentialService {
       create: tmf_action.includes('Create'),
       update: tmf_action.includes('Update'),
       delete: tmf_action.includes('Delete'),
-      operator: tmf_action.includes('Operator'),
-      customer: tmf_action.includes('Customer'),
-      provider: tmf_action.includes('Provider'),
-      marketplace: tmf_action.includes('Marketplace')
+      upload: tmf_action.includes('Upload')
     };
   }
 
@@ -97,8 +94,8 @@ export class FormCredentialService {
     }
     let tmf_action: string[] = [];
     switch (option.tmf_function) {
-      case 'DomePlatform':
-        tmf_action=isDomePlatform(option,tmf_action)
+      case 'Certification':
+        tmf_action=isCertification(option,tmf_action)
         break;
       case 'ProductOffering':
         tmf_action=isProductOffering(option,tmf_action)
@@ -117,12 +114,9 @@ export class FormCredentialService {
   }
 
 }
-export function isDomePlatform(option: TempPower,tmf_action: string[]) {
+export function isCertification(option: TempPower,tmf_action: string[]) {
   const tmf_action2=tmf_action;
-  if (option.operator) tmf_action2.push('Operator');
-  if (option.customer) tmf_action2.push('Customer');
-  if (option.provider) tmf_action2.push('Provider');
-  if (option.marketplace) tmf_action2.push('Marketplace');
+  if (option.upload) tmf_action2.push('Upload');
   return tmf_action2;
 }
 export function isProductOffering(option: TempPower,tmf_action: string[]) {

@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import {FormCredentialService, isDomePlatform, isProductOffering} from './form-credential.service';
+import {FormCredentialService, isCertification, isProductOffering} from './form-credential.service';
 import {Power} from 'src/app/core/models/power.interface';
 import {TempPower} from '../../power/power/power.component';
 import {CredentialMandatee} from 'src/app/core/models/credendentialMandatee.interface';
@@ -84,10 +84,7 @@ describe('FormCredentialService', () => {
       create: false,
       update: false,
       delete: false,
-      operator: false,
-      customer: false,
-      provider: false,
-      marketplace: false
+      upload: false
     };
     mockAddedOptions = [
       {...mockTempPower},
@@ -340,45 +337,17 @@ describe('FormCredentialService', () => {
   });
   
 
-  it('should add "Operator" to tmf_action if option.operator is true', () => {
+  it('should add "Upload" to tmf_action if option.upload is true', () => {
     const option: TempPower = {
       ...mockTempPower,
       tmf_domain: 'domain',
-      tmf_function: 'DomePlatform',
+      tmf_function: 'Certification',
       tmf_type: 'type',
-      operator: true
+      upload: true
     };
 
-    const result = isDomePlatform(option, []);
-    expect(result).toContain('Operator');
-  });
-
-  it('should add "Customer" to tmf_action if option.customer is true', () => {
-    const option: TempPower = {
-      ...mockTempPower,
-      tmf_domain: 'domain',
-      tmf_function: 'ProductOffering',
-      tmf_type: 'type',
-      customer: true
-    };
-
-    const result = isDomePlatform(option, []);
-    expect(result).toContain('Customer');
-  });
-
-  it('should add "Provider" and "Marketplace" if both are true', () => {
-    const option: TempPower = {
-      ...mockTempPower,
-      tmf_domain: 'domain',
-      tmf_function: 'ProductOffering',
-      tmf_type: 'type',
-      provider: true,
-      marketplace: true
-    };
-
-    const result = isDomePlatform(option, []);
-    expect(result).toContain('Provider');
-    expect(result).toContain('Marketplace');
+    const result = isCertification(option, []);
+    expect(result).toContain('Upload');
   });
 
   it('should return an empty array if no conditions are true', () => {
@@ -389,7 +358,7 @@ describe('FormCredentialService', () => {
       tmf_type: 'type',
     };
 
-    const result = isDomePlatform(option, []);
+    const result = isCertification(option, []);
     expect(result).toEqual([]);
   });
 
@@ -448,24 +417,23 @@ describe('FormCredentialService', () => {
     const tempPower: TempPower = {
       ...mockTempPower,
       tmf_action: '',
-      operator: true,
-      provider: true
+      upload: true,
     };
     const tmf_action = ['InitialAction'];
   
-    const result = isDomePlatform(tempPower, tmf_action);
+    const result = isCertification(tempPower, tmf_action);
   
-    expect(result).toEqual(['InitialAction', 'Operator', 'Provider']);
+    expect(result).toEqual(['InitialAction', 'Upload']);
   });
   
-  it('should return tmf_action unchanged for isDomePlatform if no TempPower properties are true', () => {
+  it('should return tmf_action unchanged for isCertification if no TempPower properties are true', () => {
     const tempPower: TempPower = {
       ...mockTempPower,
       tmf_action: ''
     };
     const tmf_action = ['InitialAction'];
   
-    const result = isDomePlatform(tempPower, tmf_action);
+    const result = isCertification(tempPower, tmf_action);
   
     expect(result).toEqual(['InitialAction']);
   });
@@ -517,23 +485,22 @@ describe('FormCredentialService', () => {
     });
   });
   
-  it('should call isDomePlatform and return the correct object when tmf_function is DomePlatform', () => {
+  it('should call isCertification and return the correct object when tmf_function is Certification', () => {
     const tempPower: TempPower = {
       ...mockTempPower,
       tmf_action: '',
       tmf_domain: 'domain2',
-      tmf_function: 'DomePlatform',
+      tmf_function: 'Certification',
       tmf_type: 'type2',
-      operator: true,
-      provider: true
+      upload: true
     };
     
     const result = service.checkTmfFunction(tempPower);
   
     expect(result).toEqual({
-      tmf_action: ['Operator', 'Provider'],
+      tmf_action: ['Upload'],
       tmf_domain: 'domain2',
-      tmf_function: 'DomePlatform',
+      tmf_function: 'Certification',
       tmf_type: 'type2'
     });
   });
