@@ -115,7 +115,9 @@ export class FormCredentialComponent implements OnInit {
   }
 
   public hasSelectedPowers(): boolean {
-    return this.addedOptions.length > 0;
+    return this.addedOptions.some(option =>
+      option.execute || option.create || option.update || option.delete || option.upload
+    );
   }
 
   public submitCredential(): void {
