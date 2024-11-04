@@ -114,22 +114,12 @@ export class FormCredentialComponent implements OnInit {
     this.selectedOption = this.formCredentialService.handleSelectChange(event);
   }
 
-  public validateAtLeastOnePower(): boolean {
-    return this.addedOptions.some(option => {
-      if (option.tmf_function === 'Certification') {
-        return option.upload
-      } else if (option.tmf_function === 'ProductOffering') {
-        return option.create || option.update || option.delete;
-      } else if (option.tmf_function === 'Onboarding') {
-        return option.execute;
-      }
-      return false;
-    });
+  public hasSelectedPowers(): boolean {
+    return this.addedOptions.length > 0;
   }
 
   public submitCredential(): void {
-      //if(this.addedOptions.length!==0){
-      if(this.validateAtLeastOnePower()){
+      if(this.hasSelectedPowers()){
         this.formCredentialService.submitCredential(
           this.credential,
           this.selectedCountry,
