@@ -10,6 +10,7 @@ import { environment } from 'src/environments/environment';
 })
 export class HomeComponent {
   public walletUrl = environment.wallet_url;
+  public knowledgebase_url = environment.knowledgebase_url;
 
   public constructor(private router: Router, public authService: AuthService) {}
 
