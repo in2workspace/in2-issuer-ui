@@ -15,5 +15,4 @@ export const environment = {
   credential_offer_url: window["env"]["credential_offer_url"] || '/api/v1/credential-offer',
   notification: window["env"]["notification"] || '/api/v1/notifications',
   firma_credential: window["env"]["firma_credential"] || '/api/v1/sign-credential'
-
 };
