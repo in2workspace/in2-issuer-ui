@@ -115,7 +115,7 @@ export class FormCredentialComponent implements OnInit {
   }
 
   public hasSelectedPowers(): boolean {
-    return this.addedOptions.some(option =>
+    return this.addedOptions.every(option =>
       option.execute || option.create || option.update || option.delete || option.upload
     );
   }
@@ -133,7 +133,7 @@ export class FormCredentialComponent implements OnInit {
           this.resetForm.bind(this)
         );
       } else {
-        this.popupMessage = "At least one power set must be selected.";
+        this.popupMessage = "Each power must have at least one action selected.";
         this.isPopupVisible = true;
         return;
       }

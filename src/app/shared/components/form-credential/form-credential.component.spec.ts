@@ -256,13 +256,23 @@ describe('FormCredentialComponent', () => {
       country: 'US'
     });
     component.selectedCountry = 'US';
-    component.addedOptions = [];
+    component.addedOptions = [{
+      tmf_action: [],
+      tmf_domain: 'Dome',
+      tmf_function: 'ProductOffering',
+      tmf_type: 'SomeType',
+      execute: false,
+      create: false,
+      update: false,
+      delete: false,
+      upload: false
+    }];
   
     component.submitCredential();
 
     expect(mockFormCredentialService.submitCredential).not.toHaveBeenCalled();
   
-    expect(component.popupMessage).toBe("At least one power set must be selected.");
+    expect(component.popupMessage).toBe("Each power must have at least one action selected.");
     expect(component.isPopupVisible).toBe(true);
   });
 
