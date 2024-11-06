@@ -63,7 +63,8 @@ describe('PowerComponent', () => {
         create: false,
         update: false,
         delete: false,
-        upload: false
+        upload: false,
+        attest: false
       }
     ];
 

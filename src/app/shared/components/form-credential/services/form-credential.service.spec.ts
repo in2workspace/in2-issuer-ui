@@ -84,7 +84,8 @@ describe('FormCredentialService', () => {
       create: false,
       update: false,
       delete: false,
-      upload: false
+      upload: false,
+      attest: false
     };
     mockAddedOptions = [
       {...mockTempPower},
@@ -298,7 +299,6 @@ describe('FormCredentialService', () => {
     expect(popupSpy).toHaveBeenCalled();
   });
 
-  //TODO
   it('should map addedOptions to Power objects correctly',() => {
 
     const expectedPower = {

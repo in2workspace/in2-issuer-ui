@@ -25,7 +25,8 @@ const mockTempPower: TempPower = {
   create: false,
   update: false,
   delete: true,
-  upload: true
+  upload: true,
+  attest: true
 };
 const mockPowers: Power[] = [
   { tmf_action: 'action1', tmf_domain: 'domain1', tmf_function: 'function1', tmf_type: 'type1' },
@@ -225,6 +226,7 @@ describe('FormCredentialComponent', () => {
       tmf_domain: 'SomeDomain',
       tmf_type: 'SomeType',
       upload: true,
+      attest: true,
       execute: false, 
       create: false,
       update: false,
@@ -265,7 +267,8 @@ describe('FormCredentialComponent', () => {
       create: false,
       update: false,
       delete: false,
-      upload: false
+      upload: false,
+      attest: false
     }];
   
     component.submitCredential();
