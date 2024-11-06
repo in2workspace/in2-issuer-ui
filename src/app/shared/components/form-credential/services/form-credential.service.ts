@@ -22,7 +22,8 @@ export class FormCredentialService {
       create: tmf_action.includes('Create'),
       update: tmf_action.includes('Update'),
       delete: tmf_action.includes('Delete'),
-      upload: tmf_action.includes('Upload')
+      upload: tmf_action.includes('Upload'),
+      attest: tmf_action.includes('Attest')
     };
   }
 
@@ -117,6 +118,7 @@ export class FormCredentialService {
 export function isCertification(option: TempPower,tmf_action: string[]) {
   const tmf_action2=tmf_action;
   if (option.upload) tmf_action2.push('Upload');
+  if (option.attest) tmf_action2.push('Attest');
   return tmf_action2;
 }
 export function isProductOffering(option: TempPower,tmf_action: string[]) {

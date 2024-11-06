@@ -258,7 +258,7 @@ describe('FormCredentialComponent', () => {
     component.selectedCountry = 'US';
     component.addedOptions = [{
       tmf_action: [],
-      tmf_domain: 'Dome',
+      tmf_domain: 'DOME',
       tmf_function: 'ProductOffering',
       tmf_type: 'SomeType',
       execute: false,

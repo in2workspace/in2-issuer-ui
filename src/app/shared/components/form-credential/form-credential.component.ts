@@ -121,7 +121,7 @@ export class FormCredentialComponent implements OnInit {
   }
 
   public submitCredential(): void {
-      if(this.hasSelectedPowers()){
+      if(this.addedOptions.length > 0 && this.hasSelectedPowers()){
         this.formCredentialService.submitCredential(
           this.credential,
           this.selectedCountry,

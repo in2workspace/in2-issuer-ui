@@ -10,6 +10,7 @@ export interface TempPower {
   update: boolean;
   delete: boolean;
   upload: boolean;
+  attest: boolean;
 }
 
 @Component({
@@ -52,11 +53,13 @@ export class PowerComponent {
       update: false,
       delete: false,
       upload: false,
+      attest: false
     };
 
     switch(this.selectedOption) {
       case 'Certification':
         newOption.upload = false;
+        newOption.attest = false;
         break;
       case 'ProductOffering':
         newOption.create = false;
