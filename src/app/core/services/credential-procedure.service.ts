@@ -3,7 +3,8 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { CredentialProcedure, CredentialProcedureResponse,CredentialData } from '../models/credentialProcedure.interface';
+import { CredentialProcedureResponse,CredentialData } from '../models/credentialProcedure.interface';
+import { IssuanceRequest } from '../models/issuanceRequest.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -29,8 +30,9 @@ export class CredentialProcedureService {
     );
   }
 
-  public saveCredentialProcedure(credentialProcedure: CredentialProcedure): Observable<any> {
-    return this.http.post(this.saveCredential, credentialProcedure).pipe(
+  public createProcedure(IssuanceRequest: IssuanceRequest): Observable<any> {
+
+    return this.http.post(this.saveCredential, IssuanceRequest).pipe(
       catchError(this.handleError)
     );
   }

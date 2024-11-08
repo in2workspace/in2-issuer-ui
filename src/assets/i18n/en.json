@@ -15,7 +15,7 @@
   },
   "credentialDetail": {
     "credentialDetail": "Credential detail",
-    "textinformation": "A new Dome credential has been issued for you with the following information"
+    "textinformation": "A new DOME credential has been issued for you with the following information"
   },
   "credentialOffer": {
     "credentialDetail": "Credential Offer",
@@ -43,16 +43,19 @@
     "power": {
       "power": "Powers",
       "domain": "Domain",
-      "dome": "dome",
+      "dome": "DOME",
       "function": "Function",
       "onboarding": "Onboarding",
       "marketplace": "Marketplace",
       "productoffer": "Product offer",
+      "certification": "Certification",
       "add": "Add",
       "execute": "Execute",
       "create": "Create",
       "update": "Update",
-      "delete": "Delete"
+      "delete": "Delete",
+      "upload": "Upload",
+      "attest": "Attest"
     },
     "credentialIssuance":{
       "create": "Create Credential"

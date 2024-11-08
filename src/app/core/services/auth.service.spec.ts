@@ -3,90 +3,99 @@ import { AuthService } from './auth.service';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { of } from 'rxjs';
 
+const mockAuthResponse = {
+  isAuthenticated: false,
+  userData: { emailAddress: 'test@example.com' },
+  accessToken: 'dummyAccessToken',
+  idToken: 'dummyIdToken'
+};
+
 describe('AuthService', () => {
   let service: AuthService;
-  let oidcSecurityService: jasmine.SpyObj<OidcSecurityService>;
+  let oidcSecurityService: {
+    checkAuth: jest.Mock,
+    authorize: jest.Mock,
+    logoff: jest.Mock
+  };
 
   beforeEach(() => {
-    const oidcSecurityServiceSpy = jasmine.createSpyObj('OidcSecurityService', ['checkAuth', 'authorize', 'logoff']);
+    oidcSecurityService = {
+      checkAuth: jest.fn().mockReturnValue(of(mockAuthResponse)),
+      authorize: jest.fn(),
+      logoff: jest.fn()
+    };
 
     TestBed.configureTestingModule({
       providers: [
         AuthService,
-        { provide: OidcSecurityService, useValue: oidcSecurityServiceSpy }
+        { provide: OidcSecurityService, useValue: oidcSecurityService }
       ]
     });
-
-    oidcSecurityService = TestBed.inject(OidcSecurityService) as jasmine.SpyObj<OidcSecurityService>;
-
-    oidcSecurityService.checkAuth.and.returnValue(of({
-      isAuthenticated: false,
-      userData: null,
-      accessToken: '',
-      idToken: ''
-    }));
-
+    
     service = TestBed.inject(AuthService);
+    Object.defineProperty(window, 'localStorage', {
+      value: {
+        clear: jest.fn()
+      },
+      writable: true
+    });
+  });
+
+  afterEach(() => {
+    TestBed.resetTestingModule();
+    jest.clearAllMocks();
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
-
-  // TODO this test needs to be fixed
-  // The error occurs because there is a timeout issue. This can happen if the asynchronous
-  // code does not complete within the set timeout interval. Ensure that all observables
-  // and asynchronous calls are properly handled and that the test completes within the timeout.
-
-  // it('should set isAuthenticatedSubject based on OidcSecurityService checkAuth response', (done: DoneFn) => {
-  //   const authResponse = {
-  //     isAuthenticated: true,
-  //     userData: { emailAddress: 'test@example.com' },
-  //     accessToken: 'dummyAccessToken',
-  //     idToken: 'dummyIdToken'
-  //   };
-  //   oidcSecurityService.checkAuth.and.returnValue(of(authResponse));
-  //
-  //   service.checkAuth().subscribe(isAuthenticated => {
-  //     expect(isAuthenticated).toBeTrue();
-  //     service.isLoggedIn().subscribe(isLoggedIn => {
-  //       expect(isLoggedIn).toBeTrue();
-  //       done();
-  //     });
-  //   });
-  // });
-
+  
   it('should call authorize on OidcSecurityService when login is called', () => {
     service.login();
     expect(oidcSecurityService.authorize).toHaveBeenCalled();
   });
+  
+    it('should set isAuthenticatedSubject based on OidcSecurityService checkAuth response', done => {
+      const dummyToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQtY29uc29sZSI6eyJyb2xlcyI6WyJhZG1pbiJdfX0sImlhdCI6MTUxNjIzOTAyMn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+      const authResponse = {
+        ...mockAuthResponse,
+        isAuthenticated: true,
+        accessToken: dummyToken,
+      };
+      oidcSecurityService.checkAuth.mockReturnValue(of(authResponse));
+    
+      service.checkAuth().subscribe(isAuthenticated => {
+        expect(isAuthenticated).toBeTruthy();
+        service.isLoggedIn().subscribe(isLoggedIn => {
+          expect(isLoggedIn).toBeTruthy();
+          done();
+        });
+      });
+    });
 
   it('should clear localStorage and call logoff on OidcSecurityService when logout is called', () => {
-    spyOn(localStorage, 'clear').and.callThrough();
     service.logout();
     expect(localStorage.clear).toHaveBeenCalled();
     expect(oidcSecurityService.logoff).toHaveBeenCalled();
   });
 
-  it('should return isAuthenticatedSubject as observable when isLoggedIn is called', (done: DoneFn) => {
+  it('should return isAuthenticatedSubject as observable when isLoggedIn is called', done => {
     service.isLoggedIn().subscribe(isLoggedIn => {
-      expect(isLoggedIn).toBeFalse();
+      expect(isLoggedIn).toBeFalsy();
       done();
     });
   });
 
-  it('should handle login callback and update subjects accordingly', (done: DoneFn) => {
+  it('should handle login callback and update subjects accordingly', done => {
     const authResponse = {
-      isAuthenticated: true,
-      userData: { emailAddress: 'john.doe@example.com' },
-      accessToken: 'dummyAccessToken',
-      idToken: 'dummyIdToken'
+      ...mockAuthResponse,
+      isAuthenticated: true
     };
-    oidcSecurityService.checkAuth.and.returnValue(of(authResponse));
+    oidcSecurityService.checkAuth.mockReturnValue(of(authResponse));
 
     service.handleLoginCallback();
     service.isLoggedIn().subscribe(isLoggedIn => {
-      expect(isLoggedIn).toBeTrue();
+      expect(isLoggedIn).toBeTruthy();
       service.getUserData().subscribe(userData => {
         expect(userData).toEqual(authResponse.userData);
         service.getToken().subscribe(token => {
@@ -100,39 +109,39 @@ describe('AuthService', () => {
     });
   });
 
-  it('should log a message if authentication fails or is not completed', (done: DoneFn) => {
-    spyOn(console, 'log');
+  it('should log a message if authentication fails or is not completed', done => {
+    jest.spyOn(console, 'log');
     const authResponse = {
-      isAuthenticated: false,
+      ...mockAuthResponse,
       userData: null,
       accessToken: '',
       idToken: ''
     };
-    oidcSecurityService.checkAuth.and.returnValue(of(authResponse));
+    oidcSecurityService.checkAuth(of(authResponse));
 
     service.handleLoginCallback();
     service.isLoggedIn().subscribe(isLoggedIn => {
-      expect(isLoggedIn).toBeFalse();
+      expect(isLoggedIn).toBeFalsy();
       expect(console.log).toHaveBeenCalledWith('Authentication failed or not completed yet.');
       done();
     });
   });
 
-  it('should return user data as observable when getUserData is called', (done: DoneFn) => {
+  it('should return user data as observable when getUserData is called', done => {
     service.getUserData().subscribe(userData => {
       expect(userData).toBeNull();
       done();
     });
   });
 
-  it('should return email name as observable when getEmailName is called', (done: DoneFn) => {
+  it('should return email name as observable when getEmailName is called', done => {
     service.getEmailName().subscribe(emailName => {
       expect(emailName).toBe('');
       done();
     });
   });
 
-  it('should return token as observable when getToken is called', (done: DoneFn) => {
+  it('should return token as observable when getToken is called', done => {
     service.getToken().subscribe(token => {
       expect(token).toBe('');
       done();

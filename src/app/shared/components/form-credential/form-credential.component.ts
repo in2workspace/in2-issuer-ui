@@ -77,19 +77,21 @@ export class FormCredentialComponent implements OnInit {
       first_name: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*')]],
       last_name: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*')]],
       email: ['', [Validators.required, Validators.email]],
-      mobile_phone: ['', [Validators.required, Validators.pattern('[0-9 ]*')]],
+      mobile_phone: ['', [Validators.pattern('[0-9 ]*')]],
       country: ['', Validators.required],
 
     });
 
     this.authService.getMandator().subscribe(mandator2 => {
       if (mandator2) {
-        this.mandator ={ 'organizationIdentifier': mandator2.organizationIdentifier,
-          'organization': mandator2.organization,
-          'commonName':mandator2.commonName,
-          'emailAddress':mandator2.emailAddress,
-          'serialNumber':mandator2.serialNumber,
-          'country':mandator2.country}
+        if(this.viewMode === "create" && this.role!=="admin"){
+          this.mandator ={ 'organizationIdentifier': mandator2.organizationIdentifier,
+            'organization': mandator2.organization,
+            'commonName':mandator2.commonName,
+            'emailAddress':mandator2.emailAddress,
+            'serialNumber':mandator2.serialNumber,
+            'country':mandator2.country}
+        }
         this.signer = { 'organizationIdentifier': mandator2.organizationIdentifier,
                         'organization': mandator2.organization,
                         'commonName':mandator2.commonName,
@@ -112,18 +114,29 @@ export class FormCredentialComponent implements OnInit {
     this.selectedOption = this.formCredentialService.handleSelectChange(event);
   }
 
-  public submitCredential(): void {
+  public hasSelectedPowers(): boolean {
+    return this.addedOptions.every(option =>
+      option.execute || option.create || option.update || option.delete || option.upload
+    );
+  }
 
-      this.formCredentialService.submitCredential(
-        this.credential,
-        this.selectedCountry,
-        this.addedOptions,
-        this.mandator,
-        this.signer,
-        this.credentialProcedureService,
-        this.popupComponent,
-        this.resetForm.bind(this)
-      );
+  public submitCredential(): void {
+      if(this.addedOptions.length > 0 && this.hasSelectedPowers()){
+        this.formCredentialService.submitCredential(
+          this.credential,
+          this.selectedCountry,
+          this.addedOptions,
+          this.mandator,
+          this.signer,
+          this.credentialProcedureService,
+          this.popupComponent,
+          this.resetForm.bind(this)
+        );
+      } else {
+        this.popupMessage = "Each power must have at least one action selected.";
+        this.isPopupVisible = true;
+        return;
+      }
   }
 
   public triggerSendReminder(): void {
