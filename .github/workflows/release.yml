@@ -7,6 +7,10 @@ on:
     branches:
       - main
     types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+
 jobs:
   release-snapshot:
     if: github.event_name == 'pull_request'
@@ -17,19 +21,23 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Get Project Version
+        id: get_version
+        run: echo "VERSION=$(jq -r '.version' package.json)" >> $GITHUB_ENV
+
       - name: Build and Push docker image
         run: |
           PROJECT_NAME=$(jq -r '.name' package.json)
-          VERSION=$(jq -r '.version' package.json)
           IMAGE_TAG="$PROJECT_NAME:v$VERSION$SUFFIX"
           docker build . --file Dockerfile --tag $DOCKER_HUB_CLIENT_NAME/$IMAGE_TAG
           echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
           docker push $DOCKER_HUB_CLIENT_NAME/$IMAGE_TAG
         env:
+          VERSION: ${{ env.VERSION }}
+          SUFFIX: -snapshot
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_TOKEN }}
           DOCKER_HUB_CLIENT_NAME: in2workspace
-          SUFFIX: -snapshot
 
   release:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -40,15 +48,19 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Get Project Version
+        id: get_version
+        run: echo "VERSION=$(jq -r '.version' package.json)" >> $GITHUB_ENV
+
       - name: Build and Push docker image
         run: |
           PROJECT_NAME=$(jq -r '.name' package.json)
-          VERSION=$(jq -r '.version' package.json)
           IMAGE_TAG="$PROJECT_NAME:v$VERSION"
           docker build . --file Dockerfile --tag $DOCKER_HUB_CLIENT_NAME/$IMAGE_TAG
           echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
           docker push $DOCKER_HUB_CLIENT_NAME/$IMAGE_TAG
         env:
+          VERSION: ${{ env.VERSION }}
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_TOKEN }}
           DOCKER_HUB_CLIENT_NAME: in2workspace
@@ -58,8 +70,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: "v$VERSION"
-          release_name: "Release v$VERSION"
-          body: "Release of version v$VERSION"
+          tag_name: "v${{ env.VERSION }}"
+          release_name: "v${{ env.VERSION }}"
+          body: "Release of version v${{ env.VERSION }}"
           draft: false
           prerelease: true
