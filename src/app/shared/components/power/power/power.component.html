@@ -32,8 +32,8 @@
 
 <div *ngIf="viewMode === 'create'">
   <div *ngFor="let option of addedOptions; let i = index" class="option-container">
+    <p>{{ option.tmf_function }}</p>
     <ng-container *ngIf="option.tmf_function === 'Certification'">
-      <p>{{ option.tmf_function }}</p>
       <mat-slide-toggle [(ngModel)]="option.upload" name="upload-{{ i }}" [disabled]="isDisabled">
         {{ "power.upload" | translate }}
       </mat-slide-toggle>
@@ -42,7 +42,6 @@
       </mat-slide-toggle>
     </ng-container>
     <ng-container *ngIf="option.tmf_function === 'ProductOffering'">
-      <p>{{ option.tmf_function }}</p>
       <mat-slide-toggle [(ngModel)]="option.create" name="create-{{ i }}" [disabled]="isDisabled">
         {{ "power.create" | translate }}
       </mat-slide-toggle>
@@ -54,7 +53,6 @@
       </mat-slide-toggle>
     </ng-container>
     <ng-container *ngIf="option.tmf_function === 'Onboarding'">
-      <p>{{ option.tmf_function }}</p>
       <mat-slide-toggle [(ngModel)]="option.execute" name="execute-{{ i }}" [disabled]="isDisabled">
         {{ "power.execute" | translate }}
       </mat-slide-toggle>
@@ -65,7 +63,6 @@
 <div *ngIf="viewMode === 'detail'">
   <div *ngFor="let option of power; let i = index" class="option-container">
     <ng-container *ngIf="option.tmf_function === 'Certification'">
-      <p>{{ option.tmf_function }}</p>
       <mat-slide-toggle [(ngModel)]="option.upload" name="upload-{{ i }}" [disabled]="isDisabled">
         {{ "power.upload" | translate }}
       </mat-slide-toggle>
@@ -74,7 +71,6 @@
       </mat-slide-toggle>
     </ng-container>
     <ng-container *ngIf="option.tmf_function === 'ProductOffering'">
-      <p>{{ option.tmf_function }}</p>
       <mat-slide-toggle [(ngModel)]="option.create" name="create-{{ i }}" disabled>
         {{ "power.create" | translate }}
       </mat-slide-toggle>
@@ -86,7 +82,6 @@
       </mat-slide-toggle>
     </ng-container>
     <ng-container *ngIf="option.tmf_function === 'Onboarding'">
-      <p>{{ option.tmf_function }}</p>
       <mat-slide-toggle [(ngModel)]="option.execute" name="execute-{{ i }}" disabled>
         {{ "power.execute" | translate }}
       </mat-slide-toggle>
