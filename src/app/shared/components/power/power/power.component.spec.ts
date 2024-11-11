@@ -41,6 +41,25 @@ describe('PowerComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should filter addedOptions on init', () => {
+    component.addedOptions = [
+      { tmf_function: 'Onboarding' },
+      { tmf_function: 'DomePlatform' },
+      { tmf_function: 'Certification' },
+      { tmf_function: 'ProductOffering' },
+      { tmf_function: 'random' }
+    ] as any;
+  
+    component.ngOnInit();
+
+    expect(component.addedOptions.length).toBe(3);
+    expect(component.addedOptions).toEqual([
+      { tmf_function: 'Onboarding' },
+      { tmf_function: 'Certification' },
+      { tmf_function: 'ProductOffering' }
+    ]);
+  });
+
   it('should not add an option if isDisabled is true', () => {
     component.isDisabled = true;
     component.selectedOption = 'TestOption';
