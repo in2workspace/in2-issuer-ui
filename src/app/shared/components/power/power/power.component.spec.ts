@@ -41,19 +41,17 @@ describe('PowerComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should filter addedOptions on init', () => {
-    component.addedOptions = [
+  it('should filter power on init', () => {
+    component.power = [
       { tmf_function: 'Onboarding' },
       { tmf_function: 'DomePlatform' },
       { tmf_function: 'Certification' },
       { tmf_function: 'ProductOffering' },
       { tmf_function: 'random' }
     ] as any;
-  
-    component.ngOnInit();
 
-    expect(component.addedOptions.length).toBe(3);
-    expect(component.addedOptions).toEqual([
+    expect(component._power.length).toBe(3);
+    expect(component._power).toEqual([
       { tmf_function: 'Onboarding' },
       { tmf_function: 'Certification' },
       { tmf_function: 'ProductOffering' }

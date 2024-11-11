@@ -21,7 +21,16 @@ export interface TempPower {
 export class PowerComponent implements OnInit{
   @Input() public isDisabled: boolean = false;
   @Input() public viewMode: 'create' | 'detail' = 'create';
-  @Input() public power: TempPower[] = [];
+  public _power: TempPower[] = [];
+  public get power(){
+    return this._power;
+  }
+  @Input() 
+  public set power(value:TempPower[]){
+    this._power = value.filter(option =>
+      ['Onboarding', 'ProductOffering', 'Certification'].includes(option.tmf_function)
+    );
+  }
   @Input() public addedOptions: TempPower[] = [];
   @Output() public addedOptionsChange = new EventEmitter<TempPower[]>();
   @Output() public selectedOptionChange = new EventEmitter<string>();
