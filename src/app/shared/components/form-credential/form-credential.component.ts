@@ -25,6 +25,7 @@ export class FormCredentialComponent implements OnInit {
   @Input() public hideButton: boolean = true;
   @Input() public role: string = "";
   @Input() public power: Power[] = [];
+  @Input() public credentialStatus: string = '';
   @Input() public credential: CredentialMandatee = {
     first_name: '',
     last_name: '',
@@ -118,6 +119,10 @@ export class FormCredentialComponent implements OnInit {
     return this.addedOptions.every(option =>
       option.execute || option.create || option.update || option.delete || option.upload
     );
+  }
+
+  public showReminderButton(){
+    return (this.credentialStatus === 'WITHDRAWN') || (this.credentialStatus === 'PEND_DOWNLOAD')
   }
 
   public submitCredential(): void {
