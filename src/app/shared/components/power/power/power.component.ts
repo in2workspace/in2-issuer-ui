@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 
 export interface TempPower {
   tmf_action: string | string[];
@@ -18,7 +18,7 @@ export interface TempPower {
   templateUrl: './power.component.html',
   styleUrls: ['./power.component.scss']
 })
-export class PowerComponent {
+export class PowerComponent implements OnInit{
   @Input() public isDisabled: boolean = false;
   @Input() public viewMode: 'create' | 'detail' = 'create';
   @Input() public power: TempPower[] = [];
@@ -30,6 +30,12 @@ export class PowerComponent {
   public selectedOption: string = '';
   public popupMessage: string = '';
   public isPopupVisible: boolean = false;
+
+  public ngOnInit(): void {
+    this.addedOptions = this.addedOptions.filter(option =>
+      ['Onboarding', 'ProductOffering', 'Certification'].includes(option.tmf_function)
+    );
+  }
 
   public addOption(): void {
     if (this.isDisabled) return;
