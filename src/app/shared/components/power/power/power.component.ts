@@ -18,7 +18,7 @@ export interface TempPower {
   templateUrl: './power.component.html',
   styleUrls: ['./power.component.scss']
 })
-export class PowerComponent implements OnInit{
+export class PowerComponent{
   @Input() public isDisabled: boolean = false;
   @Input() public viewMode: 'create' | 'detail' = 'create';
   public _power: TempPower[] = [];
@@ -39,12 +39,6 @@ export class PowerComponent implements OnInit{
   public selectedOption: string = '';
   public popupMessage: string = '';
   public isPopupVisible: boolean = false;
-
-  public ngOnInit(): void {
-    this.addedOptions = this.addedOptions.filter(option =>
-      ['Onboarding', 'ProductOffering', 'Certification'].includes(option.tmf_function)
-    );
-  }
 
   public addOption(): void {
     if (this.isDisabled) return;
