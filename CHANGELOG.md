@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - In home wallet section, QR and link were not set as env variable
-
+- In form credential, show Send reminder button only if VC status is WITHDRAWN or PEND_DOWNLOAD
 
 ## [1.0.1] - 2024-09-09
 
