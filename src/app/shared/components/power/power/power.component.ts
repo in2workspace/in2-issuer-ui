@@ -21,7 +21,7 @@ export interface TempPower {
 export class PowerComponent{
   @Input() public isDisabled: boolean = false;
   @Input() public viewMode: 'create' | 'detail' = 'create';
-  public _power: TempPower[] = [];
+  private _power: TempPower[] = [];
   public get power(){
     return this._power;
   }
