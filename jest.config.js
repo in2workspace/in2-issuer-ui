@@ -28,8 +28,6 @@ module.exports = {
       // '/src/app/app',
       // '/src/app/core/',
       // '/src/app/features/',
-      // '/src/app/features/(?!credencial-offer)',
-      // '/src/app/features/(?!credential-offer-onboarding)',
       // '/src/app/shared/',
     ]
    };

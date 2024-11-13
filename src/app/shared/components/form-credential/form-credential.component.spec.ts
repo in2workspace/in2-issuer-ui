@@ -203,6 +203,21 @@ describe('FormCredentialComponent', () => {
     expect(mockFormCredentialService.convertToTempPower).not.toHaveBeenCalled();
   });
 
+  it('should check if sendReminder should be shown according to VC status', ()=>{
+    component.credentialStatus = 'WITHDRAWN';
+    let showBtn = component.showReminderButton();
+    expect(showBtn).toBe(true);
+
+    component.credentialStatus = 'PEND_DOWNLOAD';
+    showBtn = component.showReminderButton();
+    expect(showBtn).toBe(true);
+
+    component.credentialStatus = 'VALID';
+    showBtn = component.showReminderButton();
+    expect(showBtn).toBe(false);
+
+  });
+
   it('should emit sendReminder event when triggerSendReminder is called', () => {
     const spy = jest.spyOn(component.sendReminder, 'emit');
     component.triggerSendReminder();

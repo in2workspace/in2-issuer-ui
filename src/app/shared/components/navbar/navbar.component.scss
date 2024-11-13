@@ -1,5 +1,6 @@
 @import "../../../../styles.scss";
 
+// todo repeated in home component
 .main-header {
   position: relative;
   top: 0;
@@ -12,7 +13,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 2rem;
+    padding: 0 16px;
     position: relative;
 
     .navbar-brand {
@@ -41,10 +42,6 @@
       align-items: baseline;
 
       .nav-item {
-        span {
-          padding-left: 0.5rem;
-        }
-
         mat-form-field {
           width: 6.625rem;
         }
@@ -59,9 +56,42 @@
           mat-icon {
             color: $White;
             margin-right: 0.5rem;
-            margin-left: 0.5rem;
+            margin-left: 1rem;
           }
 
+        }
+      }
+    }
+  }
+}
+
+@media(width < 768px){
+  .main-header{
+    .navbar{
+      .navbar-nav{
+        .nav-item{
+          .nav-link{
+            mat-icon{
+              margin-right: 0rem;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media(width < 481px){
+  .main-header{
+    .navbar{
+      .navbar-nav{
+        .nav-item{
+          .nav-link{
+            .user{
+              display:flex;
+            flex-direction: column;
+            }
+          }
         }
       }
     }

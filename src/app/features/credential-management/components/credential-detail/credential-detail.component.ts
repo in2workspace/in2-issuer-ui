@@ -10,7 +10,8 @@ import { CredentialProcedureService } from 'src/app/core/services/credential-pro
 export class CredentialDetailComponent implements OnInit {
   public credentialId: string | null = null;
   public credential: Credential | null = null;
-  public credentialData: CredentialData | null =null;
+  public credentialData: CredentialData | null = null;
+  public credentialStatus: string | null = null;
   public constructor(
     private route: ActivatedRoute,
     private credentialProcedureService: CredentialProcedureService
@@ -30,6 +31,7 @@ export class CredentialDetailComponent implements OnInit {
       next: (credentials: CredentialData) => {
         console.log(credentials)
         this.credential = credentials['credential'];
+        this.credentialStatus = credentials['credential_status'];
       },
       error: (error: any) => {
         console.error('Error fetching credential details', error);
