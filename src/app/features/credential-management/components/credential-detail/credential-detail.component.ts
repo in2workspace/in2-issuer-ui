@@ -10,7 +10,7 @@ import { CredentialProcedureService } from 'src/app/core/services/credential-pro
 export class CredentialDetailComponent implements OnInit {
   public credentialId: string | null = null;
   public credential: Credential | null = null;
-  public credentialData: CredentialData | null = null;//remove?
+  public credentialData: CredentialData | null = null;
   public credentialStatus: string | null = null;
   public constructor(
     private route: ActivatedRoute,
