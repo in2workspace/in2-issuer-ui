@@ -28,6 +28,7 @@ export class AuthService {
 
   public checkAuth(): Observable<boolean> {
     return this.oidcSecurityService.checkAuth().pipe(map(({ isAuthenticated, userData, accessToken }) => {
+      console.log("userdata " + userData);
       this.isAuthenticatedSubject.next(isAuthenticated);
       if (isAuthenticated) {
         this.userDataSubject.next(userData);
@@ -38,7 +39,7 @@ export class AuthService {
         const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
             return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
         }).join(''));
-    
+
         this.rol= JSON.parse(jsonPayload)['resource_access']['account-console']['roles'][0]
 
 
