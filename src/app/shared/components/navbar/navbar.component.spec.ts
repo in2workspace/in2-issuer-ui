@@ -76,8 +76,9 @@ describe('NavbarComponent', () => {
   });
 
   it('should initialize with username', () => {
-    const mockUserName = { first_name: 'Test', last_name: 'User' };
-    jest.spyOn(authService, 'getUserData').mockReturnValue(of(mockUserName));
+    const mockUserData = { first_name: 'Test', last_name: 'User' };
+    const mockUserName = 'Test User';
+    jest.spyOn(authService, 'getUserData').mockReturnValue(of(mockUserData));
 
     component.ngOnInit();
     fixture.detectChanges();
