@@ -76,8 +76,8 @@ describe('NavbarComponent', () => {
   });
 
   it('should initialize with username', () => {
-    const mockUserName = 'Test User';
-    jest.spyOn(authService, 'getEmailName').mockReturnValue(of(mockUserName));
+    const mockUserName = { first_name: 'Test', last_name: 'User' };
+    jest.spyOn(authService, 'getUserData').mockReturnValue(of(mockUserName));
 
     component.ngOnInit();
     fixture.detectChanges();
@@ -114,9 +114,9 @@ describe('NavbarComponent', () => {
 
   it('should call logout on click', () => {
     const logoutLink = fixture.nativeElement.querySelector('#logout-link');
-    
+
     logoutLink.click();
-    
+
     expect(component.logout).toHaveBeenCalled();
   });
 
@@ -133,12 +133,12 @@ describe('NavbarComponent', () => {
     component.userName = mockUserName;
     component.mandator = mockMandator;
     fixture.detectChanges();
-  
+
     const userNameElement: HTMLElement = fixture.nativeElement.querySelector('#username');
     const mandatorElement: HTMLElement = fixture.nativeElement.querySelector('#mandator');
-  
+
     expect(userNameElement.textContent).toContain(mockUserName);
     expect(mandatorElement.textContent).toContain(mockMandator.organization);
   });
-  
+
 });
