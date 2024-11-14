@@ -24,4 +24,8 @@ export class HomeComponent {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
+
+  public navigateToSection(sectionId: string): void {
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+  }
 }
