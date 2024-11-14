@@ -37,7 +37,7 @@ export class NavbarComponent implements OnInit {
     });
     this.authService.getUserData().subscribe(userData => {
       if (userData) {
-        this.userName = userData.first_name + ' ' + userData.last_name;
+        this.userName = userData.name;
       }
     });
   }

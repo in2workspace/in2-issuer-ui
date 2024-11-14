@@ -76,7 +76,7 @@ describe('NavbarComponent', () => {
   });
 
   it('should initialize with username', () => {
-    const mockUserData = { first_name: 'Test', last_name: 'User' };
+    const mockUserData = { name: 'Test User' };
     const mockUserName = 'Test User';
     jest.spyOn(authService, 'getUserData').mockReturnValue(of(mockUserData));
 
