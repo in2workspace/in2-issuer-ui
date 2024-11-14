@@ -10,8 +10,8 @@ class MockAuthService {
   getMandator() {
     return of(null);
   }
-  getEmailName() {
-    return of('User Name');
+  getUserData(){
+    return of(null);
   }
   logout() {
     return of(void 0);
