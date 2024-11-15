@@ -11,8 +11,8 @@ import { Mandator } from 'src/app/core/models/madator.interface';
 })
 export class NavbarComponent implements OnInit {
   @Input() public mandator: Mandator | null = null;
-  public userName: string = 'User Name';
-  public companyName: string = '';
+  public userName: string = '';
+  public organization: string = '';
   public languages = [
     { code: 'en', label: 'English' },
     { code: 'es', label: 'Español' },
@@ -30,14 +30,10 @@ export class NavbarComponent implements OnInit {
     this.translate.addLangs(['en', 'es', 'ca']);
     this.translate.setDefaultLang('en');
     this.selectedLanguage = this.translate.getDefaultLang();
-    this.authService.getMandator().subscribe(mandator => {
-      if (mandator) {
-        this.mandator = mandator;
-      }
-    });
     this.authService.getUserData().subscribe(userData => {
       if (userData) {
-        this.userName = `${userData.name}\n${userData.organization || ''}`;
+        this.userName = userData.name;
+        this.organization = userData.organization;
       }
     });
   }

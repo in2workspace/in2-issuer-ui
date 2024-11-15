@@ -7,9 +7,6 @@ import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 
 class MockAuthService {
-  getMandator() {
-    return of(null);
-  }
   getUserData(){
     return of(null);
   }
@@ -65,25 +62,15 @@ describe('NavbarComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize with mandator', () => {
-    const mockMandator = { name: 'Test Mandator' };
-    jest.spyOn(authService, 'getMandator').mockReturnValue(of(mockMandator));
-
-    component.ngOnInit();
-    fixture.detectChanges();
-
-    expect(component.mandator).toEqual(mockMandator);
-  });
-
   it('should initialize with username and organization', () => {
     const mockUserData = { name: 'Test User', organization: 'Test Organization' };
-    const mockUserName = 'Test User\nTest Organization';
     jest.spyOn(authService, 'getUserData').mockReturnValue(of(mockUserData));
 
     component.ngOnInit();
     fixture.detectChanges();
 
-    expect(component.userName).toEqual(mockUserName);
+    expect(component.userName).toEqual(mockUserData.name);
+    expect(component.organization).toEqual(mockUserData.organization);
   });
 
 
@@ -123,24 +110,19 @@ describe('NavbarComponent', () => {
   });
 
   it('should display the correct username and mandator', () => {
-    const mockUserName = 'Test User';
-    const mockMandator = {
+    const mockUserData = {
       organization: 'Test Organization',
-      organizationIdentifier: '12345',
-      commonName: 'Test Common Name',
-      emailAddress: 'test@test.com',
-      serialNumber: 'SN123456',
-      country: 'ES'
+      name: 'Test User'
     };
-    component.userName = mockUserName;
-    component.mandator = mockMandator;
+    component.userName = mockUserData.name;
+    component.organization = mockUserData.organization;
     fixture.detectChanges();
 
     const userNameElement: HTMLElement = fixture.nativeElement.querySelector('#username');
-    const mandatorElement: HTMLElement = fixture.nativeElement.querySelector('#mandator');
+    const organizationElement: HTMLElement = fixture.nativeElement.querySelector('#organization');
 
-    expect(userNameElement.textContent).toContain(mockUserName);
-    expect(mandatorElement.textContent).toContain(mockMandator.organization);
+    expect(userNameElement.textContent).toContain(mockUserData.name);
+    expect(organizationElement.textContent).toContain(mockUserData.organization);
   });
 
 });
