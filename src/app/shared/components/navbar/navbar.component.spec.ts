@@ -7,11 +7,8 @@ import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 
 class MockAuthService {
-  getMandator() {
+  getUserData(){
     return of(null);
-  }
-  getEmailName() {
-    return of('User Name');
   }
   logout() {
     return of(void 0);
@@ -65,25 +62,17 @@ describe('NavbarComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize with mandator', () => {
-    const mockMandator = { name: 'Test Mandator' };
-    jest.spyOn(authService, 'getMandator').mockReturnValue(of(mockMandator));
+  it('should initialize with username and organization', () => {
+    const mockUserData = { name: 'Test User', organization: 'Test Organization' };
+    jest.spyOn(authService, 'getUserData').mockReturnValue(of(mockUserData));
 
     component.ngOnInit();
     fixture.detectChanges();
 
-    expect(component.mandator).toEqual(mockMandator);
+    expect(component.userName).toEqual(mockUserData.name);
+    expect(component.organization).toEqual(mockUserData.organization);
   });
 
-  it('should initialize with username', () => {
-    const mockUserName = 'Test User';
-    jest.spyOn(authService, 'getEmailName').mockReturnValue(of(mockUserName));
-
-    component.ngOnInit();
-    fixture.detectChanges();
-
-    expect(component.userName).toEqual(mockUserName);
-  });
 
   it('should initialize with default language', () => {
     component.ngOnInit();
@@ -114,31 +103,26 @@ describe('NavbarComponent', () => {
 
   it('should call logout on click', () => {
     const logoutLink = fixture.nativeElement.querySelector('#logout-link');
-    
+
     logoutLink.click();
-    
+
     expect(component.logout).toHaveBeenCalled();
   });
 
   it('should display the correct username and mandator', () => {
-    const mockUserName = 'Test User';
-    const mockMandator = {
+    const mockUserData = {
       organization: 'Test Organization',
-      organizationIdentifier: '12345',
-      commonName: 'Test Common Name',
-      emailAddress: 'test@test.com',
-      serialNumber: 'SN123456',
-      country: 'ES'
+      name: 'Test User'
     };
-    component.userName = mockUserName;
-    component.mandator = mockMandator;
+    component.userName = mockUserData.name;
+    component.organization = mockUserData.organization;
     fixture.detectChanges();
-  
+
     const userNameElement: HTMLElement = fixture.nativeElement.querySelector('#username');
-    const mandatorElement: HTMLElement = fixture.nativeElement.querySelector('#mandator');
-  
-    expect(userNameElement.textContent).toContain(mockUserName);
-    expect(mandatorElement.textContent).toContain(mockMandator.organization);
+    const organizationElement: HTMLElement = fixture.nativeElement.querySelector('#organization');
+
+    expect(userNameElement.textContent).toContain(mockUserData.name);
+    expect(organizationElement.textContent).toContain(mockUserData.organization);
   });
-  
+
 });
