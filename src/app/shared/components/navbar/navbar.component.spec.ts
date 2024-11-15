@@ -75,9 +75,9 @@ describe('NavbarComponent', () => {
     expect(component.mandator).toEqual(mockMandator);
   });
 
-  it('should initialize with username', () => {
-    const mockUserData = { name: 'Test User' };
-    const mockUserName = 'Test User';
+  it('should initialize with username and organization', () => {
+    const mockUserData = { name: 'Test User', organization: 'Test Organization' };
+    const mockUserName = 'Test User\nTest Organization';
     jest.spyOn(authService, 'getUserData').mockReturnValue(of(mockUserData));
 
     component.ngOnInit();
@@ -85,6 +85,7 @@ describe('NavbarComponent', () => {
 
     expect(component.userName).toEqual(mockUserName);
   });
+
 
   it('should initialize with default language', () => {
     component.ngOnInit();
