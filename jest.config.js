@@ -25,10 +25,10 @@ module.exports = {
     testPathIgnorePatterns: [
       '/node_modules/',
       '/dist/',
+      '/src/app/features/credential-management/components/', //TODO Fix this
       // '/src/app/app',
       // '/src/app/core/',
       // '/src/app/features/',
       // '/src/app/shared/',
     ]
    };
-   

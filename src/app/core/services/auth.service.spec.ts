@@ -31,7 +31,7 @@ describe('AuthService', () => {
         { provide: OidcSecurityService, useValue: oidcSecurityService }
       ]
     });
-    
+
     service = TestBed.inject(AuthService);
     Object.defineProperty(window, 'localStorage', {
       value: {
@@ -49,25 +49,38 @@ describe('AuthService', () => {
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
-  
+
   it('should call authorize on OidcSecurityService when login is called', () => {
     service.login();
     expect(oidcSecurityService.authorize).toHaveBeenCalled();
   });
-  
+
     it('should set isAuthenticatedSubject based on OidcSecurityService checkAuth response', done => {
       const dummyToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQtY29uc29sZSI6eyJyb2xlcyI6WyJhZG1pbiJdfX0sImlhdCI6MTUxNjIzOTAyMn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
       const authResponse = {
         ...mockAuthResponse,
         isAuthenticated: true,
         accessToken: dummyToken,
+        userData: {
+          vc: {
+            credentialSubject: {
+              mandate: {
+                power: [{ tmf_function: 'Onboarding', tmf_action: 'Execute' }]
+              }
+            }
+          }
+        }
       };
       oidcSecurityService.checkAuth.mockReturnValue(of(authResponse));
-    
-      service.checkAuth().subscribe(isAuthenticated => {
-        expect(isAuthenticated).toBeTruthy();
-        service.isLoggedIn().subscribe(isLoggedIn => {
-          expect(isLoggedIn).toBeTruthy();
+
+      service.handleLoginCallback();
+
+      service.isLoggedIn().subscribe(isLoggedIn => {
+        expect(isLoggedIn).toBeTruthy();
+
+        service.getToken().subscribe(token => {
+          expect(token).toEqual(dummyToken);
+          expect(service.getUserPowers()).toContainEqual({ tmf_function: 'Onboarding', tmf_action: 'Execute' });
           done();
         });
       });
@@ -86,28 +99,48 @@ describe('AuthService', () => {
     });
   });
 
-  it('should handle login callback and update subjects accordingly', done => {
+  it('should handle login callback, update subjects accordingly, and check for onboarding power', done => {
     const authResponse = {
       ...mockAuthResponse,
-      isAuthenticated: true
+      isAuthenticated: true,
+      userData: {
+        vc: {
+          credentialSubject: {
+            mandate: {
+              power: [
+                { tmf_function: 'Onboarding',tmf_action: 'Execute' }
+              ]
+            }
+          }
+        },
+        organizationIdentifier: 'Org123',
+        organization: 'Test Organization',
+        commonName: 'Test User',
+        emailAddress: 'testuser@example.com',
+        serialNumber: '123456',
+        country: 'Testland'
+      },
+      accessToken: 'mockAccessToken'
     };
+
     oidcSecurityService.checkAuth.mockReturnValue(of(authResponse));
 
     service.handleLoginCallback();
+
     service.isLoggedIn().subscribe(isLoggedIn => {
-      expect(isLoggedIn).toBeTruthy();
+      expect(isLoggedIn).toBeTruthy(); // Debe estar autenticado
       service.getUserData().subscribe(userData => {
-        expect(userData).toEqual(authResponse.userData);
+        expect(userData).toEqual(authResponse.userData); // Los datos del usuario deben coincidir
         service.getToken().subscribe(token => {
-          expect(token).toEqual(authResponse.accessToken);
-          service.getEmailName().subscribe(emailName => {
-            expect(emailName).toEqual('');
-            done();
-          });
+          expect(token).toEqual(authResponse.accessToken); // El token debe coincidir
+          // Verifica que los poderes del usuario se han almacenado correctamente
+          expect(service.getUserPowers()).toContainEqual({ tmf_function: 'Onboarding',tmf_action: 'Execute' });
+          done();
         });
       });
     });
   });
+
 
   it('should log a message if authentication fails or is not completed', done => {
     jest.spyOn(console, 'log');

@@ -18,6 +18,7 @@ export class CredentialManagementComponent implements AfterViewInit {
   public displayedColumns: string[] = ['status', 'full_name', 'updated'];
   public dataSource = new MatTableDataSource<CredentialProcedure>();
   public rol = "";
+  public isValidOrganizationIdentifier = false;
   public constructor(
     private credentialProcedureService: CredentialProcedureService,
     private authService: AuthService,
@@ -41,22 +42,23 @@ export class CredentialManagementComponent implements AfterViewInit {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.rol = this.authService.getRol();
+    this.isValidOrganizationIdentifier = this.authService.hasIn2OrganizationIdentifier()
     this.loadCredentialData();
 
     this.dataSource.sortingDataAccessor = (item: CredentialProcedure, property: string) => {
       switch (property) {
-        case 'status': 
+        case 'status':
           return item.credential_procedure.status.toLowerCase();
-        case 'full_name': 
+        case 'full_name':
           return item.credential_procedure.full_name.toLowerCase();
-        case 'updated': 
+        case 'updated':
           return item.credential_procedure.updated.toLowerCase();
-        default: 
+        default:
           return '';
       }
     };
 
-    if (this.rol === 'local-signer') {
+    if (this.isValidOrganizationIdentifier) {
       this.displayedColumns.push('actions');
     }
   }
@@ -75,9 +77,10 @@ export class CredentialManagementComponent implements AfterViewInit {
 
   public createNewCredential(): void {
     this.router.navigate(['/organization/credentials/create']);
-  }  
-  
+  }
+
   public createNewCredential2(): void {
+    //TODO Change rol
     this.router.navigate(['/organization/credentials/create2',this.rol]);
   }
 

@@ -14,14 +14,14 @@
       (change)="onHandleSelectChange($event)"
     >
       <option *ngIf="!selectedOption" [ngValue]="null" disabled selected>Select an option</option>
-      <option value="Onboarding">{{ "power.onboarding" | translate }}</option>
+      <option *ngIf="organizationIdentifierIsIn2" value="Onboarding">{{ "power.onboarding" | translate }}</option>
       <option value="ProductOffering">{{ "power.productoffer" | translate }}</option>
       <option value="Certification">{{ "power.certification" | translate }}</option>
     </select>
     <button
       class="add-option-btn"
       [disabled]="isDisabled || !selectedOption"
-      (click)="addOption()" 
+      (click)="addOption()"
       type="button"
     >
       {{ "power.add" | translate }}
@@ -52,7 +52,7 @@
           {{ "power.delete" | translate }}
         </mat-slide-toggle>
       </ng-container>
-      <ng-container *ngIf="option.tmf_function === 'Onboarding'">
+      <ng-container *ngIf="option.tmf_function === 'Onboarding' && organizationIdentifierIsIn2">
         <mat-slide-toggle [(ngModel)]="option.execute" name="execute-{{ i }}" [disabled]="isDisabled">
           {{ "power.execute" | translate }}
         </mat-slide-toggle>
@@ -84,7 +84,7 @@
           {{ "power.delete" | translate }}
         </mat-slide-toggle>
       </ng-container>
-      <ng-container *ngIf="option.tmf_function === 'Onboarding'">
+      <ng-container *ngIf="option.tmf_function === 'Onboarding' && organizationIdentifierIsIn2">
         <mat-slide-toggle [(ngModel)]="option.execute" name="execute-{{ i }}" disabled>
           {{ "power.execute" | translate }}
         </mat-slide-toggle>

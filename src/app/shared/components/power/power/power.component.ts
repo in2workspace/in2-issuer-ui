@@ -1,4 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import {AuthService} from "../../../../core/services/auth.service";
 
 export interface TempPower {
   tmf_action: string | string[];
@@ -30,6 +31,13 @@ export class PowerComponent {
   public selectedOption: string = '';
   public popupMessage: string = '';
   public isPopupVisible: boolean = false;
+  public organizationIdentifierIsIn2: boolean = false;
+
+  constructor(private authService: AuthService) {}
+
+  ngOnInit(): void {
+    this.organizationIdentifierIsIn2 = this.authService.hasIn2OrganizationIdentifier();
+  }
 
   public addOption(): void {
     if (this.isDisabled) return;
@@ -40,6 +48,10 @@ export class PowerComponent {
     }
     if (!this.selectedOption) {
       this.showPopup('Please select an option.');
+      return;
+    }
+
+    if (this.selectedOption === 'Onboarding' && !this.organizationIdentifierIsIn2) {
       return;
     }
 

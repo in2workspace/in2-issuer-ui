@@ -6,11 +6,16 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { MaterialModule } from 'src/app/material.module';
+import { AuthService} from "../../../../core/services/auth.service";
 
 describe('PowerComponent', () => {
   let component: PowerComponent;
   let fixture: ComponentFixture<PowerComponent>;
   let debugElement: DebugElement;
+
+  const mockAuthService = {
+    hasIn2OrganizationIdentifier: jest.fn().mockReturnValue(true),
+  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -21,6 +26,9 @@ describe('PowerComponent', () => {
         BrowserAnimationsModule,
         MaterialModule,
         RouterModule.forRoot([]),
+      ],
+      providers: [
+        { provide: AuthService, useValue: mockAuthService },
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
@@ -39,6 +47,40 @@ describe('PowerComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should call hasIn2OrganizationIdentifier on ngOnInit', () => {
+    const spy = jest.spyOn(mockAuthService, 'hasIn2OrganizationIdentifier');
+    component.ngOnInit();
+    expect(spy).toHaveBeenCalled();
+    expect(component.organizationIdentifierIsIn2).toBe(true);
+  });
+
+  it('should not add "Onboarding" option if organizationIdentifierIsIn2 is false', () => {
+    mockAuthService.hasIn2OrganizationIdentifier.mockReturnValue(false);
+    component.ngOnInit();
+
+    component.isDisabled = false;
+    component.selectedOption = 'Onboarding';
+    const initialOptionsLength = component.addedOptions.length;
+
+    component.addOption();
+
+    expect(component.addedOptions.length).toBe(initialOptionsLength);
+  });
+
+  it('should add "Onboarding" option if organizationIdentifierIsIn2 is true', () => {
+    mockAuthService.hasIn2OrganizationIdentifier.mockReturnValue(true);
+    component.ngOnInit();
+
+    component.isDisabled = false;
+    component.selectedOption = 'Onboarding';
+
+    component.addOption();
+
+    expect(component.addedOptions.length).toBe(1);
+    expect(component.addedOptions[0].tmf_function).toBe('Onboarding');
+    expect(component.addedOptions[0].execute).toBe(false);
   });
 
   it('should not add an option if isDisabled is true', () => {
