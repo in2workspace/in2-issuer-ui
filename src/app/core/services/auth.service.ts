@@ -52,8 +52,15 @@ export class AuthService {
   }
 
   private extractUserPowers(userData: any): any[] {
-    return userData.vc?.credentialSubject?.mandate?.power || [];
+    try {
+      const vcObject = userData.vc ? JSON.parse(userData.vc) : null;
+      return vcObject?.credentialSubject?.mandate?.power || [];
+    } catch (error) {
+      console.error('Failed to parse vc or extract user powers:', error);
+      return [];
+    }
   }
+
 
   // POLICY: login_restriction_policy
   public hasOnboardingExecutePower(): boolean {
