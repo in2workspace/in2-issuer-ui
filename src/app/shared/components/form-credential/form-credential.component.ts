@@ -9,6 +9,7 @@ import { Country, CountryService } from './services/country.service';
 import { FormCredentialService } from './services/form-credential.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { PopupComponent } from '../popup/popup.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-form-credential',
@@ -60,7 +61,8 @@ export class FormCredentialComponent implements OnInit {
     private fb: FormBuilder,
     private countryService: CountryService,
     private formCredentialService: FormCredentialService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {
     this.countries = this.countryService.getCountries();
   }
@@ -137,6 +139,10 @@ export class FormCredentialComponent implements OnInit {
           this.popupComponent,
           this.resetForm.bind(this)
         );
+        this.router.navigate(['/organization/credentials']).then(() => {
+          window.scrollTo(0, 0);
+          location.reload();
+        });
       } else {
         this.popupMessage = "Each power must have at least one action selected.";
         this.isPopupVisible = true;
