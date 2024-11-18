@@ -17,7 +17,6 @@ export class CredentialManagementComponent implements AfterViewInit {
   @ViewChild(MatSort) public sort!: MatSort;
   public displayedColumns: string[] = ['status', 'full_name', 'updated'];
   public dataSource = new MatTableDataSource<CredentialProcedure>();
-  public rol = "";
   public isValidOrganizationIdentifier = false;
   public constructor(
     private credentialProcedureService: CredentialProcedureService,
@@ -41,7 +40,6 @@ export class CredentialManagementComponent implements AfterViewInit {
   public ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    this.rol = this.authService.getRol();
     this.isValidOrganizationIdentifier = this.authService.hasIn2OrganizationIdentifier()
     this.loadCredentialData();
 
@@ -79,9 +77,8 @@ export class CredentialManagementComponent implements AfterViewInit {
     this.router.navigate(['/organization/credentials/create']);
   }
 
-  public createNewCredential2(): void {
-    //TODO Change rol
-    this.router.navigate(['/organization/credentials/create2',this.rol]);
+  public createCredentialAsSigner(): void {
+    this.router.navigate(['/organization/credentials/create2',this.isValidOrganizationIdentifier ? "admin" : ""]);
   }
 
   public goToCredentialDetails(credential_procedures: CredentialProcedure): void {

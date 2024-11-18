@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AutoLoginPartialRoutesGuard } from 'angular-auth-oidc-client';
 import { CallbackComponent } from './features/callback/callback.component';
 import { CredentialOfferOnboardingComponent } from './features/credential-offer-onboarding/credential-offer-onboarding.component';
+import { OnboardingGuard} from "./core/guards/onboarding-guard";
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'home' },
@@ -16,7 +17,7 @@ const routes: Routes = [
       import(
         './features/credential-management/credential-management.module'
       ).then((m) => m.CredentialManagementModule),
-    canActivate: [AutoLoginPartialRoutesGuard],
+    canActivate: [AutoLoginPartialRoutesGuard,OnboardingGuard],
   },
   {
     path: 'organization/credentials/create',
@@ -24,7 +25,7 @@ const routes: Routes = [
       import('./features/credentialIssuance/credentialIssuance.module').then(
         (m) => m.CredentialIssuanceModule
       ),
-    canActivate: [AutoLoginPartialRoutesGuard],
+    canActivate: [AutoLoginPartialRoutesGuard,OnboardingGuard],
   },
   {
     path: 'organization/credentials/create2/:id',
@@ -32,21 +33,21 @@ const routes: Routes = [
       import('./features/credentialIssuanceAdmin/credentialIssuanceAdmin.module').then(
         (m) => m.CredentialIssuanceAdminModule
       ),
-    canActivate: [AutoLoginPartialRoutesGuard],
+    canActivate: [AutoLoginPartialRoutesGuard,OnboardingGuard],
   },
   {
     path: 'credential-offer',
     component:CredentialOfferOnboardingComponent,
-    
-      
-  },  
+
+
+  },
   {
     path: 'credential-offer-detail',
     loadChildren: () =>
       import('./features/credencial-offer/credencial-offer.module').then(
         (m) => m.CredencialOfferModule
       ),
-      
+
   },
   { path: 'callback', component: CallbackComponent },
   { path: '**', redirectTo: 'home' }

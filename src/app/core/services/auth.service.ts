@@ -11,10 +11,9 @@ export class AuthService {
   public isAuthenticated$: Observable<boolean>;
   private isAuthenticatedSubject: BehaviorSubject<boolean>;
   private userDataSubject: BehaviorSubject<any>;
-  private tokenSubject: BehaviorSubject<string>;
+  private tokenSubject: BehaviorSubject<string>; //TODO es necesario?¿
   private mandatorSubject: BehaviorSubject<any>;
   private emailSubject: BehaviorSubject<string>;
-  private rol="";
   private userPowers: any[] = [];
 
   public constructor(private oidcSecurityService: OidcSecurityService, private router: Router) {
@@ -34,24 +33,7 @@ export class AuthService {
 
       if (isAuthenticated) {
         this.userPowers = this.extractUserPowers(userData);
-        const hasOnboardingPower = this.hasOnboardingExecutePower();
-
-        if (!hasOnboardingPower) {
-          throw new Error('Unauthorized: Missing OnBoarding power');
-        }
-
         this.userDataSubject.next(userData);
-        this.tokenSubject.next(accessToken);
-
-        const base64Url = this.tokenSubject.getValue().split('.')[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
-            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        }).join(''));
-        // TODO Delete rol management. Now policy management
-        this.rol= JSON.parse(jsonPayload)['resource_access']['account-console']['roles'][0]
-
-
 
         const mandator = {
           organizationIdentifier: userData.organizationIdentifier,
@@ -74,7 +56,7 @@ export class AuthService {
   }
 
   // POLICY: login_restriction_policy
-  private hasOnboardingExecutePower(): boolean {
+  public hasOnboardingExecutePower(): boolean {
     return this.userPowers.some((power: any) => {
       if (power.tmf_function === "Onboarding") {
         const action = power.tmf_action;
@@ -86,8 +68,8 @@ export class AuthService {
 
   // POLICY: user_powers_restriction_policy
   public hasIn2OrganizationIdentifier() : boolean {
-    const userData = this.userDataSubject.getValue(); // Obtener los datos del usuario del BehaviorSubject
-    return "VATEU-B99999999" === userData.vc?.credentialSubject?.mandator?.organizationIdentifier;
+    const userData = this.userDataSubject.getValue();
+    return "VATEU-B99999999" === userData.organizationIdentifier;
   }
 
   public getMandator(): Observable<any> {
@@ -140,9 +122,7 @@ export class AuthService {
   public getToken(): Observable<string> {
     return this.tokenSubject.asObservable();
   }
-  public getRol(): any{
-    return this.rol;
-  }
+
   public getUserPowers() {
     return this.userPowers;
   }
