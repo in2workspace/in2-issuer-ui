@@ -78,7 +78,7 @@ export class AuthService {
   // POLICY: user_powers_restriction_policy
   public hasIn2OrganizationIdentifier() : boolean {
     const userData = this.userDataSubject.getValue();
-    if ("VATEU-B99999999" === userData.organizationIdentifier) {
+    if ("VATES-B60645900" === userData.organizationIdentifier) {
       console.info('AuthService -- hasIn2OrganizationIdentifier -- IN2 Organization Identifier found!');
       return true
     }
