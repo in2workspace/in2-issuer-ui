@@ -67,8 +67,10 @@ export class AuthService {
     return this.userPowers.some((power: any) => {
       if (power.tmf_function === "Onboarding") {
         const action = power.tmf_action;
+        console.info('AuthService -- hasOnboardingExecutePower -- Onboarding power!');
         return action === "Execute" || (Array.isArray(action) && action.includes("Execute"));
       }
+      console.error('AuthService -- hasOnboardingExecutePower -- NOT Onboarding power!');
       return false;
     });
   }
@@ -76,7 +78,12 @@ export class AuthService {
   // POLICY: user_powers_restriction_policy
   public hasIn2OrganizationIdentifier() : boolean {
     const userData = this.userDataSubject.getValue();
-    return "VATEU-B99999999" === userData.organizationIdentifier;
+    if ("VATEU-B99999999" === userData.organizationIdentifier) {
+      console.info('AuthService -- hasIn2OrganizationIdentifier -- IN2 Organization Identifier found!');
+      return true
+    }
+    console.error('AuthService -- hasIn2OrganizationIdentifier -- NOT IN2 Organization Identifier found!');
+    return false;
   }
 
   public getMandator(): Observable<any> {
