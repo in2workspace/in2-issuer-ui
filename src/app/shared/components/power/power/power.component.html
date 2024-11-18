@@ -16,7 +16,7 @@
       <option *ngIf="!selectedOption" [ngValue]="null" disabled selected>Select an option</option>
       <option *ngIf="organizationIdentifierIsIn2" value="Onboarding">{{ "power.onboarding" | translate }}</option>
       <option value="ProductOffering">{{ "power.productoffer" | translate }}</option>
-      <option value="Certification">{{ "power.certification" | translate }}</option>
+      <option *ngIf="organizationIdentifierIsIn2" value="Certification">{{ "power.certification" | translate }}</option>
     </select>
     <button
       class="add-option-btn"
@@ -41,7 +41,7 @@
           {{ "power.attest" | translate }}
         </mat-slide-toggle>
       </ng-container>
-      <ng-container *ngIf="option.tmf_function === 'ProductOffering'">
+      <ng-container *ngIf="option.tmf_function === 'ProductOffering' && organizationIdentifierIsIn2">
         <mat-slide-toggle [(ngModel)]="option.create" name="create-{{ i }}" [disabled]="isDisabled">
           {{ "power.create" | translate }}
         </mat-slide-toggle>
@@ -65,7 +65,7 @@
   <div *ngFor="let option of power; let i = index" class="option-container">
     <p>{{ option.tmf_function }}</p>
     <div class="toggle-container">
-      <ng-container *ngIf="option.tmf_function === 'Certification'">
+      <ng-container *ngIf="option.tmf_function === 'Certification' && organizationIdentifierIsIn2">
         <mat-slide-toggle [(ngModel)]="option.upload" name="upload-{{ i }}" [disabled]="isDisabled">
           {{ "power.upload" | translate }}
         </mat-slide-toggle>
