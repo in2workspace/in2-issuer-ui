@@ -55,6 +55,10 @@ export class PowerComponent {
       return;
     }
 
+    if (this.selectedOption === 'Certification' && !this.organizationIdentifierIsIn2) {
+      return;
+    }
+
     const newOption: TempPower = {
       tmf_action: '',
       tmf_domain: 'DOME',
