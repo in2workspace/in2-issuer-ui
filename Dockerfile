@@ -1,7 +1,7 @@
 #################
 # Build the app #
 #################
-FROM node:23.1.0-alpine AS build
+FROM node:20-alpine AS build
 
 WORKDIR /app
 COPY package.json package-lock.json ./
@@ -18,7 +18,6 @@ RUN ng build --configuration production --output-path=/dist
 ################
 FROM  nginxinc/nginx-unprivileged:stable-alpine
 COPY /nginx-custom.conf /etc/nginx/conf.d/default.conf
-
 
 COPY --from=build /dist /usr/share/nginx/html
 
