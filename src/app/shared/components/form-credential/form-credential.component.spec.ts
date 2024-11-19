@@ -32,6 +32,12 @@ const mockPowers: Power[] = [
   { tmf_action: 'action1', tmf_domain: 'domain1', tmf_function: 'function1', tmf_type: 'type1' },
   { tmf_action: 'action2', tmf_domain: 'domain2', tmf_function: 'function2', tmf_type: 'type2' }
 ];
+const countries: any[] = [
+  {name:'Spain'},
+  {name:'Finland'},
+  {name:'France'},
+  {name:'Portugal'}
+];
 
 describe('FormCredentialComponent', () => {
   let component: FormCredentialComponent;
@@ -60,7 +66,7 @@ describe('FormCredentialComponent', () => {
     } as jest.Mocked<FormCredentialService>;
 
     mockCountryService = {
-      getCountries: jest.fn()
+      getCountries: jest.fn().mockReturnValue(countries)
     };
     mockAuthService = {
       getMandator:()=> of(null),
@@ -97,6 +103,8 @@ describe('FormCredentialComponent', () => {
     fixture = TestBed.createComponent(FormCredentialComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+
+    jest.spyOn(component, 'sortItemsByName');
   });
 
   afterEach(() => {
@@ -130,6 +138,12 @@ describe('FormCredentialComponent', () => {
     expect(emailControl?.valid).toBeFalsy();
     emailControl?.setValue('test@example.com');
     expect(emailControl?.valid).toBeTruthy();
+  });
+
+  it('should get countries from service and sort them alphabetically', ()=>{
+    component.ngOnInit();
+    expect(mockCountryService.getCountries).toHaveBeenCalled();
+    expect(component.countries).toEqual([{name:'Finland'}, {name:'France'}, {name:'Portugal'}, {name:'Spain'}]);
   });
 
   it('should set mandator and signer correctly if mandator is returned', (done) => {
@@ -375,6 +389,12 @@ describe('FormCredentialComponent', () => {
     component.mobilePhone = '+34 987654321';
   
     expect(component.credential.mobile_phone).toBe('987654321');
+  });
+
+  it('should sort items by name', ()=>{
+    const unsortedArray = [{name:'Carla'}, {name:'Anna'}, {name:'Berta'}, {name:'Clara'}];
+    const sortedArray = component.sortItemsByName(unsortedArray);
+    expect(sortedArray).toEqual([{name:'Anna'}, {name:'Berta'}, {name:'Carla'}, {name:'Clara'}]);
   });
   
   

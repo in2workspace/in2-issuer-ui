@@ -11,7 +11,7 @@
     "firstnameid": "First name",
     "last_name": "Last name",
     "email": "Email address",
-    "mobile_phone": " mobile phone"
+    "mobile_phone": "Mobile phone"
   },
   "credentialDetail": {
     "credentialDetail": "Credential detail",
