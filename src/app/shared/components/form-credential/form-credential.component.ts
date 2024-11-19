@@ -11,12 +11,17 @@ import { AuthService } from 'src/app/core/services/auth.service';
 import { PopupComponent } from '../popup/popup.component';
 import { Router } from '@angular/router';
 
+export interface objectWithName{
+  name:string
+}
+
 @Component({
   selector: 'app-form-credential',
   templateUrl: './form-credential.component.html',
   styleUrls: ['./form-credential.component.scss'],
 })
 export class FormCredentialComponent implements OnInit {
+  
   @ViewChild(PopupComponent) public popupComponent!: PopupComponent;
   @ViewChild('formDirective') public formDirective!: FormGroupDirective;
   @Output() public sendReminder = new EventEmitter<void>();
@@ -34,7 +39,6 @@ export class FormCredentialComponent implements OnInit {
     email: '',
     mobile_phone: '',
   };
-  public signer : any ={};
   @Input() public mandator: Mandator = {
     organizationIdentifier: "",
     organization: "",
@@ -43,6 +47,9 @@ export class FormCredentialComponent implements OnInit {
     serialNumber: "",
     country: "",
   }
+  public signer : any ={};
+
+  
 
   public selectedOption = '';
   public addedOptions: TempPower[] = [];
@@ -65,8 +72,10 @@ export class FormCredentialComponent implements OnInit {
     private authService: AuthService,
     private router: Router
   ) {
-    this.countries = this.countryService.getCountries();
+    const unsortedCountries = this.countryService.getCountries();
+    this.countries = this.sortItemsByName(unsortedCountries) as Country[];
   }
+  
 
   public get mobilePhone(): string {
     return `${this.selectedCountry} ${this.credential.mobile_phone}`;
@@ -75,6 +84,7 @@ export class FormCredentialComponent implements OnInit {
     const numberPart = value.replace(`${this.selectedCountry} `, '').trim();
     this.credential.mobile_phone = numberPart;
   }
+
 
   public ngOnInit(): void {
     this.credentialForm = this.fb.group({
@@ -166,6 +176,10 @@ export class FormCredentialComponent implements OnInit {
     this.sendReminder.emit();
   }
 
+  public sortItemsByName(items:objectWithName[]): objectWithName[] {
+    return [...items].sort((a, b) => a.name.localeCompare(b.name));
+  }
+
   private resetForm(): void {
     this.credential = this.formCredentialService.resetForm();
     this.formDirective.resetForm();
@@ -183,4 +197,8 @@ export class FormCredentialComponent implements OnInit {
       }
     });
   }
+
+  
+
+
 }
