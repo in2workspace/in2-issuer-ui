@@ -10,7 +10,7 @@ COPY angular.json angular.json
 COPY tsconfig.json tsconfig.json
 COPY tsconfig.app.json tsconfig.app.json
 COPY tsconfig.spec.json tsconfig.spec.json
-RUN npm install -g --force --ignore-scripts @angular/cli
+RUN npm ci -g --force --ignore-scripts @angular/cli
 RUN ng build --configuration production --output-path=/dist
 
 ################
