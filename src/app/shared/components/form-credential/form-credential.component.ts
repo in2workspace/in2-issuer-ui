@@ -128,8 +128,9 @@ export class FormCredentialComponent implements OnInit {
   }
 
   public submitCredential(): void {
-      if(this.addedOptions.length > 0 && this.hasSelectedPowers()){
-        this.formCredentialService.submitCredential(
+    if (this.addedOptions.length > 0 && this.hasSelectedPowers()) {
+      this.formCredentialService
+        .submitCredential(
           this.credential,
           this.selectedCountry,
           this.addedOptions,
@@ -138,16 +139,26 @@ export class FormCredentialComponent implements OnInit {
           this.credentialProcedureService,
           this.popupComponent,
           this.resetForm.bind(this)
-        );
-        this.router.navigate(['/organization/credentials']).then(() => {
-          window.scrollTo(0, 0);
-          location.reload();
+        )
+        .subscribe({
+          next: () => {
+            // Navigate after successful submission
+            this.router.navigate(['/organization/credentials']).then(() => {
+              window.scrollTo(0, 0); // Reset scroll position
+              location.reload(); // Refresh the page
+            });
+          },
+          error: (err) => {
+            this.popupMessage = 'Error occurred while submitting credential.';
+            this.isPopupVisible = true;
+            console.error(err);
+          }
         });
-      } else {
-        this.popupMessage = "Each power must have at least one action selected.";
-        this.isPopupVisible = true;
-        return;
-      }
+    } else {
+      this.popupMessage = 'Each power must have at least one action selected.';
+      this.isPopupVisible = true;
+      return;
+    }
   }
 
   public triggerSendReminder(): void {
