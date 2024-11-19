@@ -38,6 +38,12 @@ const countries: any[] = [
   {name:'France'},
   {name:'Portugal'}
 ];
+const sortedCountries: any[] = [
+  {name:'Finland'},
+  {name:'France'},
+  {name:'Portugal'},
+  {name:'Spain'}
+];
 
 describe('FormCredentialComponent', () => {
   let component: FormCredentialComponent;
@@ -66,7 +72,8 @@ describe('FormCredentialComponent', () => {
     } as jest.Mocked<FormCredentialService>;
 
     mockCountryService = {
-      getCountries: jest.fn().mockReturnValue(countries)
+      getCountries: jest.fn().mockReturnValue(countries),
+      getSortedCountries: jest.fn().mockReturnValue(sortedCountries)
     };
     mockAuthService = {
       getMandator:()=> of(null),
@@ -104,7 +111,7 @@ describe('FormCredentialComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
 
-    jest.spyOn(component, 'sortItemsByName');
+    jest.spyOn(mockCountryService, 'getSortedCountries');
   });
 
   afterEach(() => {
@@ -142,8 +149,8 @@ describe('FormCredentialComponent', () => {
 
   it('should get countries from service and sort them alphabetically', ()=>{
     component.ngOnInit();
-    expect(mockCountryService.getCountries).toHaveBeenCalled();
-    expect(component.countries).toEqual([{name:'Finland'}, {name:'France'}, {name:'Portugal'}, {name:'Spain'}]);
+    expect(mockCountryService.getSortedCountries).toHaveBeenCalled();
+    expect(component.countries).toEqual(sortedCountries);
   });
 
   it('should set mandator and signer correctly if mandator is returned', (done) => {
@@ -390,12 +397,5 @@ describe('FormCredentialComponent', () => {
   
     expect(component.credential.mobile_phone).toBe('987654321');
   });
-
-  it('should sort items by name', ()=>{
-    const unsortedArray = [{name:'Carla'}, {name:'Anna'}, {name:'Berta'}, {name:'Clara'}];
-    const sortedArray = component.sortItemsByName(unsortedArray);
-    expect(sortedArray).toEqual([{name:'Anna'}, {name:'Berta'}, {name:'Carla'}, {name:'Clara'}]);
-  });
-  
   
 });
