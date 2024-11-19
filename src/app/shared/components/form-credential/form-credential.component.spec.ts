@@ -1,4 +1,4 @@
-import { TempPower } from './../power/power/power.component';
+import { TempPower } from '../power/power/power.component';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -7,7 +7,7 @@ import { AlertService } from 'src/app/core/services/alert.service';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { CountryService } from './services/country.service';
 import { FormCredentialService } from './services/form-credential.service';
-import { CUSTOM_ELEMENTS_SCHEMA, inject } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterModule } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
@@ -183,7 +183,7 @@ describe('FormCredentialComponent', () => {
 
     component.ngOnInit();
 
-    expect(component.tempPowers).toEqual([]);;
+    expect(component.tempPowers).toEqual([]);
     expect(mockFormCredentialService.convertToTempPower).not.toHaveBeenCalled();
   });
 
