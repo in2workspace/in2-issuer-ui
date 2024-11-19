@@ -12,7 +12,7 @@ COPY tsconfig.json tsconfig.json
 COPY tsconfig.app.json tsconfig.app.json
 COPY tsconfig.spec.json tsconfig.spec.json
 RUN npm install --save-dev @angular/cli
-RUN ng build --configuration production --output-path=/dist
+RUN npx ng build --configuration production --output-path=/dist
 
 ################
 # Run in NGINX #
