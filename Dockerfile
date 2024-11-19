@@ -1,7 +1,7 @@
 #################
 # Build the app #
 #################
-FROM node:alpine AS build
+FROM node:23.1.0-alpine AS build
 
 WORKDIR /app
 COPY package.json package-lock.json ./
