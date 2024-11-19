@@ -23,7 +23,6 @@ export class FormCredentialComponent implements OnInit {
   @Input() public title: string = '';
   @Input() public showButton: boolean = false;
   @Input() public hideButton: boolean = true;
-  @Input() public role: string = "";
   @Input() public power: Power[] = [];
   @Input() public credentialStatus: string = '';
   @Input() public credential: CredentialMandatee = {
@@ -47,13 +46,12 @@ export class FormCredentialComponent implements OnInit {
   public tempPowers: TempPower[] = [];
   public countries: Country[] = [];
   public selectedCountry: string = '';
-  public actualMobilePhone: string = '';
   public credentialForm!: FormGroup;
 
   public popupMessage: string = '';
   public isPopupVisible: boolean = false;
 
-
+  public isValidOrganizationIdentifier = false;
 
   public constructor(
     private credentialProcedureService: CredentialProcedureService,
@@ -63,6 +61,7 @@ export class FormCredentialComponent implements OnInit {
     private authService: AuthService
   ) {
     this.countries = this.countryService.getCountries();
+    this.isValidOrganizationIdentifier = this.authService.hasIn2OrganizationIdentifier()
   }
 
   public get mobilePhone(): string {
@@ -85,7 +84,7 @@ export class FormCredentialComponent implements OnInit {
 
     this.authService.getMandator().subscribe(mandator2 => {
       if (mandator2) {
-        if(this.viewMode === "create" && this.role!=="admin"){
+        if(this.viewMode === "create" && this.isValidOrganizationIdentifier){
           this.mandator ={ 'organizationIdentifier': mandator2.organizationIdentifier,
             'organization': mandator2.organization,
             'commonName':mandator2.commonName,

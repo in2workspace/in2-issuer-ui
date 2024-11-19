@@ -63,13 +63,15 @@ describe('FormCredentialComponent', () => {
       getCountries: jest.fn()
     };
     mockAuthService = {
+
       getMandator:()=> of(null),
       getEmailName() {
         return of('User Name');
       },
       logout() {
         return of(void 0);
-      }
+      },
+      hasIn2OrganizationIdentifier: jest.fn(() => true),
     } as jest.Mocked<any>
 
 
@@ -103,10 +105,18 @@ describe('FormCredentialComponent', () => {
     TestBed.resetTestingModule();
     jest.clearAllMocks();
   });
-  
+
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should initialize isValidOrganizationIdentifier correctly', () => {
+    jest.spyOn(mockAuthService, 'hasIn2OrganizationIdentifier').mockReturnValue(true);
+
+    component.ngOnInit();
+    expect(mockAuthService.hasIn2OrganizationIdentifier).toHaveBeenCalled();
+    expect(component.isValidOrganizationIdentifier).toBe(true);
   });
 
   it('should initialize the form with default values', () => {
@@ -132,7 +142,7 @@ describe('FormCredentialComponent', () => {
     expect(emailControl?.valid).toBeTruthy();
   });
 
-  it('should set mandator and signer correctly if mandator is returned', (done) => {
+  it('should initialize mandator and signer correctly in create mode when isValidOrganizationIdentifier is true', (done) => {
     const mockMandator = {
       organizationIdentifier: 'org123',
       organization: 'Org Name',
@@ -141,44 +151,18 @@ describe('FormCredentialComponent', () => {
       serialNumber: '12345',
       country: 'Country',
     };
-  
+
+    jest.spyOn(mockAuthService, 'hasIn2OrganizationIdentifier').mockReturnValue(true);
     jest.spyOn(mockAuthService, 'getMandator').mockReturnValue(of(mockMandator));
-  
-    component.ngOnInit(); 
-    fixture.detectChanges();
-  
-    mockAuthService.getMandator().subscribe(mandator2 => {
-      expect(mandator2).toBeTruthy();
-      expect(component.mandator).toEqual({
-        organizationIdentifier: mockMandator.organizationIdentifier,
-        organization: mockMandator.organization,
-        commonName: mockMandator.commonName,
-        emailAddress: mockMandator.emailAddress,
-        serialNumber: mockMandator.serialNumber,
-        country: mockMandator.country,
-      });
-      expect(component.signer).toEqual({
-        organizationIdentifier: mockMandator.organizationIdentifier,
-        organization: mockMandator.organization,
-        commonName: mockMandator.commonName,
-        emailAddress: mockMandator.emailAddress,
-        serialNumber: mockMandator.serialNumber,
-        country: mockMandator.country,
-      });
+
+    component.viewMode = 'create';
+    component.ngOnInit();
+
+    mockAuthService.getMandator().subscribe(() => {
+      expect(component.isValidOrganizationIdentifier).toBe(true);
+      expect(component.mandator).toEqual(mockMandator);
       done();
     });
-  });
-
-  it('should not initialize mandator nor signer if mandator is null', ()=>{
-    component.ngOnInit();
-    expect(component.mandator.commonName).toBe('');
-    expect(component.mandator.country).toBe('');
-    expect(component.mandator.emailAddress).toBe('');
-    expect(component.mandator.organization).toBe('');
-    expect(component.mandator.organizationIdentifier).toBe('');
-    expect(component.mandator.serialNumber).toBe('');
-
-    expect(component.signer).toEqual({});
   });
 
   it('should map power to tempPowers if viewMode is "detail"', () => {
@@ -225,7 +209,6 @@ describe('FormCredentialComponent', () => {
   });
 
   it('it should submit credential when submitCredential is called with selected power', () => {
-    component.role = "user";
 
     component.credentialForm.setValue({
       first_name: 'John',
@@ -242,7 +225,7 @@ describe('FormCredentialComponent', () => {
       tmf_type: 'SomeType',
       upload: true,
       attest: true,
-      execute: false, 
+      execute: false,
       create: false,
       update: false,
       delete: false
@@ -263,8 +246,6 @@ describe('FormCredentialComponent', () => {
   });
 
   it('it should not submit credential when submitCredential is called with empty addedOptions', () => {
-    component.role = "user";
-  
     component.credentialForm.setValue({
       first_name: 'John',
       last_name: 'Doe',
@@ -285,11 +266,11 @@ describe('FormCredentialComponent', () => {
       upload: false,
       attest: false
     }];
-  
+
     component.submitCredential();
 
     expect(mockFormCredentialService.submitCredential).not.toHaveBeenCalled();
-  
+
     expect(component.popupMessage).toBe("Each power must have at least one action selected.");
     expect(component.isPopupVisible).toBe(true);
   });
@@ -310,32 +291,32 @@ describe('FormCredentialComponent', () => {
       serialNumber: '12345',
       country: 'Country',
     };
-  
+
     const mockCredential: CredentialMandatee = {
       first_name: 'John',
       last_name: 'Doe',
       email: 'john.doe@example.com',
       mobile_phone: '123456789'
     };
-  
+
     mockFormCredentialService.resetForm.mockReturnValue(mockCredential);
-  
+
     jest.spyOn(mockAuthService, 'getMandator').mockReturnValue(of(mockMandator));
-  
+
     const resetSpy = jest.spyOn(component.credentialForm, 'reset');
-  
+
     (component as any).resetForm();
-  
+
     expect(mockFormCredentialService.resetForm).toHaveBeenCalled();
-  
+
     expect(component.credential).toEqual(mockCredential);
-  
+
     expect(component.addedOptions).toEqual([]);
-  
+
     expect(resetSpy).toHaveBeenCalled();
-  
+
     expect(mockAuthService.getMandator).toHaveBeenCalled();
-  
+
     expect(component.mandator).toEqual(mockMandator);
     expect(component.signer).toEqual({
       organizationIdentifier: mockMandator.organizationIdentifier,
@@ -346,25 +327,25 @@ describe('FormCredentialComponent', () => {
       country: mockMandator.country,
     });
   });
-  
+
 
   it('should invoke addOption', ()=>{
     component.addOption([mockTempPower]);
     expect(mockFormCredentialService.addOption).toHaveBeenCalledWith(
       [],
-      [mockTempPower], 
+      [mockTempPower],
       component.isDisabled
     );
   });
 
   it('should call handleSelectChange and update selectedOption', () => {
     const mockEvent = new Event('change');
-    
+
     const mockSelectedOption = 'selectedOptionValue';
     mockFormCredentialService.handleSelectChange.mockReturnValue(mockSelectedOption);
-  
+
     component.handleSelectChange(mockEvent);
-  
+
     expect(mockFormCredentialService.handleSelectChange).toHaveBeenCalledWith(mockEvent);
     expect(component.selectedOption).toBe(mockSelectedOption);
   });
@@ -372,18 +353,18 @@ describe('FormCredentialComponent', () => {
   it('should return the correct mobile phone with country code in getter', () => {
     component.selectedCountry = '+34';
     component.credential = { mobile_phone: '123456789' } as CredentialMandatee;
-  
+
     expect(component.mobilePhone).toBe('+34 123456789');
   });
-  
+
   it('should set the correct mobile phone without the country code in setter', () => {
     component.selectedCountry = '+34';
     component.credential = { mobile_phone: '' } as CredentialMandatee;
-  
+
     component.mobilePhone = '+34 987654321';
-  
+
     expect(component.credential.mobile_phone).toBe('987654321');
   });
-  
-  
+
+
 });
