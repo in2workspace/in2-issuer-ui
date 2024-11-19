@@ -72,8 +72,7 @@ export class FormCredentialComponent implements OnInit {
     private authService: AuthService,
     private router: Router
   ) {
-    const unsortedCountries = this.countryService.getCountries();
-    this.countries = this.sortItemsByName(unsortedCountries) as Country[];
+    this.countries = this.countryService.getSortedCountries();
   }
   
 
@@ -176,10 +175,6 @@ export class FormCredentialComponent implements OnInit {
     this.sendReminder.emit();
   }
 
-  public sortItemsByName(items:objectWithName[]): objectWithName[] {
-    return [...items].sort((a, b) => a.name.localeCompare(b.name));
-  }
-
   private resetForm(): void {
     this.credential = this.formCredentialService.resetForm();
     this.formDirective.resetForm();
@@ -197,8 +192,5 @@ export class FormCredentialComponent implements OnInit {
       }
     });
   }
-
-  
-
 
 }

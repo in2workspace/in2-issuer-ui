@@ -66,4 +66,8 @@ export class CountryService {
   public getCountries(): Country[] {
     return this.countries;
   }
+
+  public getSortedCountries(): Country[] {
+    return [...this.countries].sort((a, b) => a.name.localeCompare(b.name));
+  }
 }
