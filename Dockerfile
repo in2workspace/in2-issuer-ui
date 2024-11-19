@@ -5,12 +5,13 @@ FROM node:20-alpine AS build
 
 WORKDIR /app
 COPY package.json package-lock.json ./
+RUN npm install
 COPY src src
 COPY angular.json angular.json
 COPY tsconfig.json tsconfig.json
 COPY tsconfig.app.json tsconfig.app.json
 COPY tsconfig.spec.json tsconfig.spec.json
-RUN npm ci -g --force --ignore-scripts @angular/cli
+RUN npm install --save-dev @angular/cli
 RUN ng build --configuration production --output-path=/dist
 
 ################
