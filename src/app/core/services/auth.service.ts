@@ -137,7 +137,4 @@ export class AuthService {
     return this.tokenSubject.asObservable();
   }
 
-  public getUserPowers() {
-    return this.userPowers;
-  }
 }

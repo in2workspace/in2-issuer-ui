@@ -29,7 +29,7 @@
   "scaner": {
     "textinformation": "Escaneo de la organización con su cartera para descargar la credencial"
   },
-  
+
   "credentialManagement": {
     "title": "List of issued credentials",
     "button": "New credential",
@@ -48,7 +48,7 @@
       "function": "Function",
       "onboarding": "Onboarding",
       "marketplace": "Marketplace",
-      "productoffer": "Product offer",
+      "productOffering": "ProductOffering",
       "certification": "Certification",
       "add": "Add",
       "execute": "Execute",
