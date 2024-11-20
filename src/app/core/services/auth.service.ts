@@ -35,25 +35,31 @@ export class AuthService {
         this.userPowers = this.extractUserPowers(userData);
         this.userDataSubject.next(userData);
 
+        const vcObject = this.extractVCFromUserData(userData)
+
         const mandator = {
-          organizationIdentifier: userData.vc.credentialSubject.mandate.mandator.organizationIdentifier,
-          organization: userData.vc.credentialSubject.mandate.mandator.organization,
-          commonName: userData.vc.credentialSubject.mandate.mandator.commonName,
-          emailAddress: userData.vc.credentialSubject.mandate.mandator.emailAddress,
-          serialNumber: userData.vc.credentialSubject.mandate.mandator.serialNumber,
-          country: userData.vc.credentialSubject.mandate.mandator.country
+          organizationIdentifier: vcObject.credentialSubject.mandate.mandator.organizationIdentifier,
+          organization: vcObject.credentialSubject.mandate.mandator.organization,
+          commonName: vcObject.credentialSubject.mandate.mandator.commonName,
+          emailAddress: vcObject.credentialSubject.mandate.mandator.emailAddress,
+          serialNumber: vcObject.credentialSubject.mandate.mandator.serialNumber,
+          country: vcObject.credentialSubject.mandate.mandator.country
         };
         this.mandatorSubject.next(mandator);
-        const emailName = userData.vc.credentialSubject.mandate.mandator.emailAddress.split('@')[0];
+        const emailName = vcObject.credentialSubject.mandate.mandator.emailAddress.split('@')[0];
         this.emailSubject.next(emailName);
       }
       return isAuthenticated;
     }));
   }
 
+  private extractVCFromUserData(userData: any) {
+    return userData.vc ? JSON.parse(userData.vc) : null;
+  }
+
   private extractUserPowers(userData: any): any[] {
     try {
-      const vcObject = userData.vc ? JSON.parse(userData.vc) : null;
+      const vcObject = this.extractVCFromUserData(userData)
       return vcObject?.credentialSubject?.mandate?.power || [];
     } catch (error) {
       console.error('Failed to parse vc or extract user powers:', error);
