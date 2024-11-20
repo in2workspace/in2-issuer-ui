@@ -7,7 +7,8 @@
     "serialNumber": "Serial number",
     "country": "Country",
     "select-country": "Select a country",
-    "no-country-error": "Please select a country with mobile phone"
+    "no-country-error": "Please select a phone prefix",
+    "phone-prefix": "Phone prefix"
   },
   "mandatee": {
     "firstnameid": "First name",

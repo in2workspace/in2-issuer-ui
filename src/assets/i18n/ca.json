@@ -7,7 +7,8 @@
     "serialNumber": "Número de sèrie",
     "country": "País",
     "select-country": "Selecciona un país",
-    "no-country-error": "Selecciona un país per al mòbil"
+    "no-country-error": "Selecciona un prefix",
+    "phone-prefix": "Prefix mòbil"
   },
   "mandatee": {
     "firstnameid": "ID del nom",

@@ -7,7 +7,8 @@
     "serialNumber": "Número de serie",
     "country": "País",
     "select-country": "Seleccione un país",
-    "no-country-error": "Seleccione un país para el móvil"
+    "no-country-error": "Seleccione un prefijo",
+    "phone-prefix": "Prefijo telefónico"
   },
   "mandatee": {
     "firstnameid": "ID del nombre",

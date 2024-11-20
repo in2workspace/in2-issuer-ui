@@ -3,14 +3,12 @@ import { RouterModule, Routes } from '@angular/router';
 import { AutoLoginPartialRoutesGuard } from 'angular-auth-oidc-client';
 import { CallbackComponent } from './features/callback/callback.component';
 import { CredentialOfferOnboardingComponent } from './features/credential-offer-onboarding/credential-offer-onboarding.component';
-import { FormCredentialComponent } from './shared/components/form-credential/form-credential.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'home' },
   {
     path: 'home',
-    // loadChildren: () => import('./features/home/home.module').then(m => m.HomeModule)
-    component:FormCredentialComponent
+    loadChildren: () => import('./features/home/home.module').then(m => m.HomeModule)
   },
   {
     path: 'organization/credentials',
