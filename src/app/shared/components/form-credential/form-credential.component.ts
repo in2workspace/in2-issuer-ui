@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
 import { CredentialMandatee } from 'src/app/core/models/credendentialMandatee.interface';
 import { Mandator } from 'src/app/core/models/madator.interface';
 import { Power } from 'src/app/core/models/power.interface';
@@ -9,6 +9,7 @@ import { Country, CountryService } from './services/country.service';
 import { FormCredentialService } from './services/form-credential.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { PopupComponent } from '../popup/popup.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-form-credential',
@@ -17,6 +18,7 @@ import { PopupComponent } from '../popup/popup.component';
 })
 export class FormCredentialComponent implements OnInit {
   @ViewChild(PopupComponent) public popupComponent!: PopupComponent;
+  @ViewChild('formDirective') public formDirective!: FormGroupDirective;
   @Output() public sendReminder = new EventEmitter<void>();
   @Input() public viewMode: 'create' | 'detail' = 'create';
   @Input() public isDisabled: boolean = false;
@@ -60,7 +62,8 @@ export class FormCredentialComponent implements OnInit {
     private fb: FormBuilder,
     private countryService: CountryService,
     private formCredentialService: FormCredentialService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {
     this.countries = this.countryService.getCountries();
   }
@@ -126,8 +129,9 @@ export class FormCredentialComponent implements OnInit {
   }
 
   public submitCredential(): void {
-      if(this.addedOptions.length > 0 && this.hasSelectedPowers()){
-        this.formCredentialService.submitCredential(
+    if (this.addedOptions.length > 0 && this.hasSelectedPowers()) {
+      this.formCredentialService
+        .submitCredential(
           this.credential,
           this.selectedCountry,
           this.addedOptions,
@@ -136,12 +140,26 @@ export class FormCredentialComponent implements OnInit {
           this.credentialProcedureService,
           this.popupComponent,
           this.resetForm.bind(this)
-        );
-      } else {
-        this.popupMessage = "Each power must have at least one action selected.";
-        this.isPopupVisible = true;
-        return;
-      }
+        )
+        .subscribe({
+          next: () => {
+            // Navigate after successful submission
+            this.router.navigate(['/organization/credentials']).then(() => {
+              window.scrollTo(0, 0); // Reset scroll position
+              location.reload(); // Refresh the page
+            });
+          },
+          error: (err) => {
+            this.popupMessage = 'Error occurred while submitting credential.';
+            this.isPopupVisible = true;
+            console.error(err);
+          }
+        });
+    } else {
+      this.popupMessage = 'Each power must have at least one action selected.';
+      this.isPopupVisible = true;
+      return;
+    }
   }
 
   public triggerSendReminder(): void {
@@ -150,6 +168,7 @@ export class FormCredentialComponent implements OnInit {
 
   private resetForm(): void {
     this.credential = this.formCredentialService.resetForm();
+    this.formDirective.resetForm();
     this.addedOptions = [];
     this.credentialForm.reset();
     this.authService.getMandator().subscribe(mandator2 => {

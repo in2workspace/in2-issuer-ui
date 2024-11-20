@@ -3,6 +3,7 @@ import { HomeComponent } from './home.component';
 import { Router } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { QRCodeModule } from 'angularx-qrcode';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -21,7 +22,7 @@ describe('HomeComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [HomeComponent],
-      imports: [HttpClientModule],
+      imports: [HttpClientModule, QRCodeModule],
       providers: [
         { provide: AuthService, useValue: mockAuthService },
       ]

@@ -53,7 +53,7 @@ describe('FormCredentialComponent', () => {
     mockFormCredentialService = {
       addOption: jest.fn(),
       handleSelectChange: jest.fn(),
-      submitCredential: jest.fn(),
+      submitCredential: jest.fn().mockReturnValue(of({})), // Mock return of Observable
       resetForm: jest.fn(),
       convertToTempPower: jest.fn(),
       checkTmfFunction: jest.fn()
@@ -226,7 +226,7 @@ describe('FormCredentialComponent', () => {
 
   it('it should submit credential when submitCredential is called with selected power', () => {
     component.role = "user";
-
+  
     component.credentialForm.setValue({
       first_name: 'John',
       last_name: 'Doe',
@@ -235,20 +235,10 @@ describe('FormCredentialComponent', () => {
       country: 'US'
     });
     component.selectedCountry = 'US';
-    component.addedOptions = [{
-      tmf_function: 'Certification',
-      tmf_action: 'SomeAction',
-      tmf_domain: 'SomeDomain',
-      tmf_type: 'SomeType',
-      upload: true,
-      attest: true,
-      execute: false, 
-      create: false,
-      update: false,
-      delete: false
-    }];
-
+    component.addedOptions = [mockTempPower];
+  
     component.submitCredential();
+  
     expect(mockFormCredentialService.submitCredential).toHaveBeenCalled();
     expect(mockFormCredentialService.submitCredential).toHaveBeenCalledWith(
       component.credential,
@@ -295,8 +285,10 @@ describe('FormCredentialComponent', () => {
   });
 
   it('should reset the form when resetForm is called', () => {
+    jest.spyOn(component.formDirective, 'resetForm');
     (component as any).resetForm();
     expect(mockFormCredentialService.resetForm).toHaveBeenCalled();
+    expect(component.formDirective.resetForm).toHaveBeenCalled();
     expect(component.addedOptions.length).toBe(0);
     expect(component.credentialForm.pristine).toBeTruthy();
   });
