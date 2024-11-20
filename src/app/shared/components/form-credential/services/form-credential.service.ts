@@ -5,6 +5,8 @@ import { CredentialMandatee } from 'src/app/core/models/credendentialMandatee.in
 import { Mandator } from 'src/app/core/models/madator.interface';
 import { PopupComponent } from '../../popup/popup.component';
 import { IssuanceRequest } from 'src/app/core/models/issuanceRequest.interface';
+import { Observable } from 'rxjs';
+import { tap, catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -46,42 +48,41 @@ export class FormCredentialService {
     selectedCountry: string,
     addedOptions: TempPower[],
     mandator: Mandator | null,
-    signer:any,
+    signer: any,
     credentialProcedureService: any,
     popupComponent: PopupComponent,
     resetForm: () => void
-  ): void {
+  ): Observable<any> {
     const countryPrefix = `+${selectedCountry}`;
     if (credential.mobile_phone != '' && !credential.mobile_phone?.startsWith(countryPrefix)) {
       credential.mobile_phone = `${countryPrefix} ${credential.mobile_phone}`;
     }
     const power: Power[] = addedOptions.map(option => {
-      const tmfPower = this.checkTmfFunction(option);
-      return tmfPower;
+      return this.checkTmfFunction(option);
     });
-
-    const credentialProcedure:IssuanceRequest =  {
+  
+    const credentialProcedure: IssuanceRequest = {
       schema: "LEARCredentialEmployee",
       format: "jwt_vc_json",
       payload: {
         mandatee: credential,
         mandator: mandator!,
-        signer:signer,
+        signer: signer,
         power: power
       },
       operation_mode: "S"
     };
-    
-
-    credentialProcedureService.createProcedure(credentialProcedure).subscribe({
-      next: () => {
+  
+    return credentialProcedureService.createProcedure(credentialProcedure).pipe(
+      tap(() => {
         popupComponent.showPopup();
         resetForm();
-      },
-      error: () => {
+      }),
+      catchError(error => {
         popupComponent.showPopup();
-      }
-    });
+        throw error;
+      })
+    );
   }
 
   public checkTmfFunction(option: TempPower): any {
