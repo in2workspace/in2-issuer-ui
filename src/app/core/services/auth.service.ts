@@ -36,15 +36,15 @@ export class AuthService {
         this.userDataSubject.next(userData);
 
         const mandator = {
-          organizationIdentifier: userData.organizationIdentifier,
-          organization: userData.organization,
-          commonName: userData.commonName,
-          emailAddress: userData.emailAddress,
-          serialNumber: userData.serialNumber,
-          country: userData.country
+          organizationIdentifier: userData.vc.credentialSubject.mandate.mandator.organizationIdentifier,
+          organization: userData.vc.credentialSubject.mandate.mandator.organization,
+          commonName: userData.vc.credentialSubject.mandate.mandator.commonName,
+          emailAddress: userData.vc.credentialSubject.mandate.mandator.emailAddress,
+          serialNumber: userData.vc.credentialSubject.mandate.mandator.serialNumber,
+          country: userData.vc.credentialSubject.mandate.mandator.country
         };
         this.mandatorSubject.next(mandator);
-        const emailName = userData.emailAddress.split('@')[0];
+        const emailName = userData.vc.credentialSubject.mandate.mandator.emailAddress.split('@')[0];
         this.emailSubject.next(emailName);
       }
       return isAuthenticated;

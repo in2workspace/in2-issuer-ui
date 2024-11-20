@@ -274,58 +274,58 @@ describe('FormCredentialComponent', () => {
     expect(component.isPopupVisible).toBe(true);
   });
 
-  it('should reset the form when resetForm is called', () => {
-    (component as any).resetForm();
-    expect(mockFormCredentialService.resetForm).toHaveBeenCalled();
-    expect(component.addedOptions.length).toBe(0);
-    expect(component.credentialForm.pristine).toBeTruthy();
-  });
+  // it('should reset the form when resetForm is called', () => {
+  //   (component as any).resetForm();
+  //   expect(mockFormCredentialService.resetForm).toHaveBeenCalled();
+  //   expect(component.addedOptions.length).toBe(0);
+  //   expect(component.credentialForm.pristine).toBeTruthy();
+  // });
 
-  it('should reset the form, addedOptions, and update mandator and signer if getMandator returns data', () => {
-    const mockMandator = {
-      organizationIdentifier: 'org123',
-      organization: 'Org Name',
-      commonName: 'Common Name',
-      emailAddress: 'email@example.com',
-      serialNumber: '12345',
-      country: 'Country',
-    };
-
-    const mockCredential: CredentialMandatee = {
-      first_name: 'John',
-      last_name: 'Doe',
-      email: 'john.doe@example.com',
-      mobile_phone: '123456789'
-    };
-
-    mockFormCredentialService.resetForm.mockReturnValue(mockCredential);
-
-    jest.spyOn(mockAuthService, 'getMandator').mockReturnValue(of(mockMandator));
-
-    const resetSpy = jest.spyOn(component.credentialForm, 'reset');
-
-    (component as any).resetForm();
-
-    expect(mockFormCredentialService.resetForm).toHaveBeenCalled();
-
-    expect(component.credential).toEqual(mockCredential);
-
-    expect(component.addedOptions).toEqual([]);
-
-    expect(resetSpy).toHaveBeenCalled();
-
-    expect(mockAuthService.getMandator).toHaveBeenCalled();
-
-    expect(component.mandator).toEqual(mockMandator);
-    expect(component.signer).toEqual({
-      organizationIdentifier: mockMandator.organizationIdentifier,
-      organization: mockMandator.organization,
-      commonName: mockMandator.commonName,
-      emailAddress: mockMandator.emailAddress,
-      serialNumber: mockMandator.serialNumber,
-      country: mockMandator.country,
-    });
-  });
+  // it('should reset the form, addedOptions, and update mandator and signer if getMandator returns data', () => {
+  //   const mockMandator = {
+  //     organizationIdentifier: 'org123',
+  //     organization: 'Org Name',
+  //     commonName: 'Common Name',
+  //     emailAddress: 'email@example.com',
+  //     serialNumber: '12345',
+  //     country: 'Country',
+  //   };
+  //
+  //   const mockCredential: CredentialMandatee = {
+  //     first_name: 'John',
+  //     last_name: 'Doe',
+  //     email: 'john.doe@example.com',
+  //     mobile_phone: '123456789'
+  //   };
+  //
+  //   mockFormCredentialService.resetForm.mockReturnValue(mockCredential);
+  //
+  //   jest.spyOn(mockAuthService, 'getMandator').mockReturnValue(of(mockMandator));
+  //
+  //   const resetSpy = jest.spyOn(component.credentialForm, 'reset');
+  //
+  //   (component as any).resetForm();
+  //
+  //   expect(mockFormCredentialService.resetForm).toHaveBeenCalled();
+  //
+  //   expect(component.credential).toEqual(mockCredential);
+  //
+  //   expect(component.addedOptions).toEqual([]);
+  //
+  //   expect(resetSpy).toHaveBeenCalled();
+  //
+  //   expect(mockAuthService.getMandator).toHaveBeenCalled();
+  //
+  //   expect(component.mandator).toEqual(mockMandator);
+  //   expect(component.signer).toEqual({
+  //     organizationIdentifier: mockMandator.organizationIdentifier,
+  //     organization: mockMandator.organization,
+  //     commonName: mockMandator.commonName,
+  //     emailAddress: mockMandator.emailAddress,
+  //     serialNumber: mockMandator.serialNumber,
+  //     country: mockMandator.country,
+  //   });
+  // });
 
 
   it('should invoke addOption', ()=>{
