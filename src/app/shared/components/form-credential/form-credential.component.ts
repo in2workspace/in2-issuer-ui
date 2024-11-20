@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, Validators } from '@angular/forms';
 import { CredentialMandatee } from 'src/app/core/models/credendentialMandatee.interface';
 import { Mandator } from 'src/app/core/models/madator.interface';
 import { Power } from 'src/app/core/models/power.interface';
@@ -10,6 +10,7 @@ import { FormCredentialService } from './services/form-credential.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { PopupComponent } from '../popup/popup.component';
 import { Router } from '@angular/router';
+import { ErrorStateMatcher } from '@angular/material/core';
 
 export interface objectWithName{
   name:string
@@ -48,6 +49,18 @@ export class FormCredentialComponent implements OnInit {
     country: "",
   }
   public signer : any ={};
+
+  //if mobile has been introduced and unfocused and there is not country, show error
+  public countryErrorMatcher: ErrorStateMatcher = {
+    isErrorState: (control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean => {
+      const mobilePhoneControl = form?.form.get('mobile_phone');
+      return (
+        !!this.credential.mobile_phone &&
+        (!this.selectedCountry || this.selectedCountry === '') &&
+        (mobilePhoneControl?.touched ?? false)
+      );
+    },
+  };
 
   
 
@@ -173,7 +186,7 @@ export class FormCredentialComponent implements OnInit {
 
   public triggerSendReminder(): void {
     this.sendReminder.emit();
-  }
+  }  
 
   private resetForm(): void {
     this.credential = this.formCredentialService.resetForm();
@@ -194,3 +207,5 @@ export class FormCredentialComponent implements OnInit {
   }
 
 }
+
+

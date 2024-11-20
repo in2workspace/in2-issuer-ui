@@ -5,7 +5,9 @@
     "name": "Name",
     "email": "Email address",
     "serialNumber": "Serial number",
-    "country": "Country"
+    "country": "Country",
+    "select-country": "Select a country",
+    "no-country-error": "Please select a country with mobile phone"
   },
   "mandatee": {
     "firstnameid": "First name",
