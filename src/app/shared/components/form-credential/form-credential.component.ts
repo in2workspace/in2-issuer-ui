@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
 import { CredentialMandatee } from 'src/app/core/models/credendentialMandatee.interface';
 import { Mandator } from 'src/app/core/models/madator.interface';
 import { Power } from 'src/app/core/models/power.interface';
@@ -18,6 +18,7 @@ import { Router } from '@angular/router';
 })
 export class FormCredentialComponent implements OnInit {
   @ViewChild(PopupComponent) public popupComponent!: PopupComponent;
+  @ViewChild('formDirective') public formDirective!: FormGroupDirective;
   @Output() public sendReminder = new EventEmitter<void>();
   @Input() public viewMode: 'create' | 'detail' = 'create';
   @Input() public isDisabled: boolean = false;
@@ -167,6 +168,7 @@ export class FormCredentialComponent implements OnInit {
 
   private resetForm(): void {
     this.credential = this.formCredentialService.resetForm();
+    this.formDirective.resetForm();
     this.addedOptions = [];
     this.credentialForm.reset();
     this.authService.getMandator().subscribe(mandator2 => {

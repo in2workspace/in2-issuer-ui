@@ -285,8 +285,10 @@ describe('FormCredentialComponent', () => {
   });
 
   it('should reset the form when resetForm is called', () => {
+    jest.spyOn(component.formDirective, 'resetForm');
     (component as any).resetForm();
     expect(mockFormCredentialService.resetForm).toHaveBeenCalled();
+    expect(component.formDirective.resetForm).toHaveBeenCalled();
     expect(component.addedOptions.length).toBe(0);
     expect(component.credentialForm.pristine).toBeTruthy();
   });
