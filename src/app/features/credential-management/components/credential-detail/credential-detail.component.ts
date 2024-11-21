@@ -29,7 +29,6 @@ export class CredentialDetailComponent implements OnInit {
   public loadCredentialDetail(procedureId: string): void {
     this.credentialProcedureService.getCredentialProcedureById(procedureId).subscribe({
       next: (credentials: CredentialData) => {
-        console.log(credentials)
         this.credential = credentials['credential'];
         this.credentialStatus = credentials['credential_status'];
       },
