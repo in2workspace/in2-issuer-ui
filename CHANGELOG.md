@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - In credential form, capitalize "mobile phone" placeholder
 - In credential form, sort countries dropdown alphabetically
+- In credential form, make phone-prefix and country validation independent
 
 ## [1.1.4](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.1.3)
 ### Fixed
