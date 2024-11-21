@@ -88,6 +88,16 @@ describe('PowerComponent', () => {
     expect(spy).toHaveBeenCalledWith('Please select an option.');
   });
 
+  it('should open and close popup', ()=>{
+    const msg = 'random message';
+    (component as any).showPopup(msg);
+    expect(component.popupMessage).toBe(msg);
+    expect(component.isPopupVisible).toBe(true);
+    setTimeout(()=>{
+      expect(component.isPopupVisible).toBe(false);
+    }, 1000);
+  });
+
   it('should add an option if it does not already exist', () => {
     component.isDisabled = false;
     component.selectedOption = 'NewOption';
