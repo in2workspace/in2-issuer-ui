@@ -189,6 +189,7 @@ export class FormCredentialComponent implements OnInit {
           error: (err) => {
             this.popupMessage = 'Error occurred while submitting credential.';
             this.isPopupVisible = true;
+            setTimeout(()=>{this.isPopupVisible=false}, 1000)
             console.error(err);
           }
         });
