@@ -255,7 +255,7 @@ describe('FormCredentialComponent', () => {
       mobile_phone: '1234567890',
       country: 'US'
     });
-    component.selectedCountry = 'US';
+    component.selectedCountryCode = 'US';
     component.addedOptions = [mockTempPower];
   
     component.submitCredential();
@@ -263,7 +263,7 @@ describe('FormCredentialComponent', () => {
     expect(mockFormCredentialService.submitCredential).toHaveBeenCalled();
     expect(mockFormCredentialService.submitCredential).toHaveBeenCalledWith(
       component.credential,
-      component.selectedCountry,
+      component.selectedCountryCode,
       component.addedOptions,
       component.mandator,
       component.signer,
@@ -283,7 +283,7 @@ describe('FormCredentialComponent', () => {
       mobile_phone: '1234567890',
       country: 'US'
     });
-    component.selectedCountry = 'US';
+    component.selectedCountryCode = 'US';
     component.addedOptions = [{
       tmf_action: [],
       tmf_domain: 'DOME',
@@ -370,6 +370,18 @@ describe('FormCredentialComponent', () => {
     );
   });
 
+  it('should mark prefix and phone number as touched', ()=>{
+    const prefixControl = {control:{markAsTouched:jest.fn()}} as any;
+    const phoneControl = {control:{markAsTouched:jest.fn()}} as any;
+    const prefixSpy = jest.spyOn(prefixControl.control, 'markAsTouched');
+    const phoneSpy = jest.spyOn(phoneControl.control, 'markAsTouched');
+
+    component.markPrefixAndPhoneAsTouched(prefixControl, phoneControl);
+
+    expect(prefixSpy).toHaveBeenCalled();
+    expect(phoneSpy).toHaveBeenCalled();
+  });
+
   it('should call handleSelectChange and update selectedOption', () => {
     const mockEvent = new Event('change');
     
@@ -383,14 +395,14 @@ describe('FormCredentialComponent', () => {
   });
 
   it('should return the correct mobile phone with country code in getter', () => {
-    component.selectedCountry = '+34';
+    component.selectedCountryCode = '+34';
     component.credential = { mobile_phone: '123456789' } as CredentialMandatee;
   
     expect(component.mobilePhone).toBe('+34 123456789');
   });
   
   it('should set the correct mobile phone without the country code in setter', () => {
-    component.selectedCountry = '+34';
+    component.selectedCountryCode = '+34';
     component.credential = { mobile_phone: '' } as CredentialMandatee;
   
     component.mobilePhone = '+34 987654321';
