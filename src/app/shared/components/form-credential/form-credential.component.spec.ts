@@ -32,6 +32,18 @@ const mockPowers: Power[] = [
   { tmf_action: 'action1', tmf_domain: 'domain1', tmf_function: 'function1', tmf_type: 'type1' },
   { tmf_action: 'action2', tmf_domain: 'domain2', tmf_function: 'function2', tmf_type: 'type2' }
 ];
+const countries: any[] = [
+  {name:'Spain'},
+  {name:'Finland'},
+  {name:'France'},
+  {name:'Portugal'}
+];
+const sortedCountries: any[] = [
+  {name:'Finland'},
+  {name:'France'},
+  {name:'Portugal'},
+  {name:'Spain'}
+];
 
 describe('FormCredentialComponent', () => {
   let component: FormCredentialComponent;
@@ -60,7 +72,8 @@ describe('FormCredentialComponent', () => {
     } as jest.Mocked<FormCredentialService>;
 
     mockCountryService = {
-      getCountries: jest.fn()
+      getCountries: jest.fn().mockReturnValue(countries),
+      getSortedCountries: jest.fn().mockReturnValue(sortedCountries)
     };
     mockAuthService = {
       getMandator:()=> of(null),
@@ -97,6 +110,8 @@ describe('FormCredentialComponent', () => {
     fixture = TestBed.createComponent(FormCredentialComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+
+    jest.spyOn(mockCountryService, 'getSortedCountries');
   });
 
   afterEach(() => {
@@ -130,6 +145,12 @@ describe('FormCredentialComponent', () => {
     expect(emailControl?.valid).toBeFalsy();
     emailControl?.setValue('test@example.com');
     expect(emailControl?.valid).toBeTruthy();
+  });
+
+  it('should get countries from service and sort them alphabetically', ()=>{
+    component.ngOnInit();
+    expect(mockCountryService.getSortedCountries).toHaveBeenCalled();
+    expect(component.countries).toEqual(sortedCountries);
   });
 
   it('should set mandator and signer correctly if mandator is returned', (done) => {
@@ -234,7 +255,7 @@ describe('FormCredentialComponent', () => {
       mobile_phone: '1234567890',
       country: 'US'
     });
-    component.selectedCountry = 'US';
+    component.selectedCountryCode = 'US';
     component.addedOptions = [mockTempPower];
   
     component.submitCredential();
@@ -242,7 +263,7 @@ describe('FormCredentialComponent', () => {
     expect(mockFormCredentialService.submitCredential).toHaveBeenCalled();
     expect(mockFormCredentialService.submitCredential).toHaveBeenCalledWith(
       component.credential,
-      component.selectedCountry,
+      component.selectedCountryCode,
       component.addedOptions,
       component.mandator,
       component.signer,
@@ -262,7 +283,7 @@ describe('FormCredentialComponent', () => {
       mobile_phone: '1234567890',
       country: 'US'
     });
-    component.selectedCountry = 'US';
+    component.selectedCountryCode = 'US';
     component.addedOptions = [{
       tmf_action: [],
       tmf_domain: 'DOME',
@@ -349,6 +370,18 @@ describe('FormCredentialComponent', () => {
     );
   });
 
+  it('should mark prefix and phone number as touched', ()=>{
+    const prefixControl = {control:{markAsTouched:jest.fn()}} as any;
+    const phoneControl = {control:{markAsTouched:jest.fn()}} as any;
+    const prefixSpy = jest.spyOn(prefixControl.control, 'markAsTouched');
+    const phoneSpy = jest.spyOn(phoneControl.control, 'markAsTouched');
+
+    component.markPrefixAndPhoneAsTouched(prefixControl, phoneControl);
+
+    expect(prefixSpy).toHaveBeenCalled();
+    expect(phoneSpy).toHaveBeenCalled();
+  });
+
   it('should call handleSelectChange and update selectedOption', () => {
     const mockEvent = new Event('change');
     
@@ -362,20 +395,19 @@ describe('FormCredentialComponent', () => {
   });
 
   it('should return the correct mobile phone with country code in getter', () => {
-    component.selectedCountry = '+34';
+    component.selectedCountryCode = '+34';
     component.credential = { mobile_phone: '123456789' } as CredentialMandatee;
   
     expect(component.mobilePhone).toBe('+34 123456789');
   });
   
   it('should set the correct mobile phone without the country code in setter', () => {
-    component.selectedCountry = '+34';
+    component.selectedCountryCode = '+34';
     component.credential = { mobile_phone: '' } as CredentialMandatee;
   
     component.mobilePhone = '+34 987654321';
   
     expect(component.credential.mobile_phone).toBe('987654321');
   });
-  
   
 });

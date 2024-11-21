@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, NgModel, Validators } from '@angular/forms';
 import { CredentialMandatee } from 'src/app/core/models/credendentialMandatee.interface';
 import { Mandator } from 'src/app/core/models/madator.interface';
 import { Power } from 'src/app/core/models/power.interface';
@@ -10,6 +10,11 @@ import { FormCredentialService } from './services/form-credential.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { PopupComponent } from '../popup/popup.component';
 import { Router } from '@angular/router';
+import { ErrorStateMatcher } from '@angular/material/core';
+
+export interface objectWithName{
+  name:string
+}
 
 @Component({
   selector: 'app-form-credential',
@@ -17,6 +22,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./form-credential.component.scss'],
 })
 export class FormCredentialComponent implements OnInit {
+  
   @ViewChild(PopupComponent) public popupComponent!: PopupComponent;
   @ViewChild('formDirective') public formDirective!: FormGroupDirective;
   @Output() public sendReminder = new EventEmitter<void>();
@@ -34,7 +40,6 @@ export class FormCredentialComponent implements OnInit {
     email: '',
     mobile_phone: '',
   };
-  public signer : any ={};
   @Input() public mandator: Mandator = {
     organizationIdentifier: "",
     organization: "",
@@ -43,12 +48,25 @@ export class FormCredentialComponent implements OnInit {
     serialNumber: "",
     country: "",
   }
+  public signer : any ={};
+
+  //if mobile has been introduced and unfocused and there is not country, show error
+  public countryErrorMatcher: ErrorStateMatcher = {
+    isErrorState: (control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean => {
+      const mobilePhoneControl = form?.form.get('mobile_phone');
+      return (
+        !!this.credential.mobile_phone &&
+        (!this.selectedCountryCode || this.selectedCountryCode === '') &&
+        ((mobilePhoneControl?.touched ?? false))
+      );
+    },
+  };
 
   public selectedOption = '';
   public addedOptions: TempPower[] = [];
   public tempPowers: TempPower[] = [];
   public countries: Country[] = [];
-  public selectedCountry: string = '';
+  public selectedCountryCode: string = '';
   public actualMobilePhone: string = '';
   public credentialForm!: FormGroup;
 
@@ -65,16 +83,27 @@ export class FormCredentialComponent implements OnInit {
     private authService: AuthService,
     private router: Router
   ) {
-    this.countries = this.countryService.getCountries();
+    this.countries = this.countryService.getSortedCountries();
   }
+  
 
   public get mobilePhone(): string {
-    return `${this.selectedCountry} ${this.credential.mobile_phone}`;
+    return `${this.selectedCountryCode} ${this.credential.mobile_phone}`;
   }
   public set mobilePhone(value: string) {
-    const numberPart = value.replace(`${this.selectedCountry} `, '').trim();
+    const numberPart = value.replace(`${this.selectedCountryCode} `, '').trim();
     this.credential.mobile_phone = numberPart;
   }
+
+  public markPrefixAndPhoneAsTouched(prefixControl: NgModel, phoneControl: NgModel): void {
+    if (prefixControl) {
+      prefixControl.control.markAsTouched();
+    }
+    if (phoneControl) {
+      phoneControl.control.markAsTouched();
+    }
+  }
+
 
   public ngOnInit(): void {
     this.credentialForm = this.fb.group({
@@ -85,6 +114,8 @@ export class FormCredentialComponent implements OnInit {
       country: ['', Validators.required],
 
     });
+
+    
 
     this.authService.getMandator().subscribe(mandator2 => {
       if (mandator2) {
@@ -110,6 +141,11 @@ export class FormCredentialComponent implements OnInit {
     }
   }
 
+  public getCountryName(code: string): string {
+    const country = this.countries.find(c => c.code === code);
+    return country ? country.name : '';
+  }
+
   public addOption(options: TempPower[]): void {
     this.addedOptions = this.formCredentialService.addOption(this.addedOptions, options, this.isDisabled);
   }
@@ -129,11 +165,12 @@ export class FormCredentialComponent implements OnInit {
   }
 
   public submitCredential(): void {
+    console.log('submit')
     if (this.addedOptions.length > 0 && this.hasSelectedPowers()) {
       this.formCredentialService
         .submitCredential(
           this.credential,
-          this.selectedCountry,
+          this.selectedCountryCode,
           this.addedOptions,
           this.mandator,
           this.signer,
@@ -164,7 +201,7 @@ export class FormCredentialComponent implements OnInit {
 
   public triggerSendReminder(): void {
     this.sendReminder.emit();
-  }
+  }  
 
   private resetForm(): void {
     this.credential = this.formCredentialService.resetForm();
@@ -183,4 +220,7 @@ export class FormCredentialComponent implements OnInit {
       }
     });
   }
+
 }
+
+

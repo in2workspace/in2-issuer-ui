@@ -5,7 +5,10 @@
     "name": "Nom",
     "email": "Adreça de correu",
     "serialNumber": "Número de sèrie",
-    "country": "País"
+    "country": "País",
+    "select-country": "Selecciona un país",
+    "no-country-error": "Selecciona un prefix",
+    "phone-prefix": "Prefix mòbil"
   },
   "mandatee": {
     "firstnameid": "ID del nom",
