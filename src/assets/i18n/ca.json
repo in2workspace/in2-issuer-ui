@@ -34,15 +34,15 @@
   },
   
   "credentialManagement": {
-    "title": "List of issued credentials",
-    "button": "New credential",
-    "status": "Status",
-    "name": "Name",
-    "updated": "Updated",
-    "sendReminder": "Send Reminder",
-    "cancel": "Cancel",
-    "create" : "Create Credential",
-    "buttonAdmin":"New credential as Signer"
+    "title": "Llista de credencials emeses",
+    "button": "Nova credencial",
+    "status": "Estatus",
+    "full_name": "Nom complet",
+    "updated": "Actualitzat",
+    "sendReminder": "Enviar recordatori",
+    "cancel": "Cancel·lar",
+    "create" : "Crear Credencial",
+    "buttonAdmin":"Nova Credencial com a Signer"
   },
     "power": {
       "power": "Powers",
