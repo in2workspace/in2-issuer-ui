@@ -13,6 +13,6 @@
   window["env"]["save_credential"] = "${SAVE_CREDENTIAL}";
   window["env"]["credential_offer_url"] = "${CREDENTIAL_OFFER_URI}";
   window["env"]["notification"] = "${NOTIFICATION}";
-  window["env"]["firma_credential"] = "${FIRMA_CREDENTIAL}";
+  //window["env"]["firma_credential"] = "${FIRMA_CREDENTIAL}";
 
 })(this);

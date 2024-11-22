@@ -25,18 +25,18 @@ export class CredentialManagementComponent implements AfterViewInit {
   ) {
 
   }
-  performAction(credential_procedures: any): void {
-    // Lógica del botón de acción
-    console.log('Acción realizada en:', credential_procedures);
-    this.credentialProcedureService.signCredential(credential_procedures.credential_procedure.procedure_id).subscribe({
-      next: () => {
-        console.log("firma enviada")
-      },
-      error: () => {
-        console.log("firma no enviada")
-      }
-    });
-  }
+  // performAction(credential_procedures: any): void {
+  //   // Lógica del botón de acción
+  //   console.log('Acción realizada en:', credential_procedures);
+  //   this.credentialProcedureService.signCredential(credential_procedures.credential_procedure.procedure_id).subscribe({
+  //     next: () => {
+  //       console.log("firma enviada")
+  //     },
+  //     error: () => {
+  //       console.log("firma no enviada")
+  //     }
+  //   });
+  // }
   public ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
