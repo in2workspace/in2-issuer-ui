@@ -101,5 +101,8 @@ export class PowerComponent {
   private showPopup(message: string): void {
     this.popupMessage = message;
     this.isPopupVisible = true;
+    setTimeout(()=>{
+      this.isPopupVisible=false
+    }, 1000);
   }
 }

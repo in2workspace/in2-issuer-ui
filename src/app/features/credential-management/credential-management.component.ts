@@ -65,7 +65,6 @@ export class CredentialManagementComponent implements AfterViewInit {
   public loadCredentialData(): void {
     this.credentialProcedureService.getCredentialProcedures().subscribe({
       next: (data:CredentialProcedureResponse) => {
-        console.log(data)
         this.dataSource.data = data.credential_procedures;
       },
       error: (error) => {
