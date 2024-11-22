@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { PowerComponent } from './power.component';
 import { DebugElement, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
@@ -87,6 +87,18 @@ describe('PowerComponent', () => {
     expect(component.addedOptions.length).toBe(0);
     expect(spy).toHaveBeenCalledWith('Please select an option.');
   });
+
+  it('should open and close popup', fakeAsync(() => {
+    const msg = 'random message';
+    (component as any).showPopup(msg);
+  
+    expect(component.popupMessage).toBe(msg);
+    expect(component.isPopupVisible).toBe(true);
+  
+    tick(1000);
+  
+    expect(component.isPopupVisible).toBe(false);
+  }));
 
   it('should add an option if it does not already exist', () => {
     component.isDisabled = false;
