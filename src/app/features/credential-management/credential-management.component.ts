@@ -56,9 +56,9 @@ export class CredentialManagementComponent implements AfterViewInit {
       }
     };
 
-    if (!this.isValidOrganizationIdentifier) {
-      this.displayedColumns.push('actions');
-    }
+    // if (!this.isValidOrganizationIdentifier) {
+    //   this.displayedColumns.push('actions');
+    // }
 
   }
 
