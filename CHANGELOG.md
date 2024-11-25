@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.7](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.1.8)
+### Changed
+- In credential procedures list, add limit to name column width and change title to "Full name"
+- In credential procedures list, change datetime format of "updated" column
+- In credential procedures list, change pagination to 10/25/50 visible objects at a time.
+### Fixed
+- In credential procedures table, make sort arrow always visible
+- Fix credential procedures table responsiveness
+
 ## [1.1.6](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.1.6)
 ### Fixed
 - In credential form, show error 'already added option' every time is needed
