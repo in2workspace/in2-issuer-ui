@@ -1,0 +1,50 @@
+// Resources: https://lea.verou.me/blog/2024/css-conditionals-now/
+
+ion-alert.custom-alert-error .alert-wrapper {
+  background-color: #fdf0f0 !important;
+  color: white !important;
+  border-radius: 8px;
+}
+
+ion-alert.custom-alert-error .alert-message {
+  color: #7b2531 !important;
+}
+
+ion-alert.custom-alert-error .alert-button.sc-ion-alert-md {
+  color: #7b2531 !important;
+}
+
+ion-alert.custom-alert-error .alert-message ion-icon {
+  font-size: 38px;
+  color: #7b2531;
+}
+
+ion-alert.custom-alert-ok .alert-wrapper {
+  background-color: #e7f8e4 !important;
+  color: white !important;
+  border-radius: 8px;
+}
+
+ion-alert.custom-alert-ok .alert-message {
+  color: #215112 !important;
+}
+
+ion-alert.custom-alert-ok .alert-message ion-icon {
+  font-size: 38px;
+  color: #215112;
+}
+
+ion-alert .alert-message div {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Center the button for error alert */
+ion-alert.custom-alert-error .alert-button-group {
+  justify-content: center !important;
+}
+
+ion-alert .alert-message span {
+  line-height: 1.2;
+}
