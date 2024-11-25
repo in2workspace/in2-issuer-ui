@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Router } from '@angular/router';
 import { map } from 'rxjs/operators';
+import { AlertController } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,7 @@ export class AuthService {
   private emailSubject: BehaviorSubject<string>;
   private userPowers: any[] = [];
 
-  public constructor(private oidcSecurityService: OidcSecurityService, private router: Router) {
+  public constructor(private oidcSecurityService: OidcSecurityService, private alertController: AlertController) {
     this.isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
     this.isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
     this.userDataSubject = new BehaviorSubject<any>(null);
@@ -101,7 +101,7 @@ export class AuthService {
   }
 
   public handleLoginCallback(): void {
-    this.oidcSecurityService.checkAuth().subscribe(({ isAuthenticated, userData, accessToken }) => {
+    this.oidcSecurityService.checkAuth().subscribe(async ({ isAuthenticated, userData, accessToken }) => {
       if (isAuthenticated) {
 
         this.userPowers = this.extractUserPowers(userData);
@@ -109,6 +109,7 @@ export class AuthService {
 
         if (!hasOnboardingPower) {
           console.error('Unauthorized: Missing OnBoarding power');
+          await this.showUnauthorizedAlert();
           this.logout();
           return;
         }
@@ -120,6 +121,28 @@ export class AuthService {
         console.log('Authentication failed or not completed yet.');
       }
     });
+  }
+
+  private async showUnauthorizedAlert() {
+    const alert = await this.alertController.create({
+      header: 'Unauthorized',
+      message: `
+      <div>
+        <ion-icon name="alert-circle-outline"></ion-icon>
+        <span>You do not have the required permissions to continue. Please contact your administrator.</span>
+      </div>
+    `,
+      buttons: [
+        {
+          text: 'OK',
+          role: 'confirm',
+        },
+      ],
+      cssClass: 'custom-alert-error',
+    });
+
+    await alert.present();
+    await alert.onDidDismiss();
   }
 
   public logout() {
