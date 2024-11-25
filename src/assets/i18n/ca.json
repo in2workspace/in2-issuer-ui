@@ -78,6 +78,7 @@
         "required": "Camp obligatori.",
         "invalid_character": "Caràcter/s invàlid/s",
         "only_letters_and_numbers": "Només lletres i xifres",
+        "only_letters_numbers_hyphens": "Només lletres, xifres i guions",
         "only_numbers": "Només es permeten xifres",
         "max_50": "50 caràcters com a màxim",
         "max_15": "15 caràcters com a màxim",

@@ -77,10 +77,12 @@
         "required": "This field is required.",
         "invalid_character": "Invalid character/s",
         "only_letters_and_numbers": "Only letters and numbers",
+        "only_letters_numbers_hyphens": "Only letters, numbers and hyphens",
         "only_numbers": "Only numbers allowed",
         "max_50": "Maximum 50 characters",
         "max_15": "Maximum 15 characters",
         "max_9": "Maximum 9 characters",
+        "min_9": "Minimum 9 characters",
         "min_7": "Minimum 7 characters",
         "min_2": "Minimum 2 characters",
         "email":{

@@ -12,6 +12,7 @@ import { DialogComponent } from "./components/dialog/dialog.component";
 import { MaxLengthDirective } from './directives/max-length-directive.directive';
 import { EmailLengthValidatorDirective } from './directives/email-length-validator.directive';
 import { UnicodeValidatorDirective } from './directives/unicode-validator.directive';
+import { OrganizationNameValidatorDirective } from './directives/organization-name.validator.directive';
 
 
 
@@ -24,7 +25,8 @@ import { UnicodeValidatorDirective } from './directives/unicode-validator.direct
     MaxLengthDirective,
     DialogComponent,
     EmailLengthValidatorDirective,
-    UnicodeValidatorDirective
+    UnicodeValidatorDirective,
+    OrganizationNameValidatorDirective
   ],
   imports: [
     CommonModule, MaterialModule, FormsModule, RouterModule, TranslateModule, ReactiveFormsModule
