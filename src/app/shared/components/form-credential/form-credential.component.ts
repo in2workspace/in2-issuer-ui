@@ -38,7 +38,7 @@ export class FormCredentialComponent implements OnInit {
       return (
         !!this.credential.mobile_phone &&
         (!this.selectedCountryCode || this.selectedCountryCode === '') &&
-        ((mobilePhoneControl?.touched ?? false))
+        ((mobilePhoneControl?.dirty ?? false))
       );
     },
   };
@@ -63,12 +63,19 @@ export class FormCredentialComponent implements OnInit {
 
   public markPrefixAndPhoneAsTouched(prefixControl: NgModel, phoneControl: NgModel): void {
     if (prefixControl) {
+      //so angular material can mark the input as invalid
       prefixControl.control.markAsTouched();
     }
     if (phoneControl) {
-      phoneControl.control.markAsTouched();
+      phoneControl.control.markAsDirty();
     }
   }
+
+  public validateFirstName(value: string): boolean {
+    const pattern = /^[\p{L}\p{M}'\- ]+$/u;
+    return pattern.test(value);
+  }
+
 
   public ngOnInit(): void {
 

@@ -10,6 +10,8 @@ import { PowerComponent } from './components/power/power/power.component';
 import { PopupComponent } from './components/popup/popup.component';
 import { DialogComponent } from "./components/dialog/dialog.component";
 import { MaxLengthDirective } from './directives/max-length-directive.directive';
+import { EmailLengthValidatorDirective } from './directives/email-length-validator.directive';
+import { UnicodeValidatorDirective } from './directives/unicode-validator.directive';
 
 
 
@@ -20,7 +22,9 @@ import { MaxLengthDirective } from './directives/max-length-directive.directive'
     PowerComponent,
     PopupComponent,
     MaxLengthDirective,
-    DialogComponent
+    DialogComponent,
+    EmailLengthValidatorDirective,
+    UnicodeValidatorDirective
   ],
   imports: [
     CommonModule, MaterialModule, FormsModule, RouterModule, TranslateModule, ReactiveFormsModule
