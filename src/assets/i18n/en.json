@@ -36,7 +36,7 @@
     "title": "List of issued credentials",
     "button": "New credential",
     "status": "Status",
-    "fullName": "Full name",
+    "name": "Name",
     "updated": "Updated",
     "sendReminder": "Send Reminder",
     "cancel": "Cancel",
