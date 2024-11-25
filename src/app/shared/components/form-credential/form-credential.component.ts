@@ -143,7 +143,7 @@ export class FormCredentialComponent implements OnInit {
           this.credential,
           this.selectedCountryCode,
           this.addedOptions,
-          this.mandator,
+          {...this.mandator},
           this.signer,
           this.credentialProcedureService,
           this.popupComponent,
