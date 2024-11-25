@@ -90,6 +90,15 @@ export class AuthService {
       return true
     }
     console.error('AuthService -- hasIn2OrganizationIdentifier -- NOT IN2 Organization Identifier found!');
+    this.dialog
+      .open(DialogComponent, {
+        data: { message: 'You do not have the required permissions to access OnBoarding.' },
+        disableClose: true,
+      })
+      .afterClosed()
+      .subscribe(() => {
+        this.logout();
+    });
     return false;
   }
 
