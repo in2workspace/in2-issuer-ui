@@ -37,7 +37,7 @@
     "title": "Llista de credencials emeses",
     "button": "Nova credencial",
     "status": "Estatus",
-    "full_name": "Nom complet",
+    "fullName": "Nom complet",
     "updated": "Actualitzat",
     "sendReminder": "Enviar recordatori",
     "cancel": "Cancel·lar",

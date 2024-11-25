@@ -37,7 +37,7 @@
     "title": "Lista de credenciales emitidas",
     "button": "Nueva credencial",
     "status": "Estatus",
-    "full_name": "Nombre completo",
+    "fullName": "Nombre completo",
     "updated": "Actualizado",
     "sendReminder": "Enviar recordatorio",
     "cancel": "Cancelar",
