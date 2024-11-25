@@ -17,7 +17,8 @@ export const OnboardingPolicy = () => {
 
     const dialogRef = dialog.open(DialogComponent, {
       data: { message: 'You do not have the required permissions to access Onboarding.' },
-      disableClose: true  // Prevents closing until the user acknowledges
+      panelClass: 'custom-dialog-error',
+      disableClose: true
     });
 
     dialogRef.afterClosed().subscribe(() => {
