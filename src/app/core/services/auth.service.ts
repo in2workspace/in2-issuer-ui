@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { Router } from '@angular/router';
 import { map } from 'rxjs/operators';
-import { MatDialog } from '@angular/material/dialog';
-import {DialogComponent} from "../dialog/dialog.component";
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +16,7 @@ export class AuthService {
   private emailSubject: BehaviorSubject<string>;
   private userPowers: any[] = [];
 
-  public constructor(private oidcSecurityService: OidcSecurityService, private dialog: MatDialog) {
+  public constructor(private oidcSecurityService: OidcSecurityService, private router: Router) {
     this.isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
     this.isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
     this.userDataSubject = new BehaviorSubject<any>(null);
@@ -90,15 +89,6 @@ export class AuthService {
       return true
     }
     console.error('AuthService -- hasIn2OrganizationIdentifier -- NOT IN2 Organization Identifier found!');
-    this.dialog
-      .open(DialogComponent, {
-        data: { message: 'You do not have the required permissions to access OnBoarding.' },
-        disableClose: true,
-      })
-      .afterClosed()
-      .subscribe(() => {
-        this.logout();
-    });
     return false;
   }
 
@@ -119,17 +109,7 @@ export class AuthService {
 
         if (!hasOnboardingPower) {
           console.error('Unauthorized: Missing OnBoarding power');
-
-          this.dialog
-            .open(DialogComponent, {
-              data: { message: 'You do not have the required permissions to access OnBoarding.' },
-              disableClose: true,
-            })
-            .afterClosed()
-            .subscribe(() => {
-              this.logout();
-            });
-
+          this.logout();
           return;
         }
 
