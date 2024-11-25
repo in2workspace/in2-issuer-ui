@@ -70,7 +70,26 @@
     "unauthorized": "You are not authorized to perform this action.",
     "forbidden": "You do not have permission to access this resource.",
     "internal_server": "An error occurred on the server. Please try again later.",
-    "unknown_error": "An unknown error occurred. Please try again."
+    "credential_submission": "Error occurred while submitting credential.",
+    "one_power_min":"Each power must have at least one action selected.",
+    "unknown_error": "An unknown error occurred. Please try again.",
+      "form":{
+        "required": "This field is required.",
+        "invalid_character": "Invalid character/s",
+        "only_letters_and_numbers": "Only letters and numbers",
+        "only_numbers": "Only numbers allowed",
+        "max_50": "Maximum 50 characters",
+        "max_15": "Maximum 15 characters",
+        "max_9": "Maximum 9 characters",
+        "min_7": "Minimum 7 characters",
+        "min_2": "Minimum 2 characters",
+        "email":{
+          "invalid": "Email is invalid",
+          "local_part_max": "The local part of the email can't exceed 64 characters.",
+          "domain_part_max": "The domain part of the email can't exceed 189 characters.",
+          "max": "The email can't exceed 254 characters."
+        }
+      }
   }
 }
 

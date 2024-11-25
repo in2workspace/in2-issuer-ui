@@ -1,5 +1,5 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, NgModel, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, NgModel } from '@angular/forms';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { Country } from './services/country.service';
 import { FormCredentialService } from './services/form-credential.service';
@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { TempPower } from "../../../core/models/temporal/temp-power.interface";
 import { Mandatee, OrganizationDetails, Power } from "../../../core/models/entity/lear-credential-employee.entity";
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-form-credential',
@@ -60,6 +61,7 @@ export class FormCredentialComponent implements OnInit {
   private readonly formCredentialService = inject(FormCredentialService);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly translate = inject(TranslateService);
 
   public markPrefixAndPhoneAsTouched(prefixControl: NgModel, phoneControl: NgModel): void {
     if (prefixControl) {
@@ -81,15 +83,6 @@ export class FormCredentialComponent implements OnInit {
 
     this.formCredentialService.showMandator$.subscribe((value) => {
       this.showMandator = value;
-    });
-
-    this.credentialForm = this.fb.group({
-      first_name: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*')]],
-      last_name: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*')]],
-      email: ['', [Validators.required, Validators.email]],
-      mobile_phone: ['', [Validators.pattern('[0-9 ]*')]],
-      country: ['', Validators.required],
-
     });
 
     this.authService.getMandator().subscribe(mandator2 => {
@@ -144,7 +137,6 @@ export class FormCredentialComponent implements OnInit {
   }
 
   public submitCredential(): void {
-    console.log('submit')
     if (this.addedOptions.length > 0 && this.hasSelectedPowers()) {
       this.formCredentialService
         .submitCredential(
@@ -159,21 +151,20 @@ export class FormCredentialComponent implements OnInit {
         )
         .subscribe({
           next: () => {
-            // Navigate after successful submission
             this.router.navigate(['/organization/credentials']).then(() => {
-              window.scrollTo(0, 0); // Reset scroll position
-              location.reload(); // Refresh the page
+              window.scrollTo(0, 0);
+              location.reload(); 
             });
           },
           error: (err) => {
-            this.popupMessage = 'Error occurred while submitting credential.';
+            this.popupMessage = this.translate.instant("error.credential_submission");
             this.isPopupVisible = true;
             setTimeout(()=>{this.isPopupVisible=false}, 1000)
             console.error(err);
           }
         });
     } else {
-      this.popupMessage = 'Each power must have at least one action selected.';
+      this.popupMessage = this.translate.instant("error.one_power_min");
       this.isPopupVisible = true;
     }
   }

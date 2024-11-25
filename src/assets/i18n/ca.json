@@ -71,6 +71,25 @@
       "unauthorized": "You are not authorized to perform this action.",
       "forbidden": "You do not have permission to access this resource.",
       "internal_server": "An error occurred on the server. Please try again later.",
-      "unknown_error": "An unknown error occurred. Please try again."
+      "unknown_error": "An unknown error occurred. Please try again.",
+      "credential_submission": "S'ha produït un error en crear la credencial.",
+      "one_power_min":"Cada power requereix almenys una acció.",
+      "form":{
+        "required": "Camp obligatori.",
+        "invalid_character": "Caràcter/s invàlid/s",
+        "only_letters_and_numbers": "Només lletres i xifres",
+        "only_numbers": "Només es permeten xifres",
+        "max_50": "50 caràcters com a màxim",
+        "max_15": "15 caràcters com a màxim",
+        "max_9": "9 caràcters com a màxim",
+        "min_7": "27 caràcters com a mínim",
+        "min_2": "2 caràcters com a mínim",
+        "email":{
+          "invalid": "Adreça electrònica invàlida",
+          "local_part_max": "La part local de l'adreça el. no pot superar els 64 caràcters.",
+          "domain_part_max": "El domini de l'adreça el. no pot superar els 189 caràcters.",
+          "max": "L'adreça electrònica no pot superar els 254 caràcters."
+        }
+      }
     }
 }
