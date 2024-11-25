@@ -8,8 +8,8 @@ import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { PowerComponent } from './components/power/power/power.component';
 import { PopupComponent } from './components/popup/popup.component';
-import {  DialogComponent  } from "./components/dialog/dialog.component";
-import { MaxLengthDirectiveDirective } from './directives/max-length-directive.directive';
+import { DialogComponent } from "./components/dialog/dialog.component";
+import { MaxLengthDirective } from './directives/max-length-directive.directive';
 
 
 
@@ -19,7 +19,7 @@ import { MaxLengthDirectiveDirective } from './directives/max-length-directive.d
     NavbarComponent,
     PowerComponent,
     PopupComponent,
-    MaxLengthDirectiveDirective,
+    MaxLengthDirective,
     DialogComponent
   ],
   imports: [

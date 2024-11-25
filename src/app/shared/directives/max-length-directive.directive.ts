@@ -1,30 +1,34 @@
-import { Directive, ElementRef, HostListener, Input, Renderer2 } from '@angular/core';
-import { AbstractControl, ValidationErrors } from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { DestroyRef, Directive, inject, Input, OnInit } from '@angular/core';
+import { NgModel } from '@angular/forms';
 
 @Directive({
-  selector: '[appMaxLengthDirective]'
+  selector: '[appMaxLength]',
+  exportAs: 'appMaxLength',
 })
-export class MaxLengthDirectiveDirective {
-  @Input() private maxLength!: number;
+export class MaxLengthDirective implements OnInit{
+  @Input('appMaxLength') public maxLength!: number; 
 
-  constructor(private el: ElementRef, private renderer: Renderer2) {}
+  private ngModel = inject(NgModel);
+  private destroyRef = inject(DestroyRef);
 
-  @HostListener('input', ['$event'])
-  public onInput(event: Event): void {
-    console.log('input directive')
-    const input = this.el.nativeElement as HTMLInputElement;
-    if (input.value.length > this.maxLength) {
-      // Limitar el text al màxim permès
-      input.value = input.value.substring(0, this.maxLength);
-      this.renderer.setProperty(this.el.nativeElement, 'value', input.value);
-    }
+
+  public ngOnInit(): void {
+    this.ngModel.control.valueChanges?.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+      this.validate();
+    });
   }
 
-  public validate(control: AbstractControl): ValidationErrors | null {
-    const value = control.value as string;
-    if (value && value.length > this.maxLength) {
-      return { maxLength: { requiredLength: this.maxLength, actualLength: value.length } };
+  private validate(): void {
+    const value = this.ngModel.value || '';
+    if (value.length > this.maxLength) {
+      const errors = { ...this.ngModel.control.errors, maxlengthExceeded: true };
+      this.ngModel.control.setErrors(errors);
+    } else {
+      if (this.ngModel.control.errors) {
+        const { ...otherErrors } = this.ngModel.control.errors;
+        this.ngModel.control.setErrors(Object.keys(otherErrors).length ? otherErrors : null);
+      }
     }
-    return null;
   }
 }
