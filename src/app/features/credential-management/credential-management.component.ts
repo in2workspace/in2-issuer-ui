@@ -57,11 +57,7 @@ export class CredentialManagementComponent implements AfterViewInit {
   }
 
   public createNewCredential(): void {
-    if (this.isValidOrganizationIdentifier){
-      this.router.navigate(['/organization/credentials/create2',"admin"]);
-    } else {
-      this.router.navigate(['/organization/credentials/create']);
-    }
+    this.router.navigate(['/organization/credentials/create']);
   }
 
   public createCredentialAsSigner(): void {

@@ -23,6 +23,6 @@ import {DialogComponent} from "./components/dialog/dialog.component";
   imports: [
     CommonModule, MaterialModule, FormsModule, RouterModule, TranslateModule, ReactiveFormsModule
   ],
-  exports:[CommonModule,MaterialModule, FormsModule,FormCredentialComponent, NavbarComponent, PowerComponent, PopupComponent, DialogComponent],
+  exports:[CommonModule,MaterialModule, FormsModule,FormCredentialComponent, NavbarComponent, PowerComponent, PopupComponent,DialogComponent]
 })
 export class SharedModule { }

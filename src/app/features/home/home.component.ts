@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import {Component, inject} from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { environment } from 'src/environments/environment';
+import {DialogComponent} from "../../shared/components/dialog/dialog.component";
+import {MatDialog} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-home',
@@ -11,8 +13,17 @@ import { environment } from 'src/environments/environment';
 export class HomeComponent {
   public walletUrl = environment.wallet_url;
   public knowledgebase_url = environment.knowledgebase_url;
+  private dialog = inject(MatDialog);
 
   public constructor(private router: Router, public authService: AuthService) {}
+
+  ngOnInit(): void {
+    this.dialog.open(DialogComponent, {
+      panelClass: 'custom-dialog-error'
+    }).afterClosed().subscribe(() => {
+      console.log("Closed");
+    });
+  }
 
   public login() {
     console.log('HomeComponent: login button clicked');
