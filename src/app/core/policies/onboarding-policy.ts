@@ -16,7 +16,7 @@ export const OnboardingPolicy = () => {
     console.error("OnboardingPolicy Guard NOT OKEY!")
 
     const dialogRef = dialog.open(DialogComponent, {
-      data: { message: 'You do not have the required permissions to access Onboarding.' },
+      data: { messageKey: 'power.invalid_power_message'  },
       panelClass: 'custom-dialog-error',
       disableClose: true
     });

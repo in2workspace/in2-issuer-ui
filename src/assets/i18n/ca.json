@@ -59,7 +59,9 @@
       "update": "Update",
       "delete": "Delete",
       "upload": "Upload",
-      "attest": "Attest"
+      "attest": "Attest",
+      "invalid_power_title": "Accés Denegat",
+      "invalid_power": "No teniu la política necessaria per accedir"
     },
     "credentialIssuance":{
       "create": "Create Credential"
