@@ -18,7 +18,7 @@ import {
 })
 export class UnicodeValidatorDirective implements Validator {
   public validate(control: AbstractControl): ValidationErrors | null {
-    const pattern = /^[\p{L}\p{M}'\- .]+$/u;
+    const pattern = /^[\p{L}\p{M}’.]+$/u;
     const value = control.value;
 
     if (!value) {
