@@ -25,18 +25,6 @@ export class CredentialManagementComponent implements AfterViewInit {
   ) {
 
   }
-  // performAction(credential_procedures: any): void {
-  //   // Lógica del botón de acción
-  //   console.log('Acción realizada en:', credential_procedures);
-  //   this.credentialProcedureService.signCredential(credential_procedures.credential_procedure.procedure_id).subscribe({
-  //     next: () => {
-  //       console.log("firma enviada")
-  //     },
-  //     error: () => {
-  //       console.log("firma no enviada")
-  //     }
-  //   });
-  // }
   public ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -55,11 +43,6 @@ export class CredentialManagementComponent implements AfterViewInit {
           return '';
       }
     };
-
-    // if (!this.isValidOrganizationIdentifier) {
-    //   this.displayedColumns.push('actions');
-    // }
-
   }
 
   public loadCredentialData(): void {
@@ -74,7 +57,11 @@ export class CredentialManagementComponent implements AfterViewInit {
   }
 
   public createNewCredential(): void {
-    this.router.navigate(['/organization/credentials/create']);
+    if (this.isValidOrganizationIdentifier){
+      this.router.navigate(['/organization/credentials/create2',"admin"]);
+    } else {
+      this.router.navigate(['/organization/credentials/create']);
+    }
   }
 
   public createCredentialAsSigner(): void {
