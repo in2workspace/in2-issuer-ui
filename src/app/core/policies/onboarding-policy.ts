@@ -16,9 +16,7 @@ export const OnboardingPolicy = () => {
     console.error("OnboardingPolicy Guard NOT OKEY!")
 
     const dialogRef = dialog.open(DialogComponent, {
-      data: { messageKey: 'power.invalid_power_message'  },
-      panelClass: 'custom-dialog-error',
-      disableClose: true
+      panelClass: 'custom-dialog-error'
     });
 
     dialogRef.afterClosed().subscribe(() => {

@@ -1,16 +1,16 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, NgModel, Validators } from '@angular/forms';
-import { CredentialMandatee } from 'src/app/core/models/credendentialMandatee.interface';
-import { Mandator } from 'src/app/core/models/madator.interface';
-import { Power } from 'src/app/core/models/power.interface';
-import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
-import { TempPower } from '../power/power/power.component';
-import { Country, CountryService } from './services/country.service';
-import { FormCredentialService } from './services/form-credential.service';
-import { AuthService } from 'src/app/core/services/auth.service';
-import { PopupComponent } from '../popup/popup.component';
-import { Router } from '@angular/router';
-import { ErrorStateMatcher } from '@angular/material/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, NgModel, Validators} from '@angular/forms';
+import {CredentialMandatee} from 'src/app/core/models/credendentialMandatee.interface';
+import {Mandator} from 'src/app/core/models/madator.interface';
+import {Power} from 'src/app/core/models/power.interface';
+import {CredentialProcedureService} from 'src/app/core/services/credential-procedure.service';
+import {TempPower} from '../power/power/power.component';
+import {Country, CountryService} from './services/country.service';
+import {FormCredentialService} from './services/form-credential.service';
+import {AuthService} from 'src/app/core/services/auth.service';
+import {PopupComponent} from '../popup/popup.component';
+import {Router} from '@angular/router';
+import {ErrorStateMatcher} from '@angular/material/core';
 
 export interface objectWithName{
   name:string
@@ -91,8 +91,7 @@ export class FormCredentialComponent implements OnInit {
     return `${this.selectedCountryCode} ${this.credential.mobile_phone}`;
   }
   public set mobilePhone(value: string) {
-    const numberPart = value.replace(`${this.selectedCountryCode} `, '').trim();
-    this.credential.mobile_phone = numberPart;
+    this.credential.mobile_phone = value.replace(`${this.selectedCountryCode} `, '').trim();
   }
 
   public markPrefixAndPhoneAsTouched(prefixControl: NgModel, phoneControl: NgModel): void {

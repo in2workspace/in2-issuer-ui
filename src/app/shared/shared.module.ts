@@ -19,7 +19,6 @@ import {DialogComponent} from "./components/dialog/dialog.component";
     PowerComponent,
     PopupComponent,
     DialogComponent
-
   ],
   imports: [
     CommonModule, MaterialModule, FormsModule, RouterModule, TranslateModule, ReactiveFormsModule
