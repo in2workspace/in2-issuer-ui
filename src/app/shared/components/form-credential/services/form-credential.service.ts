@@ -53,14 +53,35 @@ export class FormCredentialService {
     selectedCountry: string,
     addedOptions: TempPower[],
     mandator: Mandator | null,
+    mandatorLastName: string,
     signer: any,
     credentialProcedureService: any,
     popupComponent: PopupComponent,
     resetForm: () => void
   ): Observable<any> {
+    console.log('mandator to submit: ');
+    console.log(mandator);
+
+    let credentialToSubmit={...credential};
+    let mandatorToSubmit;
+    
+    if(mandator){
+      const mandatorFullName = mandator.commonName + ' ' + mandatorLastName;
+      mandatorToSubmit = {...mandator, commonName:mandatorFullName}
+    }else{
+      mandatorToSubmit = {
+        organizationIdentifier: "",
+        organization: "",
+        commonName: "",
+        emailAddress: "",
+        serialNumber: "",
+        country: "",
+      };
+    }
+
     const countryPrefix = `+${selectedCountry}`;
-    if (credential.mobile_phone != '' && !credential.mobile_phone?.startsWith(countryPrefix)) {
-      credential.mobile_phone = `${countryPrefix} ${credential.mobile_phone}`;
+    if (credentialToSubmit.mobile_phone != '' && !credentialToSubmit.mobile_phone?.startsWith(countryPrefix)) {
+      credentialToSubmit.mobile_phone = `${countryPrefix} ${credentialToSubmit.mobile_phone}`;
     }
     const power: Power[] = addedOptions.map(option => {
       return this.checkTmfFunction(option);
@@ -70,8 +91,8 @@ export class FormCredentialService {
       schema: "LEARCredentialEmployee",
       format: "jwt_vc_json",
       payload: {
-        mandatee: credential,
-        mandator: mandator!,
+        mandatee: credentialToSubmit,
+        mandator: mandatorToSubmit,
         signer: signer,
         power: power
       },

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, NgModel } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroupDirective, NgForm, NgModel } from '@angular/forms';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { Country } from './services/country.service';
 import { FormCredentialService } from './services/form-credential.service';
@@ -44,12 +44,12 @@ export class FormCredentialComponent implements OnInit {
     },
   };
 
+  public countries: Country[] = [];
   public selectedOption = '';
   public addedOptions: TempPower[] = [];
   public tempPowers: TempPower[] = [];
-  public countries: Country[] = [];
   public selectedCountryCode: string = '';
-  public credentialForm!: FormGroup;
+  public addedMandatorLastName: string = '';
 
   public popupMessage: string = '';
   public isPopupVisible: boolean = false;
@@ -137,13 +137,15 @@ export class FormCredentialComponent implements OnInit {
   }
 
   public submitCredential(): void {
+    
     if (this.addedOptions.length > 0 && this.hasSelectedPowers()) {
       this.formCredentialService
         .submitCredential(
           this.credential,
           this.selectedCountryCode,
           this.addedOptions,
-          {...this.mandator},
+          this.mandator,
+          this.addedMandatorLastName,
           this.signer,
           this.credentialProcedureService,
           this.popupComponent,
@@ -177,7 +179,6 @@ export class FormCredentialComponent implements OnInit {
     this.credential = this.formCredentialService.resetForm();
     this.formDirective.resetForm();
     this.addedOptions = [];
-    this.credentialForm.reset();
     this.authService.getMandator().subscribe(mandator2 => {
       if (mandator2) {
         this.mandator = mandator2;

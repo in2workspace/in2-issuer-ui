@@ -1,10 +1,11 @@
 {
   "mandator": {
-    "organizationid": "ID de la organización",
-    "organization": "Organización",
-    "name": "Nombre",
-    "email": "Dirección de correo",
-    "serialNumber": "Número de serie",
+    "organizationid": "Número VAT de empresa",
+    "organization": "Nombre de empresa",
+    "first-name": "Nombre",
+    "last-name": "Apellidos",
+    "email": "Dirección electrónica",
+    "serialNumber": "Número de tarjeta ID",
     "country": "País",
     "select-country": "Seleccione un país",
     "no-country-error": "Seleccione un prefijo",
@@ -64,7 +65,8 @@
       "invalid_power": "No tienes la política necesaria para acceder"
     },
     "credentialIssuance":{
-      "create": "Create Credential"
+      "create": "Crea una LEARCredential",
+      "create-as-signer": "Crea una LEARCredential como Signer"
     },
     "error": {
       "not_found": "The requested resource was not found.",

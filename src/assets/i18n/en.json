@@ -1,10 +1,11 @@
 {
   "mandator": {
-    "organizationid": "Organization id",
-    "organization": "Organization",
-    "name": "Name",
-    "email": "Email address",
-    "serialNumber": "Serial number",
+    "organizationid": "Company VAT number",
+    "organization": "Company name",
+    "first-name": "First name",
+    "last-name": "Last name",
+    "email": "Email",
+    "serialNumber": "ID card number",
     "country": "Country",
     "select-country": "Select a country",
     "no-country-error": "Please select a phone prefix",
@@ -13,11 +14,11 @@
   "mandatee": {
     "firstnameid": "First name",
     "last_name": "Last name",
-    "email": "Email address",
+    "email": "Email",
     "mobile_phone": "Mobile phone"
   },
   "credentialDetail": {
-    "credentialDetail": "Credential detail",
+    "credentialDetails": "Credential details",
     "textinformation": "A new DOME credential has been issued for you with the following information"
   },
   "credentialOffer": {
@@ -63,7 +64,8 @@
     "invalid_power_message": "You do not have the required power to access"
   },
   "credentialIssuance":{
-    "create": "Create Credential"
+    "create": "Create LEARCredential",
+    "create-as-signer": "Create LEARCredential as Signer"
   },
   "error": {
     "not_found": "The requested resource was not found.",
