@@ -11,7 +11,7 @@ export class AuthService {
   public isAuthenticated$: Observable<boolean>;
   private isAuthenticatedSubject: BehaviorSubject<boolean>;
   private userDataSubject: BehaviorSubject<any>;
-  private tokenSubject: BehaviorSubject<string>; //TODO es necesario?¿
+  private tokenSubject: BehaviorSubject<string>;
   private mandatorSubject: BehaviorSubject<any>;
   private emailSubject: BehaviorSubject<string>;
   private userPowers: any[] = [];
