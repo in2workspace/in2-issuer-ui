@@ -14,6 +14,8 @@ export class AuthService {
   private tokenSubject: BehaviorSubject<string>;
   private mandatorSubject: BehaviorSubject<any>;
   private emailSubject: BehaviorSubject<string>;
+  private nameSubject: BehaviorSubject<string>;
+
   private userPowers: any[] = [];
 
   public constructor(private oidcSecurityService: OidcSecurityService, private router: Router) {
@@ -23,6 +25,7 @@ export class AuthService {
     this.tokenSubject = new BehaviorSubject<string>('');
     this.mandatorSubject = new BehaviorSubject<any>(null);
     this.emailSubject = new BehaviorSubject<string>('');
+    this.nameSubject = new BehaviorSubject<string>('');
 
     this.checkAuth().subscribe();
   }
@@ -47,7 +50,10 @@ export class AuthService {
         };
         this.mandatorSubject.next(mandator);
         const emailName = vcObject.credentialSubject.mandate.mandator.emailAddress.split('@')[0];
+        const name = vcObject.credentialSubject.mandate.mandatee.first_name + ' ' + vcObject.credentialSubject.mandate.mandatee.last_name;
+
         this.emailSubject.next(emailName);
+        this.nameSubject.next(name);
       }
       return isAuthenticated;
     }));
@@ -141,6 +147,10 @@ export class AuthService {
 
   public getToken(): Observable<string> {
     return this.tokenSubject.asObservable();
+  }
+
+  public getName(): Observable<string> {
+    return this.nameSubject.asObservable()
   }
 
 }
