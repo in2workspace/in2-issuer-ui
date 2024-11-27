@@ -61,7 +61,9 @@ export class CredentialManagementComponent implements AfterViewInit {
   }
 
   public createCredentialAsSigner(): void {
-    this.router.navigate(['/organization/credentials/create2',this.isValidOrganizationIdentifier ? "admin" : ""]);
+    this.router.navigate(['/organization/credentials/create2',this.isValidOrganizationIdentifier ? "admin" : ""], {
+      state: {showMandator: true}
+    });
   }
 
   public goToCredentialDetails(credential_procedures: CredentialProcedure): void {
