@@ -13,7 +13,7 @@ export class ActiveSortColumnDirective implements OnInit, OnDestroy {
   @Input() public appActiveSortColumn: string = ''; //name of column to be marked with class "active-sort-column" 
   private subscription: Subscription | undefined; 
 
-  public constructor(private el: ElementRef, private renderer: Renderer2, private matSort: MatSort) {} 
+  public constructor(private readonly el: ElementRef, private readonly renderer: Renderer2, private readonly matSort: MatSort) {} 
 
   public ngOnInit(): void { 
     this.subscription = this.matSort.sortChange.subscribe((sort: Sort) => { 
