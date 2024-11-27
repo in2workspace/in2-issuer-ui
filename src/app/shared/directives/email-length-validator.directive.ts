@@ -29,10 +29,6 @@ export class EmailLengthValidatorDirective implements Validator {
       return { emailDomainTooLong: true };
     }
 
-    if (email.length > 320) {
-      return { emailTooLong: true };
-    }
-
     return null;
   }
 }

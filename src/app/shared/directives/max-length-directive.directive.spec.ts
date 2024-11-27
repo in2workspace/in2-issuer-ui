@@ -19,6 +19,8 @@ describe('MaxLengthDirective', () => {
   let directive: any;
   let inputEl: HTMLInputElement;
   let ngModel: NgModel;
+  let validateSpy: any;
+  let setErrorSpy: any;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -37,6 +39,9 @@ describe('MaxLengthDirective', () => {
     ngModel = fixture.debugElement.query(By.directive(NgModel)).injector.get(NgModel);
     // console.log(inputEl)
     console.log(ngModel.control)
+
+    validateSpy = jest.spyOn(directive, 'validate');
+    setErrorSpy = jest.spyOn(ngModel.control, 'setErrors');
   });
 
   it('should create the directive', () => {
@@ -47,40 +52,62 @@ describe('MaxLengthDirective', () => {
     component.inputValue = '12345'; // exactly 5 characters
     fixture.detectChanges();
 
-    // expect(directive.validate).toHaveBeenCalled();
     expect(ngModel.control.errors).toBeNull();
   });
 
   it('should set an error when the value length exceeds the limit', () => {
-    const validateSpy = jest.spyOn(directive, 'validate');
-    const setErrorSpy = jest.spyOn(ngModel.control, 'setErrors');
+    const errors = { ...ngModel.control.errors, maxlengthExceeded: true }
     component.inputValue = '123456'; // more than 5 characters
     fixture.detectChanges();
-    console.log('console test:');
-    console.log(ngModel.control);
-    expect(directive.validate).toHaveBeenCalled();
-    expect(setErrorSpy)
-    // expect(ngModel.control.errors).toEqual({ maxlengthExceeded: true });
+    fixture.whenStable().then(()=>{
+      fixture.detectChanges();
+
+      console.log('console test:');
+      console.log(ngModel.control);
+      expect(validateSpy).toHaveBeenCalled();
+      expect(setErrorSpy).toHaveBeenCalled()
+      expect(setErrorSpy).toHaveBeenCalledWith(errors);
+      expect(ngModel.control.errors).toEqual({ maxlengthExceeded: true });
+    });
   });
 
-  // it('should remove the maxlengthExceeded error when the value length is reduced', () => {
-  //   component.inputValue = '123456'; // exceeds limit
-  //   fixture.detectChanges();
-  //   expect(ngModel.control.errors).toEqual({ maxlengthExceeded: true });
+  it('should remove the maxlengthExceeded error when the value length is reduced', () => {
+    component.inputValue = '123456'; // exceeds limit
+    fixture.detectChanges();
+    fixture.whenStable().then(()=>{
+      fixture.detectChanges();
+      expect(ngModel.control.errors).toEqual({ maxlengthExceeded: true });
+    });
 
-  //   component.inputValue = '1234'; // within limit
-  //   fixture.detectChanges();
-  //   expect(ngModel.control.errors).toBeNull();
-  // });
+    component.inputValue = '1234'; // within limit
+    fixture.detectChanges();
+    fixture.whenStable().then(()=>{
+      fixture.detectChanges();
+      expect(ngModel.control.errors).toBeNull();
+    });
+  });
 
-  // it('should retain other errors when maxlengthExceeded is removed', () => {
-  //   component.inputValue = '123456'; // exceeds limit
-  //   fixture.detectChanges();
+  it('should retain other errors when maxlengthExceeded is removed', () => {
+    const initialErrors = { required: true };
+    ngModel.control.setErrors(initialErrors);
+    component.inputValue = '123456'; // Exceeds max length
+    fixture.detectChanges();
 
-  //   ngModel.control.setErrors({ customError: true, maxlengthExceeded: true });
-  //   component.inputValue = '1234'; // within limit
-  //   fixture.detectChanges();
+    fixture.whenStable().then(() => {
+      fixture.detectChanges();
+      expect(ngModel.control.errors).toEqual({
+        ...initialErrors,
+        maxlengthExceeded: true,
+      });
 
-  //   expect(ngModel.control.errors).toEqual({ customError: true }); // retains other errors
-  // });
+      component.inputValue = '1234'; // Within limit
+      fixture.detectChanges();
+
+      fixture.whenStable().then(() => {
+        fixture.detectChanges();
+        expect(ngModel.control.errors).toEqual(initialErrors);
+      });
+    });
+  });
+
 });
