@@ -59,10 +59,8 @@ export class FormCredentialService {
     popupComponent: PopupComponent,
     resetForm: () => void
   ): Observable<any> {
-    console.log('mandator to submit: ');
-    console.log(mandator);
 
-    let credentialToSubmit={...credential};
+    const credentialToSubmit={...credential};
     let mandatorToSubmit;
     
     if(mandator){

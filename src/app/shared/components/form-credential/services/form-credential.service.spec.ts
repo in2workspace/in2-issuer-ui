@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { FormCredentialService, isCertification, isProductOffering } from './form-credential.service';
 import { of, throwError } from 'rxjs';
+import { CredentialMandatee } from 'src/app/core/models/credendentialMandatee.interface';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -165,122 +166,140 @@ describe('FormCredentialService', () => {
     expect(result).toBe('newValue');
   });
 
-  it('should submit credential correctly', (done) => {
-    jest.spyOn(service, 'resetForm');
-    jest.spyOn(popupComponent, 'showPopup');
-    credentialProcedureService.createProcedure.mockReturnValue(of({}));
+it('should submit credential correctly', (done) => {
+  jest.spyOn(service, 'resetForm');
+  jest.spyOn(popupComponent, 'showPopup');
+  jest.spyOn(service, 'checkTmfFunction');
+  credentialProcedureService.createProcedure.mockReturnValue(of({}));
 
-    service.submitCredential(
-      mockCredential,
-      mockSelectedCountry,
-      mockAddedOptions,
-      mockMandator,
-      mockSigner,
-      credentialProcedureService as any,
-      popupComponent,
-      service.resetForm
-    ).subscribe(() => {
-      expect(mockCredential.mobile_phone).toBe('+34 123456789');
-      expect(credentialProcedureService.createProcedure).toHaveBeenCalled();
-      expect(popupComponent.showPopup).toHaveBeenCalled();
-      expect(service.resetForm).toHaveBeenCalled();
-      done(); // Ensure the test completes after assertions
-    });
+  service.submitCredential(
+    mockCredential,
+    mockSelectedCountry,
+    mockAddedOptions,
+    mockMandator,
+    'lastName',
+    mockSigner,
+    credentialProcedureService as any,
+    popupComponent,
+    service.resetForm
+  ).subscribe(() => {
+    expect(credentialProcedureService.createProcedure).toHaveBeenCalledWith(
+      expect.objectContaining({
+        schema: 'LEARCredentialEmployee',
+        format: 'jwt_vc_json',
+        payload: expect.objectContaining({
+          mandatee: expect.any(Object),
+          mandator: expect.any(Object),
+          signer: mockSigner,
+          power: expect.any(Array)
+        }),
+        operation_mode: 'S'
+      })
+    );
+    expect(popupComponent.showPopup).toHaveBeenCalled();
+    expect(service.resetForm).toHaveBeenCalled();
+    expect(service.checkTmfFunction).toHaveBeenCalledTimes(mockAddedOptions.length);
+    done();
   });
+});
 
-  it('should append country prefix to mobile_phone if not present', (done) => {
-    const credential: Mandatee = {
-      first_name: 'John',
-      last_name: 'Doe',
-      email: 'john.doe@example.com',
-      mobile_phone: '123456789',
-    };
+it('should handle error when submitCredential fails', (done) => {
+  const errorMessage = 'Submission failed';
+  credentialProcedureService.createProcedure.mockReturnValue(throwError(() => new Error(errorMessage)));
+  jest.spyOn(service, 'resetForm');
+  jest.spyOn(popupComponent, 'showPopup');
 
-    credentialProcedureService.createProcedure.mockReturnValue(of({}));
-
-    service.submitCredential(
-      credential,
-      mockSelectedCountry,
-      mockAddedOptions,
-      mockMandator,
-      mockSigner,
-      credentialProcedureService,
-      popupComponent,
-      jest.fn()
-    ).subscribe(() => {
-      expect(credential.mobile_phone).toBe('+34 123456789');
-      expect(credentialProcedureService.createProcedure).toHaveBeenCalled();
-      done();
-    });
-  });
-
-  it('should not append country prefix to mobile_phone if already present', (done) => {
-    const credential: Mandatee = {
-      first_name: 'John',
-      last_name: 'Doe',
-      email: 'john.doe@example.com',
-      mobile_phone: '+34 123456789', // Already has country prefix
-    };
-    const resetForm = jest.fn();
-
-    credentialProcedureService.createProcedure.mockReturnValue(of({})); // Mock Observable return
-
-    service.submitCredential(
-      credential,
-      mockSelectedCountry,
-      mockAddedOptions,
-      mockMandator,
-      mockSigner,
-      credentialProcedureService,
-      popupComponent,
-      resetForm
-    ).subscribe(() => {
-      expect(credential.mobile_phone).toBe('+34 123456789'); // Ensure prefix is unchanged
-      expect(credentialProcedureService.createProcedure).toHaveBeenCalled(); // Check createProcedure was called
-      expect(resetForm).toHaveBeenCalled(); // Ensure resetForm was called
-      done(); // Mark the test as completed
-    });
-  });
-
-  it('should call popupComponent.showPopup on success', (done) => {
-    jest.spyOn(popupComponent, 'showPopup');
-    credentialProcedureService.createProcedure.mockReturnValue(of({}));
-
-    service.submitCredential(
-      mockCredential,
-      mockSelectedCountry,
-      mockAddedOptions,
-      mockMandator,
-      mockSigner,
-      credentialProcedureService,
-      popupComponent,
-      jest.fn()
-    ).subscribe(() => {
-      expect(popupComponent.showPopup).toHaveBeenCalled();
-      done();
-    });
-  });
-
-  it('should call popupComponent.showPopup on error', (done) => {
-    jest.spyOn(popupComponent, 'showPopup');
-    credentialProcedureService.createProcedure.mockReturnValue(throwError(() => new Error('error')));
-
-    service.submitCredential(
-      mockCredential,
-      mockSelectedCountry,
-      mockAddedOptions,
-      mockMandator,
-      mockSigner,
-      credentialProcedureService,
-      popupComponent,
-      jest.fn()
-    ).subscribe({
-      error: () => {
+  service.submitCredential(
+    mockCredential,
+    mockSelectedCountry,
+    mockAddedOptions,
+    mockMandator,
+    'lastName',
+    mockSigner,
+    credentialProcedureService as any,
+    popupComponent,
+    service.resetForm
+  ).subscribe({
+    next: () => {
+      done.fail('Should not reach next block');
+    },
+    error: (error) => {
+      try {
+        expect(error.message).toBe(errorMessage);
         expect(popupComponent.showPopup).toHaveBeenCalled();
+        expect(service.resetForm).not.toHaveBeenCalled();
         done();
+      } catch (assertionError) {
+        done(assertionError);
       }
-    });
+    }
   });
+});
+
+
+
+it('should append country prefix to mobile_phone if not present', (done) => {
+  const mockCredential = { 
+    mobile_phone: '123456789' 
+  } as CredentialMandatee;
+  const mockSelectedCountry = '34';
+  const mockAddedOptions: TempPower[] = [];
+  const mockMandator = null;
+  const mockSigner = {};
+
+  jest.spyOn(credentialProcedureService, 'createProcedure').mockImplementation((credentialProcedure) => {
+    expect((credentialProcedure as any).payload.mandatee.mobile_phone).toBe('+34 123456789');
+    return of({});
+  });
+
+  service.submitCredential(
+    mockCredential,
+    mockSelectedCountry,
+    mockAddedOptions,
+    mockMandator,
+    'Doe',
+    mockSigner,
+    credentialProcedureService as any,
+    popupComponent,
+    jest.fn()
+  ).subscribe(() => {
+    done();
+  }, (error) => {
+    done(error); 
+  });
+});
+
+it('should not append country prefix to mobile_phone if already present', (done) => {
+  const mockCredential = {
+    mobile_phone: '+34 123456789'
+  } as CredentialMandatee; 
+  const mockSelectedCountry = '34'; 
+  const mockAddedOptions: TempPower[] = [];
+  const mockMandator = null;
+  const mockSigner = {};
+
+  jest.spyOn(credentialProcedureService, 'createProcedure').mockImplementation((credentialProcedure) => {
+    expect((credentialProcedure as any).payload.mandatee.mobile_phone).toBe('+34 123456789');
+    return of({});
+  });
+
+  service.submitCredential(
+    mockCredential,
+    mockSelectedCountry,
+    mockAddedOptions,
+    mockMandator,
+    'Doe',
+    mockSigner,
+    credentialProcedureService as any,
+    popupComponent,
+    jest.fn()
+  ).subscribe(() => {
+    done(); 
+  }, (error) => {
+    done(error);
+  });
+});
+
 
   it('should map addedOptions to Power objects correctly',() => {
 
@@ -300,6 +319,7 @@ describe('FormCredentialService', () => {
       mockSelectedCountry,
       mockAddedOptions,
       mockMandator,
+      'lastName',
       mockSigner,
       credentialProcedureService,
       popupComponent,
