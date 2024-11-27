@@ -57,10 +57,12 @@ export class CredentialManagementComponent implements AfterViewInit {
   }
 
   public createNewCredential(): void {
+    console.info("BUTTON createNewCredential pressed!")
     this.router.navigate(['/organization/credentials/create']);
   }
 
   public createCredentialAsSigner(): void {
+    console.info("BUTTON createCredentialAsSigner pressed!")
     this.router.navigate(['/organization/credentials/create2',this.isValidOrganizationIdentifier ? "admin" : ""], {
       state: {showMandator: true}
     });

@@ -109,6 +109,7 @@ export class FormCredentialComponent implements OnInit {
   public ngOnInit(): void {
     const navigation = this.router.getCurrentNavigation();
     this.showMandatorDetails = navigation?.extras.state?.['showMandator'] || false;
+    console.log("SHOW MANDATOR DETAILS? " + this.showMandatorDetails)
 
     this.credentialForm = this.fb.group({
       first_name: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*')]],
