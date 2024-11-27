@@ -8,9 +8,10 @@ import { CredentialDetailComponent } from './components/credential-detail/creden
 import { SharedModule } from 'src/app/shared/shared.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSortModule } from '@angular/material/sort';
+import { ActiveSortColumnDirective } from 'src/app/shared/directives/active-sort-column.directive';
 
 @NgModule({
-  declarations: [CredentialManagementComponent, CredentialDetailComponent],
+  declarations: [CredentialManagementComponent, CredentialDetailComponent, ActiveSortColumnDirective],
   imports: [
     CommonModule,
     CredentialManagementRoutingModule,
