@@ -5,13 +5,26 @@ import { CredentialMandatee } from 'src/app/core/models/credendentialMandatee.in
 import { Mandator } from 'src/app/core/models/madator.interface';
 import { PopupComponent } from '../../popup/popup.component';
 import { IssuanceRequest } from 'src/app/core/models/issuanceRequest.interface';
-import { Observable } from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FormCredentialService {
+
+  private showMandatorSubject = new BehaviorSubject<boolean>(false);
+  showMandator$ = this.showMandatorSubject.asObservable();
+
+  constructor() {}
+
+  setShowMandator(value: boolean): void {
+    this.showMandatorSubject.next(value);
+  }
+
+  getShowMandator(): boolean {
+    return this.showMandatorSubject.value;
+  }
 
   public convertToTempPower(power: Power): TempPower {
     const tmf_action = Array.isArray(power.tmf_action) ? power.tmf_action : [power.tmf_action];
@@ -60,7 +73,7 @@ export class FormCredentialService {
     const power: Power[] = addedOptions.map(option => {
       return this.checkTmfFunction(option);
     });
-  
+
     const credentialProcedure: IssuanceRequest = {
       schema: "LEARCredentialEmployee",
       format: "jwt_vc_json",
@@ -72,7 +85,7 @@ export class FormCredentialService {
       },
       operation_mode: "S"
     };
-  
+
     return credentialProcedureService.createProcedure(credentialProcedure).pipe(
       tap(() => {
         popupComponent.showPopup();
@@ -105,14 +118,14 @@ export class FormCredentialService {
       default:
         break;
     }
-  
+
     return {
       tmf_action,
       tmf_domain: option.tmf_domain,
       tmf_function: option.tmf_function,
       tmf_type: option.tmf_type
     };
-  
+
   }
 
 }

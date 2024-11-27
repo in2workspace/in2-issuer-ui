@@ -6,6 +6,7 @@ import { CredentialProcedure, CredentialProcedureResponse } from 'src/app/core/m
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { MatSort } from '@angular/material/sort';
+import {FormCredentialService} from "../../shared/components/form-credential/services/form-credential.service";
 
 @Component({
   selector: 'app-credential-management',
@@ -21,6 +22,7 @@ export class CredentialManagementComponent implements AfterViewInit {
   public constructor(
     private credentialProcedureService: CredentialProcedureService,
     private authService: AuthService,
+    private formCredentialService: FormCredentialService,
     private router: Router
   ) {
 
@@ -58,14 +60,14 @@ export class CredentialManagementComponent implements AfterViewInit {
 
   public createNewCredential(): void {
     console.info("BUTTON createNewCredential pressed!")
+    this.formCredentialService.setShowMandator(false);
     this.router.navigate(['/organization/credentials/create']);
   }
 
   public createCredentialAsSigner(): void {
-    console.info("BUTTON createCredentialAsSigner pressed!")
-    this.router.navigate(['/organization/credentials/create2',this.isValidOrganizationIdentifier ? "admin" : ""], {
-      state: {showMandator: true}
-    });
+    console.info("BUTTON createNewCredential pressed!")
+    this.formCredentialService.setShowMandator(true);
+    this.router.navigate(['/organization/credentials/create2',this.isValidOrganizationIdentifier ? "admin" : ""]);
   }
 
   public goToCredentialDetails(credential_procedures: CredentialProcedure): void {

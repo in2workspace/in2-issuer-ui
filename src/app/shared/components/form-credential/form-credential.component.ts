@@ -73,8 +73,7 @@ export class FormCredentialComponent implements OnInit {
   public isPopupVisible: boolean = false;
 
   public isValidOrganizationIdentifier = false;
-  public showMandatorDetails: boolean = false;
-
+  public showMandator: boolean = false;
 
   public constructor(
     private credentialProcedureService: CredentialProcedureService,
@@ -107,9 +106,10 @@ export class FormCredentialComponent implements OnInit {
 
 
   public ngOnInit(): void {
-    const navigation = this.router.getCurrentNavigation();
-    this.showMandatorDetails = navigation?.extras.state?.['showMandator'] || false;
-    console.log("SHOW MANDATOR DETAILS? " + this.showMandatorDetails)
+
+    this.formCredentialService.showMandator$.subscribe((value) => {
+      this.showMandator = value;
+    });
 
     this.credentialForm = this.fb.group({
       first_name: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*')]],
