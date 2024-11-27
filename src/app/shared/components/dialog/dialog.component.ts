@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
-import {TranslateModule} from "@ngx-translate/core";
+import {MatDialogRef} from '@angular/material/dialog';
+
 @Component({
   selector: 'app-confirmation-dialog',
   templateUrl: './dialog.component.html',

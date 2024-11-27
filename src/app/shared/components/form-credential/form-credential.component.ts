@@ -1,4 +1,4 @@
-import {Component, EventEmitter, inject, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, NgModel, Validators} from '@angular/forms';
 import {CredentialMandatee} from 'src/app/core/models/credendentialMandatee.interface';
 import {Mandator} from 'src/app/core/models/madator.interface';
@@ -11,8 +11,6 @@ import {AuthService} from 'src/app/core/services/auth.service';
 import {PopupComponent} from '../popup/popup.component';
 import {Router} from '@angular/router';
 import {ErrorStateMatcher} from '@angular/material/core';
-import {DialogComponent} from "../dialog/dialog.component";
-import {MatDialog} from "@angular/material/dialog";
 
 export interface objectWithName{
   name:string
@@ -50,8 +48,6 @@ export class FormCredentialComponent implements OnInit {
     country: "",
   }
   public signer : any ={};
-
-  private dialog = inject(MatDialog);
 
   //if mobile has been introduced and unfocused and there is not country, show error
   public countryErrorMatcher: ErrorStateMatcher = {
@@ -110,12 +106,6 @@ export class FormCredentialComponent implements OnInit {
 
   public ngOnInit(): void {
 
-    this.dialog.open(DialogComponent, {
-      panelClass: 'custom-dialog-error'
-    }).afterClosed().subscribe(() => {
-      console.log("Closed");
-    });
-
     this.credentialForm = this.fb.group({
       first_name: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*')]],
       last_name: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*')]],
@@ -124,8 +114,6 @@ export class FormCredentialComponent implements OnInit {
       country: ['', Validators.required],
 
     });
-
-
 
     this.authService.getMandator().subscribe(mandator2 => {
       if (mandator2) {
