@@ -25,9 +25,9 @@ module.exports = {
     testPathIgnorePatterns: [
       '/node_modules/',
       '/dist/',
-      '/src/app/app',
-      '/src/app/core/',
-      '/src/app/features/',
-      '/src/app/shared/components/(?!directives/max-length)',
+      // '/src/app/app',
+      // '/src/app/core/',
+      // '/src/app/features/',
+      // '/src/app/shared/(?!components)'
     ]
    };
