@@ -130,12 +130,14 @@ export class FormCredentialComponent implements OnInit {
             'serialNumber':mandator2.serialNumber,
             'country':mandator2.country}
         }
-        this.signer = { 'organizationIdentifier': mandator2.organizationIdentifier,
-                        'organization': mandator2.organization,
-                        'commonName':mandator2.commonName,
-                        'emailAddress':mandator2.emailAddress,
-                        'serialNumber':mandator2.serialNumber,
-                        'country':mandator2.country}
+        this.authService.getSigner().subscribe(signer => {
+          this.signer = { 'organizationIdentifier': signer.organizationIdentifier,
+            'organization': signer.organization,
+            'commonName':signer.commonName,
+            'emailAddress':signer.emailAddress,
+            'serialNumber':signer.serialNumber,
+            'country':signer.country}
+        })
       }
     });
 

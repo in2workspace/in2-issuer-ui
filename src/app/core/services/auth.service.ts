@@ -13,6 +13,7 @@ export class AuthService {
   private userDataSubject: BehaviorSubject<any>;
   private tokenSubject: BehaviorSubject<string>;
   private mandatorSubject: BehaviorSubject<any>;
+  private signerSubject: BehaviorSubject<any>;
   private emailSubject: BehaviorSubject<string>;
   private nameSubject: BehaviorSubject<string>;
 
@@ -24,6 +25,7 @@ export class AuthService {
     this.userDataSubject = new BehaviorSubject<any>(null);
     this.tokenSubject = new BehaviorSubject<string>('');
     this.mandatorSubject = new BehaviorSubject<any>(null);
+    this.signerSubject = new BehaviorSubject<any>(null);
     this.emailSubject = new BehaviorSubject<string>('');
     this.nameSubject = new BehaviorSubject<string>('');
 
@@ -49,6 +51,17 @@ export class AuthService {
           country: vcObject.credentialSubject.mandate.mandator.country
         };
         this.mandatorSubject.next(mandator);
+
+        const  signer = {
+          organizationIdentifier: vcObject.credentialSubject.mandate.signer.organizationIdentifier,
+          organization: vcObject.credentialSubject.mandate.signer.organization,
+          commonName: vcObject.credentialSubject.mandate.signer.commonName,
+          emailAddress: vcObject.credentialSubject.mandate.signer.emailAddress,
+          serialNumber: vcObject.credentialSubject.mandate.signer.serialNumber,
+          country: vcObject.credentialSubject.mandate.signer.country
+        }
+        this.signerSubject.next(signer)
+
         const emailName = vcObject.credentialSubject.mandate.mandator.emailAddress.split('@')[0];
         const name = vcObject.credentialSubject.mandate.mandatee.first_name + ' ' + vcObject.credentialSubject.mandate.mandatee.last_name;
 
@@ -100,6 +113,10 @@ export class AuthService {
 
   public getMandator(): Observable<any> {
     return this.mandatorSubject.asObservable();
+  }
+
+  public getSigner(): Observable<any> {
+    return this.signerSubject.asObservable();
   }
 
   public login(): void {
