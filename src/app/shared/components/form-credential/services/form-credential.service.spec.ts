@@ -93,6 +93,10 @@ describe('FormCredentialService', () => {
     ];
   });
 
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
@@ -336,7 +340,6 @@ it('should not append country prefix to mobile_phone if already present', (done)
         })
       })
     );
-    checkTmfSpy.mockRestore();
   });
 
   it('should add "Upload" to tmf_action if option.upload is true', () => {

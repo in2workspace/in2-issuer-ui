@@ -73,12 +73,6 @@ export class FormCredentialComponent implements OnInit {
     }
   }
 
-  public validateFirstName(value: string): boolean {
-    const pattern = /^[\p{L}\p{M}'\- ]+$/u;
-    return pattern.test(value);
-  }
-
-
   public ngOnInit(): void {
 
     this.formCredentialService.showMandator$.subscribe((value) => {
