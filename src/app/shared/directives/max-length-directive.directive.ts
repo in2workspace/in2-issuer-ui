@@ -9,8 +9,8 @@ import { NgModel } from '@angular/forms';
 export class MaxLengthDirective implements OnInit{
   @Input('appMaxLength') public maxLength!: number; 
 
-  private ngModel = inject(NgModel);
-  private destroyRef = inject(DestroyRef);
+  private readonly ngModel = inject(NgModel);
+  private readonly destroyRef = inject(DestroyRef);
 
 
   public ngOnInit(): void {
