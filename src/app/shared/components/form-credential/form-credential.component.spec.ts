@@ -445,4 +445,12 @@ describe('FormCredentialComponent', () => {
     expect(result).toBe('');
   });
   
+  it('should close component', fakeAsync(()=>{
+    component.closePopup();
+    expect(component.isPopupVisible).toBe(true);
+    tick(1000);
+    expect(component.isPopupVisible).toBe(false);
+
+  }));
+
 });
