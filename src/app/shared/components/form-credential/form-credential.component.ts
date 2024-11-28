@@ -154,15 +154,20 @@ export class FormCredentialComponent implements OnInit {
           },
           error: (err) => {
             this.popupMessage = this.translate.instant("error.credential_submission");
-            this.isPopupVisible = true;
-            setTimeout(()=>{this.isPopupVisible=false}, 1000)
+            this.closePopup();
             console.error(err);
           }
         });
     } else {
       this.popupMessage = this.translate.instant("error.one_power_min");
-      this.isPopupVisible = true;
+      this.closePopup();
+      return;
     }
+  }
+
+  public closePopup(){
+    this.isPopupVisible = true;
+    setTimeout(()=>{this.isPopupVisible=false}, 1000);
   }
 
   public triggerSendReminder(): void {
