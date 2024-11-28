@@ -63,10 +63,19 @@ describe('EmailLengthValidatorDirective', () => {
     emailControl.setValue('username@.com');
     expect(emailControl.errors).toEqual({ emailPatternInvalid: true });
 
-    emailControl.setValue('username@domain.c'); // Domini massa curt
+    emailControl.setValue('username@domain.c');
     expect(emailControl.errors).toEqual({ emailPatternInvalid: true });
 
     emailControl.setValue('@missinguser.com');
+    expect(emailControl.errors).toEqual({ emailPatternInvalid: true });
+
+    emailControl.setValue('john.@missinguser.com');
+    expect(emailControl.errors).toEqual({ emailPatternInvalid: true });
+
+    emailControl.setValue('.john.@missinguser.com');
+    expect(emailControl.errors).toEqual({ emailPatternInvalid: true });
+
+    emailControl.setValue('"john.@missinguser.com');
     expect(emailControl.errors).toEqual({ emailPatternInvalid: true });
 
     emailControl.setValue('username@.domain.com');
@@ -76,19 +85,17 @@ describe('EmailLengthValidatorDirective', () => {
     expect(emailControl.errors).toEqual({ emailPatternInvalid: true });
   });
 
-  // it('should not set an error for edge cases that are valid', () => {
-  //   emailControl.setValue('user.name+tag+sorting@example.com');
-  //   expect(emailControl.errors).toBeNull();
+  it('should not set an error for edge cases that are valid', () => {
+    emailControl.setValue('user.name+tag+sorting@example.com');
+    expect(emailControl.errors).toBeNull();
 
-  //   emailControl.setValue('x@example.com'); // Nom curt vàlid
-  //   expect(emailControl.errors).toBeNull();
+    emailControl.setValue('x@example.com'); // Nom curt vàlid
+    expect(emailControl.errors).toBeNull();
 
-  //   emailControl.setValue('"john..doe"@example.com'); // Noms amb cometes
-  //   expect(emailControl.errors).toBeNull();
+    emailControl.setValue('user_name@sub-domain.example.com'); // Subdominis vàlids
+    expect(emailControl.errors).toBeNull();
 
-  //   emailControl.setValue('user_name@sub-domain.example.com'); // Subdominis vàlids
-  //   expect(emailControl.errors).toBeNull();
-  // });
+  });
 
   it('should not set an error for a null or empty value', () => {
     emailControl.setValue(null);

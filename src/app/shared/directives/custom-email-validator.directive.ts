@@ -12,7 +12,21 @@ import { AbstractControl, NG_VALIDATORS, ValidationErrors, Validator } from '@an
   ],
 })
 export class CustomEmailValidatorDirective implements Validator {
-  private readonly emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)+$/;
+  /**
+   * Validates email addresses according to RFC 5322, excluding quoted strings (e.g., "john..doe"@example.com).
+   * 
+   * Rules:
+   * - `local-part` (before @):
+   *   - Allows letters, numbers, and special characters: !#$%&'*+/=?^_`{|}~-.
+   *   - Permits dots (.) only between segments (not at start, end, or consecutively).
+   * - `domain` (after @):
+   *   - Allows letters, numbers, and hyphens (-).
+   *   - Hyphens cannot appear at the start or end of a segment.
+   *   - Requires at least two characters in the top-level domain (e.g., ".com").
+   */
+  private readonly emailPattern =
+  /^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
+
   public validate(control: AbstractControl): ValidationErrors | null {
     const email = control.value;
 
