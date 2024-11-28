@@ -12,18 +12,15 @@ export const OnboardingPolicy = () => {
   const dialog = inject(MatDialog);
 
   if (authService.hasOnboardingExecutePower()) {
-    console.info("OnboardingPolicy Guard OKEY!")
     return true;
   } else {
-    console.error("OnboardingPolicy Guard NOT OKEY!")
-
     const dialogRef = dialog.open(DialogComponent, {
       panelClass: 'custom-dialog-error'
     });
 
     dialogRef.afterClosed().subscribe(() => {
       oidcService.logoff()
-      router.navigate(['/home']).then(r => false);
+      router.navigate(['/home']).then(() => false);
     });
     return false;
   }
