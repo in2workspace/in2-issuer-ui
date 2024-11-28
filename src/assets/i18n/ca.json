@@ -2,6 +2,7 @@
   "mandator": {
     "organizationid": "Número VAT de l'empresa",
     "organization": "Nom de l'empresa",
+    "name": "Nom",
     "first-name": "Nom",
     "last-name": "Cognoms",
     "email": "Adreça electrònica",
