@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AutoLoginPartialRoutesGuard } from 'angular-auth-oidc-client';
 import { CallbackComponent } from './features/callback/callback.component';
 import { CredentialOfferOnboardingComponent } from './features/credential-offer-onboarding/credential-offer-onboarding.component';
-import { OnboardingPolicy} from "./core/policies/onboarding-policy";
+import { OnboardingPolicy } from "./core/policies/onboarding-policy";
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'home' },

@@ -1,9 +1,9 @@
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import {DialogComponent} from "../../shared/components/dialog/dialog.component";
-import {MatDialog} from "@angular/material/dialog";
-import {OidcSecurityService} from "angular-auth-oidc-client";
+import { DialogComponent } from "../../shared/components/dialog/dialog.component";
+import { MatDialog } from "@angular/material/dialog";
+import { OidcSecurityService } from "angular-auth-oidc-client";
 
 export const OnboardingPolicy = () => {
   const authService = inject(AuthService);

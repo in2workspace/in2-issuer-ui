@@ -1,11 +1,9 @@
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from '../services/auth.service';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
-import {OnboardingPolicy} from "./onboarding-policy";
+import { OnboardingPolicy } from "./onboarding-policy";
 import { TestBed } from '@angular/core/testing';
-import {DialogComponent} from "../../shared/components/dialog/dialog.component";
-import {of} from "rxjs";
 
 describe('OnboardingPolicyGuard', () => {
   let authService: {hasOnboardingExecutePower: jest.Mock};
