@@ -45,24 +45,40 @@ describe('OrganizationNameValidatorDirective', () => {
     expect(orgNameControl.errors).toBeNull();
   });
 
+  it('should allow names with valid Latin characters and permitted symbols', () => {
+    const validNames = [
+      "Org Name",       // Space
+      "O'Connor",       // Apostrof
+      "AT&T",           // Ampersand
+      "Café-au-lait",   // Latin characters with accent and hyphens
+      "Dr. John's Org", // Dots, apostrofs, spaces
+      "Org(2024)",      // Parenthesis and numbers
+    ];
+  
+    validNames.forEach((name) => {
+      orgNameControl.setValue(name);
+      expect(orgNameControl.errors).toBeNull();
+    });
+  });
+
   it('should set an error for names containing special characters not allowed', () => {
     const invalidNames = [
-      'Org@Name',  
-      'Org#Name', 
-      'Org$Name', 
-      'Org%Name', 
-      'Org^Name', 
-      'Org*Name',  
-      'Org=Name',  
-      'Org+Name',  
-      'Org~Name',   
-      'Org!Name', 
-      'Org?Name',  
-      'Org|Name', 
-      'Org\\Name', 
-      'Org<Name>', 
-      'Org[Name]', 
-      'Org{Name}', 
+      'Org@Name',  // '@'
+      'Org#Name',  // '#' 
+      'Org$Name',  // '$' 
+      'Org%Name',  // '%' 
+      'Org^Name',  // '^' 
+      'Org*Name',  // '*'
+      'Org=Name',  // '=' 
+      'Org+Name',  // '+' 
+      'Org~Name',  // '~' 
+      'Org!Name',  // '!' 
+      'Org?Name',  // '?' 
+      'Org|Name',  // '|' 
+      'Org\\Name', // '\' 
+      'Org<Name>', // '<', '>'
+      'Org[Name]', // '[', ']'
+      'Org{Name}', // '{', '}'
     ];
   
     invalidNames.forEach((name) => {
@@ -74,8 +90,8 @@ describe('OrganizationNameValidatorDirective', () => {
   it('should set an error for names containing emojis', () => {
     const invalidNames = [
       'Org😀Name',  
-      'Org🚀Name', 
-      'Org❤️Name',  
+      'Org🚀Name',
+      'Org❤️Name',
     ];
   
     invalidNames.forEach((name) => {
@@ -83,5 +99,6 @@ describe('OrganizationNameValidatorDirective', () => {
       expect(orgNameControl.errors).toEqual({ invalidOrgName: true });
     });
   });
+  
  
 });

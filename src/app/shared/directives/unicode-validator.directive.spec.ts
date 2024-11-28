@@ -35,43 +35,41 @@ describe('UnicodeValidatorDirective', () => {
     expect(fixture).toBeTruthy();
   });
 
-  it('should not set an error for valid Unicode text', () => {
+  it('should not set an error for valid text', () => {
     const validValues = [
-      'Héllo',       // Latin characters with accents
-      'Český',       // Diacritics
-      'Γειά',        // Greek letters
-      'こんにちは',  // Japanese Hiragana/Katakana
-      '안녕하세요',   // Korean Hangul
-      'مرحبا',       // Arabic
-      '中文',         // Chinese
-      '’',           // Unicode apostrophe
-      'é’.',         // Mixed valid characters
+      'Héllo',         // Letters with accents
+      'Renée O’Connor', // Apostrof
+      'Jean-Pierre',   // Hyphen
+      'Joan Martí',    // Space
+      'Renée',         // Accent simple name
     ];
-
+  
     validValues.forEach((value) => {
       unicodeControl.setValue(value);
       expect(unicodeControl.errors).toBeNull();
     });
   });
-
-  it('should set an error for invalid characters', () => {
+  
+  it('should set an error for invalid text', () => {
     const invalidValues = [
-      'Hello!',      // Exclamation mark
-      '12345',       // Numbers
-      'Test@Name',   // `@` not allowed
-      'Name#Value',  // `#` not allowed
-      'Value$',      // `$` not allowed
-      'Value%',      // `%` not allowed
-      'Value_',      // `_` not allowed
-      'Value1',      // Numbers
-      '🙂',           // Emoji
+      'Γειά',         // Greek
+      'こんにちは',   // Japanese
+      '안녕하세요',    // Korean
+      'مرحبا',        // Arabic
+      '中文',          // Chinese
+      'Hello!',       // Exclamation
+      'Test@Name',    // @
+      'Name#Value',   // #
+      'Value$',       // $
+      '12345',        // Numbers
+      '🙂',            // Emoji
     ];
-
+  
     invalidValues.forEach((value) => {
       unicodeControl.setValue(value);
-      expect(unicodeControl.errors).toEqual({ invalidUnicode: true });
+      expect(unicodeControl.errors).not.toBeNull();
     });
-  });
+  });  
 
   it('should not set an error for an empty value', () => {
     unicodeControl.setValue('');

@@ -18,7 +18,7 @@ import {
 })
 export class OrganizationNameValidatorDirective implements Validator {
   public validate(control: AbstractControl): ValidationErrors | null {
-    const pattern = /^[\p{L}\p{M}0-9'&\-,.()/ ]+$/u;
+    const pattern = /^[\p{Script=Latin}\p{M}0-9'&\-,.()/ ]+$/u;
     const value = control.value;
 
     if (!value) {

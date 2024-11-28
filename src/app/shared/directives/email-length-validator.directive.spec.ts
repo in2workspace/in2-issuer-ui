@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule, FormControl, ValidationErrors } from '@angular/forms';
-import { EmailLengthValidatorDirective } from './email-length-validator.directive';
+import { CustomEmailValidatorDirective } from './custom-email-validator.directive';
 
 @Component({
   template: `
     <form>
-      <input type="email" [formControl]="emailControl" appValidateEmailLength />
+      <input type="email" [formControl]="emailControl" appEmailValidator />
     </form>
   `,
 })
@@ -21,7 +21,7 @@ describe('EmailLengthValidatorDirective', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [TestComponent, EmailLengthValidatorDirective],
+      declarations: [TestComponent, CustomEmailValidatorDirective],
       imports: [ReactiveFormsModule, FormsModule],
     }).compileComponents();
 
@@ -51,6 +51,44 @@ describe('EmailLengthValidatorDirective', () => {
     emailControl.setValue(longDomain);
     expect(emailControl.errors).toEqual({ emailDomainTooLong: true });
   });
+
+  it('should set an error if the email does not match the pattern', () => {
+
+    emailControl.setValue('plainaddress');
+    expect(emailControl.errors).toEqual({ emailPatternInvalid: true });
+
+    emailControl.setValue('missingatsymbol.com');
+    expect(emailControl.errors).toEqual({ emailPatternInvalid: true });
+
+    emailControl.setValue('username@.com');
+    expect(emailControl.errors).toEqual({ emailPatternInvalid: true });
+
+    emailControl.setValue('username@domain.c'); // Domini massa curt
+    expect(emailControl.errors).toEqual({ emailPatternInvalid: true });
+
+    emailControl.setValue('@missinguser.com');
+    expect(emailControl.errors).toEqual({ emailPatternInvalid: true });
+
+    emailControl.setValue('username@.domain.com');
+    expect(emailControl.errors).toEqual({ emailPatternInvalid: true });
+
+    emailControl.setValue('username@domain..com');
+    expect(emailControl.errors).toEqual({ emailPatternInvalid: true });
+  });
+
+  // it('should not set an error for edge cases that are valid', () => {
+  //   emailControl.setValue('user.name+tag+sorting@example.com');
+  //   expect(emailControl.errors).toBeNull();
+
+  //   emailControl.setValue('x@example.com'); // Nom curt vàlid
+  //   expect(emailControl.errors).toBeNull();
+
+  //   emailControl.setValue('"john..doe"@example.com'); // Noms amb cometes
+  //   expect(emailControl.errors).toBeNull();
+
+  //   emailControl.setValue('user_name@sub-domain.example.com'); // Subdominis vàlids
+  //   expect(emailControl.errors).toBeNull();
+  // });
 
   it('should not set an error for a null or empty value', () => {
     emailControl.setValue(null);

@@ -2,16 +2,17 @@ import { Directive } from '@angular/core';
 import { AbstractControl, NG_VALIDATORS, ValidationErrors, Validator } from '@angular/forms';
 
 @Directive({
-  selector: '[appValidateEmailLength]',
+  selector: '[appEmailValidator]',
   providers: [
     {
       provide: NG_VALIDATORS,
-      useExisting: EmailLengthValidatorDirective,
+      useExisting: CustomEmailValidatorDirective,
       multi: true,
     },
   ],
 })
-export class EmailLengthValidatorDirective implements Validator {
+export class CustomEmailValidatorDirective implements Validator {
+  private readonly emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)+$/;
   public validate(control: AbstractControl): ValidationErrors | null {
     const email = control.value;
 
@@ -27,6 +28,10 @@ export class EmailLengthValidatorDirective implements Validator {
 
     if (domain && domain.length > 255) {
       return { emailDomainTooLong: true };
+    }
+
+    if (!this.emailPattern.test(email)) {
+      return { emailPatternInvalid: true };
     }
 
     return null;

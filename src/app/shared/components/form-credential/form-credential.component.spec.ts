@@ -16,7 +16,7 @@ import { PopupComponent } from '../popup/popup.component';
 import { Power } from 'src/app/core/models/power.interface';
 import { CredentialMandatee } from 'src/app/core/models/credendentialMandatee.interface';
 import { MaxLengthDirective } from '../../directives/max-length-directive.directive';
-import { EmailLengthValidatorDirective } from '../../directives/email-length-validator.directive';
+import { EmailLengthValidatorDirective } from '../../directives/custom-email-validator.directive';
 import { UnicodeValidatorDirective } from '../../directives/unicode-validator.directive';
 import { OrganizationNameValidatorDirective } from '../../directives/organization-name.validator.directive';
 

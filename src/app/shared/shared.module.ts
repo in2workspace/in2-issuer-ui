@@ -10,7 +10,7 @@ import { PowerComponent } from './components/power/power/power.component';
 import { PopupComponent } from './components/popup/popup.component';
 import { DialogComponent } from "./components/dialog/dialog.component";
 import { MaxLengthDirective } from './directives/max-length-directive.directive';
-import { EmailLengthValidatorDirective } from './directives/email-length-validator.directive';
+import { CustomEmailValidatorDirective } from './directives/custom-email-validator.directive';
 import { UnicodeValidatorDirective } from './directives/unicode-validator.directive';
 import { OrganizationNameValidatorDirective } from './directives/organization-name.validator.directive';
 
@@ -24,7 +24,7 @@ import { OrganizationNameValidatorDirective } from './directives/organization-na
     PopupComponent,
     MaxLengthDirective,
     DialogComponent,
-    EmailLengthValidatorDirective,
+    CustomEmailValidatorDirective,
     UnicodeValidatorDirective,
     OrganizationNameValidatorDirective
   ],
