@@ -1,5 +1,5 @@
 import { TempPower } from './../power/power/power.component';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { ReactiveFormsModule, FormsModule, FormGroupDirective, FormGroup, FormControl } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { FormCredentialComponent } from './form-credential.component';
@@ -209,7 +209,7 @@ describe('FormCredentialComponent', () => {
     expect(component.countries).toEqual(sortedCountries);
   });
 
-  it('should set mandator and signer correctly if mandator is returned', (done) => {
+  it('should set mandator and signer correctly if mandator is returned', fakeAsync(() => {
     const mockMandator = {
       organizationIdentifier: 'org123',
       organization: 'Org Name',
@@ -221,30 +221,30 @@ describe('FormCredentialComponent', () => {
   
     jest.spyOn(mockAuthService, 'getMandator').mockReturnValue(of(mockMandator));
   
-    component.ngOnInit(); 
+    component.ngOnInit();
     fixture.detectChanges();
   
-    mockAuthService.getMandator().subscribe(mandator2 => {
-      expect(mandator2).toBeTruthy();
-      expect(component.mandator).toEqual({
-        organizationIdentifier: mockMandator.organizationIdentifier,
-        organization: mockMandator.organization,
-        commonName: mockMandator.commonName,
-        emailAddress: mockMandator.emailAddress,
-        serialNumber: mockMandator.serialNumber,
-        country: mockMandator.country,
-      });
-      expect(component.signer).toEqual({
-        organizationIdentifier: mockMandator.organizationIdentifier,
-        organization: mockMandator.organization,
-        commonName: mockMandator.commonName,
-        emailAddress: mockMandator.emailAddress,
-        serialNumber: mockMandator.serialNumber,
-        country: mockMandator.country,
-      });
-      done();
+    tick();
+  
+    expect(component.mandator).toEqual({
+      organizationIdentifier: mockMandator.organizationIdentifier,
+      organization: mockMandator.organization,
+      commonName: mockMandator.commonName,
+      emailAddress: mockMandator.emailAddress,
+      serialNumber: mockMandator.serialNumber,
+      country: mockMandator.country,
     });
-  });
+  
+    expect(component.signer).toEqual({
+      organizationIdentifier: mockMandator.organizationIdentifier,
+      organization: mockMandator.organization,
+      commonName: mockMandator.commonName,
+      emailAddress: mockMandator.emailAddress,
+      serialNumber: mockMandator.serialNumber,
+      country: mockMandator.country,
+    });
+  }));
+  
 
   it('should not initialize mandator nor signer if mandator is null', ()=>{
     component.ngOnInit();
