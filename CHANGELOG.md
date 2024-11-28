@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.1](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.2.1)
+### Fixed
+- In credential form, fix validation (add length and character restrictions and error messages)
+- In credential form phone input, make label go up only after clicking
+- In credential form, don't add prefix to phone number input after submitting
+
 ## [1.2.0](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.2.0)
 ### Changed
 - The authentication logic has been changed from Role-Based Access Control (RBAC) to Policy-Based Access Control (PBAC) to enhance granularity and flexibility in permission management.
