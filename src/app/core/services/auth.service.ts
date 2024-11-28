@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Router } from '@angular/router';
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -10,7 +9,7 @@ import { map } from 'rxjs/operators';
 export class AuthService {
   public isAuthenticated$: Observable<boolean>;
   private isAuthenticatedSubject: BehaviorSubject<boolean>;
-  private userDataSubject: BehaviorSubject<any>;
+  private readonly userDataSubject: BehaviorSubject<any>;
   private tokenSubject: BehaviorSubject<string>;
   private mandatorSubject: BehaviorSubject<any>;
   private signerSubject: BehaviorSubject<any>;
@@ -19,7 +18,7 @@ export class AuthService {
 
   private userPowers: any[] = [];
 
-  public constructor(private oidcSecurityService: OidcSecurityService, private router: Router) {
+  public constructor(private oidcSecurityService: OidcSecurityService) {
     this.isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
     this.isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
     this.userDataSubject = new BehaviorSubject<any>(null);
@@ -81,7 +80,6 @@ export class AuthService {
       const vcObject = this.extractVCFromUserData(userData)
       return vcObject?.credentialSubject?.mandate?.power || [];
     } catch (error) {
-      console.error('Failed to parse vc or extract user powers:', error);
       return [];
     }
   }
@@ -92,10 +90,8 @@ export class AuthService {
     return this.userPowers.some((power: any) => {
       if (power.tmf_function === "Onboarding") {
         const action = power.tmf_action;
-        console.info('AuthService -- hasOnboardingExecutePower -- Onboarding power!');
         return action === "Execute" || (Array.isArray(action) && action.includes("Execute"));
       }
-      console.error('AuthService -- hasOnboardingExecutePower -- NOT Onboarding power!');
       return false;
     });
   }
@@ -103,12 +99,7 @@ export class AuthService {
   // POLICY: user_powers_restriction_policy
   public hasIn2OrganizationIdentifier() : boolean {
     const userData = this.userDataSubject.getValue();
-    if ("VATES-B60645900" === userData.organizationIdentifier) {
-      console.info('AuthService -- hasIn2OrganizationIdentifier -- IN2 Organization Identifier found!');
-      return true
-    }
-    console.error('AuthService -- hasIn2OrganizationIdentifier -- NOT IN2 Organization Identifier found!');
-    return false;
+    return "VATES-B60645900" === userData.organizationIdentifier;
   }
 
   public getMandator(): Observable<any> {
@@ -131,7 +122,6 @@ export class AuthService {
         const hasOnboardingPower = this.hasOnboardingExecutePower();
 
         if (!hasOnboardingPower) {
-          console.error('Unauthorized: Missing OnBoarding power');
           this.logout();
           return;
         }
@@ -139,8 +129,6 @@ export class AuthService {
         this.isAuthenticatedSubject.next(true);
         this.userDataSubject.next(userData);
         this.tokenSubject.next(accessToken);
-      } else {
-        console.log('Authentication failed or not completed yet.');
       }
     });
   }

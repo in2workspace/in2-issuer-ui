@@ -2,7 +2,6 @@ import { TestBed } from '@angular/core/testing';
 import { AuthService } from './auth.service';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { of } from 'rxjs';
-import { MatDialog } from '@angular/material/dialog';
 
 const mockAuthResponse = {
   isAuthenticated: false,
@@ -11,11 +10,6 @@ const mockAuthResponse = {
   idToken: 'dummyIdToken'
 };
 
-const mockMatDialog = {
-  open: jest.fn().mockReturnValue({
-    afterClosed: jest.fn().mockReturnValue(of(true)), // simula que el diálogo se cierra
-  }),
-};
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -35,8 +29,7 @@ describe('AuthService', () => {
     TestBed.configureTestingModule({
       providers: [
         AuthService,
-        { provide: OidcSecurityService, useValue: oidcSecurityService },
-        { provide: MatDialog, useValue: mockMatDialog }
+        { provide: OidcSecurityService, useValue: oidcSecurityService }
       ]
     });
 
@@ -63,42 +56,6 @@ describe('AuthService', () => {
     expect(oidcSecurityService.authorize).toHaveBeenCalled();
   });
 
-  // it('should set isAuthenticatedSubject based on OidcSecurityService checkAuth response', done => {
-  //   const authResponse = {
-  //     ...mockAuthResponse,
-  //     isAuthenticated: true,
-  //     userData: {
-  //       vc: {
-  //         credentialSubject: {
-  //           mandate: {
-  //             power: [{ tmf_function: 'Onboarding', tmf_action: 'Execute' }]
-  //           }
-  //         }
-  //       },
-  //       organizationIdentifier: 'Org123',
-  //       organization: 'Test Organization',
-  //       commonName: 'Test User',
-  //       emailAddress: 'testuser@example.com',
-  //       serialNumber: '123456',
-  //       country: 'Testland'
-  //     },
-  //     accessToken: 'dummyAccessToken'
-  //   };
-  //
-  //   oidcSecurityService.checkAuth.mockReturnValue(of(authResponse));
-  //
-  //   service.handleLoginCallback();
-  //
-  //   service.isLoggedIn().subscribe(isLoggedIn => {
-  //     expect(isLoggedIn).toBeTruthy();
-  //     service.getToken().subscribe(token => {
-  //       expect(token).toEqual('dummyAccessToken');
-  //       done();
-  //     });
-  //   });
-  // });
-
-
   it('should call logoff and clear localStorage when logout is called', () => {
     service.logout();
     expect(localStorage.clear).toHaveBeenCalled();
@@ -112,68 +69,6 @@ describe('AuthService', () => {
     });
   });
 
-  // it('should handle login callback, update subjects accordingly, and check for onboarding power', done => {
-  //   const authResponse = {
-  //     ...mockAuthResponse,
-  //     isAuthenticated: true,
-  //     userData: {
-  //       vc: {
-  //         credentialSubject: {
-  //           mandate: {
-  //             power: [
-  //               { tmf_function: 'Onboarding', tmf_action: 'Execute' }
-  //             ]
-  //           }
-  //         }
-  //       },
-  //       organizationIdentifier: 'Org123',
-  //       organization: 'Test Organization',
-  //       commonName: 'Test User',
-  //       emailAddress: 'testuser@example.com',
-  //       serialNumber: '123456',
-  //       country: 'Testland'
-  //     },
-  //     accessToken: 'mockAccessToken'
-  //   };
-  //
-  //   oidcSecurityService.checkAuth.mockReturnValue(of(authResponse));
-  //
-  //   service.handleLoginCallback();
-  //
-  //   service.isLoggedIn().subscribe(isLoggedIn => {
-  //     expect(isLoggedIn).toBeTruthy();
-  //
-  //     service.getUserData().subscribe(userData => {
-  //       expect(userData).toEqual(authResponse.userData);
-  //
-  //       service.getToken().subscribe(token => {
-  //         expect(token).toEqual(authResponse.accessToken);
-  //         done();
-  //       });
-  //     });
-  //   });
-  // });
-
-
-  it('should log a message if authentication fails or is not completed', done => {
-    jest.spyOn(console, 'log');
-    const authResponse = {
-      ...mockAuthResponse,
-      isAuthenticated: false,
-      userData: null,
-      accessToken: '',
-      idToken: ''
-    };
-
-    oidcSecurityService.checkAuth.mockReturnValue(of(authResponse));
-
-    service.handleLoginCallback();
-    service.isLoggedIn().subscribe(isLoggedIn => {
-      expect(isLoggedIn).toBeFalsy();
-      expect(console.log).toHaveBeenCalledWith('Authentication failed or not completed yet.');
-      done();
-    });
-  });
 
   it('should return user data as observable when getUserData is called', done => {
     service.getUserData().subscribe(userData => {
@@ -195,4 +90,348 @@ describe('AuthService', () => {
       done();
     });
   });
+
+  it('should return true if user has "Onboarding" power with action array containing "Execute"', () => {
+    (service as any).userPowers = [
+      { tmf_function: 'Onboarding', tmf_action: ['Read', 'Execute', 'Write'] }
+    ];
+
+    const result = service.hasOnboardingExecutePower();
+    expect(result).toBeTruthy();
+  });
+
+  it('should return false if user has "Onboarding" power but no "Execute" action', () => {
+    (service as any).userPowers = [
+      { tmf_function: 'Onboarding', tmf_action: ['Read', 'Write'] }
+    ];
+
+    const result = service.hasOnboardingExecutePower();
+    expect(result).toBeFalsy();
+  });
+
+  it('should return false if user has no "Onboarding" power', () => {
+    (service as any).userPowers = [
+      { tmf_function: 'OtherFunction', tmf_action: 'Execute' }
+    ];
+
+    const result = service.hasOnboardingExecutePower();
+    expect(result).toBeFalsy();
+  });
+
+  it('should return false if userPowers is empty', () => {
+    (service as any).userPowers = [];
+
+    const result = service.hasOnboardingExecutePower();
+    expect(result).toBeFalsy();
+  });
+
+  it('should return true if userData.organizationIdentifier matches "VATES-B60645900"', () => {
+    const mockUserData = { organizationIdentifier: 'VATES-B60645900' };
+    (service as any).userDataSubject.next(mockUserData);
+
+    const result = service.hasIn2OrganizationIdentifier();
+    expect(result).toBeTruthy();
+  });
+
+  it('should return false if userData.organizationIdentifier does not match "VATES-B60645900"', () => {
+    const mockUserData = { organizationIdentifier: 'OTHER-ORG123' };
+    (service as any).userDataSubject.next(mockUserData);
+
+    const result = service.hasIn2OrganizationIdentifier();
+    expect(result).toBeFalsy();
+  });
+
+  it('should return false if userData is null', () => {
+    const mockUserData = { organizationIdentifier: null };
+    (service as any).userDataSubject.next(mockUserData);
+
+    const result = service.hasIn2OrganizationIdentifier();
+    expect(result).toBeFalsy();
+  });
+
+  it('should return false if userData.organizationIdentifier is undefined', () => {
+    const mockUserData = { otherField: 'someValue' };
+    (service as any).userDataSubject.next(mockUserData);
+
+    const result = service.hasIn2OrganizationIdentifier();
+    expect(result).toBeFalsy();
+  });
+
+  it('should return the mandatorSubject as an observable', done => {
+    const mockMandator = {
+      organizationIdentifier: 'ORG123',
+      organization: 'Test Organization',
+      commonName: 'Test Common Name',
+      emailAddress: 'test@example.com',
+      serialNumber: '123456',
+      country: 'Testland'
+    };
+
+    (service as any).mandatorSubject.next(mockMandator);
+
+    service.getMandator().subscribe(mandator => {
+      expect(mandator).toEqual(mockMandator);
+      done();
+    });
+  });
+
+  it('should return null if no mandator is set', done => {
+    (service as any).mandatorSubject.next(null);
+
+    service.getMandator().subscribe(mandator => {
+      expect(mandator).toBeNull();
+      done();
+    });
+  });
+
+  it('should return the signerSubject as an observable', done => {
+    const mockSigner = {
+      organizationIdentifier: 'SIGNER123',
+      organization: 'Signer Organization',
+      commonName: 'Signer Common Name',
+      emailAddress: 'signer@example.com',
+      serialNumber: '7891011',
+      country: 'Signerland'
+    };
+
+    (service as any).signerSubject.next(mockSigner);
+
+    service.getSigner().subscribe(signer => {
+      expect(signer).toEqual(mockSigner);
+      done();
+    });
+  });
+
+  it('should return null if no signer is set', done => {
+    (service as any).signerSubject.next(null);
+
+    service.getSigner().subscribe(signer => {
+      expect(signer).toBeNull();
+      done();
+    });
+  });
+
+  it('should return the nameSubject as an observable', done => {
+    const mockName = 'John Doe';
+
+    (service as any).nameSubject.next(mockName);
+
+    service.getName().subscribe(name => {
+      expect(name).toEqual(mockName);
+      done();
+    });
+  });
+
+  it('should return an empty string if no name is set', done => {
+    (service as any).nameSubject.next('');
+
+    service.getName().subscribe(name => {
+      expect(name).toBe('');
+      done();
+    });
+  });
+
+  it('should set isAuthenticated, userData, and token if the user is authenticated and has onboarding execute power', done => {
+    const mockUserData = {
+      vc: JSON.stringify({
+        credentialSubject: {
+          mandate: {
+            power: [{ tmf_function: 'Onboarding', tmf_action: 'Execute' }]
+          }
+        }
+      })
+    };
+
+    const mockAuthResponse = {
+      isAuthenticated: true,
+      userData: mockUserData,
+      accessToken: 'dummyAccessToken'
+    };
+
+    oidcSecurityService.checkAuth.mockReturnValue(of(mockAuthResponse));
+
+    service.handleLoginCallback();
+
+    service.isLoggedIn().subscribe(isAuthenticated => {
+      expect(isAuthenticated).toBeTruthy()
+
+      service.getUserData().subscribe(userData => {
+        expect(userData).toEqual(mockUserData);
+
+        service.getToken().subscribe(token => {
+          expect(token).toEqual('dummyAccessToken');
+          done();
+        });
+      });
+    });
+  });
+
+  it('should call logout if the user is authenticated but does not have onboarding execute power', () => {
+    const mockUserData = {
+      vc: JSON.stringify({
+        credentialSubject: {
+          mandate: {
+            power: [{ tmf_function: 'OtherFunction', tmf_action: 'Read' }]
+          }
+        }
+      })
+    };
+
+    const mockAuthResponse = {
+      isAuthenticated: true,
+      userData: mockUserData,
+      accessToken: 'dummyAccessToken'
+    };
+
+    oidcSecurityService.checkAuth.mockReturnValue(of(mockAuthResponse));
+
+    jest.spyOn(service, 'logout');
+
+    service.handleLoginCallback();
+
+    expect(service.logout).toHaveBeenCalled();
+  });
+
+  it('should not set any subjects if the user is not authenticated', done => {
+    const mockAuthResponse = {
+      isAuthenticated: false,
+      userData: null,
+      accessToken: null
+    };
+
+    oidcSecurityService.checkAuth.mockReturnValue(of(mockAuthResponse));
+
+    service.handleLoginCallback();
+
+    service.isLoggedIn().subscribe(isAuthenticated => {
+      expect(isAuthenticated).toBeFalsy();
+
+      service.getUserData().subscribe(userData => {
+        expect(userData).toBeNull();
+
+        service.getToken().subscribe(token => {
+          expect(token).toBe('');
+          done();
+        });
+      });
+    });
+  });
+
+  it('should set isAuthenticated, userData, mandator, signer, email and name when the user is authenticated', done => {
+    // Mock de respuesta de autenticación
+    const mockUserData = {
+      vc: JSON.stringify({
+        credentialSubject: {
+          mandate: {
+            mandator: {
+              organizationIdentifier: 'ORG123',
+              organization: 'Test Organization',
+              commonName: 'Mandator Name',
+              emailAddress: 'mandator@example.com',
+              serialNumber: '123456',
+              country: 'Testland'
+            },
+            signer: {
+              organizationIdentifier: 'SIGNER123',
+              organization: 'Signer Organization',
+              commonName: 'Signer Name',
+              emailAddress: 'signer@example.com',
+              serialNumber: '7891011',
+              country: 'Signerland'
+            },
+            mandatee: {
+              first_name: 'John',
+              last_name: 'Doe'
+            },
+            power: [{ tmf_function: 'Onboarding', tmf_action: 'Execute' }]
+          }
+        }
+      })
+    };
+
+    const mockAuthResponse = {
+      isAuthenticated: true,
+      userData: mockUserData,
+      accessToken: 'dummyAccessToken'
+    };
+
+    oidcSecurityService.checkAuth.mockReturnValue(of(mockAuthResponse));
+
+    service.checkAuth().subscribe(isAuthenticated => {
+      expect(isAuthenticated).toBeTruthy();
+
+      service.isLoggedIn().subscribe(isLoggedIn => {
+        expect(isLoggedIn).toBeTruthy();
+
+        service.getUserData().subscribe(userData => {
+          expect(userData).toEqual(mockUserData);
+
+          service.getToken().subscribe(token => {
+            expect(token).toEqual('');
+
+            service.getMandator().subscribe(mandator => {
+              expect(mandator).toEqual({
+                organizationIdentifier: 'ORG123',
+                organization: 'Test Organization',
+                commonName: 'Mandator Name',
+                emailAddress: 'mandator@example.com',
+                serialNumber: '123456',
+                country: 'Testland'
+              });
+
+              service.getSigner().subscribe(signer => {
+                expect(signer).toEqual({
+                  organizationIdentifier: 'SIGNER123',
+                  organization: 'Signer Organization',
+                  commonName: 'Signer Name',
+                  emailAddress: 'signer@example.com',
+                  serialNumber: '7891011',
+                  country: 'Signerland'
+                });
+
+                service.getEmailName().subscribe(emailName => {
+                  expect(emailName).toBe('mandator');
+
+                  service.getName().subscribe(name => {
+                    expect(name).toBe('John Doe');
+                    done();
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+  });
+
+  it('should return false if the user is not authenticated', done => {
+    const mockAuthResponse = {
+      isAuthenticated: false,
+      userData: null,
+      accessToken: ''
+    };
+
+    // Mock de la función checkAuth
+    oidcSecurityService.checkAuth.mockReturnValue(of(mockAuthResponse));
+
+    // Llamamos a checkAuth
+    service.checkAuth().subscribe(isAuthenticated => {
+      expect(isAuthenticated).toBeFalsy();
+
+      service.isLoggedIn().subscribe(isLoggedIn => {
+        expect(isLoggedIn).toBeFalsy();
+
+        service.getUserData().subscribe(userData => {
+          expect(userData).toBeNull();
+
+          service.getToken().subscribe(token => {
+            expect(token).toBe('');
+            done();
+          });
+        });
+      });
+    });
+  });
+
 });
