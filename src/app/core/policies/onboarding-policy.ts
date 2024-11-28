@@ -25,7 +25,6 @@ export const OnboardingPolicy = () => {
       oidcService.logoff()
       router.navigate(['/home']).then(r => false);
     });
-
     return false;
   }
 };
