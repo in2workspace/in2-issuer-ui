@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {TranslateService} from '@ngx-translate/core';
 import {AuthService} from 'src/app/core/services/auth.service';
@@ -18,11 +18,9 @@ export class NavbarComponent implements OnInit {
   ];
   public selectedLanguage = 'en';
 
-  public constructor(
-    public translate: TranslateService,
-    private authService: AuthService,
-    private router: Router,
-  ) {}
+  private translate = inject(TranslateService);
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
   public ngOnInit() {
     this.translate.addLangs(['en', 'es', 'ca']);

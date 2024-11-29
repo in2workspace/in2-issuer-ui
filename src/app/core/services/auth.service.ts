@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable} from '@angular/core';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -7,27 +7,20 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class AuthService {
-  public isAuthenticated$: Observable<boolean>;
-  private isAuthenticatedSubject: BehaviorSubject<boolean>;
-  private readonly userDataSubject: BehaviorSubject<any>;
-  private tokenSubject: BehaviorSubject<string>;
-  private mandatorSubject: BehaviorSubject<any>;
-  private signerSubject: BehaviorSubject<any>;
-  private emailSubject: BehaviorSubject<string>;
-  private nameSubject: BehaviorSubject<string>;
+  private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
+  public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
+  private userDataSubject = new BehaviorSubject<any>(null);
+  private tokenSubject = new BehaviorSubject<string>('');
+  private mandatorSubject = new BehaviorSubject<any>(null);
+  private signerSubject = new BehaviorSubject<any>(null);
+  private emailSubject = new BehaviorSubject<string>('');
+  private nameSubject = new BehaviorSubject<string>('');
 
   private userPowers: any[] = [];
 
-  public constructor(private oidcSecurityService: OidcSecurityService) {
-    this.isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
-    this.isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
-    this.userDataSubject = new BehaviorSubject<any>(null);
-    this.tokenSubject = new BehaviorSubject<string>('');
-    this.mandatorSubject = new BehaviorSubject<any>(null);
-    this.signerSubject = new BehaviorSubject<any>(null);
-    this.emailSubject = new BehaviorSubject<string>('');
-    this.nameSubject = new BehaviorSubject<string>('');
+  private oidcSecurityService = inject(OidcSecurityService);
 
+  constructor() {
     this.checkAuth().subscribe();
   }
 

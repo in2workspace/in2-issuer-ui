@@ -3,6 +3,7 @@ import { ElementRef } from '@angular/core';
 import { MatSort, Sort } from '@angular/material/sort';
 import { ActiveSortColumnDirective } from './active-sort-column.directive';
 import { of, Subject } from 'rxjs';
+import {TestBed} from "@angular/core/testing";
 
 describe('ActiveSortColumnDirective', () => {
   let directive: ActiveSortColumnDirective;
@@ -23,8 +24,19 @@ describe('ActiveSortColumnDirective', () => {
       sortChange: sortChangeSubject.asObservable(),
     } as MatSort;
 
-    directive = new ActiveSortColumnDirective(mockElementRef, mockRenderer, mockMatSort);
+    TestBed.configureTestingModule({
+      providers: [
+        { provide: Renderer2, useValue: mockRenderer },
+        { provide: ElementRef, useValue: mockElementRef },
+        { provide: MatSort, useValue: mockMatSort }
+      ]
+    });
+
     directive.appActiveSortColumn = 'columnName';
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   it('should add "active-sort-column" class when the sort active column matches', () => {
@@ -46,11 +58,11 @@ describe('ActiveSortColumnDirective', () => {
   });
 
   it('should unsubscribe from sortChange on destroy', () => {
-    directive.ngOnInit(); 
+    directive.ngOnInit();
     const unsubscribeSpy = jest.spyOn(directive['subscription']!, 'unsubscribe');
     directive.ngOnDestroy();
-  
+
     expect(unsubscribeSpy).toHaveBeenCalled();
   });
-  
+
 });

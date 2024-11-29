@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable} from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -11,12 +11,13 @@ import { IssuanceRequest } from '../models/issuanceRequest.interface';
 })
 export class CredentialProcedureService {
 
-  private saveCredential = `${environment.base_url}${environment.save_credential}`;
+  private readonly saveCredential = `${environment.base_url}${environment.save_credential}`;
+  private readonly organizationProcedures = `${environment.base_url}${environment.procedures}`;
+  private readonly credentialOfferUrl = `${environment.base_url}${environment.credential_offer_url}`;
+  private readonly notificationProcedure =`${environment.base_url}${environment.notification}`;
   //private sendFirma = `${environment.base_url}${environment.firma_credential}`; The`sendFirma` variable has been commented out as it was initially intended for the signature functionality,which remains incomplete. This configuration is currently unnecessary for the existing flows but is expected to be reintroduced in the future when the related use case is implemented.
-  private organizationProcedures = `${environment.base_url}${environment.procedures}`;
-  private credentialOfferUrl = `${environment.base_url}${environment.credential_offer_url}`;
-  private notificationProcedure =`${environment.base_url}${environment.notification}`;
-  public constructor(private http: HttpClient) { }
+
+  private http = inject(HttpClient);
 
   public getCredentialProcedures(): Observable<CredentialProcedureResponse> {
     return this.http.get<CredentialProcedureResponse>(this.organizationProcedures).pipe(

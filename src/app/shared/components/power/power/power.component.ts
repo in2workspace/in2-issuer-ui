@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import {Component, Input, Output, EventEmitter, inject} from '@angular/core';
 import {AuthService} from "../../../../core/services/auth.service";
 
 export interface TempPower {
@@ -33,7 +33,7 @@ export class PowerComponent {
   public isPopupVisible: boolean = false;
   public organizationIdentifierIsIn2: boolean = false;
 
-  constructor(private authService: AuthService) {}
+  private authService = inject(AuthService);
 
   ngOnInit(): void {
     this.organizationIdentifierIsIn2 = this.authService.hasIn2OrganizationIdentifier();

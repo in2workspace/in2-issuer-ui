@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, inject, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, NgModel, Validators} from '@angular/forms';
 import {CredentialMandatee} from 'src/app/core/models/credendentialMandatee.interface';
 import {Mandator} from 'src/app/core/models/madator.interface';
@@ -33,20 +33,8 @@ export class FormCredentialComponent implements OnInit {
   @Input() public hideButton: boolean = true;
   @Input() public power: Power[] = [];
   @Input() public credentialStatus: string = '';
-  @Input() public credential: CredentialMandatee = {
-    first_name: '',
-    last_name: '',
-    email: '',
-    mobile_phone: '',
-  };
-  @Input() public mandator: Mandator = {
-    organizationIdentifier: "",
-    organization: "",
-    commonName: "",
-    emailAddress: "",
-    serialNumber: "",
-    country: "",
-  }
+  @Input() public credential: CredentialMandatee = this.initializeCredential();
+  @Input() public mandator: Mandator = this.initializeMandator();
   public signer : any ={};
 
   //if mobile has been introduced and unfocused and there is not country, show error
@@ -75,18 +63,12 @@ export class FormCredentialComponent implements OnInit {
   public isValidOrganizationIdentifier = false;
   public showMandator: boolean = false;
 
-  public constructor(
-    private credentialProcedureService: CredentialProcedureService,
-    private fb: FormBuilder,
-    private countryService: CountryService,
-    private formCredentialService: FormCredentialService,
-    private authService: AuthService,
-    private router: Router
-  ) {
-    this.countries = this.countryService.getSortedCountries();
-    this.isValidOrganizationIdentifier = this.authService.hasIn2OrganizationIdentifier()
-  }
-
+  private readonly credentialProcedureService = inject(CredentialProcedureService);
+  private readonly fb: FormBuilder = inject(FormBuilder);
+  private readonly countryService = inject(CountryService);
+  private readonly formCredentialService = inject(FormCredentialService);
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
 
   public get mobilePhone(): string {
     return `${this.selectedCountryCode} ${this.credential.mobile_phone}`;
@@ -103,7 +85,6 @@ export class FormCredentialComponent implements OnInit {
       phoneControl.control.markAsTouched();
     }
   }
-
 
   public ngOnInit(): void {
 
@@ -225,5 +206,25 @@ export class FormCredentialComponent implements OnInit {
                         'country':mandator2.country}
       }
     });
+  }
+
+  private initializeCredential(): CredentialMandatee {
+    return {
+      first_name: '',
+      last_name: '',
+      email: '',
+      mobile_phone: ''
+    };
+  }
+
+  private initializeMandator(): Mandator {
+    return {
+      organizationIdentifier: '',
+      organization: '',
+      commonName: '',
+      emailAddress: '',
+      serialNumber: '',
+      country: ''
+    };
   }
 }

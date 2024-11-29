@@ -1,14 +1,15 @@
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Injectable } from '@angular/core';
+import { inject, Injectable} from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AlertService {
-  public constructor(private snackbar: MatSnackBar, private translate: TranslateService) {}
+  private snackbar = inject(MatSnackBar);
+  private translate = inject(TranslateService);
 
-    public showAlert(
+  public showAlert(
         messageKey: string,
         alertType: 'error' | 'info' | 'success' | 'warning' = 'info',
         timeOut = 3000

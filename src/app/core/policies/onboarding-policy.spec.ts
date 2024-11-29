@@ -41,29 +41,4 @@ describe('OnboardingPolicyGuard', () => {
   });
   expect(guardResponse).toBe(true);
   });
-
-  // it('should return false, open dialog, log off and navigate to home when hasOnboardingExecutePower is false', (done) => {
-  //   authService.hasOnboardingExecutePower.mockReturnValue(false);
-  //
-  //   const dialogRef = { afterClosed: jest.fn() };
-  //   dialog.open.mockReturnValue(dialogRef);
-  //
-  //   const guardResponse = TestBed.runInInjectionContext(() => {
-  //     return OnboardingPolicy();
-  //   });
-  //
-  //   expect(guardResponse).toBe(false);
-  //
-  //   expect(dialog.open).toHaveBeenCalledWith(DialogComponent, {
-  //     panelClass: 'custom-dialog-error',
-  //   });
-  //
-  //   dialogRef.afterClosed.mockReturnValue(of(true));
-  //
-  //   dialogRef.afterClosed().subscribe(() => {
-  //     expect(oidcService.logoff).toHaveBeenCalled();
-  //     done();
-  //   });
-  // });
-
 });
