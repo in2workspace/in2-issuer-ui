@@ -22,6 +22,7 @@ export class FormCredentialComponent implements OnInit {
   @ViewChild('formDirective') public formDirective!: FormGroupDirective;
   @Output() public sendReminder = new EventEmitter<void>();
   @Input() public viewMode: 'create' | 'detail' = 'create';
+  @Input() public asSigner: boolean = false;
   @Input() public isDisabled: boolean = false;
   @Input() public title: string = '';
   @Input() public showButton: boolean = false;
@@ -54,8 +55,7 @@ export class FormCredentialComponent implements OnInit {
   public popupMessage: string = '';
   public isPopupVisible: boolean = false;
 
-  public isValidOrganizationIdentifier = false;//it is initialized but seems unused
-  public showMandator: boolean = false;
+  public hasIn2OrganizationId = false;
 
   private readonly credentialProcedureService = inject(CredentialProcedureService);
   private readonly fb: FormBuilder = inject(FormBuilder);
@@ -76,11 +76,9 @@ export class FormCredentialComponent implements OnInit {
 
   public ngOnInit(): void {
 
-    this.showMandator = this.authService.hasIn2OrganizationIdentifier();
-
     this.authService.getMandator().subscribe(mandator2 => {
       if (mandator2) {
-        if(this.viewMode === "create" && !this.showMandator){
+        if(this.viewMode === "create" && !this.asSigner){
           this.mandator ={ 'organizationIdentifier': mandator2.organizationIdentifier,
             'organization': mandator2.organization,
             'commonName':mandator2.commonName,

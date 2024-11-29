@@ -225,6 +225,10 @@ describe('FormCredentialComponent', () => {
     expect(component.countries).toEqual(sortedCountries);
   });
 
+  it('should check if has IN2 organization id', ()=>{
+    expect(component.hasIn2OrganizationId).toBe(true);
+  });
+
   it('should set mandator and signer correctly if mandator is returned', fakeAsync(() => {
     const mockMandator = {
       organizationIdentifier: 'org123',
@@ -251,7 +255,7 @@ describe('FormCredentialComponent', () => {
       country: mockMandator.country,
     });
     expect(component.signer).toEqual(mockSigner);
-    expect(component.showMandator).toBe(false);
+    expect(component.asSigner).toBe(false);
   }));
   
 
