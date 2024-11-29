@@ -27,20 +27,20 @@ export class FormCredentialService {
     return this.selectedPowerNameSubject.getValue();
   }
 
-  public getAddedPowers():Observable<TempPower[]>{
+  public getAddedPowers(): Observable<TempPower[]>{
     return this.addedPowers$;
   }
 
-  public getSelectedPowerName():Observable<string>{
+  public getSelectedPowerName(): Observable<string>{
     return this.selectedPowerName$;
   }
 
-  public setAddedPowers(powers:TempPower[]){
+  public setAddedPowers(powers:TempPower[]): void{
     const newaddedPowers = structuredClone(powers);
     this.addedPowersSubject.next(newaddedPowers);
   }
 
-  public setSelectedPowerName(powerName:string){
+  public setSelectedPowerName(powerName:string): void{
     this.selectedPowerNameSubject.next(powerName);
   }
 
@@ -58,6 +58,11 @@ export class FormCredentialService {
       (option) => option.tmf_function !== optionToRemove
     );
     this.setAddedPowers(currentAddedPowers);
+  }
+
+  public reset(){
+    this.setAddedPowers([]);
+    this.setSelectedPowerName('');
   }
 
   public convertToTempPower(power: Power): TempPower {

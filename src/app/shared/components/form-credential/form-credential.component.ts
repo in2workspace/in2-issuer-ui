@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
 import { FormControl, FormGroupDirective, NgForm, NgModel } from '@angular/forms';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { Country, CountryService } from './services/country.service';
@@ -8,16 +8,16 @@ import { PopupComponent } from '../popup/popup.component';
 import { Router } from '@angular/router';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { TempPower } from "../../../core/models/temporal/temp-power.interface";
-import { Mandatee, OrganizationDetails, Power } from "../../../core/models/entity/lear-credential-employee.entity";
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
+import { Mandatee, OrganizationDetails, Power } from "../../../core/models/entity/lear-credential-employee.entity";
 
 @Component({
   selector: 'app-form-credential',
   templateUrl: './form-credential.component.html',
   styleUrls: ['./form-credential.component.scss'],
 })
-export class FormCredentialComponent implements OnInit {
+export class FormCredentialComponent implements OnInit, OnDestroy {
 
   @ViewChild(PopupComponent) public popupComponent!: PopupComponent;
   @ViewChild('formDirective') public formDirective!: FormGroupDirective;
@@ -58,7 +58,7 @@ export class FormCredentialComponent implements OnInit {
   public hasIn2OrganizationId = false;
 
   private readonly credentialProcedureService = inject(CredentialProcedureService);
-  private readonly formCredentialService = inject(FormCredentialService);
+  private readonly formService = inject(FormCredentialService);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly translate = inject(TranslateService);
@@ -66,8 +66,9 @@ export class FormCredentialComponent implements OnInit {
 
   public constructor(){
     this.countries = this.countryService.getSortedCountries();
-    this.addedPowers$ = this.formCredentialService.getAddedPowers();
-    this.hasIn2OrganizationId = this.authService.hasIn2OrganizationIdentifier();
+    this.addedPowers$ = this.formService.getAddedPowers();
+    // this.hasIn2OrganizationId = this.authService.hasIn2OrganizationIdentifier();
+    this.hasIn2OrganizationId = true;
   }
 
   public markPrefixAndPhoneAsTouched(prefixControl: NgModel, phoneControl: NgModel): void {
@@ -106,7 +107,7 @@ export class FormCredentialComponent implements OnInit {
     });
 
     if (this.viewMode === 'detail') {
-      this.tempPowers = this.power.map(power => this.formCredentialService.convertToTempPower(power));
+      this.tempPowers = this.power.map(power => this.formService.convertToTempPower(power));
     }
   }
 
@@ -116,13 +117,13 @@ export class FormCredentialComponent implements OnInit {
   }
 
   public hasSelectedFunction(): boolean {
-    return this.formCredentialService.getPlainAddedPowers().every(option =>
+    return this.formService.getPlainAddedPowers().every((option:TempPower) =>
       option.execute || option.create || option.update || option.delete || option.upload
     );
   }
 
   public hasSelectedPower(): boolean{
-    return this.formCredentialService.getPlainAddedPowers().length > 0;
+    return this.formService.getPlainAddedPowers().length > 0;
   }
 
   public showReminderButton(): boolean{
@@ -132,11 +133,11 @@ export class FormCredentialComponent implements OnInit {
   public submitCredential(): void {
     
     if (this.hasSelectedPower() && this.hasSelectedFunction()) {
-      this.formCredentialService
+      this.formService
         .submitCredential(
           this.credential,
           this.selectedCountryCode,
-          this.formCredentialService.getPlainAddedPowers(),
+          this.formService.getPlainAddedPowers(),
           this.mandator,
           this.addedMandatorLastName,
           this.signer,
@@ -151,7 +152,7 @@ export class FormCredentialComponent implements OnInit {
               location.reload(); 
             });
           },
-          error: (err) => {
+          error: (err:Error) => {
             this.popupMessage = this.translate.instant("error.credential_submission");
             this.closePopup();
             console.error(err);
@@ -173,11 +174,15 @@ export class FormCredentialComponent implements OnInit {
     this.sendReminder.emit();
   }
 
+  public ngOnDestroy(): void {
+    this.formService.reset();
+  }
+
   //this function is currently unused, since user is redirected after successful submit
-  private resetForm(): void {
-    this.credential = this.formCredentialService.resetForm();
+  public resetForm(): void {
+    this.credential = this.formService.resetForm();
     this.formDirective.resetForm();
-    this.formCredentialService.setAddedPowers([]);
+    this.formService.setAddedPowers([]);
     this.authService.getMandator().subscribe(mandator2 => {
       if (mandator2) {
         this.mandator = mandator2;
