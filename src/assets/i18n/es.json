@@ -62,6 +62,7 @@
       "delete": "Delete",
       "upload": "Upload",
       "attest": "Attest",
+      "select": "Selecciona un poder",
       "invalid_power_title": "Acceso Denegado",
       "invalid_power": "No tienes la política necesaria para acceder"
     },
@@ -94,7 +95,9 @@
           "local_part_max": "La parte local del email no puede superar los 64 caracteres.",
           "domain_part_max": "El dominio del email no puede superar los 189 caracteres.",
           "max": "El email no puede superar los 254 caracteres."
-        }
+        },
+        "no_power": "Añade por lo menos un poder",
+        "no_function": "Cada poder debe tener por lo menos una acción"
       }
     }
 }

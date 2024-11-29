@@ -4,29 +4,39 @@
     <p>{{ "power.domain" | translate }}</p>
     <p>{{ "power.dome" | translate }}</p>
   </div>
-  <div class="function">
-    <p>{{ "power.function" | translate }}</p>
-    <select
-      class="select-power"
-      [(ngModel)]="selectedOption"
-      [disabled]="isDisabled"
-      name="selectedOption"
-      (change)="onHandleSelectChange($event)"
-    >
-      <option *ngIf="!selectedOption" [ngValue]="null" disabled selected>Select an option</option>
-      <option *ngIf="organizationIdentifierIsIn2" value="Onboarding">{{ "power.onboarding" | translate }}</option>
-      <option value="ProductOffering">{{ "power.productOffering" | translate }}</option>
-      <option *ngIf="organizationIdentifierIsIn2" value="Certification">{{ "power.certification" | translate }}</option>
-    </select>
+  <div class="function mat-form-field">
+    <p mat-body-1>{{ "power.function" | translate }}</p>
+    <mat-form-field appearance="fill" class="mat-select-power">
+      <mat-select
+        [(value)]="selectedOption"
+        [disabled]="isDisabled"
+        name="selectedOption"
+        (selectionChange)="onHandleSelectChange($event)"
+      >
+        <mat-option *ngIf="!selectedOption" [value]="null" disabled>
+          {{ "power.select" | translate }}
+        </mat-option>
+        <mat-option *ngIf="organizationIdentifierIsIn2" value="Onboarding" [disabled]="isOptionDisabled('Onboarding')">
+          {{ "power.onboarding" | translate }}
+        </mat-option>
+        <mat-option value="ProductOffering" [disabled]="isOptionDisabled('ProductOffering')">
+          {{ "power.productOffering" | translate }}
+        </mat-option>
+        <mat-option *ngIf="organizationIdentifierIsIn2" value="Certification" [disabled]="isOptionDisabled('Certification')">
+          {{ "power.certification" | translate }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
     <button
-      class="add-option-btn"
+      mat-raised-button
+      color="primary"
       [disabled]="isDisabled || !selectedOption"
       (click)="addOption()"
       type="button"
     >
       {{ "power.add" | translate }}
     </button>
-  </div>
+  </div>  
 </div>
 
 <div *ngIf="viewMode === 'create' || viewMode === 'detail'">
@@ -61,6 +71,13 @@
       {{ "power.delete" | translate }}
     </mat-slide-toggle>
   </div>
+  <button
+  mat-icon-button
+  color="warn"
+  aria-label="Remove power"
+  (click)="removeOption(option.tmf_function)">
+  <mat-icon>delete</mat-icon>
+  </button>
   <div *ngIf="option.tmf_function === 'Onboarding' && organizationIdentifierIsIn2">
     <mat-slide-toggle [(ngModel)]="option.execute" name="execute-{{ i }}" [disabled]="isDisabled">
       {{ "power.execute" | translate }}

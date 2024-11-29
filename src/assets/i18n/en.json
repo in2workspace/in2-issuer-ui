@@ -61,6 +61,7 @@
     "delete": "Delete",
     "upload": "Upload",
     "attest": "Attest",
+    "select": "Select a power",
     "invalid_power_title": "Access Denied",
     "invalid_power_message": "You do not have the required power to access"
   },
@@ -93,7 +94,9 @@
           "local_part_max": "The local part of the email can't exceed 64 characters.",
           "domain_part_max": "The domain part of the email can't exceed 189 characters.",
           "max": "The email can't exceed 254 characters."
-        }
+        },
+        "no_power": "Add at least one power",
+        "no_function": "Each power must have at least one function"
       }
   }
 }

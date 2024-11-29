@@ -62,6 +62,7 @@
       "delete": "Delete",
       "upload": "Upload",
       "attest": "Attest",
+      "select": "Selecciona un poder",
       "invalid_power_title": "Accés Denegat",
       "invalid_power": "No teniu la política necessaria per accedir"
     },
@@ -93,7 +94,9 @@
           "local_part_max": "La part local de l'adreça el. no pot superar els 64 caràcters.",
           "domain_part_max": "El domini de l'adreça el. no pot superar els 189 caràcters.",
           "max": "L'adreça electrònica no pot superar els 254 caràcters."
-        }
+        },
+        "no_power": "Afegeix almenys un poder",
+        "no_function": "Cada poder ha de tenir almenys una funció"
       }
     }
 }

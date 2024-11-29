@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
 import { AuthService } from "../../../../core/services/auth.service";
+import { MatSelectChange } from '@angular/material/select';
 import { TempPower } from "../../../../core/models/temporal/temp-power.interface";
 
 @Component({
@@ -30,10 +31,10 @@ export class PowerComponent {
   public addOption(): void {
     if (this.isDisabled) return;
 
-    if (this.addedOptions.some((option) => option.tmf_function === this.selectedOption)) {
-      this.showPopup('This option has already been added.');
-      return;
-    }
+    // if (this.addedOptions.some((option) => option.tmf_function === this.selectedOption)) {
+    //   this.showPopup('This option has already been added.');
+    //   return;
+    // }
     if (!this.selectedOption) {
       this.showPopup('Please select an option.');
       return;
@@ -82,8 +83,20 @@ export class PowerComponent {
     this.selectedOption = '';
   }
 
-  public onHandleSelectChange(event: Event): void {
-    this.handleSelectChange.emit(event);
+  public removeOption(optionToRemove: string): void {
+    this.addedOptions = this.addedOptions.filter(
+      (option) => option.tmf_function !== optionToRemove
+    );
+  
+    this.addedOptionsChange.emit(this.addedOptions);
+  }
+
+  public onHandleSelectChange(event: MatSelectChange): void {
+    this.handleSelectChange.emit(event.value);
+  }
+
+  public isOptionDisabled(option: string): boolean {
+    return this.addedOptions.some((addedOption) => addedOption.tmf_function === option);
   }
 
   private showPopup(message: string): void {
@@ -93,4 +106,5 @@ export class PowerComponent {
       this.isPopupVisible=false
     }, 1000);
   }
+
 }

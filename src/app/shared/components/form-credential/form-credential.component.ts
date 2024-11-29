@@ -117,19 +117,23 @@ export class FormCredentialComponent implements OnInit {
     this.selectedOption = this.formCredentialService.handleSelectChange(event);
   }
 
-  public hasSelectedPowers(): boolean {
+  public hasSelectedFunction(): boolean {
     return this.addedOptions.every(option =>
       option.execute || option.create || option.update || option.delete || option.upload
     );
   }
 
-  public showReminderButton(){
+  public hasSelectedPower(): boolean{
+    return this.addedOptions.length > 0;
+  }
+
+  public showReminderButton(): boolean{
     return (this.credentialStatus === 'WITHDRAWN') || (this.credentialStatus === 'PEND_DOWNLOAD')
   }
 
   public submitCredential(): void {
     
-    if (this.addedOptions.length > 0 && this.hasSelectedPowers()) {
+    if (this.hasSelectedPower() && this.hasSelectedFunction()) {
       this.formCredentialService
         .submitCredential(
           this.credential,

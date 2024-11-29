@@ -372,7 +372,7 @@ describe('FormCredentialComponent', () => {
     });
   
     component.addedOptions = [{} as any]; 
-    jest.spyOn(component, 'hasSelectedPowers').mockReturnValue(true);
+    jest.spyOn(component, 'hasSelectedFunction').mockReturnValue(true);
     
     component.submitCredential();
     await navigateSpy;
