@@ -18,6 +18,10 @@ export class FormCredentialService {
     this.showMandatorSubject.next(value);
   }
 
+  getShowMandator(): boolean { //todo should return observable
+    return this.showMandatorSubject.value;
+  }
+
   public convertToTempPower(power: Power): TempPower {
     const tmf_action = Array.isArray(power.tmf_action) ? power.tmf_action : [power.tmf_action];
     return {

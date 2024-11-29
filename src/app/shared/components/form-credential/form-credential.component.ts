@@ -54,6 +54,7 @@ export class FormCredentialComponent implements OnInit {
   public popupMessage: string = '';
   public isPopupVisible: boolean = false;
 
+  public isValidOrganizationIdentifier = false;//it is initialized but seems unused
   public showMandator: boolean = false;
 
   private readonly credentialProcedureService = inject(CredentialProcedureService);
@@ -75,9 +76,7 @@ export class FormCredentialComponent implements OnInit {
 
   public ngOnInit(): void {
 
-    this.formCredentialService.showMandator$.subscribe((value) => {
-      this.showMandator = value;
-    });
+    this.showMandator = this.authService.hasIn2OrganizationIdentifier();
 
     this.authService.getMandator().subscribe(mandator2 => {
       if (mandator2) {
