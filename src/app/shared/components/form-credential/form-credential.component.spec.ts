@@ -234,7 +234,8 @@ describe('FormCredentialComponent', () => {
       serialNumber: '12345',
       country: 'Country',
     };
-  
+    
+    jest.spyOn(mockAuthService, 'hasIn2OrganizationIdentifier').mockReturnValue(false);
     jest.spyOn(mockAuthService, 'getMandator').mockReturnValue(of(mockMandator));
   
     component.ngOnInit();
@@ -250,6 +251,7 @@ describe('FormCredentialComponent', () => {
       country: mockMandator.country,
     });
     expect(component.signer).toEqual(mockSigner);
+    expect(component.showMandator).toBe(false);
   }));
   
 
