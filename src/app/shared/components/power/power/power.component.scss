@@ -3,31 +3,50 @@
   margin-top:8px;
 }
 
-#title{
+::ng-deep .toggles-container mat-slide-toggle{
+  display:flex;
+  align-items:center;
+}
+
+h2.title{
   margin: 0 0 8px;
 }
 
-.power {
-  display: flex;
+.domain-function{
+  display:flex;
+}
 
-  .domain {
-    margin-right: 2rem;
-    margin-top: 0;
-    padding-top: 0;
+.selector-container{
+  display:flex;
+  align-items: center;
+
+  .dome{
+    margin-bottom:16px;
   }
-  button {
-    margin-left: 0.25rem;
+
+  button{
+    display:block;
+    height:58px;
+    margin-bottom:20px;
+    margin-left: 12px;
   }
 }
 
+.first-col{
+  width:80px; 
+}
+
+
 .option-container {
   display: flex;
+  align-items: center;
   margin-top: 0.5rem;
 
   p {
     margin-right: 1rem;
+    margin-bottom: 0px;
   }
-  .toggle-container{
+  .toggles-container{
     display:flex;
     flex-wrap:wrap;
     row-gap: 12px;
@@ -35,5 +54,50 @@
     mat-slide-toggle {
       margin-left: 0.5rem;
     }
+  }
+}
+
+.functions-container{
+  display:flex;
+  gap: 16px;
+}
+
+.small-icon-button {
+  width: 24px !important;
+  height: 24px !important;
+  padding: 0px !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+
+  & > *[role=img] {
+     width: 16px;
+     height: 16px;
+     font-size: 16px;
+
+     svg {
+        width: 16px;
+        height: 16px;
+     }
+  }
+
+  .mat-mdc-button-touch-target {
+     width: 24px !important;
+     height: 24px !important;
+  }
+}
+
+@media (width < 480px){
+  .domain-function{
+    display:none;
+  }
+  .mat-mdc-form-field{
+    width:150px;
+  }
+  .selector-container{
+    flex-wrap:wrap;
+  }
+  .dome{
+    width:100%;
   }
 }

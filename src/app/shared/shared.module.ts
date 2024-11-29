@@ -13,6 +13,7 @@ import { MaxLengthDirective } from './directives/max-length-directive.directive'
 import { CustomEmailValidatorDirective } from './directives/custom-email-validator.directive';
 import { UnicodeValidatorDirective } from './directives/unicode-validator.directive';
 import { OrganizationNameValidatorDirective } from './directives/organization-name.validator.directive';
+import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 
 
 
@@ -24,6 +25,7 @@ import { OrganizationNameValidatorDirective } from './directives/organization-na
     PopupComponent,
     MaxLengthDirective,
     DialogComponent,
+    ConfirmDialogComponent,
     CustomEmailValidatorDirective,
     UnicodeValidatorDirective,
     OrganizationNameValidatorDirective

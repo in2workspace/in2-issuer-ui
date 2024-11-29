@@ -1,7 +1,7 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroupDirective, NgForm, NgModel } from '@angular/forms';
+import { FormControl, FormGroupDirective, NgForm, NgModel } from '@angular/forms';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
-import { Country } from './services/country.service';
+import { Country, CountryService } from './services/country.service';
 import { FormCredentialService } from './services/form-credential.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { PopupComponent } from '../popup/popup.component';
@@ -10,6 +10,7 @@ import { ErrorStateMatcher } from '@angular/material/core';
 import { TempPower } from "../../../core/models/temporal/temp-power.interface";
 import { Mandatee, OrganizationDetails, Power } from "../../../core/models/entity/lear-credential-employee.entity";
 import { TranslateService } from '@ngx-translate/core';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-form-credential',
@@ -25,8 +26,8 @@ export class FormCredentialComponent implements OnInit {
   @Input() public asSigner: boolean = false;
   @Input() public isDisabled: boolean = false;
   @Input() public title: string = '';
-  @Input() public showButton: boolean = false;
-  @Input() public hideButton: boolean = true;
+  @Input() public showButton: boolean = false; //confusing name
+  @Input() public hideButton: boolean = true; //confusing name
   @Input() public power: Power[] = [];
   @Input() public credentialStatus: string = '';
   @Input() public credential: Mandatee = this.initializeCredential();
@@ -46,8 +47,7 @@ export class FormCredentialComponent implements OnInit {
   };
 
   public countries: Country[] = [];
-  public selectedOption = '';
-  public addedOptions: TempPower[] = [];
+  public addedPowers$: Observable<TempPower[]>;
   public tempPowers: TempPower[] = [];
   public selectedCountryCode: string = '';
   public addedMandatorLastName: string = '';
@@ -58,11 +58,17 @@ export class FormCredentialComponent implements OnInit {
   public hasIn2OrganizationId = false;
 
   private readonly credentialProcedureService = inject(CredentialProcedureService);
-  private readonly fb: FormBuilder = inject(FormBuilder);
   private readonly formCredentialService = inject(FormCredentialService);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly translate = inject(TranslateService);
+  private readonly countryService = inject(CountryService);
+
+  public constructor(){
+    this.countries = this.countryService.getSortedCountries();
+    this.addedPowers$ = this.formCredentialService.getAddedPowers();
+    this.hasIn2OrganizationId = this.authService.hasIn2OrganizationIdentifier();
+  }
 
   public markPrefixAndPhoneAsTouched(prefixControl: NgModel, phoneControl: NgModel): void {
     if (prefixControl) {
@@ -109,22 +115,14 @@ export class FormCredentialComponent implements OnInit {
     return country ? country.name : '';
   }
 
-  public addOption(options: TempPower[]): void {
-    this.addedOptions = this.formCredentialService.addOption(this.addedOptions, options, this.isDisabled);
-  }
-
-  public handleSelectChange(event: Event): void {
-    this.selectedOption = this.formCredentialService.handleSelectChange(event);
-  }
-
   public hasSelectedFunction(): boolean {
-    return this.addedOptions.every(option =>
+    return this.formCredentialService.getPlainAddedPowers().every(option =>
       option.execute || option.create || option.update || option.delete || option.upload
     );
   }
 
   public hasSelectedPower(): boolean{
-    return this.addedOptions.length > 0;
+    return this.formCredentialService.getPlainAddedPowers().length > 0;
   }
 
   public showReminderButton(): boolean{
@@ -138,7 +136,7 @@ export class FormCredentialComponent implements OnInit {
         .submitCredential(
           this.credential,
           this.selectedCountryCode,
-          this.addedOptions,
+          this.formCredentialService.getPlainAddedPowers(),
           this.mandator,
           this.addedMandatorLastName,
           this.signer,
@@ -175,10 +173,11 @@ export class FormCredentialComponent implements OnInit {
     this.sendReminder.emit();
   }
 
+  //this function is currently unused, since user is redirected after successful submit
   private resetForm(): void {
     this.credential = this.formCredentialService.resetForm();
     this.formDirective.resetForm();
-    this.addedOptions = [];
+    this.formCredentialService.setAddedPowers([]);
     this.authService.getMandator().subscribe(mandator2 => {
       if (mandator2) {
         this.mandator = mandator2;
