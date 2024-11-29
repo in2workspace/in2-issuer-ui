@@ -7,8 +7,11 @@ import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 
 class MockAuthService {
-  getUserData(){
-    return of(null);
+  getMandator() {
+    return of({ organization: 'Test Organization' });
+  }
+  getName() {
+    return of('Test User');
   }
   logout() {
     return of(void 0);
@@ -63,14 +66,17 @@ describe('NavbarComponent', () => {
   });
 
   it('should initialize with username and organization', () => {
-    const mockUserData = { name: 'Test User', organization: 'Test Organization' };
-    jest.spyOn(authService, 'getUserData').mockReturnValue(of(mockUserData));
+    const mockMandator = { organization: 'Test Organization' };
+    const mockName = 'Test User';
+
+    jest.spyOn(authService, 'getMandator').mockReturnValue(of(mockMandator));
+    jest.spyOn(authService, 'getName').mockReturnValue(of(mockName));
 
     component.ngOnInit();
     fixture.detectChanges();
 
-    expect(component.userName).toEqual(mockUserData.name);
-    expect(component.organization).toEqual(mockUserData.organization);
+    expect(component.userName).toEqual(mockName);
+    expect(component.organization).toEqual(mockMandator.organization);
   });
 
 

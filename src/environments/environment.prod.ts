@@ -13,6 +13,6 @@ export const environment = {
   procedures: window["env"]["procedures"] || '/api/v1/procedures',
   save_credential: window["env"]["saveCredential"] || '/vci/v1/issuances',
   credential_offer_url: window["env"]["credential_offer_url"] || '/api/v1/credential-offer',
-  notification: window["env"]["notification"] || '/api/v1/notifications',
-  firma_credential: window["env"]["firma_credential"] || '/api/v1/sign-credential'
+  notification: window["env"]["notification"] || '/api/v1/notifications'
+  //firma_credential: window["env"]["firma_credential"] || '/api/v1/sign-credential' The`firma_credential` variable has been commented out as it was initially intended for the signature functionality,which remains incomplete. This configuration is currently unnecessary for the existing flows but is expected to be reintroduced in the future when the related use case is implemented.
 };

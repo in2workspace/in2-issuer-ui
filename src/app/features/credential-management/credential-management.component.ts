@@ -6,6 +6,7 @@ import { CredentialProcedure, CredentialProcedureResponse } from 'src/app/core/m
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { MatSort } from '@angular/material/sort';
+import { FormCredentialService } from "../../shared/components/form-credential/services/form-credential.service";
 
 @Component({
   selector: 'app-credential-management',
@@ -17,48 +18,33 @@ export class CredentialManagementComponent implements AfterViewInit {
   @ViewChild(MatSort) public sort!: MatSort;
   public displayedColumns: string[] = ['status', 'full_name', 'updated'];
   public dataSource = new MatTableDataSource<CredentialProcedure>();
-  public rol = "";
+  public isValidOrganizationIdentifier = false;
   public constructor(
     private credentialProcedureService: CredentialProcedureService,
     private authService: AuthService,
+    private formCredentialService: FormCredentialService,
     private router: Router
   ) {
 
   }
-  performAction(credential_procedures: any): void {
-    // Lógica del botón de acción
-    console.log('Acción realizada en:', credential_procedures);
-    this.credentialProcedureService.signCredential(credential_procedures.credential_procedure.procedure_id).subscribe({
-      next: () => {
-        console.log("firma enviada")
-      },
-      error: () => {
-        console.log("firma no enviada")
-      }
-    });
-  }
   public ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    this.rol = this.authService.getRol();
+    this.isValidOrganizationIdentifier = this.authService.hasIn2OrganizationIdentifier()
     this.loadCredentialData();
 
     this.dataSource.sortingDataAccessor = (item: CredentialProcedure, property: string) => {
       switch (property) {
-        case 'status': 
+        case 'status':
           return item.credential_procedure.status.toLowerCase();
-        case 'full_name': 
+        case 'full_name':
           return item.credential_procedure.full_name.toLowerCase();
-        case 'updated': 
+        case 'updated':
           return item.credential_procedure.updated.toLowerCase();
-        default: 
+        default:
           return '';
       }
     };
-
-    if (this.rol === 'local-signer') {
-      this.displayedColumns.push('actions');
-    }
   }
 
   public loadCredentialData(): void {
@@ -73,11 +59,15 @@ export class CredentialManagementComponent implements AfterViewInit {
   }
 
   public createNewCredential(): void {
-    this.router.navigate(['/organization/credentials/create']);
-  }  
-  
-  public createNewCredential2(): void {
-    this.router.navigate(['/organization/credentials/create2',this.rol]);
+    console.info("BUTTON createNewCredential pressed!")
+    this.formCredentialService.setShowMandator(false);
+    this.router.navigate(['/organization/credentials/create2',this.isValidOrganizationIdentifier ? "admin" : ""]);
+  }
+
+  public createCredentialAsSigner(): void {
+    console.info("BUTTON createCredentialAsSigner pressed!")
+    this.formCredentialService.setShowMandator(true);
+    this.router.navigate(['/organization/credentials/create2',this.isValidOrganizationIdentifier ? "admin" : ""]);
   }
 
   public goToCredentialDetails(credential_procedures: CredentialProcedure): void {

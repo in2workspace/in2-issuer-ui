@@ -12,7 +12,7 @@ import { IssuanceRequest } from '../models/issuanceRequest.interface';
 export class CredentialProcedureService {
 
   private saveCredential = `${environment.base_url}${environment.save_credential}`;
-  private sendFirma = `${environment.base_url}${environment.firma_credential}`;
+  //private sendFirma = `${environment.base_url}${environment.firma_credential}`; The`sendFirma` variable has been commented out as it was initially intended for the signature functionality,which remains incomplete. This configuration is currently unnecessary for the existing flows but is expected to be reintroduced in the future when the related use case is implemented.
   private organizationProcedures = `${environment.base_url}${environment.procedures}`;
   private credentialOfferUrl = `${environment.base_url}${environment.credential_offer_url}`;
   private notificationProcedure =`${environment.base_url}${environment.notification}`;
@@ -67,10 +67,17 @@ export class CredentialProcedureService {
     console.error('Error response body:', error.error);
     return throwError(()=>errorMessage);
   }
-  public signCredential(id: string): Observable<any> {
-    return this.http.post(this.sendFirma, {'procedure-id':id}).pipe(
-      catchError(this.handleError)
-    );
-  }
+
+  /**
+    The `signCredential` method has been commented out as the implementation was initially started
+    but left incomplete. Currently, this functionality is not required in the existing flows.
+    However, it is expected to be revisited and fully implemented in the future when the use case demands it.
+   **/
+  // public signCredential(id: string): Observable<any> {
+  //   return this.http.post(this.sendFirma, {'procedure-id':id}).pipe(
+  //     catchError(this.handleError)
+  //   );
+  // }
+
 
 }

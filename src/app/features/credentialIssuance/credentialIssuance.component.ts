@@ -4,6 +4,4 @@ import { Component } from '@angular/core';
   selector: 'app-credential-issuance',
   templateUrl: './credentialIssuance.component.html'
 })
-export class CredentialIssuanceComponent{
-
-}
+export class CredentialIssuanceComponent {}

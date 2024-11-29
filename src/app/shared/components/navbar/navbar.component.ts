@@ -28,10 +28,14 @@ export class NavbarComponent implements OnInit {
     this.translate.addLangs(['en', 'es', 'ca']);
     this.translate.setDefaultLang('en');
     this.selectedLanguage = this.translate.getDefaultLang();
-    this.authService.getUserData().subscribe(userData => {
-      if (userData) {
-        this.userName = userData.name;
-        this.organization = userData.organization;
+    this.authService.getMandator().subscribe(mandator => {
+      if (mandator) {
+        this.organization = mandator.organization
+      }
+    })
+    this.authService.getName().subscribe(name => {
+      if (name) {
+        this.userName = name;
       }
     });
   }

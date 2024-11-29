@@ -43,32 +43,34 @@
     "create" : "Create Credential",
     "buttonAdmin":"New credential as Signer"
   },
-    "power": {
-      "power": "Powers",
-      "domain": "Domain",
-      "dome": "DOME",
-      "function": "Function",
-      "onboarding": "Onboarding",
-      "marketplace": "Marketplace",
-      "productoffer": "Product offer",
-      "certification": "Certification",
-      "add": "Add",
-      "execute": "Execute",
-      "create": "Create",
-      "update": "Update",
-      "delete": "Delete",
-      "upload": "Upload",
-      "attest": "Attest"
-    },
-    "credentialIssuance":{
-      "create": "Create Credential"
-    },
-    "error": {
-      "not_found": "The requested resource was not found.",
-      "unauthorized": "You are not authorized to perform this action.",
-      "forbidden": "You do not have permission to access this resource.",
-      "internal_server": "An error occurred on the server. Please try again later.",
-      "unknown_error": "An unknown error occurred. Please try again."
-    }
+  "power": {
+    "power": "Powers",
+    "domain": "Domain",
+    "dome": "DOME",
+    "function": "Function",
+    "onboarding": "Onboarding",
+    "marketplace": "Marketplace",
+    "productOffering": "ProductOffering",
+    "certification": "Certification",
+    "add": "Add",
+    "execute": "Execute",
+    "create": "Create",
+    "update": "Update",
+    "delete": "Delete",
+    "upload": "Upload",
+    "attest": "Attest",
+    "invalid_power_title": "Access Denied",
+    "invalid_power_message": "You do not have the required power to access"
+  },
+  "credentialIssuance":{
+    "create": "Create Credential"
+  },
+  "error": {
+    "not_found": "The requested resource was not found.",
+    "unauthorized": "You are not authorized to perform this action.",
+    "forbidden": "You do not have permission to access this resource.",
+    "internal_server": "An error occurred on the server. Please try again later.",
+    "unknown_error": "An unknown error occurred. Please try again."
   }
+}
 

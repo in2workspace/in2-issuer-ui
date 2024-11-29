@@ -32,7 +32,7 @@
   "scaner": {
     "textinformation": "Escaneo de la organización con su cartera para descargar la credencial"
   },
-  
+
   "credentialManagement": {
     "title": "Lista de credenciales emitidas",
     "button": "Nueva credencial",
@@ -51,7 +51,7 @@
       "function": "Function",
       "onboarding": "Onboarding",
       "marketplace": "Marketplace",
-      "productoffer": "Product offer",
+      "productOffering": "ProductOffering",
       "certification": "Certification",
       "add": "Add",
       "execute": "Execute",
@@ -59,7 +59,9 @@
       "update": "Update",
       "delete": "Delete",
       "upload": "Upload",
-      "attest": "Attest"
+      "attest": "Attest",
+      "invalid_power_title": "Acceso Denegado",
+      "invalid_power": "No tienes la política necesaria para acceder"
     },
     "credentialIssuance":{
       "create": "Create Credential"

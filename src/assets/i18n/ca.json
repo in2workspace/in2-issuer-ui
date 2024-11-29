@@ -19,7 +19,7 @@
   "credentialDetail": {
     "credentialDetail": "Detall de la credencial",
     "textinformation": "S'ha emès una nova credencial DOME per a vostè amb la següent informació"
-  },  
+  },
   "credentialOffer": {
     "credentialDetail": "Credential Offer",
     "textinformation": "You have a new credential offer. Please follow the next steps:",
@@ -32,7 +32,7 @@
   "scaner": {
     "textinformation": "Escaneig de l'organització amb la seva cartera per descarregar la credencial"
   },
-  
+
   "credentialManagement": {
     "title": "Llista de credencials emeses",
     "button": "Nova credencial",
@@ -51,7 +51,7 @@
       "function": "Function",
       "onboarding": "Onboarding",
       "marketplace": "Marketplace",
-      "productoffer": "Product offer",
+      "productOffering": "ProductOffering",
       "certification": "Certification",
       "add": "Add",
       "execute": "Execute",
@@ -59,7 +59,9 @@
       "update": "Update",
       "delete": "Delete",
       "upload": "Upload",
-      "attest": "Attest"
+      "attest": "Attest",
+      "invalid_power_title": "Accés Denegat",
+      "invalid_power": "No teniu la política necessaria per accedir"
     },
     "credentialIssuance":{
       "create": "Create Credential"

@@ -14,6 +14,7 @@ export class HomeComponent {
 
   public constructor(private router: Router, public authService: AuthService) {}
 
+
   public login() {
     console.log('HomeComponent: login button clicked');
     this.authService.login();

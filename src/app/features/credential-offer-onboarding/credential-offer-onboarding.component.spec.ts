@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { CredentialOfferOnboardingComponent } from './credential-offer-onboarding.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -70,4 +69,4 @@ describe('CredentialOfferOnboardingComponent', () => {
    component.redirect();
    expect(router.navigate).toHaveBeenCalledWith(['/credential-offer-detail'], {queryParams: {"transaction_code":component["transactionCode"]}});
   })
-});;
+})

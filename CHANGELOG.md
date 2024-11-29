@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.2.0)
+### Changed
+- The authentication logic has been changed from Role-Based Access Control (RBAC) to Policy-Based Access Control (PBAC) to enhance granularity and flexibility in permission management.
+### Fixed
+- The literal "Product Offer" has been replaced with "ProductOffering" in the selection of powers.
+
 ## [1.1.8](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.1.8)
 ### Fixed
 - In credential procedures table, differentiate active sort arrow

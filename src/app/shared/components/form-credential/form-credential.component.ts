@@ -1,16 +1,16 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, NgModel, Validators } from '@angular/forms';
-import { CredentialMandatee } from 'src/app/core/models/credendentialMandatee.interface';
-import { Mandator } from 'src/app/core/models/madator.interface';
-import { Power } from 'src/app/core/models/power.interface';
-import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
-import { TempPower } from '../power/power/power.component';
-import { Country, CountryService } from './services/country.service';
-import { FormCredentialService } from './services/form-credential.service';
-import { AuthService } from 'src/app/core/services/auth.service';
-import { PopupComponent } from '../popup/popup.component';
-import { Router } from '@angular/router';
-import { ErrorStateMatcher } from '@angular/material/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, NgModel, Validators} from '@angular/forms';
+import {CredentialMandatee} from 'src/app/core/models/credendentialMandatee.interface';
+import {Mandator} from 'src/app/core/models/madator.interface';
+import {Power} from 'src/app/core/models/power.interface';
+import {CredentialProcedureService} from 'src/app/core/services/credential-procedure.service';
+import {TempPower} from '../power/power/power.component';
+import {Country, CountryService} from './services/country.service';
+import {FormCredentialService} from './services/form-credential.service';
+import {AuthService} from 'src/app/core/services/auth.service';
+import {PopupComponent} from '../popup/popup.component';
+import {Router} from '@angular/router';
+import {ErrorStateMatcher} from '@angular/material/core';
 
 export interface objectWithName{
   name:string
@@ -22,7 +22,7 @@ export interface objectWithName{
   styleUrls: ['./form-credential.component.scss'],
 })
 export class FormCredentialComponent implements OnInit {
-  
+
   @ViewChild(PopupComponent) public popupComponent!: PopupComponent;
   @ViewChild('formDirective') public formDirective!: FormGroupDirective;
   @Output() public sendReminder = new EventEmitter<void>();
@@ -31,7 +31,6 @@ export class FormCredentialComponent implements OnInit {
   @Input() public title: string = '';
   @Input() public showButton: boolean = false;
   @Input() public hideButton: boolean = true;
-  @Input() public role: string = "";
   @Input() public power: Power[] = [];
   @Input() public credentialStatus: string = '';
   @Input() public credential: CredentialMandatee = {
@@ -73,7 +72,8 @@ export class FormCredentialComponent implements OnInit {
   public popupMessage: string = '';
   public isPopupVisible: boolean = false;
 
-
+  public isValidOrganizationIdentifier = false;
+  public showMandator: boolean = false;
 
   public constructor(
     private credentialProcedureService: CredentialProcedureService,
@@ -84,15 +84,15 @@ export class FormCredentialComponent implements OnInit {
     private router: Router
   ) {
     this.countries = this.countryService.getSortedCountries();
+    this.isValidOrganizationIdentifier = this.authService.hasIn2OrganizationIdentifier()
   }
-  
+
 
   public get mobilePhone(): string {
     return `${this.selectedCountryCode} ${this.credential.mobile_phone}`;
   }
   public set mobilePhone(value: string) {
-    const numberPart = value.replace(`${this.selectedCountryCode} `, '').trim();
-    this.credential.mobile_phone = numberPart;
+    this.credential.mobile_phone = value.replace(`${this.selectedCountryCode} `, '').trim();
   }
 
   public markPrefixAndPhoneAsTouched(prefixControl: NgModel, phoneControl: NgModel): void {
@@ -106,6 +106,11 @@ export class FormCredentialComponent implements OnInit {
 
 
   public ngOnInit(): void {
+
+    this.formCredentialService.showMandator$.subscribe((value) => {
+      this.showMandator = value;
+    });
+
     this.credentialForm = this.fb.group({
       first_name: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*')]],
       last_name: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*')]],
@@ -115,11 +120,9 @@ export class FormCredentialComponent implements OnInit {
 
     });
 
-    
-
     this.authService.getMandator().subscribe(mandator2 => {
       if (mandator2) {
-        if(this.viewMode === "create" && this.role!=="admin"){
+        if(this.viewMode === "create" && !this.showMandator){
           this.mandator ={ 'organizationIdentifier': mandator2.organizationIdentifier,
             'organization': mandator2.organization,
             'commonName':mandator2.commonName,
@@ -127,12 +130,14 @@ export class FormCredentialComponent implements OnInit {
             'serialNumber':mandator2.serialNumber,
             'country':mandator2.country}
         }
-        this.signer = { 'organizationIdentifier': mandator2.organizationIdentifier,
-                        'organization': mandator2.organization,
-                        'commonName':mandator2.commonName,
-                        'emailAddress':mandator2.emailAddress,
-                        'serialNumber':mandator2.serialNumber,
-                        'country':mandator2.country}
+        this.authService.getSigner().subscribe(signer => {
+          this.signer = { 'organizationIdentifier': signer.organizationIdentifier,
+            'organization': signer.organization,
+            'commonName':signer.commonName,
+            'emailAddress':signer.emailAddress,
+            'serialNumber':signer.serialNumber,
+            'country':signer.country}
+        })
       }
     });
 
@@ -202,7 +207,7 @@ export class FormCredentialComponent implements OnInit {
 
   public triggerSendReminder(): void {
     this.sendReminder.emit();
-  }  
+  }
 
   private resetForm(): void {
     this.credential = this.formCredentialService.resetForm();
@@ -221,7 +226,4 @@ export class FormCredentialComponent implements OnInit {
       }
     });
   }
-
 }
-
-

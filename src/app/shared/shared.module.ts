@@ -8,6 +8,7 @@ import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { PowerComponent } from './components/power/power/power.component';
 import { PopupComponent } from './components/popup/popup.component';
+import {DialogComponent} from "./components/dialog/dialog.component";
 
 
 
@@ -16,12 +17,12 @@ import { PopupComponent } from './components/popup/popup.component';
     FormCredentialComponent,
     NavbarComponent,
     PowerComponent,
-    PopupComponent
-
+    PopupComponent,
+    DialogComponent
   ],
   imports: [
     CommonModule, MaterialModule, FormsModule, RouterModule, TranslateModule, ReactiveFormsModule
   ],
-  exports:[CommonModule,MaterialModule, FormsModule,FormCredentialComponent, NavbarComponent, PowerComponent, PopupComponent],
+  exports:[CommonModule,MaterialModule, FormsModule,FormCredentialComponent, NavbarComponent, PowerComponent, PopupComponent,DialogComponent]
 })
 export class SharedModule { }
