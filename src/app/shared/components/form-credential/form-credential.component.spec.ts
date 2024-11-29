@@ -19,6 +19,7 @@ import { MaxLengthDirective } from '../../directives/max-length-directive.direct
 import { CustomEmailValidatorDirective } from '../../directives/custom-email-validator.directive';
 import { UnicodeValidatorDirective } from '../../directives/unicode-validator.directive';
 import { OrganizationNameValidatorDirective } from '../../directives/organization-name.validator.directive';
+import { Signer } from 'src/app/core/models/credentialProcedure.interface';
 
 const mockTempPower: TempPower = {
   tmf_action: 'action1',
@@ -48,6 +49,13 @@ const sortedCountries: any[] = [
   {name:'Portugal'},
   {name:'Spain'}
 ];
+const mockSigner:Signer = { 
+  'organizationIdentifier': 'orgId',
+  'organization': 'org',
+  'commonName':'common',
+  'emailAddress':'email',
+  'serialNumber':'serialNum',
+  'country':'EU'};
 
 describe('FormCredentialComponent', () => {
   let component: FormCredentialComponent;
@@ -76,8 +84,11 @@ describe('FormCredentialComponent', () => {
       submitCredential: jest.fn().mockReturnValue(of({})),
       resetForm: jest.fn(),
       convertToTempPower: jest.fn(),
-      checkTmfFunction: jest.fn()
-    } as jest.Mocked<FormCredentialService>;
+      checkTmfFunction: jest.fn(),
+      setShowMandator: jest.fn(),
+      getShowMandator: jest.fn(),
+      showMandator$: of(false), 
+    } as jest.Mocked<any>;
 
     mockCountryService = {
       getCountries: jest.fn().mockReturnValue(countries),
@@ -90,13 +101,18 @@ describe('FormCredentialComponent', () => {
       },
       logout() {
         return of(void 0);
+      },
+      hasIn2OrganizationIdentifier(){
+        return true
+      },
+      getSigner(){
+        return of(mockSigner);
       }
     } as jest.Mocked<any>
 
     mockRouter = {
       navigate: jest.fn()
     };
-
 
     await TestBed.configureTestingModule({
       declarations: [FormCredentialComponent, PopupComponent, MaxLengthDirective, CustomEmailValidatorDirective, UnicodeValidatorDirective, OrganizationNameValidatorDirective],
@@ -223,9 +239,8 @@ describe('FormCredentialComponent', () => {
   
     component.ngOnInit();
     fixture.detectChanges();
-  
     tick();
-  
+    
     expect(component.mandator).toEqual({
       organizationIdentifier: mockMandator.organizationIdentifier,
       organization: mockMandator.organization,
@@ -234,15 +249,7 @@ describe('FormCredentialComponent', () => {
       serialNumber: mockMandator.serialNumber,
       country: mockMandator.country,
     });
-  
-    expect(component.signer).toEqual({
-      organizationIdentifier: mockMandator.organizationIdentifier,
-      organization: mockMandator.organization,
-      commonName: mockMandator.commonName,
-      emailAddress: mockMandator.emailAddress,
-      serialNumber: mockMandator.serialNumber,
-      country: mockMandator.country,
-    });
+    expect(component.signer).toEqual(mockSigner);
   }));
   
 
@@ -302,7 +309,6 @@ describe('FormCredentialComponent', () => {
   });
 
   it('it should submit credential when submitCredential is called with selected power', () => {
-    component.role = "user";
     component.selectedCountryCode = 'US';
     component.addedOptions = [mockTempPower];
   
@@ -323,7 +329,6 @@ describe('FormCredentialComponent', () => {
   });
 
   it('it should not submit credential when submitCredential is called with empty addedOptions', () => {
-    component.role = "user";
   
     component.selectedCountryCode = 'US';
     component.addedOptions = [{

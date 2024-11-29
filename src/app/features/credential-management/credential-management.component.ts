@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, inject, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, inject, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { Router } from '@angular/router';
@@ -13,7 +13,7 @@ import { CredentialProcedure, ProcedureResponse } from "../../core/models/dto/pr
   templateUrl: './credential-management.component.html',
   styleUrls: ['./credential-management.component.scss'],
 })
-export class CredentialManagementComponent implements AfterViewInit {
+export class CredentialManagementComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) public paginator!: MatPaginator;
   @ViewChild(MatSort) public sort!: MatSort;
   public displayedColumns: string[] = ['status', 'full_name', 'updated'];
@@ -25,10 +25,13 @@ export class CredentialManagementComponent implements AfterViewInit {
   private readonly formCredentialService = inject(FormCredentialService);
   private readonly router = inject(Router);
 
+  public ngOnInit(){
+    this.isValidOrganizationIdentifier = this.authService.hasIn2OrganizationIdentifier();
+  }
+
   public ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    this.isValidOrganizationIdentifier = this.authService.hasIn2OrganizationIdentifier()
     this.loadCredentialData();
 
     this.dataSource.sortingDataAccessor = (item: CredentialProcedure, property: string) => {
@@ -58,7 +61,7 @@ export class CredentialManagementComponent implements AfterViewInit {
 
   public createNewCredential(): void {
     this.formCredentialService.setShowMandator(false);
-    this.router.navigate(['/organization/credentials/create2',this.isValidOrganizationIdentifier ? "admin" : ""]);
+    this.router.navigate(['/organization/credentials/create2', this.isValidOrganizationIdentifier ? "admin" : ""]);
   }
 
   public createCredentialAsSigner(): void {
