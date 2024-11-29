@@ -6,9 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.2.1](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.2.1)
 ### Fixed
+- In credential management, fix "New create credential" button to redirect to proper route
+- In credential form as a signer, show mandator form and signer panel after refreshing
 - In credential form, fix validation (add length and character restrictions and error messages)
-- In credential form phone input, make label go up only after clicking
 - In credential form, don't add prefix to phone number input after submitting
+- In credential form, disable already added power options and show messages when user has no added power options or has a power option without selected action
+- In credential form phone input, make label go up only after clicking
 
 ## [1.2.0](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.2.0)
 ### Changed

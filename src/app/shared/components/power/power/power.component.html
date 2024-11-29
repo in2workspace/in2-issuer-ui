@@ -84,7 +84,8 @@
         {{ "power.execute" | translate }}
       </mat-slide-toggle>
     </div>
-    <button
+    <button 
+    *ngIf="!isDisabled"
     type="button"
     mat-mini-fab class="small-icon-button"
     color="warn"
