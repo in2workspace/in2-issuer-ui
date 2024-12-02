@@ -66,7 +66,14 @@ describe('NavbarComponent', () => {
   });
 
   it('should initialize with username and organization', () => {
-    const mockMandator = { organization: 'Test Organization' };
+    const mockMandator = {
+      organizationIdentifier: 'VATES-B60645900',
+      organization: 'Test Organization',
+      commonName: 'Test Common Name',
+      emailAddress: 'test@organization.com',
+      serialNumber: 'SN12345',
+      country: 'Test Country'
+    };
     const mockName = 'Test User';
 
     jest.spyOn(authService, 'getMandator').mockReturnValue(of(mockMandator));
