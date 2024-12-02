@@ -280,7 +280,9 @@ describe('FormCredentialComponent', () => {
     
     jest.spyOn(mockAuthService, 'hasIn2OrganizationIdentifier').mockReturnValue(false);
     jest.spyOn(mockAuthService, 'getMandator').mockReturnValue(of(mockMandator));
-  
+    component.viewMode='create';
+    component.asSigner=false;
+
     component.ngOnInit();
     fixture.detectChanges();
     tick();
