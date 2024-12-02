@@ -4,6 +4,7 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { ActiveSortColumnDirective } from './active-sort-column.directive';
 import { of, Subject } from 'rxjs';
 import {TestBed} from "@angular/core/testing";
+import {A} from "@angular/cdk/keycodes";
 
 describe('ActiveSortColumnDirective', () => {
   let directive: ActiveSortColumnDirective;
@@ -26,12 +27,13 @@ describe('ActiveSortColumnDirective', () => {
 
     TestBed.configureTestingModule({
       providers: [
+        ActiveSortColumnDirective,
         { provide: Renderer2, useValue: mockRenderer },
         { provide: ElementRef, useValue: mockElementRef },
         { provide: MatSort, useValue: mockMatSort }
       ]
     });
-
+    directive = TestBed.inject(ActiveSortColumnDirective)
     directive.appActiveSortColumn = 'columnName';
   });
 
