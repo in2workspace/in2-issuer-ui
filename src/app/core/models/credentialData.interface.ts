@@ -1,4 +1,4 @@
-import {Credential} from "./credential.interface";
+import { Credential } from "./credential.interface";
 
 export interface CredentialData {
   procedure_id: string;

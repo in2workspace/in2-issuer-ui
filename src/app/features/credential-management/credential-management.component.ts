@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, inject, ViewChild} from '@angular/core';
+import { AfterViewInit, Component, inject, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { Router } from '@angular/router';
@@ -6,8 +6,8 @@ import { CredentialProcedureService } from 'src/app/core/services/credential-pro
 import { AuthService } from 'src/app/core/services/auth.service';
 import { MatSort } from '@angular/material/sort';
 import { FormCredentialService } from "../../shared/components/form-credential/services/form-credential.service";
-import {CredentialProcedure} from "../../core/models/credentialProcedure.interface";
-import {CredentialProcedureResponse} from "../../core/models/credentialProcedureResponse.interface";
+import { CredentialProcedure } from "../../core/models/credentialProcedure.interface";
+import { CredentialProcedureResponse } from "../../core/models/credentialProcedureResponse.interface";
 
 @Component({
   selector: 'app-credential-management',

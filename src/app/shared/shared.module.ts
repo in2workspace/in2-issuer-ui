@@ -8,7 +8,7 @@ import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { PowerComponent } from './components/power/power/power.component';
 import { PopupComponent } from './components/popup/popup.component';
-import {DialogComponent} from "./components/dialog/dialog.component";
+import { DialogComponent } from "./components/dialog/dialog.component";
 
 
 

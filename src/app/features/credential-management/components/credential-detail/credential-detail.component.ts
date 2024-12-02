@@ -1,10 +1,9 @@
-import {Component, inject, OnInit} from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
-import {CredentialData} from "../../../../core/models/credentialData.interface";
-import {Credential} from "../../../../core/models/credential.interface";
+import { CredentialData } from "../../../../core/models/credentialData.interface";
+import { Credential } from "../../../../core/models/credential.interface";
 
-// TODO CHeck any responses
 @Component({
   selector: 'app-credential-detail',
   templateUrl: './credential-detail.component.html',
@@ -12,7 +11,6 @@ import {Credential} from "../../../../core/models/credential.interface";
 export class CredentialDetailComponent implements OnInit {
   public credentialId: string | null = null;
   public credential: Credential | null = null;
-  public credentialData: CredentialData | null = null;
   public credentialStatus: string | null = null;
 
   private readonly route = inject(ActivatedRoute);
@@ -43,10 +41,10 @@ export class CredentialDetailComponent implements OnInit {
   public sendReminder(): void {
     if (this.credentialId) {
       this.credentialProcedureService.sendReminder(this.credentialId).subscribe({
-        next: (response: any) => {
+        next: (response: void) => {
           console.log('Reminder sent successfully', response);
         },
-        error: (error: any) => {
+        error: (error: void) => {
           console.error('Error sending reminder', error);
         }
       });

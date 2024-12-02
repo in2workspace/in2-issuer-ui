@@ -4,9 +4,9 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { IssuanceRequest } from '../models/issuanceRequest.interface';
-import {CredentialProcedureResponse} from "../models/credentialProcedureResponse.interface";
-import {CredentialData} from "../models/credentialData.interface";
-//TODO Check any responses
+import { CredentialProcedureResponse } from "../models/credentialProcedureResponse.interface";
+import { CredentialData } from "../models/credentialData.interface";
+
 @Injectable({
   providedIn: 'root'
 })
@@ -32,15 +32,15 @@ export class CredentialProcedureService {
     );
   }
 
-  public createProcedure(IssuanceRequest: IssuanceRequest): Observable<any> {
+  public createProcedure(IssuanceRequest: IssuanceRequest): Observable<void> {
 
-    return this.http.post(this.saveCredential, IssuanceRequest).pipe(
+    return this.http.post<void>(this.saveCredential, IssuanceRequest).pipe(
       catchError(this.handleError)
     );
   }
 
-  public sendReminder(procedureId: string): Observable<any> {
-    return this.http.post(`${this.notificationProcedure}/${procedureId}`,{} ).pipe(
+  public sendReminder(procedureId: string): Observable<void> {
+    return this.http.post<void>(`${this.notificationProcedure}/${procedureId}`,{} ).pipe(
       catchError(this.handleError)
     );
   }

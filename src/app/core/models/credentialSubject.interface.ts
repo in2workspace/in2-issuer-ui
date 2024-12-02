@@ -1,4 +1,4 @@
-import {Mandate} from "./mandate.interface";
+import { Mandate } from "./mandate.interface";
 
 export interface CredentialSubject {
   mandate: Mandate;

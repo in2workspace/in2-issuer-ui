@@ -1,4 +1,4 @@
-import {Directive, ElementRef, inject, Input, OnDestroy, OnInit, Renderer2} from '@angular/core';
+import { Directive, ElementRef, inject, Input, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MatSort, Sort } from '@angular/material/sort';
 
@@ -13,7 +13,7 @@ export class ActiveSortColumnDirective implements OnInit, OnDestroy {
   @Input() public appActiveSortColumn: string = ''; //name of column to be marked with class "active-sort-column"
   private subscription: Subscription | undefined;
 
-  private readonly el = inject(ElementRef);
+  private readonly elementRef = inject(ElementRef);
   private readonly renderer = inject(Renderer2);
   private readonly matSort = inject(MatSort);
 
@@ -31,9 +31,9 @@ export class ActiveSortColumnDirective implements OnInit, OnDestroy {
 
   private updateStyle(sort: Sort): void {
     if (sort.active === this.appActiveSortColumn) {
-      this.renderer.addClass(this.el.nativeElement, 'active-sort-column');
+      this.renderer.addClass(this.elementRef.nativeElement, 'active-sort-column');
     } else {
-      this.renderer.removeClass(this.el.nativeElement, 'active-sort-column');
+      this.renderer.removeClass(this.elementRef.nativeElement, 'active-sort-column');
     }
   }
 }

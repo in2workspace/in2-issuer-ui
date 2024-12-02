@@ -1,4 +1,5 @@
 import { CredentialManagement } from "./credentialManagement.interface";
+
 export interface IssuanceRequest {
     schema: string,
     format: string,

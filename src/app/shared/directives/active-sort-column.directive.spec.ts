@@ -2,9 +2,8 @@ import { Renderer2 } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { MatSort, Sort } from '@angular/material/sort';
 import { ActiveSortColumnDirective } from './active-sort-column.directive';
-import { of, Subject } from 'rxjs';
-import {TestBed} from "@angular/core/testing";
-import {A} from "@angular/cdk/keycodes";
+import { Subject } from 'rxjs';
+import { TestBed } from "@angular/core/testing";
 
 describe('ActiveSortColumnDirective', () => {
   let directive: ActiveSortColumnDirective;

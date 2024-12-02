@@ -1,3 +1,3 @@
-import {OrganizationDetails} from "./organizationDetails.interface";
+import { OrganizationDetails } from "./organizationDetails.interface";
 
 export interface Mandator extends OrganizationDetails {}

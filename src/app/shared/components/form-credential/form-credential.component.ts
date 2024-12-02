@@ -1,16 +1,16 @@
-import {Component, EventEmitter, inject, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, NgModel, Validators} from '@angular/forms';
-import {CredentialMandatee} from 'src/app/core/models/credendentialMandatee.interface';
-import {OrganizationDetails} from 'src/app/core/models/organizationDetails.interface';
-import {Power} from 'src/app/core/models/power.interface';
-import {CredentialProcedureService} from 'src/app/core/services/credential-procedure.service';
-import {Country, CountryService} from './services/country.service';
-import {FormCredentialService} from './services/form-credential.service';
-import {AuthService} from 'src/app/core/services/auth.service';
-import {PopupComponent} from '../popup/popup.component';
-import {Router} from '@angular/router';
-import {ErrorStateMatcher} from '@angular/material/core';
-import {TempPower} from "../../../core/models/tempPower.interface";
+import { Component, EventEmitter, inject, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, NgModel, Validators } from '@angular/forms';
+import { CredentialMandatee } from 'src/app/core/models/credendentialMandatee.interface';
+import { OrganizationDetails } from 'src/app/core/models/organizationDetails.interface';
+import { Power } from 'src/app/core/models/power.interface';
+import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
+import { Country } from './services/country.service';
+import { FormCredentialService } from './services/form-credential.service';
+import { AuthService } from 'src/app/core/services/auth.service';
+import { PopupComponent } from '../popup/popup.component';
+import { Router } from '@angular/router';
+import { ErrorStateMatcher } from '@angular/material/core';
+import { TempPower } from "../../../core/models/tempPower.interface";
 
 @Component({
   selector: 'app-form-credential',
@@ -50,28 +50,18 @@ export class FormCredentialComponent implements OnInit {
   public tempPowers: TempPower[] = [];
   public countries: Country[] = [];
   public selectedCountryCode: string = '';
-  public actualMobilePhone: string = '';
   public credentialForm!: FormGroup;
 
   public popupMessage: string = '';
   public isPopupVisible: boolean = false;
 
-  public isValidOrganizationIdentifier = false;
   public showMandator: boolean = false;
 
   private readonly credentialProcedureService = inject(CredentialProcedureService);
   private readonly fb: FormBuilder = inject(FormBuilder);
-  private readonly countryService = inject(CountryService);
   private readonly formCredentialService = inject(FormCredentialService);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
-
-  public get mobilePhone(): string {
-    return `${this.selectedCountryCode} ${this.credential.mobile_phone}`;
-  }
-  public set mobilePhone(value: string) {
-    this.credential.mobile_phone = value.replace(`${this.selectedCountryCode} `, '').trim();
-  }
 
   public markPrefixAndPhoneAsTouched(prefixControl: NgModel, phoneControl: NgModel): void {
     if (prefixControl) {

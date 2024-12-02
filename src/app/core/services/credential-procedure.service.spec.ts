@@ -1,11 +1,11 @@
-import {TestBed} from '@angular/core/testing';
-import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
-import {CredentialProcedureService} from './credential-procedure.service';
-import {environment} from 'src/environments/environment';
-import {HttpErrorResponse} from '@angular/common/http';
-import {IssuanceRequest} from '../models/issuanceRequest.interface';
-import {CredentialProcedureResponse} from "../models/credentialProcedureResponse.interface";
-import {CredentialData} from "../models/credentialData.interface";
+import { TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { CredentialProcedureService } from './credential-procedure.service';
+import { environment } from 'src/environments/environment';
+import { HttpErrorResponse } from '@angular/common/http';
+import { IssuanceRequest } from '../models/issuanceRequest.interface';
+import { CredentialProcedureResponse } from "../models/credentialProcedureResponse.interface";
+import { CredentialData } from "../models/credentialData.interface";
 
 const notFoundErrorResp = new HttpErrorResponse({
   error: '404 error',

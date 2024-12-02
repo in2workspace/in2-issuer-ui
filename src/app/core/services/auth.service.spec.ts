@@ -10,7 +10,6 @@ const mockAuthResponse = {
   idToken: 'dummyIdToken'
 };
 
-
 describe('AuthService', () => {
   let service: AuthService;
   let oidcSecurityService: {

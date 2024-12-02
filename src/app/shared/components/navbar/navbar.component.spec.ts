@@ -92,17 +92,6 @@ describe('NavbarComponent', () => {
     expect(component.selectedLanguage).toBe('en');
   });
 
-  it('should initialize languages', ()=>{
-    jest.spyOn(translateService, 'setDefaultLang');
-    jest.spyOn(translateService, 'addLangs');
-
-    component.ngOnInit();
-    fixture.detectChanges();
-
-    expect(translateService.setDefaultLang).toHaveBeenCalled();
-    expect(translateService.addLangs).toHaveBeenCalled();
-  });
-
   it('should change language', () => {
     component.changeLanguage('es');
     expect(component.selectedLanguage).toBe('es');

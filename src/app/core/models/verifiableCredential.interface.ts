@@ -1,4 +1,4 @@
-import {CredentialSubject} from "./credentialSubject.interface";
+import { CredentialSubject } from "./credentialSubject.interface";
 
 export interface VerifiableCredential {
   id: string;

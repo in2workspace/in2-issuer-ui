@@ -1,8 +1,5 @@
-import {inject, Injectable} from '@angular/core';
-import {
-  HttpInterceptor, HttpRequest, HttpHandler, HttpEvent,
-  HttpErrorResponse,
-} from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
 import { AlertService } from '../services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
