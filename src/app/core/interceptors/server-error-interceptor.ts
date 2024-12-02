@@ -9,8 +9,8 @@ import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export class ServeErrorInterceptor implements HttpInterceptor {
-  private alertService = inject(AlertService);
-  private translate = inject(TranslateService);
+  private readonly alertService = inject(AlertService);
+  private readonly translate = inject(TranslateService);
 
   public intercept(
     request: HttpRequest<unknown>,
@@ -18,7 +18,7 @@ export class ServeErrorInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
-        let errorMessage = '';
+        let errorMessage: string;
         if (error.error instanceof ErrorEvent) {
           errorMessage = `Error: ${error.error.message}`;
         } else {

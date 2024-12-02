@@ -3,33 +3,33 @@ import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {Power} from "../models/power.interface";
-import {Mandator} from "../models/madator.interface";
 import {Signer} from "../models/signer.interface";
 import {UserData} from "../models/userData.interface";
+import {Mandator} from "../models/mandator.interface";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
+  private readonly isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
-  private userDataSubject = new BehaviorSubject<UserData |null>(null);
-  private tokenSubject = new BehaviorSubject<string>('');
-  private mandatorSubject = new BehaviorSubject<Mandator | null>(null);
-  private signerSubject = new BehaviorSubject<Signer | null>(null);
-  private emailSubject = new BehaviorSubject<string>('');
-  private nameSubject = new BehaviorSubject<string>('');
+  private readonly userDataSubject = new BehaviorSubject<UserData |null>(null);
+  private readonly tokenSubject = new BehaviorSubject<string>('');
+  private readonly mandatorSubject = new BehaviorSubject<Mandator | null>(null);
+  private readonly signerSubject = new BehaviorSubject<Signer | null>(null);
+  private readonly emailSubject = new BehaviorSubject<string>('');
+  private readonly nameSubject = new BehaviorSubject<string>('');
 
   private userPowers: Power[] = [];
 
-  private oidcSecurityService = inject(OidcSecurityService);
+  private readonly oidcSecurityService = inject(OidcSecurityService);
 
   constructor() {
     this.checkAuth().subscribe();
   }
 
   public checkAuth(): Observable<boolean> {
-    return this.oidcSecurityService.checkAuth().pipe(map(({ isAuthenticated, userData, accessToken }) => {
+    return this.oidcSecurityService.checkAuth().pipe(map(({ isAuthenticated, userData}) => {
       this.isAuthenticatedSubject.next(isAuthenticated);
 
       if (isAuthenticated) {

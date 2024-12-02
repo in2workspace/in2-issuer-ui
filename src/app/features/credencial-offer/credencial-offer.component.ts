@@ -11,10 +11,10 @@ import { AlertService } from 'src/app/core/services/alert.service';
 export class CredencialOfferComponent implements OnInit {
   public qrCodeData?: string;
 
-  private route = inject(ActivatedRoute);
-  private router = inject(Router);
-  private credentialProcedureService = inject(CredentialProcedureService);
-  private alertService = inject(AlertService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly credentialProcedureService = inject(CredentialProcedureService);
+  private readonly alertService = inject(AlertService);
 
   public ngOnInit(): void {
     this.route.queryParams.subscribe(params => {

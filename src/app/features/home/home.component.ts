@@ -12,7 +12,7 @@ export class HomeComponent {
   public walletUrl = environment.wallet_url;
   public knowledgebase_url = environment.knowledgebase_url;
 
-  private router = inject(Router);
+  private readonly router = inject(Router);
   public authService = inject(AuthService);
 
   public login() {

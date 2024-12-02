@@ -18,9 +18,9 @@ export class NavbarComponent implements OnInit {
   ];
   public selectedLanguage = 'en';
 
-  private translate = inject(TranslateService);
-  private authService = inject(AuthService);
-  private router = inject(Router);
+  private readonly translate = inject(TranslateService);
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
 
   public ngOnInit() {
     this.translate.addLangs(['en', 'es', 'ca']);

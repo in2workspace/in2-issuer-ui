@@ -1,3 +1,3 @@
 import {OrganizationDetails} from "./organizationDetails.interface";
 
-export interface Signer extends OrganizationDetails {}
+export interface Mandator extends OrganizationDetails {}

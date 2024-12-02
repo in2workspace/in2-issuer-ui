@@ -1,4 +1,4 @@
-export interface Mandator {
+export interface OrganizationDetails {
   organizationIdentifier: string;
   organization: string;
   commonName: string;

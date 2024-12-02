@@ -2,18 +2,18 @@ import { Injectable } from '@angular/core';
 import {TempPower} from "../../../../core/models/tempPower.interface";
 import { Power } from 'src/app/core/models/power.interface';
 import { CredentialMandatee } from 'src/app/core/models/credendentialMandatee.interface';
-import { Mandator } from 'src/app/core/models/madator.interface';
 import { PopupComponent } from '../../popup/popup.component';
 import { IssuanceRequest } from 'src/app/core/models/issuanceRequest.interface';
 import {BehaviorSubject, Observable} from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
+import {Mandator} from "../../../../core/models/mandator.interface";
 
 @Injectable({
   providedIn: 'root'
 })
 export class FormCredentialService {
 
-  private showMandatorSubject = new BehaviorSubject<boolean>(false);
+  private readonly showMandatorSubject = new BehaviorSubject<boolean>(false);
   showMandator$ = this.showMandatorSubject.asObservable();
 
   setShowMandator(value: boolean): void {

@@ -8,8 +8,8 @@ import { Router } from '@angular/router';
 })
 export class CallbackComponent implements OnInit {
 
-  private oidcSecurityService = inject(OidcSecurityService);
-  private router = inject(Router);
+  private readonly oidcSecurityService = inject(OidcSecurityService);
+  private readonly router = inject(Router);
 
   public ngOnInit() {
     this.oidcSecurityService.checkAuth().subscribe(({ isAuthenticated }) => {

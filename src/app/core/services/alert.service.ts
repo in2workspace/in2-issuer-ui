@@ -6,8 +6,8 @@ import { TranslateService } from '@ngx-translate/core';
   providedIn: 'root'
 })
 export class AlertService {
-  private snackbar = inject(MatSnackBar);
-  private translate = inject(TranslateService);
+  private readonly snackbar = inject(MatSnackBar);
+  private readonly translate = inject(TranslateService);
 
   public showAlert(
         messageKey: string,

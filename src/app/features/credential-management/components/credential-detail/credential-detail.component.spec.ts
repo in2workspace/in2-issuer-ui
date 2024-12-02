@@ -5,7 +5,8 @@ import { of, throwError } from 'rxjs';
 import { CredentialDetailComponent } from './credential-detail.component';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
-import { CredentialData, Credential } from 'src/app/core/models/credentialProcedure.interface';
+import {CredentialData} from "../../../../core/models/credentialData.interface";
+import {Credential} from "../../../../core/models/credential.interface";
 
 describe('CredentialDetailComponent', () => {
   let component: CredentialDetailComponent;
@@ -55,7 +56,7 @@ describe('CredentialDetailComponent', () => {
 
   it('should load credential details on init', () => {
     const mockCredentialManagement: Credential = {
-      
+
         "sub": null,
         "nbf": "2024-05-30T14:01:03.809829546Z",
         "iss": "VATES-B60645900",
@@ -99,7 +100,7 @@ describe('CredentialDetailComponent', () => {
         "jti": "e2975afc-6df2-4183-b84b-d797133650eb"
     }
 
-    
+
 
     const mockCredential: CredentialData = {
       procedure_id: '1',

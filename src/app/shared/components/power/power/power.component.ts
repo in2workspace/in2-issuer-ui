@@ -21,7 +21,7 @@ export class PowerComponent {
   public isPopupVisible: boolean = false;
   public organizationIdentifierIsIn2: boolean = false;
 
-  private authService = inject(AuthService);
+  private readonly authService = inject(AuthService);
 
   ngOnInit(): void {
     this.organizationIdentifierIsIn2 = this.authService.hasIn2OrganizationIdentifier();

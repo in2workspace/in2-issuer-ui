@@ -8,7 +8,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 })
 export class DialogComponent {
 
-  private dialogRef = inject(MatDialogRef<DialogComponent>);
+  private readonly dialogRef = inject(MatDialogRef<DialogComponent>);
 
   onConfirm(): void {
     this.dialogRef.close(true);

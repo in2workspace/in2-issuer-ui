@@ -2,7 +2,6 @@ import { TestBed } from '@angular/core/testing';
 import {FormCredentialService, isCertification, isProductOffering} from './form-credential.service';
 import {Power} from 'src/app/core/models/power.interface';
 import {CredentialMandatee} from 'src/app/core/models/credendentialMandatee.interface';
-import {Mandator} from 'src/app/core/models/madator.interface';
 import {of, throwError} from 'rxjs';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
@@ -13,14 +12,15 @@ import {RouterModule} from '@angular/router';
 import {AuthModule} from 'angular-auth-oidc-client';
 import {SharedModule} from 'src/app/shared/shared.module';
 import {PopupComponent} from '../../popup/popup.component';
-import {Signer} from "../../../../core/models/credentialProcedure.interface";
 import {TempPower} from "../../../../core/models/tempPower.interface";
+import {Mandator} from "../../../../core/models/mandator.interface";
+import {Signer} from "../../../../core/models/signer.interface";
 
 describe('FormCredentialService', () => {
   let service: FormCredentialService;
   let popupComponent: PopupComponent;
   let credentialProcedureService: any;
-  let mockCredential: CredentialMandatee;;
+  let mockCredential: CredentialMandatee;
   let mockSelectedCountry: string;
   let mockMandator: Mandator;
   let mockSigner: Signer;

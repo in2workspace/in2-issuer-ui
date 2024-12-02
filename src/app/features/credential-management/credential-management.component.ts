@@ -2,11 +2,12 @@ import {AfterViewInit, Component, inject, ViewChild} from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { Router } from '@angular/router';
-import { CredentialProcedure, CredentialProcedureResponse } from 'src/app/core/models/credentialProcedure.interface';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { MatSort } from '@angular/material/sort';
 import { FormCredentialService } from "../../shared/components/form-credential/services/form-credential.service";
+import {CredentialProcedure} from "../../core/models/credentialProcedure.interface";
+import {CredentialProcedureResponse} from "../../core/models/credentialProcedureResponse.interface";
 
 @Component({
   selector: 'app-credential-management',
@@ -20,10 +21,10 @@ export class CredentialManagementComponent implements AfterViewInit {
   public dataSource = new MatTableDataSource<CredentialProcedure>();
   public isValidOrganizationIdentifier = false;
 
-  private credentialProcedureService = inject(CredentialProcedureService);
-  private authService = inject(AuthService);
-  private formCredentialService = inject(FormCredentialService);
-  private router = inject(Router);
+  private readonly credentialProcedureService = inject(CredentialProcedureService);
+  private readonly authService = inject(AuthService);
+  private readonly formCredentialService = inject(FormCredentialService);
+  private readonly router = inject(Router);
 
   public ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;

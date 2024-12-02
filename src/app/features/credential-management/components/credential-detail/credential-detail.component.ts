@@ -1,7 +1,9 @@
 import {Component, inject, OnInit} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CredentialData, Credential } from 'src/app/core/models/credentialProcedure.interface';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
+import {CredentialData} from "../../../../core/models/credentialData.interface";
+import {Credential} from "../../../../core/models/credential.interface";
+
 // TODO CHeck any responses
 @Component({
   selector: 'app-credential-detail',
@@ -13,8 +15,8 @@ export class CredentialDetailComponent implements OnInit {
   public credentialData: CredentialData | null = null;
   public credentialStatus: string | null = null;
 
-  private route = inject(ActivatedRoute);
-  private credentialProcedureService = inject(CredentialProcedureService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly credentialProcedureService = inject(CredentialProcedureService);
 
   public ngOnInit(): void {
     this.route.paramMap.subscribe(params => {

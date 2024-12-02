@@ -1,8 +1,8 @@
 
 import { CredentialMandatee } from "./credendentialMandatee.interface";
-import { Mandator } from "./madator.interface";
 import { Power } from "./power.interface";
-import { Signer } from "./credentialProcedure.interface";
+import {Mandator} from "./mandator.interface";
+import {Signer} from "./signer.interface";
 
 
 export interface CredentialManagement {

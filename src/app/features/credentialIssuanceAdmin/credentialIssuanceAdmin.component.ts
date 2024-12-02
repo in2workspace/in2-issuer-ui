@@ -8,7 +8,7 @@ import { ActivatedRoute } from '@angular/router';
 export class CredentialIssuanceAdminComponent implements OnInit{
   public rol = "admin";
 
-  private route = inject(ActivatedRoute);
+  private readonly route = inject(ActivatedRoute);
 
   public ngOnInit(): void {
     this.route.paramMap.subscribe(params => {

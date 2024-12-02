@@ -1,7 +1,7 @@
 import {Component, EventEmitter, inject, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, NgModel, Validators} from '@angular/forms';
 import {CredentialMandatee} from 'src/app/core/models/credendentialMandatee.interface';
-import {Mandator} from 'src/app/core/models/madator.interface';
+import {OrganizationDetails} from 'src/app/core/models/organizationDetails.interface';
 import {Power} from 'src/app/core/models/power.interface';
 import {CredentialProcedureService} from 'src/app/core/services/credential-procedure.service';
 import {Country, CountryService} from './services/country.service';
@@ -10,12 +10,7 @@ import {AuthService} from 'src/app/core/services/auth.service';
 import {PopupComponent} from '../popup/popup.component';
 import {Router} from '@angular/router';
 import {ErrorStateMatcher} from '@angular/material/core';
-import {Signer} from "../../../core/models/signer.interface";
 import {TempPower} from "../../../core/models/tempPower.interface";
-
-export interface objectWithName{
-  name:string
-}
 
 @Component({
   selector: 'app-form-credential',
@@ -35,8 +30,8 @@ export class FormCredentialComponent implements OnInit {
   @Input() public power: Power[] = [];
   @Input() public credentialStatus: string = '';
   @Input() public credential: CredentialMandatee = this.initializeCredential();
-  @Input() public mandator: Mandator = this.initializeMandator();
-  public signer: Signer = this.initializeSigner();
+  @Input() public mandator: OrganizationDetails = this.initializeOrganizationDetails();
+  public signer: OrganizationDetails = this.initializeOrganizationDetails();
 
   //if mobile has been introduced and unfocused and there is not country, show error
   public countryErrorMatcher: ErrorStateMatcher = {
@@ -114,12 +109,12 @@ export class FormCredentialComponent implements OnInit {
         }
         this.authService.getSigner().subscribe(signer => {
           this.signer = {
-            organizationIdentifier: signer?.organizationIdentifier || '',
-            organization: signer?.organization || '',
-            commonName: signer?.commonName || '',
-            emailAddress: signer?.emailAddress || '',
-            serialNumber: signer?.serialNumber || '',
-            country: signer?.country || ''
+            organizationIdentifier: signer?.organizationIdentifier ?? '',
+            organization: signer?.organization ?? '',
+            commonName: signer?.commonName ?? '',
+            emailAddress: signer?.emailAddress ?? '',
+            serialNumber: signer?.serialNumber ?? '',
+            country: signer?.country ?? ''
           }
         })
       }
@@ -185,7 +180,6 @@ export class FormCredentialComponent implements OnInit {
     } else {
       this.popupMessage = 'Each power must have at least one action selected.';
       this.isPopupVisible = true;
-      return;
     }
   }
 
@@ -220,18 +214,7 @@ export class FormCredentialComponent implements OnInit {
     };
   }
 
-  private initializeMandator(): Mandator {
-    return {
-      organizationIdentifier: '',
-      organization: '',
-      commonName: '',
-      emailAddress: '',
-      serialNumber: '',
-      country: ''
-    };
-  }
-
-  private initializeSigner(): Signer {
+  private initializeOrganizationDetails(): OrganizationDetails {
     return {
       organizationIdentifier: '',
       organization: '',
