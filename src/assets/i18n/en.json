@@ -94,7 +94,8 @@
           "invalid": "Email is invalid",
           "local_part_max": "The local part of the email can't exceed 64 characters.",
           "domain_part_max": "The domain part of the email can't exceed 189 characters.",
-          "main_domain_part_min": "The part between '@' and '.' must have 2 characters at minimum."
+          "main_domain_part_min": "The portion of the domain between '@' and the last '.' must be at least 2 characters long.",
+          "top_level_domain_part_min": "The portion of the domain after the last '.' must be at least 2 characters long."
         },
         "no_power": "Add at least one power",
         "no_function": "Each power must have at least one function"

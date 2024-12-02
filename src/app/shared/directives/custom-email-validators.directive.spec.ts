@@ -63,9 +63,6 @@ describe('EmailLengthValidatorDirective', () => {
     emailControl.setValue('username@.com');
     expect(emailControl.errors).toEqual({ emailPatternInvalid: true });
 
-    emailControl.setValue('username@domain.c');
-    expect(emailControl.errors).toEqual({ emailPatternInvalid: true });
-
     emailControl.setValue('@missinguser.com');
     expect(emailControl.errors).toEqual({ emailPatternInvalid: true });
 
@@ -79,16 +76,19 @@ describe('EmailLengthValidatorDirective', () => {
     expect(emailControl.errors).toEqual({ emailPatternInvalid: true });
 
     emailControl.setValue('username@.domain.com');
-    expect(emailControl.errors).toEqual({ emailMainDomainTooShort: true });
+    expect(emailControl.errors).toEqual({ emailPatternInvalid: true });
+
+    emailControl.setValue('username@.domain..com');
+    expect(emailControl.errors).toEqual({ emailPatternInvalid: true });
 
     emailControl.setValue('username@a.domain.com');
-    expect(emailControl.errors).toEqual({ emailMainDomainTooShort: true });
+    expect(emailControl.errors).toEqual(null);
 
     emailControl.setValue('username@n.com');
     expect(emailControl.errors).toEqual({ emailMainDomainTooShort: true });
 
-    emailControl.setValue('username@domain..com');
-    expect(emailControl.errors).toEqual({ emailPatternInvalid: true });
+    emailControl.setValue('username@domain.c');
+    expect(emailControl.errors).toEqual({ emailTopLevelDomainTooShort: true });
   });
 
   it('should not set an error for edge cases that are valid', () => {

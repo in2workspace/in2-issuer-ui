@@ -27,7 +27,8 @@ export class CustomEmailValidatorDirective implements Validator {
    *   - Allows maximum 255 characters [this is validated outside the regex]
    */
   private readonly emailPattern =
-  /^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    /^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z]+$/;
+
 
   public validate(control: AbstractControl): ValidationErrors | null {
     const email = control.value;
@@ -51,10 +52,15 @@ export class CustomEmailValidatorDirective implements Validator {
     }
   
     const domainParts = domain.split('.');
-
-    const mainDomain = domainParts[0];
+  
+    const mainDomain = domainParts.slice(0, -1).join('.');
     if (mainDomain.length < 2) {
       return { emailMainDomainTooShort: true };
+    }
+  
+    const topLevelDomain = domainParts[domainParts.length - 1];
+    if (topLevelDomain.length < 2) {
+      return { emailTopLevelDomainTooShort: true };
     }
   
     return null; 

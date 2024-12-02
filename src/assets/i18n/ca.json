@@ -94,7 +94,8 @@
           "invalid": "Adreça electrònica invàlida",
           "local_part_max": "La part local de l'adreça el. no pot superar els 64 caràcters.",
           "domain_part_max": "El domini de l'adreça el. no pot superar els 189 caràcters.",
-          "main_domain_part_min": "La part entre '@' i '.' ha de tenir almenys 2 caràcters."
+          "main_domain_part_min": "La part entre '@' i '.' ha de tenir almenys 2 caràcters.",
+          "top_level_domain_part_min": "La part entre l'últim punt i el final ha de tenir almenys 2 caràcters."
         },
         "no_power": "Afegeix almenys un poder",
         "no_function": "Cada poder ha de tenir almenys una funció"
