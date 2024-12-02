@@ -58,11 +58,11 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
     },
   };
 
+  public readonly translate = inject(TranslateService);
   private readonly credentialProcedureService = inject(CredentialProcedureService);
   private readonly formService = inject(FormCredentialService);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
-  private readonly translate = inject(TranslateService);
   private readonly countryService = inject(CountryService);
   private readonly destroyRef = inject(DestroyRef);
 
