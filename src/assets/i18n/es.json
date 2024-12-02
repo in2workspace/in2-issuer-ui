@@ -68,7 +68,8 @@
     },
     "credentialIssuance":{
       "create": "Crea una LEARCredentialEmployee",
-      "create-as-signer": "Crea una LEARCredentialEmployee como Signer"
+      "create-as-signer": "Crea una LEARCredentialEmployee como Signer",
+       "success": "LEARCredentialEmployee creada con éxito"
     },
     "error": {
       "not_found": "The requested resource was not found.",
@@ -94,7 +95,7 @@
           "invalid": "Email inválido",
           "local_part_max": "La parte local del email no puede superar los 64 caracteres.",
           "domain_part_max": "El dominio del email no puede superar los 189 caracteres.",
-          "max": "El email no puede superar los 254 caracteres."
+          "main_domain_part_min": "La parte entre '@' y '.' debe tener un mínimo de 2 caracteres."
         },
         "no_power": "Añade por lo menos un poder",
         "no_function": "Cada poder debe tener por lo menos una acción"

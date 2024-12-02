@@ -442,7 +442,7 @@ describe('FormCredentialComponent', () => {
   it('should navigate to credentials if submitting credential is successful', async () => {
     const navigateSpy = mockRouter.navigate.mockResolvedValue(true);
     const scrollToSpy = jest.spyOn(window, 'scrollTo').mockImplementation(() => {});
-    
+    const popupSpy = jest.spyOn(component, 'openTempPopup');
     Object.defineProperty(window, 'location', {
       value: {
         ...window.location,
@@ -470,6 +470,7 @@ describe('FormCredentialComponent', () => {
       expect.any(PopupComponent),
       expect.any(Function)
     );
+    expect(popupSpy).toHaveBeenCalled();
     expect(navigateSpy).toHaveBeenCalledWith(['/organization/credentials']);
     expect(scrollToSpy).toHaveBeenCalledWith(0, 0);
     expect(window.location.reload).toHaveBeenCalled();
@@ -478,7 +479,7 @@ describe('FormCredentialComponent', () => {
 
   
   it('should close popup', fakeAsync(()=>{
-    component.closePopup();
+    component.openTempPopup();
     expect(component.isPopupVisible).toBe(true);
     tick(1000);
     expect(component.isPopupVisible).toBe(false);

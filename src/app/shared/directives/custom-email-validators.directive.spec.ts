@@ -79,7 +79,13 @@ describe('EmailLengthValidatorDirective', () => {
     expect(emailControl.errors).toEqual({ emailPatternInvalid: true });
 
     emailControl.setValue('username@.domain.com');
-    expect(emailControl.errors).toEqual({ emailPatternInvalid: true });
+    expect(emailControl.errors).toEqual({ emailMainDomainTooShort: true });
+
+    emailControl.setValue('username@a.domain.com');
+    expect(emailControl.errors).toEqual({ emailMainDomainTooShort: true });
+
+    emailControl.setValue('username@n.com');
+    expect(emailControl.errors).toEqual({ emailMainDomainTooShort: true });
 
     emailControl.setValue('username@domain..com');
     expect(emailControl.errors).toEqual({ emailPatternInvalid: true });

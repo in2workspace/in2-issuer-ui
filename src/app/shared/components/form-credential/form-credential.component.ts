@@ -129,6 +129,8 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
         )
         .subscribe({
           next: () => {
+            this.popupMessage = this.translate.instant("credentialIssuance.success");
+            this.openTempPopup();
             this.router.navigate(['/organization/credentials']).then(() => {
               window.scrollTo(0, 0);
               location.reload(); 
@@ -136,18 +138,18 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
           },
           error: (err:Error) => {
             this.popupMessage = this.translate.instant("error.credential_submission");
-            this.closePopup();
+            this.openTempPopup();
             console.error(err);
           }
         });
     } else {
       this.popupMessage = this.translate.instant("error.one_power_min");
-      this.closePopup();
+      this.openTempPopup();
       return;
     }
   }
 
-  public closePopup(){
+  public openTempPopup(){
     this.isPopupVisible = true;
     setTimeout(()=>{this.isPopupVisible=false}, 1000);
   }
