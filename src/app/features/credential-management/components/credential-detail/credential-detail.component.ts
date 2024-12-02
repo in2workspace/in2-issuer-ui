@@ -2,7 +2,7 @@ import {Component, inject, OnInit} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CredentialData, Credential } from 'src/app/core/models/credentialProcedure.interface';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
-
+// TODO CHeck any responses
 @Component({
   selector: 'app-credential-detail',
   templateUrl: './credential-detail.component.html',

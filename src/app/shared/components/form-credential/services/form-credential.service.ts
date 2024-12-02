@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { TempPower } from '../../power/power/power.component';
+import {TempPower} from "../../../../core/models/tempPower.interface";
 import { Power } from 'src/app/core/models/power.interface';
 import { CredentialMandatee } from 'src/app/core/models/credendentialMandatee.interface';
 import { Mandator } from 'src/app/core/models/madator.interface';

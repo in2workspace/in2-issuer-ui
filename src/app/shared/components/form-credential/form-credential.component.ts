@@ -4,13 +4,14 @@ import {CredentialMandatee} from 'src/app/core/models/credendentialMandatee.inte
 import {Mandator} from 'src/app/core/models/madator.interface';
 import {Power} from 'src/app/core/models/power.interface';
 import {CredentialProcedureService} from 'src/app/core/services/credential-procedure.service';
-import {TempPower} from '../power/power/power.component';
 import {Country, CountryService} from './services/country.service';
 import {FormCredentialService} from './services/form-credential.service';
 import {AuthService} from 'src/app/core/services/auth.service';
 import {PopupComponent} from '../popup/popup.component';
 import {Router} from '@angular/router';
 import {ErrorStateMatcher} from '@angular/material/core';
+import {Signer} from "../../../core/models/signer.interface";
+import {TempPower} from "../../../core/models/tempPower.interface";
 
 export interface objectWithName{
   name:string
@@ -35,7 +36,7 @@ export class FormCredentialComponent implements OnInit {
   @Input() public credentialStatus: string = '';
   @Input() public credential: CredentialMandatee = this.initializeCredential();
   @Input() public mandator: Mandator = this.initializeMandator();
-  public signer : any ={};
+  public signer: Signer = this.initializeSigner();
 
   //if mobile has been introduced and unfocused and there is not country, show error
   public countryErrorMatcher: ErrorStateMatcher = {
@@ -112,12 +113,14 @@ export class FormCredentialComponent implements OnInit {
             'country':mandator2.country}
         }
         this.authService.getSigner().subscribe(signer => {
-          this.signer = { 'organizationIdentifier': signer?.organizationIdentifier,
-            'organization': signer?.organization,
-            'commonName':signer?.commonName,
-            'emailAddress':signer?.emailAddress,
-            'serialNumber':signer?.serialNumber,
-            'country':signer?.country}
+          this.signer = {
+            organizationIdentifier: signer?.organizationIdentifier || '',
+            organization: signer?.organization || '',
+            commonName: signer?.commonName || '',
+            emailAddress: signer?.emailAddress || '',
+            serialNumber: signer?.serialNumber || '',
+            country: signer?.country || ''
+          }
         })
       }
     });
@@ -218,6 +221,17 @@ export class FormCredentialComponent implements OnInit {
   }
 
   private initializeMandator(): Mandator {
+    return {
+      organizationIdentifier: '',
+      organization: '',
+      commonName: '',
+      emailAddress: '',
+      serialNumber: '',
+      country: ''
+    };
+  }
+
+  private initializeSigner(): Signer {
     return {
       organizationIdentifier: '',
       organization: '',

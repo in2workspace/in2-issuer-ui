@@ -5,7 +5,7 @@ import { catchError, map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { CredentialProcedureResponse,CredentialData } from '../models/credentialProcedure.interface';
 import { IssuanceRequest } from '../models/issuanceRequest.interface';
-
+//TODO Check any responses
 @Injectable({
   providedIn: 'root'
 })

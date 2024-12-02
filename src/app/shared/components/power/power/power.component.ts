@@ -1,18 +1,6 @@
 import {Component, Input, Output, EventEmitter, inject} from '@angular/core';
 import {AuthService} from "../../../../core/services/auth.service";
-
-export interface TempPower {
-  tmf_action: string | string[];
-  tmf_domain: string;
-  tmf_function: string;
-  tmf_type: string;
-  execute: boolean;
-  create: boolean;
-  update: boolean;
-  delete: boolean;
-  upload: boolean;
-  attest: boolean;
-}
+import {TempPower} from "../../../../core/models/tempPower.interface";
 
 @Component({
   selector: 'app-power',
