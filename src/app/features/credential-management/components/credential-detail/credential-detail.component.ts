@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CredentialData, Credential } from 'src/app/core/models/credentialProcedure.interface';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
@@ -12,10 +12,9 @@ export class CredentialDetailComponent implements OnInit {
   public credential: Credential | null = null;
   public credentialData: CredentialData | null = null;
   public credentialStatus: string | null = null;
-  public constructor(
-    private route: ActivatedRoute,
-    private credentialProcedureService: CredentialProcedureService
-  ) {}
+
+  private route = inject(ActivatedRoute);
+  private credentialProcedureService = inject(CredentialProcedureService);
 
   public ngOnInit(): void {
     this.route.paramMap.subscribe(params => {

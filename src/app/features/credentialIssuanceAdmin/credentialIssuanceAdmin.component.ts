@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -7,9 +7,9 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class CredentialIssuanceAdminComponent implements OnInit{
   public rol = "admin";
-  public constructor(
-    private route: ActivatedRoute,
-  ){}
+
+  private route = inject(ActivatedRoute);
+
   public ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       this.rol = params.get('id')??"";

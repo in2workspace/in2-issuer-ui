@@ -16,8 +16,6 @@ export class FormCredentialService {
   private showMandatorSubject = new BehaviorSubject<boolean>(false);
   showMandator$ = this.showMandatorSubject.asObservable();
 
-  constructor() {}
-
   setShowMandator(value: boolean): void {
     this.showMandatorSubject.next(value);
   }

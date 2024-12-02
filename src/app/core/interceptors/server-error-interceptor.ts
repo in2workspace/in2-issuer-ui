@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {
   HttpInterceptor, HttpRequest, HttpHandler, HttpEvent,
   HttpErrorResponse,
@@ -9,10 +9,8 @@ import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export class ServeErrorInterceptor implements HttpInterceptor {
-  public constructor(
-    private alertService: AlertService,
-    private translate: TranslateService
-  ) {}
+  private alertService = inject(AlertService);
+  private translate = inject(TranslateService);
 
   public intercept(
     request: HttpRequest<unknown>,

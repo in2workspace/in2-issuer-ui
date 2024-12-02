@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import {AfterViewInit, Component, inject, ViewChild} from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { Router } from '@angular/router';
@@ -19,14 +19,12 @@ export class CredentialManagementComponent implements AfterViewInit {
   public displayedColumns: string[] = ['status', 'full_name', 'updated'];
   public dataSource = new MatTableDataSource<CredentialProcedure>();
   public isValidOrganizationIdentifier = false;
-  public constructor(
-    private credentialProcedureService: CredentialProcedureService,
-    private authService: AuthService,
-    private formCredentialService: FormCredentialService,
-    private router: Router
-  ) {
 
-  }
+  private credentialProcedureService = inject(CredentialProcedureService);
+  private authService = inject(AuthService);
+  private formCredentialService = inject(FormCredentialService);
+  private router = inject(Router);
+
   public ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;

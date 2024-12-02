@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, inject} from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { environment } from 'src/environments/environment';
@@ -12,8 +12,8 @@ export class HomeComponent {
   public walletUrl = environment.wallet_url;
   public knowledgebase_url = environment.knowledgebase_url;
 
-  public constructor(private router: Router, public authService: AuthService) {}
-
+  private router = inject(Router);
+  public authService = inject(AuthService);
 
   public login() {
     console.log('HomeComponent: login button clicked');

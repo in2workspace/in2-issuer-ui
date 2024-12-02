@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { Router } from '@angular/router';
 
@@ -8,7 +8,8 @@ import { Router } from '@angular/router';
 })
 export class CallbackComponent implements OnInit {
 
-  public constructor(private oidcSecurityService: OidcSecurityService, private router: Router) {}
+  private oidcSecurityService = inject(OidcSecurityService);
+  private router = inject(Router);
 
   public ngOnInit() {
     this.oidcSecurityService.checkAuth().subscribe(({ isAuthenticated }) => {
