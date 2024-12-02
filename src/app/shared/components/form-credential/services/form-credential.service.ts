@@ -14,8 +14,8 @@ export class FormCredentialService {
   public addedPowersSubject = new BehaviorSubject<TempPower[]>([]);
   public selectedPowerNameSubject = new BehaviorSubject<string>('');
   
-  private addedPowers$ = this.addedPowersSubject.asObservable();
-  private selectedPowerName$ = this.selectedPowerNameSubject.asObservable();
+  private readonly addedPowers$ = this.addedPowersSubject.asObservable();
+  private readonly selectedPowerName$ = this.selectedPowerNameSubject.asObservable();
 
   public constructor() {}
 

@@ -24,11 +24,9 @@ export class MaxLengthDirective implements OnInit{
     if (value.length > this.maxLength) {
       const errors = { ...this.ngModel.control.errors, maxlengthExceeded: true };
       this.ngModel.control.setErrors(errors);
-    } else {
-      if (this.ngModel.control.errors) {
-        const { ...otherErrors } = this.ngModel.control.errors;
-        this.ngModel.control.setErrors(Object.keys(otherErrors).length ? otherErrors : null);
-      }
+    }else if(this.ngModel.control.errors) {
+      const { ...otherErrors } = this.ngModel.control.errors;
+      this.ngModel.control.setErrors(Object.keys(otherErrors).length ? otherErrors : null);
     }
   }
 }

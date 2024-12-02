@@ -5,7 +5,7 @@ import { MatSelectChange } from '@angular/material/select';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 import { Observable } from 'rxjs';
-import { TempPower } from 'src/app/core/models/power.interface';
+import { TempPower } from 'src/app/core/models/temporal/temp-power.interface';
 
 @Component({
   selector: 'app-power',
@@ -20,13 +20,14 @@ export class PowerComponent implements OnInit{
   public organizationIdentifierIsIn2: boolean = false;
 
   private readonly authService = inject(AuthService);
+  private readonly dialog = inject(MatDialog);
+  private readonly formService = inject(FormCredentialService);
+
   //streams (form states)
   public addedPowers$: Observable<TempPower[]>;
   public selectedPower$: Observable<string>;
 
-  public constructor(private dialog: MatDialog, 
-    private formService: FormCredentialService)
-  {
+  public constructor(){
     this.addedPowers$ = this.formService.getAddedPowers();
     this.selectedPower$ = this.formService.getSelectedPowerName();
   }
