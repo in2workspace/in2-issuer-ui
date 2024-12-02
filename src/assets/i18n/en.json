@@ -75,7 +75,7 @@
     "forbidden": "You do not have permission to access this resource.",
     "internal_server": "An error occurred on the server. Please try again later.",
     "credential_submission": "Error occurred while submitting credential.",
-    "one_power_min":"Each power must have at least one action selected.",
+    "one_power_min":"There must be at least one power selected, and each power must have at least one action selected.",
     "unknown_error": "An unknown error occurred. Please try again.",
       "form":{
         "required": "This field is required.",

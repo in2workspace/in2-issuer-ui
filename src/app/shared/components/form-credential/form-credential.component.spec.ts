@@ -1,4 +1,4 @@
-import { TempPower } from './../power/power/power.component';
+import { TempPower } from 'src/app/core/models/power.interface';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { ReactiveFormsModule, FormsModule, FormGroupDirective, FormGroup, FormControl } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -14,7 +14,6 @@ import { AuthService } from 'src/app/core/services/auth.service';
 import { of } from 'rxjs';
 import { PopupComponent } from '../popup/popup.component';
 import { Power } from 'src/app/core/models/power.interface';
-import { CredentialMandatee } from 'src/app/core/models/credendentialMandatee.interface';
 import { MaxLengthDirective } from '../../directives/max-length-directive.directive';
 import { CustomEmailValidatorDirective } from '../../directives/custom-email-validator.directive';
 import { UnicodeValidatorDirective } from '../../directives/unicode-validator.directive';
@@ -64,11 +63,28 @@ describe('FormCredentialComponent', () => {
   let mockCredentialProcedureService: jest.Mocked<CredentialProcedureService>;
   let mockAlertService: jest.Mocked<AlertService>;
   let mockCountryService: any;
-  let mockFormCredentialService: jest.Mocked<FormCredentialService>;
   let mockAuthService: jest.Mocked<AuthService>;
   let translateService:TranslateService;
   let mockRouter: {
     navigate: jest.Mock;
+  };
+  let mockFormCredentialService: {
+    addPower: jest.Mock<any>,
+    handleSelectChange: jest.Mock<any>,
+    submitCredential: jest.Mock<any>,
+    reset: jest.Mock<any>,
+    resetForm: jest.Mock<any>,
+    convertToTempPower: jest.Mock<any>,
+    checkTmfFunction: jest.Mock<any>,
+    getAddedPowers: jest.Mock<any>,
+    getPlainAddedPowers: jest.Mock<any>,
+    getSelectedPowerName: jest.Mock<any>,
+    getPlainSelectedPower: jest.Mock<any>,
+    setSelectedPowerName: jest.Mock<any>,
+    removePower: jest.Mock<any>,
+    checkIfPowerIsAdded: jest.Mock<any>,
+    powersHaveFunction: jest.Mock<any>,
+    hasSelectedPower: jest.Mock<any>
   };
 
   beforeEach(async () => {
@@ -79,15 +95,22 @@ describe('FormCredentialComponent', () => {
     } as jest.Mocked<AlertService>;
 
     mockFormCredentialService = {
-      addOption: jest.fn(),
+      addPower: jest.fn(),
       handleSelectChange: jest.fn(),
       submitCredential: jest.fn().mockReturnValue(of({})),
+      reset: jest.fn(),
       resetForm: jest.fn(),
       convertToTempPower: jest.fn(),
       checkTmfFunction: jest.fn(),
-      setShowMandator: jest.fn(),
-      getShowMandator: jest.fn(),
-      showMandator$: of(false), 
+      getAddedPowers: jest.fn().mockReturnValue(mockPowers),
+      getPlainAddedPowers: jest.fn().mockReturnValue([]),
+      getSelectedPowerName: jest.fn(),
+      getPlainSelectedPower: jest.fn().mockReturnValue(''),
+      setSelectedPowerName: jest.fn(),
+      removePower: jest.fn(),
+      checkIfPowerIsAdded: jest.fn().mockReturnValue(false),
+      powersHaveFunction: jest.fn(),
+      hasSelectedPower: jest.fn()
     } as jest.Mocked<any>;
 
     mockCountryService = {
@@ -138,11 +161,12 @@ describe('FormCredentialComponent', () => {
   beforeEach(() => {
     translateService = TestBed.inject(TranslateService);
     jest.spyOn(translateService, 'instant');
+    jest.spyOn(mockCountryService, 'getSortedCountries');
+
     fixture = TestBed.createComponent(FormCredentialComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
 
-    jest.spyOn(mockCountryService, 'getSortedCountries');
   });
 
   afterEach(() => {
@@ -217,16 +241,31 @@ describe('FormCredentialComponent', () => {
     expect(isErrorState).toBe(false);
   });
 
-
-
   it('should get countries from service and sort them alphabetically', ()=>{
     component.ngOnInit();
     expect(mockCountryService.getSortedCountries).toHaveBeenCalled();
     expect(component.countries).toEqual(sortedCountries);
   });
 
+  it('should get added powers from service', ()=>{
+    const observable = of('power');
+    expect(component.addedPowers$).toEqual(mockPowers);
+  });
+
   it('should check if has IN2 organization id', ()=>{
     expect(component.hasIn2OrganizationId).toBe(true);
+  });
+
+   it('should mark prefix and phone number as touched and dirty, respectively', ()=>{
+    const prefixControl = {control:{markAsTouched:jest.fn()}} as any;
+    const phoneControl = {control:{markAsDirty:jest.fn()}} as any;
+    const prefixSpy = jest.spyOn(prefixControl.control, 'markAsTouched');
+    const phoneSpy = jest.spyOn(phoneControl.control, 'markAsDirty');
+
+    component.markPrefixAndPhoneAsTouched(prefixControl, phoneControl);
+
+    expect(prefixSpy).toHaveBeenCalled();
+    expect(phoneSpy).toHaveBeenCalled();
   });
 
   it('should set mandator and signer correctly if mandator is returned', fakeAsync(() => {
@@ -276,7 +315,6 @@ describe('FormCredentialComponent', () => {
     component.power = mockPowers;
 
     mockFormCredentialService.convertToTempPower.mockReturnValue(mockTempPower);
-
     component.ngOnInit();
 
     expect(component.tempPowers).toEqual([mockTempPower, mockTempPower]);
@@ -291,6 +329,43 @@ describe('FormCredentialComponent', () => {
 
     expect(component.tempPowers).toEqual([]);;
     expect(mockFormCredentialService.convertToTempPower).not.toHaveBeenCalled();
+  });
+
+  it('should return the name of the country if the code matches', () => {
+    component.countries = [
+      { code: 'ES', name: 'Spain' },
+      { code: 'FR', name: 'France' },
+    ];
+
+    const result = component.getCountryName('ES');
+    expect(result).toBe('Spain');
+  });
+
+   it('should return an empty string if the code does not match any country', () => {
+    component.countries = [
+      { code: 'ES', name: 'Spain' },
+      { code: 'FR', name: 'France' },
+    ];
+
+    const result = component.getCountryName('IT');
+    expect(result).toBe('');
+  });
+
+  it('should return an empty string if the countries list is empty', () => {
+    component.countries = [];
+
+    const result = component.getCountryName('ES');
+    expect(result).toBe('');
+  });
+
+  it('should check if there is selected power', ()=>{
+    component.hasSelectedPower();
+    expect(mockFormCredentialService.hasSelectedPower).toHaveBeenCalled();
+  });
+
+  it('should check if selected powers have function', ()=>{
+    component.selectedPowersHaveFunction();
+    expect(mockFormCredentialService.powersHaveFunction).toHaveBeenCalled();
   });
 
   it('should check if sendReminder should be shown according to VC status', ()=>{
@@ -316,7 +391,9 @@ describe('FormCredentialComponent', () => {
 
   it('it should submit credential when submitCredential is called with selected power', () => {
     component.selectedCountryCode = 'US';
-    component.addedOptions = [mockTempPower];
+    mockFormCredentialService.hasSelectedPower.mockReturnValue(true);
+    mockFormCredentialService.powersHaveFunction.mockReturnValue(true);
+    mockFormCredentialService.getPlainAddedPowers.mockReturnValue(mockPowers);
   
     component.submitCredential();
   
@@ -324,7 +401,7 @@ describe('FormCredentialComponent', () => {
     expect(mockFormCredentialService.submitCredential).toHaveBeenCalledWith(
       component.credential,
       component.selectedCountryCode,
-      component.addedOptions,
+      mockPowers,
       component.mandator,
       component.addedMandatorLastName,
       component.signer,
@@ -334,21 +411,24 @@ describe('FormCredentialComponent', () => {
     );
   });
 
-  it('it should not submit credential when submitCredential is called with empty addedOptions', () => {
-  
+  it('it should not submit credential when submitCredential is called with no selected powers', () => {
     component.selectedCountryCode = 'US';
-    component.addedOptions = [{
-      tmf_action: [],
-      tmf_domain: 'DOME',
-      tmf_function: 'ProductOffering',
-      tmf_type: 'SomeType',
-      execute: false,
-      create: false,
-      update: false,
-      delete: false,
-      upload: false,
-      attest: false
-    }];
+    mockFormCredentialService.hasSelectedPower.mockReturnValue(false);
+    mockFormCredentialService.powersHaveFunction.mockReturnValue(true);
+  
+    component.submitCredential();
+
+    expect(mockFormCredentialService.submitCredential).not.toHaveBeenCalled();
+    expect(translateService.instant).toHaveBeenCalledWith("error.one_power_min");
+    const message = translateService.instant("error.one_power_min");
+    expect(component.popupMessage).toBe(message);
+    expect(component.isPopupVisible).toBe(true);
+  });
+
+  it('it should not submit credential when submitCredential not all selected powers have selected functions', () => {
+    component.selectedCountryCode = 'US';
+    mockFormCredentialService.hasSelectedPower.mockReturnValue(true);
+    mockFormCredentialService.powersHaveFunction.mockReturnValue(false);
   
     component.submitCredential();
 
@@ -370,9 +450,11 @@ describe('FormCredentialComponent', () => {
       },
       writable: true,
     });
-  
-    component.addedOptions = [{} as any]; 
-    jest.spyOn(component, 'hasSelectedFunction').mockReturnValue(true);
+
+    component.selectedCountryCode = 'US';
+    mockFormCredentialService.hasSelectedPower.mockReturnValue(true);
+    mockFormCredentialService.powersHaveFunction.mockReturnValue(true);
+    mockFormCredentialService.getPlainAddedPowers.mockReturnValue(mockPowers);
     
     component.submitCredential();
     await navigateSpy;
@@ -380,7 +462,7 @@ describe('FormCredentialComponent', () => {
     expect(mockFormCredentialService.submitCredential).toHaveBeenCalledWith(
       component.credential,
       component.selectedCountryCode,
-      component.addedOptions,
+      mockPowers,
       component.mandator,
       component.addedMandatorLastName,
       component.signer,
@@ -393,70 +475,9 @@ describe('FormCredentialComponent', () => {
     expect(window.location.reload).toHaveBeenCalled();
   
   });
+
   
-  
-
-  it('should invoke addOption', ()=>{
-    component.addOption([mockTempPower]);
-    expect(mockFormCredentialService.addOption).toHaveBeenCalledWith(
-      [],
-      [mockTempPower], 
-      component.isDisabled
-    );
-  });
-
-  it('should mark prefix and phone number as touched and dirty, respectively', ()=>{
-    const prefixControl = {control:{markAsTouched:jest.fn()}} as any;
-    const phoneControl = {control:{markAsDirty:jest.fn()}} as any;
-    const prefixSpy = jest.spyOn(prefixControl.control, 'markAsTouched');
-    const phoneSpy = jest.spyOn(phoneControl.control, 'markAsDirty');
-
-    component.markPrefixAndPhoneAsTouched(prefixControl, phoneControl);
-
-    expect(prefixSpy).toHaveBeenCalled();
-    expect(phoneSpy).toHaveBeenCalled();
-  });
-
-  it('should call handleSelectChange and update selectedOption', () => {
-    const mockEvent = new Event('change');
-    
-    const mockSelectedOption = 'selectedOptionValue';
-    mockFormCredentialService.handleSelectChange.mockReturnValue(mockSelectedOption);
-  
-    component.handleSelectChange(mockEvent);
-  
-    expect(mockFormCredentialService.handleSelectChange).toHaveBeenCalledWith(mockEvent);
-    expect(component.selectedOption).toBe(mockSelectedOption);
-  });
-
-  it('should return the name of the country if the code matches', () => {
-    component.countries = [
-      { code: 'ES', name: 'Spain' },
-      { code: 'FR', name: 'France' },
-    ];
-
-    const result = component.getCountryName('ES');
-    expect(result).toBe('Spain');
-  });
-
-  it('should return an empty string if the code does not match any country', () => {
-    component.countries = [
-      { code: 'ES', name: 'Spain' },
-      { code: 'FR', name: 'France' },
-    ];
-
-    const result = component.getCountryName('IT');
-    expect(result).toBe('');
-  });
-
-  it('should return an empty string if the countries list is empty', () => {
-    component.countries = [];
-
-    const result = component.getCountryName('ES');
-    expect(result).toBe('');
-  });
-  
-  it('should close component', fakeAsync(()=>{
+  it('should close popup', fakeAsync(()=>{
     component.closePopup();
     expect(component.isPopupVisible).toBe(true);
     tick(1000);

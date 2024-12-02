@@ -39,6 +39,8 @@ export class PowerComponent implements OnInit{
     if (this.isDisabled) return;
     const selectedPower = this.formService.getPlainSelectedPower();
 
+    if(this.isOptionDisabled(selectedPower)) return;
+
     if (selectedPower === 'Onboarding' && !this.organizationIdentifierIsIn2) {
       return;
     }
@@ -50,7 +52,7 @@ export class PowerComponent implements OnInit{
     const newPower: TempPower = {
       tmf_action: '',
       tmf_domain: 'DOME',
-      tmf_function: this.formService.getPlainSelectedPower(),
+      tmf_function: selectedPower,
       tmf_type: 'Domain',
       execute: false,
       create: false,
@@ -60,7 +62,7 @@ export class PowerComponent implements OnInit{
       attest: false
     };
 
-    switch(this.formService.getPlainSelectedPower()) {
+    switch(selectedPower) {
       case 'Certification':
         newPower.upload = false;
         newPower.attest = false;
@@ -101,7 +103,7 @@ export class PowerComponent implements OnInit{
   }
 
   public isOptionDisabled(power: string): boolean {
-    return this.formService.getPlainAddedPowers().some((addedPower) => addedPower.tmf_function === power);
+    return this.formService.checkIfPowerIsAdded(power);
   }
 
 }

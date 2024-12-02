@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
+import { Component, DestroyRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
 import { FormControl, FormGroupDirective, NgForm, NgModel } from '@angular/forms';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { Country, CountryService } from './services/country.service';
@@ -10,7 +10,8 @@ import { ErrorStateMatcher } from '@angular/material/core';
 import { TempPower } from "../../../core/models/temporal/temp-power.interface";
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
-import { Mandatee, OrganizationDetails, Power } from "../../../core/models/entity/lear-credential-employee.entity";
+import { Mandatee, OrganizationDetails, Power } from 'src/app/core/models/entity/lear-credential-employee.entity';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-form-credential',
@@ -34,6 +35,17 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
   @Input() public mandator: OrganizationDetails = this.initializeOrganizationDetails();
   public signer: OrganizationDetails = this.initializeOrganizationDetails();
 
+  public addedPowers$: Observable<TempPower[]>;
+
+  public tempPowers: TempPower[] = []; //for detail view
+  public countries: Country[] = [];
+  public selectedCountryCode: string = '';
+  public hasIn2OrganizationId = false;
+  public addedMandatorLastName: string = '';
+
+  public popupMessage: string = '';
+  public isPopupVisible: boolean = false;
+
   //if mobile has been introduced and unfocused and there is not country, show error
   public countryErrorMatcher: ErrorStateMatcher = {
     isErrorState: (control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean => {
@@ -46,39 +58,18 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
     },
   };
 
-  public countries: Country[] = [];
-  public addedPowers$: Observable<TempPower[]>;
-  public tempPowers: TempPower[] = [];
-  public selectedCountryCode: string = '';
-  public addedMandatorLastName: string = '';
-
-  public popupMessage: string = '';
-  public isPopupVisible: boolean = false;
-
-  public hasIn2OrganizationId = false;
-
   private readonly credentialProcedureService = inject(CredentialProcedureService);
   private readonly formService = inject(FormCredentialService);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly translate = inject(TranslateService);
   private readonly countryService = inject(CountryService);
+  private readonly destroyRef = inject(DestroyRef);
 
   public constructor(){
     this.countries = this.countryService.getSortedCountries();
     this.addedPowers$ = this.formService.getAddedPowers();
-    // this.hasIn2OrganizationId = this.authService.hasIn2OrganizationIdentifier();
-    this.hasIn2OrganizationId = true;
-  }
-
-  public markPrefixAndPhoneAsTouched(prefixControl: NgModel, phoneControl: NgModel): void {
-    if (prefixControl) {
-      //so angular material can mark the input as invalid
-      prefixControl.control.markAsTouched();
-    }
-    if (phoneControl) {
-      phoneControl.control.markAsDirty();
-    }
+    this.hasIn2OrganizationId = this.authService.hasIn2OrganizationIdentifier();
   }
 
   public ngOnInit(): void {
@@ -111,28 +102,19 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
     }
   }
 
-  public getCountryName(code: string): string {
-    const country = this.countries.find(c => c.code === code);
-    return country ? country.name : '';
-  }
-
-  public hasSelectedFunction(): boolean {
-    return this.formService.getPlainAddedPowers().every((option:TempPower) =>
-      option.execute || option.create || option.update || option.delete || option.upload
-    );
-  }
-
-  public hasSelectedPower(): boolean{
-    return this.formService.getPlainAddedPowers().length > 0;
-  }
-
-  public showReminderButton(): boolean{
-    return (this.credentialStatus === 'WITHDRAWN') || (this.credentialStatus === 'PEND_DOWNLOAD')
+  public markPrefixAndPhoneAsTouched(prefixControl: NgModel, phoneControl: NgModel): void {
+    if (prefixControl) {
+      //so angular material can mark the input as invalid
+      prefixControl.control.markAsTouched();
+    }
+    if (phoneControl) {
+      phoneControl.control.markAsDirty();
+    }
   }
 
   public submitCredential(): void {
-    
-    if (this.hasSelectedPower() && this.hasSelectedFunction()) {
+    //this condition is already applied in the template, so maybe it should be removed
+    if (this.hasSelectedPower() && this.selectedPowersHaveFunction()) {
       this.formService
         .submitCredential(
           this.credential,
@@ -174,16 +156,14 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
     this.sendReminder.emit();
   }
 
-  public ngOnDestroy(): void {
-    this.formService.reset();
-  }
-
   //this function is currently unused, since user is redirected after successful submit
   public resetForm(): void {
     this.credential = this.formService.resetForm();
     this.formDirective.resetForm();
     this.formService.setAddedPowers([]);
-    this.authService.getMandator().subscribe(mandator2 => {
+    this.authService.getMandator()
+    .pipe(takeUntilDestroyed(this.destroyRef))
+    .subscribe(mandator2 => {
       if (mandator2) {
         this.mandator = mandator2;
         this.signer = { 'organizationIdentifier': mandator2.organizationIdentifier,
@@ -214,5 +194,26 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
       serialNumber: '',
       country: ''
     };
+  }  //functions that are used in template; it may be better to avoid executing them in template
+  public getCountryName(code: string): string {
+    const country = this.countries.find(c => c.code === code);
+    return country ? country.name : '';
   }
+
+  public hasSelectedPower(): boolean{
+    return this.formService.hasSelectedPower();
+  }
+
+  public selectedPowersHaveFunction(): boolean {
+    return this.formService.powersHaveFunction();
+  }
+
+  public showReminderButton(): boolean{
+    return (this.credentialStatus === 'WITHDRAWN') || (this.credentialStatus === 'PEND_DOWNLOAD')
+  }
+
+  public ngOnDestroy(): void {
+    this.formService.reset();
+  }
+
 }

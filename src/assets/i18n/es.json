@@ -77,7 +77,7 @@
       "internal_server": "An error occurred on the server. Please try again later.",
       "unknown_error": "An unknown error occurred. Please try again.",
       "credential_submission": "Ha habido un error al crear la credencial.",
-      "one_power_min":"Cada power requiere por los menos de una acción.",
+      "one_power_min":"Se requiere por lo menos un poder, y cada power requiere por los menos una acción.",
       "form":{
         "required": "Campo obligatorio.",
         "invalid_character": "Caracteres inválidos",

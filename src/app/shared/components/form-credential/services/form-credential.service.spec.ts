@@ -1,7 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { FormCredentialService, isCertification, isProductOffering } from './form-credential.service';
-import { of, throwError } from 'rxjs';
-import { CredentialMandatee } from 'src/app/core/models/credendentialMandatee.interface';
+import { BehaviorSubject, of, throwError } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -11,8 +10,10 @@ import { RouterModule } from '@angular/router';
 import { AuthModule } from 'angular-auth-oidc-client';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { PopupComponent } from '../../popup/popup.component';
-import { TempPower } from "../../../../core/models/temporal/temp-power.interface";
 import { Mandatee, Mandator, Power, Signer } from "../../../../core/models/entity/lear-credential-employee.entity";
+import { TempPower } from "../../../../core/models/temporal/temp-power.interface";
+
+global.structuredClone = (obj: any) => JSON.parse(JSON.stringify(obj));
 
 describe('FormCredentialService', () => {
   let service: FormCredentialService;
@@ -101,6 +102,120 @@ describe('FormCredentialService', () => {
     expect(service).toBeTruthy();
   });
 
+  it('should get plain added powers', ()=>{
+    const exampleAddedPowers = [{power:'one'}, {power:'two'}];
+    service.addedPowersSubject = new BehaviorSubject<any>(exampleAddedPowers);
+    const addedPowers = service.getPlainAddedPowers();
+    expect(addedPowers).toEqual(exampleAddedPowers);
+  });
+
+  it('should get plain selected power', ()=>{
+    const exampleSelectedPower = 'selPower';
+    service.selectedPowerNameSubject = new BehaviorSubject<any>(exampleSelectedPower);
+    const addedPowers = service.getPlainSelectedPower();
+    expect(addedPowers).toEqual(exampleSelectedPower);
+  });
+
+  it('should get added powers observable', ()=>{
+    const powers$ = service.getAddedPowers();
+    expect(powers$).toBe((service as any).addedPowers$);
+  });
+
+  it('should get selected power observable', ()=>{
+    const selectedPower$ = service.getSelectedPowerName();
+    expect(selectedPower$).toBe((service as any).selectedPowerName$);
+  });
+
+  it('should set added powers', ()=>{
+    const newPowers = [{power:'one'}, {power:'two'}] as any;
+
+    const emittedValues = [] as any;
+    service.addedPowersSubject.subscribe(powers=>{
+      emittedValues.push(...powers)
+    })
+
+    service.setAddedPowers(newPowers);
+
+    expect(emittedValues[0]).toEqual(newPowers[0]);
+      expect(emittedValues[1]).toEqual(newPowers[1]);
+  });
+
+  it('should set selected power', ()=>{
+    const newPowerName = 'newPower' as any;
+
+    service.setSelectedPowerName(newPowerName);
+
+    service.selectedPowerNameSubject.subscribe(power=>{
+      expect(power).toBe(newPowerName);
+    })
+  });
+
+  it('should add a new power if not disabled', () => {
+    const existingPowers: TempPower[] = [
+      { ...mockTempPower, tmf_function: 'ExistingPower' }
+    ];
+    const newPower: TempPower = { ...mockTempPower, tmf_function: 'NewPower' };
+    jest.spyOn(service, 'getPlainAddedPowers').mockReturnValue(existingPowers);
+    const setAddedPowersSpy = jest.spyOn(service, 'setAddedPowers');
+  
+    service.addPower(newPower, false);
+  
+    expect(setAddedPowersSpy).toHaveBeenCalledWith([...existingPowers, newPower]);
+  });
+
+  it('should not add a new power if disabled', () => {
+    const newPower: TempPower = { ...mockTempPower, tmf_function: 'NewPower' };
+    const setAddedPowersSpy = jest.spyOn(service, 'setAddedPowers');
+  
+    service.addPower(newPower, true);
+
+    expect(setAddedPowersSpy).not.toHaveBeenCalled();
+  });
+
+  it('should remove the specified power from added powers', () => {
+    const existingPowers: TempPower[] = [
+      { ...mockTempPower, tmf_function: 'Power1' },
+      { ...mockTempPower, tmf_function: 'Power2' },
+      { ...mockTempPower, tmf_function: 'Power3' },
+    ];
+  
+    const powerToRemove = 'Power2';
+    jest.spyOn(service, 'getPlainAddedPowers').mockReturnValue(existingPowers);
+    const setAddedPowersSpy = jest.spyOn(service, 'setAddedPowers');
+  
+    service.removePower(powerToRemove);
+  
+    const expectedPowers = existingPowers.filter(
+      (power) => power.tmf_function !== powerToRemove
+    );
+    expect(setAddedPowersSpy).toHaveBeenCalledWith(expectedPowers);
+  });
+  
+  it('should not modify added powers if the specified power is not found', () => {
+    const existingPowers: TempPower[] = [
+      { ...mockTempPower, tmf_function: 'Power1' },
+      { ...mockTempPower, tmf_function: 'Power3' },
+    ];
+  
+    const powerToRemove = 'Power2'; // Not in the list
+    jest.spyOn(service, 'getPlainAddedPowers').mockReturnValue(existingPowers);
+    const setAddedPowersSpy = jest.spyOn(service, 'setAddedPowers');
+  
+    service.removePower(powerToRemove);
+  
+    expect(setAddedPowersSpy).toHaveBeenCalledWith(existingPowers);
+  });
+
+  it('should reset added powers and selected power name', () => {
+    const setAddedPowersSpy = jest.spyOn(service, 'setAddedPowers');
+    const setSelectedPowerNameSpy = jest.spyOn(service, 'setSelectedPowerName');
+  
+    service.reset();
+  
+    expect(setAddedPowersSpy).toHaveBeenCalledWith([]);
+    expect(setSelectedPowerNameSpy).toHaveBeenCalledWith('');
+  });
+
   it('should convert Power to TempPower correctly', () => {
     const power: Power = {
       tmf_action: ['Execute', 'Create'],
@@ -130,41 +245,8 @@ describe('FormCredentialService', () => {
     expect(credential.mobile_phone).toBe('');
   });
 
-  it('should add options correctly when not disabled', () => {
-    const addedOptions: TempPower[] = [];
-    const options: TempPower[] = [
-      {
-        ...mockTempPower,
-        tmf_domain: 'domain',
-        tmf_function: 'function',
-        tmf_type: 'type'
-      },
-    ];
-
-    const result: TempPower[] = service.addOption(addedOptions, options, false);
-
-    expect(result).toEqual(options);
-  });
-
-  it('should not add options when disabled', () => {
-    const addedOptions: TempPower[] = [];
-    const options: TempPower[] = [
-      {
-        ...mockTempPower,
-        tmf_domain: 'domain',
-        tmf_function: 'function',
-        tmf_type: 'type'
-      },
-    ];
-
-    const result: TempPower[] = service.addOption(addedOptions, options, true);
-
-    expect(result).toEqual(addedOptions);
-  });
-
-  it('should handle select change correctly', () => {
+    it('should handle select change correctly', () => {
     const event = { target: { value: 'newValue' } } as unknown as Event;
-
     const result: string = service.handleSelectChange(event);
 
     expect(result).toBe('newValue');
@@ -240,12 +322,10 @@ it('should handle error when submitCredential fails', (done) => {
   });
 });
 
-
-
 it('should append country prefix to mobile_phone if not present', (done) => {
   const mockCredential = { 
     mobile_phone: '123456789' 
-  } as CredentialMandatee;
+  } as Mandatee;
   const mockSelectedCountry = '34';
   const mockAddedOptions: TempPower[] = [];
   const mockMandator = null;
@@ -276,7 +356,7 @@ it('should append country prefix to mobile_phone if not present', (done) => {
 it('should not append country prefix to mobile_phone if already present', (done) => {
   const mockCredential = {
     mobile_phone: '+34 123456789'
-  } as CredentialMandatee; 
+  } as Mandatee; 
   const mockSelectedCountry = '34'; 
   const mockAddedOptions: TempPower[] = [];
   const mockMandator = null;
@@ -549,6 +629,96 @@ it('should not append country prefix to mobile_phone if already present', (done)
       tmf_type: 'type4'
     });
   });
+
+  it('should return true if the power is added', () => {
+    // Mock data
+    const existingPowers: TempPower[] = [
+      { ...mockTempPower, tmf_function: 'Power1' },
+      { ...mockTempPower, tmf_function: 'Power2' },
+    ];
+  
+    const powerToCheck = 'Power2';
+  
+    // Mock getPlainAddedPowers to return existing powers
+    jest.spyOn(service, 'getPlainAddedPowers').mockReturnValue(existingPowers);
+  
+    // Call the method with the power to check
+    const result = service.checkIfPowerIsAdded(powerToCheck);
+  
+    // Verify the method returns true
+    expect(result).toBe(true);
+  });
+  
+  it('should return false if the power is not added', () => {
+    const existingPowers: TempPower[] = [
+      { ...mockTempPower, tmf_function: 'Power1' },
+      { ...mockTempPower, tmf_function: 'Power3' },
+    ];
+    const powerToCheck = 'Power2'; // Not in the list
+    jest.spyOn(service, 'getPlainAddedPowers').mockReturnValue(existingPowers);
+    const result = service.checkIfPowerIsAdded(powerToCheck);
+  
+    expect(result).toBe(false);
+  });
+  
+  it('should return false if there are no added powers', () => {
+    jest.spyOn(service, 'getPlainAddedPowers').mockReturnValue([]);
+    const powerToCheck = 'Power2';
+    const result = service.checkIfPowerIsAdded(powerToCheck);
+
+    expect(result).toBe(false);
+  });
+
+  it('should return true if all powers have at least one valid action', () => {
+    const powersWithActions: TempPower[] = [
+      { ...mockTempPower, execute: true },
+      { ...mockTempPower, create: true },
+      { ...mockTempPower, update: true },
+      { ...mockTempPower, delete: true },
+      { ...mockTempPower, upload: true },
+    ];
+  
+    jest.spyOn(service, 'getPlainAddedPowers').mockReturnValue(powersWithActions);
+  
+    const result = service.powersHaveFunction();
+  
+    expect(result).toBe(true);
+  });
+  
+  it('should return false if any power has no valid action', () => {
+    const powersWithInvalidAction: TempPower[] = [
+      { ...mockTempPower, execute: true },
+      { ...mockTempPower, create: true },
+      { ...mockTempPower, update: true },
+      { ...mockTempPower, delete: true },
+      { ...mockTempPower, execute: false, create: false, update: false, delete: false, upload: false },
+    ];
+  
+    jest.spyOn(service, 'getPlainAddedPowers').mockReturnValue(powersWithInvalidAction);
+  
+    const result = service.powersHaveFunction();
+  
+    expect(result).toBe(false);
+  });
+  
+  it('should return true if there are no added powers (edge case)', () => {
+    jest.spyOn(service, 'getPlainAddedPowers').mockReturnValue([]);
+    const result = service.powersHaveFunction();
+  
+    expect(result).toBe(true);
+  });
+  
+  it('should check if there are selected powers', ()=>{
+    jest.spyOn(service, 'getPlainAddedPowers').mockReturnValue([]);
+    let checkPowers = service.hasSelectedPower();
+    expect(checkPowers).toBe(false);
+
+    jest.spyOn(service, 'getPlainAddedPowers').mockReturnValue([{} as any]);
+    checkPowers = service.hasSelectedPower();
+    expect(checkPowers).toBe(true);
+  });
+  
+
 });
 
 

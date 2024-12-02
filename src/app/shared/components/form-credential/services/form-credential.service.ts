@@ -65,22 +65,6 @@ export class FormCredentialService {
     this.setSelectedPowerName('');
   }
 
-  public convertToTempPower(power: Power): TempPower {
-    const tmf_action = Array.isArray(power.tmf_action) ? power.tmf_action : [power.tmf_action];
-    return {
-      tmf_action: power.tmf_action,
-      tmf_domain: power.tmf_domain,
-      tmf_function: power.tmf_function,
-      tmf_type: power.tmf_type,
-      execute: tmf_action.includes('Execute'),
-      create: tmf_action.includes('Create'),
-      update: tmf_action.includes('Update'),
-      delete: tmf_action.includes('Delete'),
-      upload: tmf_action.includes('Upload'),
-      attest: tmf_action.includes('Attest')
-    };
-  }
-
   public resetForm(): Mandatee {
     return { first_name: '', last_name: '', email: '', mobile_phone: '' };
   }
@@ -151,6 +135,22 @@ export class FormCredentialService {
     );
   }
 
+  public convertToTempPower(power: Power): TempPower {
+    const tmf_action = Array.isArray(power.tmf_action) ? power.tmf_action : [power.tmf_action];
+    return {
+      tmf_action: power.tmf_action,
+      tmf_domain: power.tmf_domain,
+      tmf_function: power.tmf_function,
+      tmf_type: power.tmf_type,
+      execute: tmf_action.includes('Execute'),
+      create: tmf_action.includes('Create'),
+      update: tmf_action.includes('Update'),
+      delete: tmf_action.includes('Delete'),
+      upload: tmf_action.includes('Upload'),
+      attest: tmf_action.includes('Attest')
+    };
+  }
+
   public checkTmfFunction(option: TempPower): any {
     if (option.tmf_function === 'Onboarding') {
       return {
@@ -179,6 +179,21 @@ export class FormCredentialService {
       tmf_type: option.tmf_type
     };
 
+  }
+
+  public checkIfPowerIsAdded(powerName: string): boolean{
+    const addedPowers = this.getPlainAddedPowers();
+    return addedPowers.some(pow => pow.tmf_function === powerName);
+  }
+
+  public powersHaveFunction(): boolean{
+    return this.getPlainAddedPowers().every((option:TempPower) =>
+      option.execute || option.create || option.update || option.delete || option.upload
+    );
+  }
+
+  public hasSelectedPower(): boolean{
+    return this.getPlainAddedPowers().length > 0;
   }
 
 }
