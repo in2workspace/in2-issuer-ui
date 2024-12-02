@@ -2,6 +2,10 @@ import { inject, Injectable} from '@angular/core';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import {Power} from "../models/power.interface";
+import {Mandator} from "../models/madator.interface";
+import {Signer} from "../models/signer.interface";
+import {UserData} from "../models/userData.interface";
 
 @Injectable({
   providedIn: 'root'
@@ -9,14 +13,14 @@ import { map } from 'rxjs/operators';
 export class AuthService {
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
-  private userDataSubject = new BehaviorSubject<any>(null);
+  private userDataSubject = new BehaviorSubject<UserData |null>(null);
   private tokenSubject = new BehaviorSubject<string>('');
-  private mandatorSubject = new BehaviorSubject<any>(null);
-  private signerSubject = new BehaviorSubject<any>(null);
+  private mandatorSubject = new BehaviorSubject<Mandator | null>(null);
+  private signerSubject = new BehaviorSubject<Signer | null>(null);
   private emailSubject = new BehaviorSubject<string>('');
   private nameSubject = new BehaviorSubject<string>('');
 
-  private userPowers: any[] = [];
+  private userPowers: Power[] = [];
 
   private oidcSecurityService = inject(OidcSecurityService);
 
@@ -64,11 +68,11 @@ export class AuthService {
     }));
   }
 
-  private extractVCFromUserData(userData: any) {
+  private extractVCFromUserData(userData: UserData) {
     return userData.vc ? JSON.parse(userData.vc) : null;
   }
 
-  private extractUserPowers(userData: any): any[] {
+  private extractUserPowers(userData: UserData): Power[] {
     try {
       const vcObject = this.extractVCFromUserData(userData)
       return vcObject?.credentialSubject?.mandate?.power || [];
@@ -77,10 +81,9 @@ export class AuthService {
     }
   }
 
-
   // POLICY: login_restriction_policy
   public hasOnboardingExecutePower(): boolean {
-    return this.userPowers.some((power: any) => {
+    return this.userPowers.some((power: Power) => {
       if (power.tmf_function === "Onboarding") {
         const action = power.tmf_action;
         return action === "Execute" || (Array.isArray(action) && action.includes("Execute"));
@@ -92,14 +95,17 @@ export class AuthService {
   // POLICY: user_powers_restriction_policy
   public hasIn2OrganizationIdentifier() : boolean {
     const userData = this.userDataSubject.getValue();
-    return "VATES-B60645900" === userData.organizationIdentifier;
+    if (userData != null){
+      return "VATES-B60645900" === userData.organizationIdentifier;
+    }
+    return false
   }
 
-  public getMandator(): Observable<any> {
+  public getMandator(): Observable<Mandator | null> {
     return this.mandatorSubject.asObservable();
   }
 
-  public getSigner(): Observable<any> {
+  public getSigner(): Observable<Signer | null> {
     return this.signerSubject.asObservable();
   }
 
@@ -135,7 +141,7 @@ export class AuthService {
     return this.isAuthenticated$;
   }
 
-  public getUserData(): Observable<any> {
+  public getUserData(): Observable<UserData | null> {
     return this.userDataSubject.asObservable();
   }
 
