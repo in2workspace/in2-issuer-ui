@@ -47,13 +47,13 @@
     </div>  
   </div>
 
-  <div *ngIf="viewMode === 'create' || viewMode === 'detail'">
-    <div *ngFor="let option of (viewMode === 'create' ? vm.addedPowers : power); let i = index" class="option-container">
+  <div class="powers-container" *ngIf="viewMode === 'create' || viewMode === 'detail'">
+    <ng-container *ngFor="let option of (viewMode === 'create' ? vm.addedPowers : power); let i = index">
       <p>{{ option.tmf_function }}</p>
 
       <!-- Use ng-template to render the repeated toggle logic -->
       <ng-container *ngTemplateOutlet="toggleTemplate; context: { option: option, i: i }"></ng-container>
-    </div>
+    </ng-container>
   </div>
 </ng-container>
 
@@ -84,15 +84,16 @@
         {{ "power.execute" | translate }}
       </mat-slide-toggle>
     </div>
-    <button 
+  </div>
+  <button
     *ngIf="!isDisabled"
     type="button"
-    mat-mini-fab class="small-icon-button"
+    mat-mini-fab class="small-icon-button delete-power"
     color="warn"
     aria-label="Remove power"
-    (click)="removePower(option.tmf_function)">
-    <mat-icon style="display:block;width:25px">delete</mat-icon>
-    </button>
-  </div>
+    (click)="removePower(option.tmf_function)"
+  >
+  <mat-icon style="display:block;width:25px">delete</mat-icon>
+  </button>
 </ng-template>
 
