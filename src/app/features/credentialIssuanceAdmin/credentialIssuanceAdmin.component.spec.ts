@@ -52,7 +52,7 @@ describe('Credential Issuance Admin Component', () => {
   
     tick(1000);
   
-    expect(translateService.get).toHaveBeenCalledWith('credentialIssuance.create-as-signer');
+    expect(translateService.get).toHaveBeenCalledWith('credentialIssuance.learCredentialEmployee');
     expect(emittedValue).toBe(mockTranslatedValue);
   }));
   

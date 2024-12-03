@@ -126,8 +126,10 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
           this.resetForm.bind(this)
         )
         .subscribe({
+          //service open popup too
           next: () => {
             this.popupMessage = this.translate.instant("credentialIssuance.success");
+            //navigates before popup is shown
             this.openTempPopup();
             this.router.navigate(['/organization/credentials']).then(() => {
               window.scrollTo(0, 0);

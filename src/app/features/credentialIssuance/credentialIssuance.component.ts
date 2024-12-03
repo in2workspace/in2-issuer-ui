@@ -9,5 +9,5 @@ import { switchMap, timer } from 'rxjs';
 export class CredentialIssuanceComponent{
   public translate = inject(TranslateService);
   //doesn't load without delay
-  public title = timer(0).pipe(switchMap(()=>this.translate.get("credentialIssuance.create")));
+  public title = timer(0).pipe(switchMap(()=>this.translate.get("credentialIssuance.learCredentialEmployee")));
 }

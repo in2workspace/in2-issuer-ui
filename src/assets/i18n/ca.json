@@ -67,8 +67,7 @@
       "invalid_power": "No teniu la política necessaria per accedir"
     },
     "credentialIssuance":{
-      "create": "Crea una LEARCredentialEmployee",
-      "create-as-signer": "Crea una LEARCredentialEmployee com a Signer",
+      "learCredentialEmployee": "LEARCredentialEmployee",
       "success": "LEARCredentialEmployee creada amb èxit"
     },
     "error": {

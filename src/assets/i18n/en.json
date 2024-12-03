@@ -66,8 +66,7 @@
     "invalid_power_message": "You do not have the required power to access"
   },
   "credentialIssuance":{
-    "create": "Create LEARCredentialEmployee",
-    "create-as-signer": "Create LEARCredentialEmployee as Signer",
+    "learCredentialEmployee": "LEARCredentialEmployee",
     "success": "LEARCredentialEmployee was created successfully"
   },
   "error": {

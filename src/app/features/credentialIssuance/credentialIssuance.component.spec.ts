@@ -46,7 +46,7 @@ describe('CredentialDetailComponent', () => {
   
     component.title.subscribe((value) => {
 
-    expect(translateService.get).toHaveBeenCalledWith("credentialIssuance.create");
+    expect(translateService.get).toHaveBeenCalledWith("credentialIssuance.learCredentialEmployee");
     expect(value).toBe(mockTranslatedValue);
     done(); 
     });
