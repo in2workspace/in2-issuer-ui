@@ -1,6 +1,7 @@
 {
   "mandator": {
     "organizationid": "Número VAT de l'empresa",
+    "organizationidHint": "Introdueix només els caràcters de després de 'VAT-'. Per exemple, si el número complet és  'VAT-123ABC', introdueix '123ABC'",
     "organization": "Nom de l'empresa",
     "name": "Nom",
     "first-name": "Nom",

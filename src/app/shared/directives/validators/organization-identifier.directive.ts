@@ -25,9 +25,10 @@ export class OrganizationIdentifierValidatorDirective implements Validator {
       return null;
     }
 
-    if (value.startsWith('VAT')) {
+    if (value.toLowerCase().startsWith('vat')) {
       return { startsWithVAT: true };
     }
+    
 
     const isValid = pattern.test(value);
     return isValid ? null : { invalidIdentifier: true };

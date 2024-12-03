@@ -1,6 +1,7 @@
 {
   "mandator": {
     "organizationid": "Company VAT number",
+    "organizationidHint": "Enter only the characters after 'VAT...-'. For example, if 'VATEU-123ABC', enter '123ABC'",
     "organization": "Company name",
     "name": "Name",
     "first-name": "First name",

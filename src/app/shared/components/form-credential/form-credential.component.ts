@@ -67,8 +67,7 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
   public constructor(){
     this.countries = this.countryService.getSortedCountries();
     this.addedPowers$ = this.formService.getAddedPowers();
-    // this.hasIn2OrganizationId = this.authService.hasIn2OrganizationIdentifier();
-    this.hasIn2OrganizationId = true;
+    this.hasIn2OrganizationId = this.authService.hasIn2OrganizationIdentifier();
   }
 
   public ngOnInit(): void {
