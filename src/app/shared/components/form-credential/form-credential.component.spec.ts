@@ -14,10 +14,10 @@ import { AuthService } from 'src/app/core/services/auth.service';
 import { of } from 'rxjs';
 import { PopupComponent } from '../popup/popup.component';
 import { Power } from 'src/app/core/models/power.interface';
-import { MaxLengthDirective } from '../../directives/max-length-directive.directive';
-import { CustomEmailValidatorDirective } from '../../directives/custom-email-validator.directive';
-import { UnicodeValidatorDirective } from '../../directives/unicode-validator.directive';
-import { OrganizationNameValidatorDirective } from '../../directives/organization-name.validator.directive';
+import { MaxLengthDirective } from '../../directives/validators/max-length-directive.directive';
+import { CustomEmailValidatorDirective } from '../../directives/validators/custom-email-validator.directive';
+import { UnicodeValidatorDirective } from '../../directives/validators/unicode-validator.directive';
+import { OrganizationNameValidatorDirective } from '../../directives/validators/organization-name.validator.directive';
 import { Signer } from 'src/app/core/models/credentialProcedure.interface';
 
 const mockTempPower: TempPower = {

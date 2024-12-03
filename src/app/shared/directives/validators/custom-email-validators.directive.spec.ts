@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule, FormControl, ValidationErrors } from '@angular/forms';
-import { CustomEmailValidatorDirective } from './custom-email-validator.directive';
+import { CustomEmailValidatorDirective } from './validators/custom-email-validator.directive';
 
 @Component({
   template: `

@@ -9,11 +9,12 @@ import { TranslateModule } from '@ngx-translate/core';
 import { PowerComponent } from './components/power/power/power.component';
 import { PopupComponent } from './components/popup/popup.component';
 import { DialogComponent } from "./components/dialog/dialog.component";
-import { MaxLengthDirective } from './directives/max-length-directive.directive';
-import { CustomEmailValidatorDirective } from './directives/custom-email-validator.directive';
-import { UnicodeValidatorDirective } from './directives/unicode-validator.directive';
-import { OrganizationNameValidatorDirective } from './directives/organization-name.validator.directive';
+import { MaxLengthDirective } from './directives/validators/max-length-directive.directive';
+import { CustomEmailValidatorDirective } from './directives/validators/custom-email-validator.directive';
+import { UnicodeValidatorDirective } from './directives/validators/unicode-validator.directive';
+import { OrganizationNameValidatorDirective } from './directives/validators/organization-name.validator.directive';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
+import { OrganizationIdentifierValidatorDirective } from './directives/validators/organization-identifier.directive';
 
 
 
@@ -28,7 +29,8 @@ import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dial
     ConfirmDialogComponent,
     CustomEmailValidatorDirective,
     UnicodeValidatorDirective,
-    OrganizationNameValidatorDirective
+    OrganizationNameValidatorDirective,
+    OrganizationIdentifierValidatorDirective
   ],
   imports: [
     CommonModule, MaterialModule, FormsModule, RouterModule, TranslateModule, ReactiveFormsModule
