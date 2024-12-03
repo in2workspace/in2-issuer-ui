@@ -27,8 +27,6 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
   @Input() public asSigner: boolean = false;
   @Input() public isDisabled: boolean = false;
   @Input() public title: string = '';
-  @Input() public showButton: boolean = false; //confusing name
-  @Input() public hideButton: boolean = true; //confusing name
   @Input() public power: Power[] = [];
   @Input() public credentialStatus: string = '';
   @Input() public credential: Mandatee = this.initializeCredential();
@@ -211,7 +209,7 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
   }
 
   public showReminderButton(): boolean{
-    return (this.credentialStatus === 'WITHDRAWN') || (this.credentialStatus === 'PEND_DOWNLOAD')
+    return (this.viewMode === 'detail') && ((this.credentialStatus === 'WITHDRAWN') || (this.credentialStatus === 'PEND_DOWNLOAD'))
   }
 
   public ngOnDestroy(): void {

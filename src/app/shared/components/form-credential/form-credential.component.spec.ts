@@ -371,8 +371,13 @@ describe('FormCredentialComponent', () => {
   });
 
   it('should check if sendReminder should be shown according to VC status', ()=>{
+    component.viewMode = 'create';
     component.credentialStatus = 'WITHDRAWN';
     let showBtn = component.showReminderButton();
+    expect(showBtn).toBe(false);
+
+    component.viewMode = 'detail';
+    showBtn = component.showReminderButton();
     expect(showBtn).toBe(true);
 
     component.credentialStatus = 'PEND_DOWNLOAD';
