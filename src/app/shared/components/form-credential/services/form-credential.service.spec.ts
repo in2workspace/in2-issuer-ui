@@ -1,7 +1,5 @@
 import { TestBed } from '@angular/core/testing';
 import { FormCredentialService, isCertification, isProductOffering } from './form-credential.service';
-import { Power } from 'src/app/core/models/power.interface';
-import { CredentialMandatee } from 'src/app/core/models/credendentialMandatee.interface';
 import { of, throwError } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -13,14 +11,13 @@ import { AuthModule } from 'angular-auth-oidc-client';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { PopupComponent } from '../../popup/popup.component';
 import { TempPower } from "../../../../core/models/tempPower.interface";
-import { Mandator } from "../../../../core/models/mandator.interface";
-import { Signer } from "../../../../core/models/signer.interface";
+import { Mandatee, Mandator, Power, Signer } from "../../../../core/models/vc/learCredential.interface";
 
 describe('FormCredentialService', () => {
   let service: FormCredentialService;
   let popupComponent: PopupComponent;
   let credentialProcedureService: any;
-  let mockCredential: CredentialMandatee;
+  let mockCredential: Mandatee;
   let mockSelectedCountry: string;
   let mockMandator: Mandator;
   let mockSigner: Signer;
@@ -120,7 +117,7 @@ describe('FormCredentialService', () => {
   });
 
   it('should reset the form correctly', () => {
-    const credential: CredentialMandatee = service.resetForm();
+    const credential: Mandatee = service.resetForm();
 
     expect(credential.first_name).toBe('');
     expect(credential.last_name).toBe('');
@@ -192,7 +189,7 @@ describe('FormCredentialService', () => {
   });
 
   it('should append country prefix to mobile_phone if not present', (done) => {
-    const credential: CredentialMandatee = {
+    const credential: Mandatee = {
       first_name: 'John',
       last_name: 'Doe',
       email: 'john.doe@example.com',
@@ -218,7 +215,7 @@ describe('FormCredentialService', () => {
   });
 
   it('should not append country prefix to mobile_phone if already present', (done) => {
-    const credential: CredentialMandatee = {
+    const credential: Mandatee = {
       first_name: 'John',
       last_name: 'Doe',
       email: 'john.doe@example.com',

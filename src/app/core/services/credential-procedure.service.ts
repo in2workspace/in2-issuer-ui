@@ -3,9 +3,9 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { IssuanceRequest } from '../models/issuanceRequest.interface';
-import { CredentialProcedureResponse } from "../models/credentialProcedureResponse.interface";
-import { CredentialData } from "../models/credentialData.interface";
+import { ProcedureRequest } from '../models/procedure/procedureRequest.interface';
+import { ProcedureResponse } from "../models/procedure/procedureResponse.interface";
+import { CredentialData } from "../models/vc/learCredential.interface";
 
 @Injectable({
   providedIn: 'root'
@@ -20,8 +20,8 @@ export class CredentialProcedureService {
 
   private readonly http = inject(HttpClient);
 
-  public getCredentialProcedures(): Observable<CredentialProcedureResponse> {
-    return this.http.get<CredentialProcedureResponse>(this.organizationProcedures).pipe(
+  public getCredentialProcedures(): Observable<ProcedureResponse> {
+    return this.http.get<ProcedureResponse>(this.organizationProcedures).pipe(
       catchError(this.handleError)
     );
   }
@@ -32,9 +32,9 @@ export class CredentialProcedureService {
     );
   }
 
-  public createProcedure(IssuanceRequest: IssuanceRequest): Observable<void> {
+  public createProcedure(procedureRequest: ProcedureRequest): Observable<void> {
 
-    return this.http.post<void>(this.saveCredential, IssuanceRequest).pipe(
+    return this.http.post<void>(this.saveCredential, procedureRequest).pipe(
       catchError(this.handleError)
     );
   }

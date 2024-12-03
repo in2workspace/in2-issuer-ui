@@ -1,8 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
-import { CredentialData } from "../../../../core/models/credentialData.interface";
-import { Credential } from "../../../../core/models/credential.interface";
+import { CredentialData, LEARCredential } from "../../../../core/models/vc/learCredential.interface";
 
 @Component({
   selector: 'app-credential-detail',
@@ -10,7 +9,7 @@ import { Credential } from "../../../../core/models/credential.interface";
 })
 export class CredentialDetailComponent implements OnInit {
   public credentialId: string | null = null;
-  public credential: Credential | null = null;
+  public credential: LEARCredential | null = null;
   public credentialStatus: string | null = null;
 
   private readonly route = inject(ActivatedRoute);

@@ -2,10 +2,8 @@ import { inject, Injectable } from '@angular/core';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Power } from "../models/power.interface";
-import { Signer } from "../models/signer.interface";
 import { UserData } from "../models/userData.interface";
-import { Mandator } from "../models/mandator.interface";
+import { Mandator, Power, Signer } from "../models/vc/learCredential.interface";
 
 @Injectable({
   providedIn: 'root'

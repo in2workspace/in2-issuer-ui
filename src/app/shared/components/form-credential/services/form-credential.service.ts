@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
 import { TempPower } from "../../../../core/models/tempPower.interface";
-import { Power } from 'src/app/core/models/power.interface';
-import { CredentialMandatee } from 'src/app/core/models/credendentialMandatee.interface';
 import { PopupComponent } from '../../popup/popup.component';
-import { IssuanceRequest } from 'src/app/core/models/issuanceRequest.interface';
+import { ProcedureRequest } from 'src/app/core/models/procedure/procedureRequest.interface';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
-import { Mandator } from "../../../../core/models/mandator.interface";
+import { Mandatee, Mandator, Power } from "../../../../core/models/vc/learCredential.interface";
 
 @Injectable({
   providedIn: 'root'
@@ -36,7 +34,7 @@ export class FormCredentialService {
     };
   }
 
-  public resetForm(): CredentialMandatee {
+  public resetForm(): Mandatee {
     return { first_name: '', last_name: '', email: '', mobile_phone: '' };
   }
 
@@ -51,7 +49,7 @@ export class FormCredentialService {
   }
 
   public submitCredential(
-    credential: CredentialMandatee,
+    credential: Mandatee,
     selectedCountry: string,
     addedOptions: TempPower[],
     mandator: Mandator | null,
@@ -68,7 +66,7 @@ export class FormCredentialService {
       return this.checkTmfFunction(option);
     });
 
-    const credentialProcedure: IssuanceRequest = {
+    const credentialProcedure: ProcedureRequest = {
       schema: "LEARCredentialEmployee",
       format: "jwt_vc_json",
       payload: {

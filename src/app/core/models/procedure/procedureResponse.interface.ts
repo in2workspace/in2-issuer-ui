@@ -1,4 +1,8 @@
-import { CredentialManagement } from "./credentialManagement.interface";
+import { CredentialManagement } from "./procedureRequest.interface";
+
+export interface ProcedureResponse {
+  credential_procedures: CredentialProcedure[];
+}
 
 export interface CredentialProcedure {
   credential_procedure: {
@@ -9,3 +13,4 @@ export interface CredentialProcedure {
     credential: CredentialManagement;
   }
 }
+

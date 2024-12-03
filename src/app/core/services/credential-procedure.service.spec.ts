@@ -3,9 +3,9 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { CredentialProcedureService } from './credential-procedure.service';
 import { environment } from 'src/environments/environment';
 import { HttpErrorResponse } from '@angular/common/http';
-import { IssuanceRequest } from '../models/issuanceRequest.interface';
-import { CredentialProcedureResponse } from "../models/credentialProcedureResponse.interface";
-import { CredentialData } from "../models/credentialData.interface";
+import { ProcedureRequest } from '../models/procedure/procedureRequest.interface';
+import { ProcedureResponse } from "../models/procedure/procedureResponse.interface";
+import { CredentialData } from "../models/vc/learCredential.interface";
 
 const notFoundErrorResp = new HttpErrorResponse({
   error: '404 error',
@@ -46,7 +46,7 @@ describe('CredentialProcedureService', () => {
   });
 
   it('should fetch credential procedures successfully', () => {
-    const mockData: CredentialProcedureResponse = {credential_procedures:[
+    const mockData: ProcedureResponse = {credential_procedures:[
       { credential_procedure:{procedure_id: '1', status: 'completed', full_name: 'John Doe', updated: '2023-01-01', credential: { mandatee: {}, mandator: {}, power: [] } as any}},
       { credential_procedure:{ procedure_id: '2', status: 'pending', full_name: 'Jane Doe', updated: '2023-01-02', credential: { mandatee: {}, mandator: {}, power: [] } as any }}
     ]};
@@ -105,7 +105,7 @@ describe('CredentialProcedureService', () => {
   });
 
   it('should save credential procedure successfully', () => {
-    const IssuanceRequestMock:IssuanceRequest = {
+    const IssuanceRequestMock:ProcedureRequest = {
       schema: "LEARCredentialEmployee",
       format: "jwt_vc_json",
       payload: {
@@ -143,7 +143,7 @@ describe('CredentialProcedureService', () => {
   });
 
   it('should handle error when saving credential procedure', () => {
-    const IssuanceRequestMock:IssuanceRequest = {
+    const IssuanceRequestMock:ProcedureRequest = {
       schema: "LEARCredentialEmployee",
       format: "jwt_vc_json",
       payload: {

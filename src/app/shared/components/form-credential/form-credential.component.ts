@@ -1,8 +1,5 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, NgModel, Validators } from '@angular/forms';
-import { CredentialMandatee } from 'src/app/core/models/credendentialMandatee.interface';
-import { OrganizationDetails } from 'src/app/core/models/organizationDetails.interface';
-import { Power } from 'src/app/core/models/power.interface';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { Country } from './services/country.service';
 import { FormCredentialService } from './services/form-credential.service';
@@ -11,6 +8,7 @@ import { PopupComponent } from '../popup/popup.component';
 import { Router } from '@angular/router';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { TempPower } from "../../../core/models/tempPower.interface";
+import { Mandatee, OrganizationDetails, Power } from "../../../core/models/vc/learCredential.interface";
 
 @Component({
   selector: 'app-form-credential',
@@ -29,7 +27,7 @@ export class FormCredentialComponent implements OnInit {
   @Input() public hideButton: boolean = true;
   @Input() public power: Power[] = [];
   @Input() public credentialStatus: string = '';
-  @Input() public credential: CredentialMandatee = this.initializeCredential();
+  @Input() public credential: Mandatee = this.initializeCredential();
   @Input() public mandator: OrganizationDetails = this.initializeOrganizationDetails();
   public signer: OrganizationDetails = this.initializeOrganizationDetails();
 
@@ -195,7 +193,7 @@ export class FormCredentialComponent implements OnInit {
     });
   }
 
-  private initializeCredential(): CredentialMandatee {
+  private initializeCredential(): Mandatee {
     return {
       first_name: '',
       last_name: '',
