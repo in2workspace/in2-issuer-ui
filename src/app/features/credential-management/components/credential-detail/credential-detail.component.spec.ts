@@ -100,8 +100,6 @@ describe('CredentialDetailComponent', () => {
         "jti": "e2975afc-6df2-4183-b84b-d797133650eb"
     }
 
-
-
     const mockCredential: CredentialData = {
       procedure_id: '1',
       credential_status:'Active',

@@ -1,6 +1,6 @@
-import {Component, Input, Output, EventEmitter, inject} from '@angular/core';
-import {AuthService} from "../../../../core/services/auth.service";
-import {TempPower} from "../../../../core/models/tempPower.interface";
+import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
+import { AuthService } from "../../../../core/services/auth.service";
+import { TempPower } from "../../../../core/models/tempPower.interface";
 
 @Component({
   selector: 'app-power',

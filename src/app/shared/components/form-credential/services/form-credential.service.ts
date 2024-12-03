@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import {TempPower} from "../../../../core/models/tempPower.interface";
+import { TempPower } from "../../../../core/models/tempPower.interface";
 import { Power } from 'src/app/core/models/power.interface';
 import { CredentialMandatee } from 'src/app/core/models/credendentialMandatee.interface';
 import { PopupComponent } from '../../popup/popup.component';
 import { IssuanceRequest } from 'src/app/core/models/issuanceRequest.interface';
-import {BehaviorSubject, Observable} from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
-import {Mandator} from "../../../../core/models/mandator.interface";
+import { Mandator } from "../../../../core/models/mandator.interface";
 
 @Injectable({
   providedIn: 'root'
@@ -18,10 +18,6 @@ export class FormCredentialService {
 
   setShowMandator(value: boolean): void {
     this.showMandatorSubject.next(value);
-  }
-
-  getShowMandator(): boolean {
-    return this.showMandatorSubject.value;
   }
 
   public convertToTempPower(power: Power): TempPower {
@@ -127,12 +123,14 @@ export class FormCredentialService {
   }
 
 }
+
 export function isCertification(option: TempPower,tmf_action: string[]) {
   const tmf_action2=tmf_action;
   if (option.upload) tmf_action2.push('Upload');
   if (option.attest) tmf_action2.push('Attest');
   return tmf_action2;
 }
+
 export function isProductOffering(option: TempPower,tmf_action: string[]) {
   const tmf_action2=tmf_action;
   if (option.create) tmf_action2.push('Create');

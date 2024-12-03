@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { MaterialModule } from 'src/app/material.module';
-import { AuthService} from "../../../../core/services/auth.service";
+import { AuthService } from "../../../../core/services/auth.service";
 
 describe('PowerComponent', () => {
   let component: PowerComponent;
@@ -109,9 +109,7 @@ describe('PowerComponent', () => {
         attest: false
       }
     ];
-
-    const spy=jest.spyOn(component as any, 'showPopup');
-
+    jest.spyOn(component as any, 'showPopup');
     component.addOption();
 
     expect(component.addedOptions.length).toBe(1);
@@ -133,12 +131,12 @@ describe('PowerComponent', () => {
   it('should open and close popup', fakeAsync(() => {
     const msg = 'random message';
     (component as any).showPopup(msg);
-  
+
     expect(component.popupMessage).toBe(msg);
     expect(component.isPopupVisible).toBe(true);
-  
+
     tick(1000);
-  
+
     expect(component.isPopupVisible).toBe(false);
   }));
 

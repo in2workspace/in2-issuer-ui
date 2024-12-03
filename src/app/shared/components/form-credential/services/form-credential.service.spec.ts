@@ -1,20 +1,20 @@
 import { TestBed } from '@angular/core/testing';
-import {FormCredentialService, isCertification, isProductOffering} from './form-credential.service';
-import {Power} from 'src/app/core/models/power.interface';
-import {CredentialMandatee} from 'src/app/core/models/credendentialMandatee.interface';
-import {of, throwError} from 'rxjs';
-import {TranslateModule, TranslateService} from '@ngx-translate/core';
-import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {MatPaginatorModule} from '@angular/material/paginator';
-import {MatTableModule} from '@angular/material/table';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {RouterModule} from '@angular/router';
-import {AuthModule} from 'angular-auth-oidc-client';
-import {SharedModule} from 'src/app/shared/shared.module';
-import {PopupComponent} from '../../popup/popup.component';
-import {TempPower} from "../../../../core/models/tempPower.interface";
-import {Mandator} from "../../../../core/models/mandator.interface";
-import {Signer} from "../../../../core/models/signer.interface";
+import { FormCredentialService, isCertification, isProductOffering } from './form-credential.service';
+import { Power } from 'src/app/core/models/power.interface';
+import { CredentialMandatee } from 'src/app/core/models/credendentialMandatee.interface';
+import { of, throwError } from 'rxjs';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterModule } from '@angular/router';
+import { AuthModule } from 'angular-auth-oidc-client';
+import { SharedModule } from 'src/app/shared/shared.module';
+import { PopupComponent } from '../../popup/popup.component';
+import { TempPower } from "../../../../core/models/tempPower.interface";
+import { Mandator } from "../../../../core/models/mandator.interface";
+import { Signer } from "../../../../core/models/signer.interface";
 
 describe('FormCredentialService', () => {
   let service: FormCredentialService;
@@ -322,7 +322,6 @@ describe('FormCredentialService', () => {
     checkTmfSpy.mockRestore();
   });
 
-
   it('should add "Upload" to tmf_action if option.upload is true', () => {
     const option: TempPower = {
       ...mockTempPower,
@@ -530,8 +529,6 @@ describe('FormCredentialService', () => {
       tmf_type: 'type4'
     });
   });
-
-
 });
 
 

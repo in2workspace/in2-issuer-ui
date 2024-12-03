@@ -37,7 +37,6 @@ export class CredentialDetailComponent implements OnInit {
     });
   }
 
-
   public sendReminder(): void {
     if (this.credentialId) {
       this.credentialProcedureService.sendReminder(this.credentialId).subscribe({

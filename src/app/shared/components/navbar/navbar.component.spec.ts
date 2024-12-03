@@ -126,5 +126,4 @@ describe('NavbarComponent', () => {
     expect(userNameElement.textContent).toContain(mockUserData.name);
     expect(organizationElement.textContent).toContain(mockUserData.organization);
   });
-
 });
