@@ -2,66 +2,68 @@ import { Injectable } from '@angular/core';
 
 export interface Country {
   name: string;
-  code: string;
+  phoneCode: string;
+  isoCountryCode: string;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class CountryService {
-  private readonly countries: Country[] = [
-    { name: 'Spain', code: '34' },
-    { name: 'Germany', code: '49' },
-    { name: 'France', code: '33' },
-    { name: 'Italy', code: '39' },
-    { name: 'United Kingdom', code: '44' },
-    { name: 'Russia', code: '7' },
-    { name: 'Ukraine', code: '380' },
-    { name: 'Poland', code: '48' },
-    { name: 'Romania', code: '40' },
-    { name: 'Netherlands', code: '31' },
-    { name: 'Belgium', code: '32' },
-    { name: 'Greece', code: '30' },
-    { name: 'Portugal', code: '351' },
-    { name: 'Sweden', code: '46' },
-    { name: 'Norway', code: '47' },
-    { name: 'Albania', code: '355' },
-    { name: 'Andorra', code: '376' },
-    { name: 'Armenia', code: '374' },
-    { name: 'Austria', code: '43' },
-    { name: 'Azerbaijan', code: '994' },
-    { name: 'Belarus', code: '375' },
-    { name: 'Bosnia and Herzegovina', code: '387' },
-    { name: 'Bulgaria', code: '359' },
-    { name: 'Croatia', code: '385' },
-    { name: 'Cyprus', code: '357' },
-    { name: 'Czech Republic', code: '420' },
-    { name: 'Denmark', code: '45' },
-    { name: 'Estonia', code: '372' },
-    { name: 'Finland', code: '358' },
-    { name: 'Georgia', code: '995' },
-    { name: 'Hungary', code: '36' },
-    { name: 'Iceland', code: '354' },
-    { name: 'Ireland', code: '353' },
-    { name: 'Kazakhstan', code: '7' },
-    { name: 'Kosovo', code: '383' },
-    { name: 'Latvia', code: '371' },
-    { name: 'Liechtenstein', code: '423' },
-    { name: 'Lithuania', code: '370' },
-    { name: 'Luxembourg', code: '352' },
-    { name: 'Malta', code: '356' },
-    { name: 'Moldova', code: '373' },
-    { name: 'Monaco', code: '377' },
-    { name: 'Montenegro', code: '382' },
-    { name: 'North Macedonia', code: '389' },
-    { name: 'San Marino', code: '378' },
-    { name: 'Serbia', code: '381' },
-    { name: 'Slovakia', code: '421' },
-    { name: 'Slovenia', code: '386' },
-    { name: 'Switzerland', code: '41' },
-    { name: 'Turkey', code: '90' },
-    { name: 'Vatican City', code: '379' }
-  ];
+  private countries: Country[] = [
+    { name: 'Spain', phoneCode: '34', isoCountryCode: 'ES' },
+    { name: 'Germany', phoneCode: '49', isoCountryCode: 'DE' },
+    { name: 'France', phoneCode: '33', isoCountryCode: 'FR' },
+    { name: 'Italy', phoneCode: '39', isoCountryCode: 'IT' },
+    { name: 'United Kingdom', phoneCode: '44', isoCountryCode: 'GB' },
+    { name: 'Russia', phoneCode: '7', isoCountryCode: 'RU' },
+    { name: 'Ukraine', phoneCode: '380', isoCountryCode: 'UA' },
+    { name: 'Poland', phoneCode: '48', isoCountryCode: 'PL' },
+    { name: 'Romania', phoneCode: '40', isoCountryCode: 'RO' },
+    { name: 'Netherlands', phoneCode: '31', isoCountryCode: 'NL' },
+    { name: 'Belgium', phoneCode: '32', isoCountryCode: 'BE' },
+    { name: 'Greece', phoneCode: '30', isoCountryCode: 'GR' },
+    { name: 'Portugal', phoneCode: '351', isoCountryCode: 'PT' },
+    { name: 'Sweden', phoneCode: '46', isoCountryCode: 'SE' },
+    { name: 'Norway', phoneCode: '47', isoCountryCode: 'NO' },
+    { name: 'Albania', phoneCode: '355', isoCountryCode: 'AL' },
+    { name: 'Andorra', phoneCode: '376', isoCountryCode: 'AD' },
+    { name: 'Armenia', phoneCode: '374', isoCountryCode: 'AM' },
+    { name: 'Austria', phoneCode: '43', isoCountryCode: 'AT' },
+    { name: 'Azerbaijan', phoneCode: '994', isoCountryCode: 'AZ' },
+    { name: 'Belarus', phoneCode: '375', isoCountryCode: 'BY' },
+    { name: 'Bosnia and Herzegovina', phoneCode: '387', isoCountryCode: 'BA' },
+    { name: 'Bulgaria', phoneCode: '359', isoCountryCode: 'BG' },
+    { name: 'Croatia', phoneCode: '385', isoCountryCode: 'HR' },
+    { name: 'Cyprus', phoneCode: '357', isoCountryCode: 'CY' },
+    { name: 'Czech Republic', phoneCode: '420', isoCountryCode: 'CZ' },
+    { name: 'Denmark', phoneCode: '45', isoCountryCode: 'DK' },
+    { name: 'Estonia', phoneCode: '372', isoCountryCode: 'EE' },
+    { name: 'Finland', phoneCode: '358', isoCountryCode: 'FI' },
+    { name: 'Georgia', phoneCode: '995', isoCountryCode: 'GE' },
+    { name: 'Hungary', phoneCode: '36', isoCountryCode: 'HU' },
+    { name: 'Iceland', phoneCode: '354', isoCountryCode: 'IS' },
+    { name: 'Ireland', phoneCode: '353', isoCountryCode: 'IE' },
+    { name: 'Kazakhstan', phoneCode: '7', isoCountryCode: 'KZ' },
+    { name: 'Kosovo', phoneCode: '383', isoCountryCode: 'XK' },
+    { name: 'Latvia', phoneCode: '371', isoCountryCode: 'LV' },
+    { name: 'Liechtenstein', phoneCode: '423', isoCountryCode: 'LI' },
+    { name: 'Lithuania', phoneCode: '370', isoCountryCode: 'LT' },
+    { name: 'Luxembourg', phoneCode: '352', isoCountryCode: 'LU' },
+    { name: 'Malta', phoneCode: '356', isoCountryCode: 'MT' },
+    { name: 'Moldova', phoneCode: '373', isoCountryCode: 'MD' },
+    { name: 'Monaco', phoneCode: '377', isoCountryCode: 'MC' },
+    { name: 'Montenegro', phoneCode: '382', isoCountryCode: 'ME' },
+    { name: 'North Macedonia', phoneCode: '389', isoCountryCode: 'MK' },
+    { name: 'San Marino', phoneCode: '378', isoCountryCode: 'SM' },
+    { name: 'Serbia', phoneCode: '381', isoCountryCode: 'RS' },
+    { name: 'Slovakia', phoneCode: '421', isoCountryCode: 'SK' },
+    { name: 'Slovenia', phoneCode: '386', isoCountryCode: 'SI' },
+    { name: 'Switzerland', phoneCode: '41', isoCountryCode: 'CH' },
+    { name: 'Turkey', phoneCode: '90', isoCountryCode: 'TR' },
+    { name: 'Vatican City', phoneCode: '379', isoCountryCode: 'VA' }
+];
+
 
   public getCountries(): Country[] {
     return this.countries;
@@ -69,5 +71,35 @@ export class CountryService {
 
   public getSortedCountries(): Country[] {
     return [...this.countries].sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  public getCountryNameFromPhoneCode(code: string): string {
+    const country = this.countries.find(c => c.phoneCode === code);
+    if(country){
+      return country.name;
+    }else{
+      console.error('Country not found. Country phone code: ' + code);
+      return '';
+    }
+  }
+
+  public getCountryNameFromIsoCountryCode(isoCode: string): string {
+    const country = this.countries.find(c => c.isoCountryCode === isoCode);
+    if(country){
+      return country.name;
+    }else{
+      console.error('Country not found. Country phone code: ' + isoCode);
+      return '';
+    }
+  }
+
+  public getCountryPhoneFromIsoCountryCode(isoCode: string): string {
+    const country = this.countries.find(c => c.isoCountryCode === isoCode);
+    if(country){
+      return country.phoneCode;
+    }else{
+      console.error('Country not found. Country phone code: ' + isoCode);
+      return '';
+    }
   }
 }

@@ -37,7 +37,7 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
 
   public tempPowers: TempPower[] = []; //for detail view
   public countries: Country[] = [];
-  public selectedCountryCode: string = '';
+  public selectedCountryIsoCode: string = '';
   public hasIn2OrganizationId = false;
   public addedMandatorLastName: string = '';
 
@@ -50,7 +50,7 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
       const mobilePhoneControl = form?.form.get('mobile_phone');
       return (
         !!this.credential.mobile_phone &&
-        (!this.selectedCountryCode || this.selectedCountryCode === '') &&
+        (!this.selectedCountryIsoCode || this.selectedCountryIsoCode === '') &&
         ((mobilePhoneControl?.dirty ?? false))
       );
     },
@@ -112,11 +112,13 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
 
   public submitCredential(): void {
     //this condition is already applied in the template, so maybe it should be removed
+    const phonePrefix = this.countryService.getCountryPhoneFromIsoCountryCode(this.selectedCountryIsoCode);
+    
     if (this.hasSelectedPower() && this.selectedPowersHaveFunction()) {
       this.formService
         .submitCredential(
           this.credential,
-          this.selectedCountryCode,
+          phonePrefix,
           this.formService.getPlainAddedPowers(),
           this.mandator,
           this.addedMandatorLastName,
@@ -126,7 +128,7 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
           this.resetForm.bind(this)
         )
         .subscribe({
-          //service open popup too
+          //service opens popup too
           next: () => {
             this.popupMessage = this.translate.instant("credentialIssuance.success");
             //navigates before popup is shown
@@ -178,6 +180,30 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
     });
   }
 
+   //functions that are used in template; it may be better to avoid executing them in template
+  public getCountryNameFromIsoCode(code: string): string {
+    return this.countryService.getCountryNameFromIsoCountryCode(code);
+  }
+  public getCountryPhoneFromIsoCountryCode(code: string): string {
+    return this.countryService.getCountryPhoneFromIsoCountryCode(code);
+  }
+
+  public hasSelectedPower(): boolean{
+    return this.formService.hasSelectedPower();
+  }
+
+  public selectedPowersHaveFunction(): boolean {
+    return this.formService.powersHaveFunction();
+  }
+
+  public showReminderButton(): boolean{
+    return (this.viewMode === 'detail') && ((this.credentialStatus === 'WITHDRAWN') || (this.credentialStatus === 'PEND_DOWNLOAD'))
+  }
+
+  public ngOnDestroy(): void {
+    this.formService.reset();
+  }
+
   private initializeCredential(): Mandatee {
     return {
       first_name: '',
@@ -196,26 +222,6 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
       serialNumber: '',
       country: ''
     };
-  }  //functions that are used in template; it may be better to avoid executing them in template
-  public getCountryName(code: string): string {
-    const country = this.countries.find(c => c.code === code);
-    return country ? country.name : '';
-  }
-
-  public hasSelectedPower(): boolean{
-    return this.formService.hasSelectedPower();
-  }
-
-  public selectedPowersHaveFunction(): boolean {
-    return this.formService.powersHaveFunction();
-  }
-
-  public showReminderButton(): boolean{
-    return (this.viewMode === 'detail') && ((this.credentialStatus === 'WITHDRAWN') || (this.credentialStatus === 'PEND_DOWNLOAD'))
-  }
-
-  public ngOnDestroy(): void {
-    this.formService.reset();
   }
 
 }
