@@ -5,7 +5,8 @@ import { of, throwError } from 'rxjs';
 import { CredentialDetailComponent } from './credential-detail.component';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
-import { CredentialData, LEARCredential } from "../../../../core/models/vc/learCredential.interface";
+import { LEARCredentialEmployee } from "../../../../core/models/entity/lear-credential-employee.entity";
+import { LearCredentialEmployeeDataDetail } from "../../../../core/models/dto/lear-credential-employee-data-detail.dto";
 
 describe('CredentialDetailComponent', () => {
   let component: CredentialDetailComponent;
@@ -54,7 +55,7 @@ describe('CredentialDetailComponent', () => {
   });
 
   it('should load credential details on init', () => {
-    const mockCredentialManagement: LEARCredential = {
+    const mockCredentialManagement: LEARCredentialEmployee = {
 
         "sub": null,
         "nbf": "2024-05-30T14:01:03.809829546Z",
@@ -99,7 +100,7 @@ describe('CredentialDetailComponent', () => {
         "jti": "e2975afc-6df2-4183-b84b-d797133650eb"
     }
 
-    const mockCredential: CredentialData = {
+    const mockCredential: LearCredentialEmployeeDataDetail = {
       procedure_id: '1',
       credential_status:'Active',
       credential: mockCredentialManagement,

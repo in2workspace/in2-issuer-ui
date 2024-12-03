@@ -6,7 +6,7 @@ import { CredentialProcedureService } from 'src/app/core/services/credential-pro
 import { AuthService } from 'src/app/core/services/auth.service';
 import { MatSort } from '@angular/material/sort';
 import { FormCredentialService } from "../../shared/components/form-credential/services/form-credential.service";
-import { CredentialProcedure, ProcedureResponse } from "../../core/models/procedure/procedureResponse.interface";
+import { CredentialProcedure, ProcedureResponse } from "../../core/models/dto/procedure-response.dto";
 
 @Component({
   selector: 'app-credential-management',

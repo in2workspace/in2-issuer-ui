@@ -2,8 +2,8 @@ import { inject, Injectable } from '@angular/core';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { UserData } from "../models/userData.interface";
-import { Mandator, Power, Signer } from "../models/vc/learCredential.interface";
+import { UserDataAuthenticationResponse } from "../models/dto/user-data-authentication-response.dto";
+import { Mandator, Power, Signer } from "../models/entity/lear-credential-employee.entity";
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +11,7 @@ import { Mandator, Power, Signer } from "../models/vc/learCredential.interface";
 export class AuthService {
   private readonly isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
-  private readonly userDataSubject = new BehaviorSubject<UserData |null>(null);
+  private readonly userDataSubject = new BehaviorSubject<UserDataAuthenticationResponse |null>(null);
   private readonly tokenSubject = new BehaviorSubject<string>('');
   private readonly mandatorSubject = new BehaviorSubject<Mandator | null>(null);
   private readonly signerSubject = new BehaviorSubject<Signer | null>(null);
@@ -66,11 +66,11 @@ export class AuthService {
     }));
   }
 
-  private extractVCFromUserData(userData: UserData) {
+  private extractVCFromUserData(userData: UserDataAuthenticationResponse) {
     return userData.vc ? JSON.parse(userData.vc) : null;
   }
 
-  private extractUserPowers(userData: UserData): Power[] {
+  private extractUserPowers(userData: UserDataAuthenticationResponse): Power[] {
     try {
       const vcObject = this.extractVCFromUserData(userData)
       return vcObject?.credentialSubject?.mandate?.power || [];
@@ -139,7 +139,7 @@ export class AuthService {
     return this.isAuthenticated$;
   }
 
-  public getUserData(): Observable<UserData | null> {
+  public getUserData(): Observable<UserDataAuthenticationResponse | null> {
     return this.userDataSubject.asObservable();
   }
 

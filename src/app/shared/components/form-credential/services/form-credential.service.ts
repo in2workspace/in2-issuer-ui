@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { TempPower } from "../../../../core/models/tempPower.interface";
+import { TempPower } from "../../../../core/models/temporal/temp-power.interface";
 import { PopupComponent } from '../../popup/popup.component';
-import { ProcedureRequest } from 'src/app/core/models/procedure/procedureRequest.interface';
+import { ProcedureRequest } from 'src/app/core/models/dto/procedure-request.dto';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
-import { Mandatee, Mandator, Power } from "../../../../core/models/vc/learCredential.interface";
+import { Mandatee, Mandator, Power } from "../../../../core/models/entity/lear-credential-employee.entity";
 
 @Injectable({
   providedIn: 'root'

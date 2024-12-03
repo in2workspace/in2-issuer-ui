@@ -3,9 +3,9 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { CredentialProcedureService } from './credential-procedure.service';
 import { environment } from 'src/environments/environment';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ProcedureRequest } from '../models/procedure/procedureRequest.interface';
-import { ProcedureResponse } from "../models/procedure/procedureResponse.interface";
-import { CredentialData } from "../models/vc/learCredential.interface";
+import { ProcedureRequest } from '../models/dto/procedure-request.dto';
+import { ProcedureResponse } from "../models/dto/procedure-response.dto";
+import { LearCredentialEmployeeDataDetail } from "../models/dto/lear-credential-employee-data-detail.dto";
 
 const notFoundErrorResp = new HttpErrorResponse({
   error: '404 error',
@@ -77,7 +77,7 @@ describe('CredentialProcedureService', () => {
 
   it('should fetch credential procedure by id successfully', () => {
     const procedureId = '1';
-    const mockData: CredentialData =
+    const mockData: LearCredentialEmployeeDataDetail =
       { procedure_id: '1', credential_status: 'completed', credential: { mandatee: {}, mandator: {}, power: [] } as any }
     ;
 

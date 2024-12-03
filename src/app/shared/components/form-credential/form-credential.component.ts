@@ -7,8 +7,8 @@ import { AuthService } from 'src/app/core/services/auth.service';
 import { PopupComponent } from '../popup/popup.component';
 import { Router } from '@angular/router';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { TempPower } from "../../../core/models/tempPower.interface";
-import { Mandatee, OrganizationDetails, Power } from "../../../core/models/vc/learCredential.interface";
+import { TempPower } from "../../../core/models/temporal/temp-power.interface";
+import { Mandatee, OrganizationDetails, Power } from "../../../core/models/entity/lear-credential-employee.entity";
 
 @Component({
   selector: 'app-form-credential',

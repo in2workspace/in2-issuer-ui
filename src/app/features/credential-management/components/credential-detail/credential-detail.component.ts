@@ -1,7 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
-import { CredentialData, LEARCredential } from "../../../../core/models/vc/learCredential.interface";
+import { LEARCredentialEmployee } from "../../../../core/models/entity/lear-credential-employee.entity";
+import {LearCredentialEmployeeDataDetail} from "../../../../core/models/dto/lear-credential-employee-data-detail.dto";
 
 @Component({
   selector: 'app-credential-detail',
@@ -9,7 +10,7 @@ import { CredentialData, LEARCredential } from "../../../../core/models/vc/learC
 })
 export class CredentialDetailComponent implements OnInit {
   public credentialId: string | null = null;
-  public credential: LEARCredential | null = null;
+  public credential: LEARCredentialEmployee | null = null;
   public credentialStatus: string | null = null;
 
   private readonly route = inject(ActivatedRoute);
@@ -26,7 +27,7 @@ export class CredentialDetailComponent implements OnInit {
 
   public loadCredentialDetail(procedureId: string): void {
     this.credentialProcedureService.getCredentialProcedureById(procedureId).subscribe({
-      next: (credentials: CredentialData) => {
+      next: (credentials: LearCredentialEmployeeDataDetail) => {
         this.credential = credentials['credential'];
         this.credentialStatus = credentials['credential_status'];
       },

@@ -1,4 +1,4 @@
-export interface UserData {
+export interface UserDataAuthenticationResponse {
   sub: string;
   commonName: string;
   country: string;

@@ -1,4 +1,4 @@
-import { CredentialManagement } from "./procedureRequest.interface";
+import { LearCredentialEmployeePayload } from "./lear-credential-employee-payload.dto";
 
 export interface ProcedureResponse {
   credential_procedures: CredentialProcedure[];
@@ -10,7 +10,7 @@ export interface CredentialProcedure {
     full_name: string;
     status: string;
     updated: string;
-    credential: CredentialManagement;
+    credential: LearCredentialEmployeePayload;
   }
 }
 

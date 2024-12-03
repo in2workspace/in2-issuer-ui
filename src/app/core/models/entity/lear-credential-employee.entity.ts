@@ -1,10 +1,4 @@
-export interface CredentialData {
-  procedure_id: string;
-  credential_status: string;
-  credential: LEARCredential;
-}
-
-export interface LEARCredential {
+export interface LEARCredentialEmployee {
   sub: string | null;
   nbf: string;
   iss: string;
