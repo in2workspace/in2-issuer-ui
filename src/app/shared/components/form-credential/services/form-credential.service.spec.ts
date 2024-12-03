@@ -1,26 +1,23 @@
 import { TestBed } from '@angular/core/testing';
-import {FormCredentialService, isCertification, isProductOffering} from './form-credential.service';
-import {Power} from 'src/app/core/models/power.interface';
-import {TempPower} from '../../power/power/power.component';
-import {CredentialMandatee} from 'src/app/core/models/credendentialMandatee.interface';
-import {Mandator} from 'src/app/core/models/madator.interface';
-import {of, throwError} from 'rxjs';
-import {TranslateModule, TranslateService} from '@ngx-translate/core';
-import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {MatPaginatorModule} from '@angular/material/paginator';
-import {MatTableModule} from '@angular/material/table';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {RouterModule} from '@angular/router';
-import {AuthModule} from 'angular-auth-oidc-client';
-import {SharedModule} from 'src/app/shared/shared.module';
-import {PopupComponent} from '../../popup/popup.component';
-import {Signer} from "../../../../core/models/credentialProcedure.interface";
+import { FormCredentialService, isCertification, isProductOffering } from './form-credential.service';
+import { of, throwError } from 'rxjs';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterModule } from '@angular/router';
+import { AuthModule } from 'angular-auth-oidc-client';
+import { SharedModule } from 'src/app/shared/shared.module';
+import { PopupComponent } from '../../popup/popup.component';
+import { TempPower } from "../../../../core/models/temporal/temp-power.interface";
+import { Mandatee, Mandator, Power, Signer } from "../../../../core/models/entity/lear-credential-employee.entity";
 
 describe('FormCredentialService', () => {
   let service: FormCredentialService;
   let popupComponent: PopupComponent;
   let credentialProcedureService: any;
-  let mockCredential: CredentialMandatee;;
+  let mockCredential: Mandatee;
   let mockSelectedCountry: string;
   let mockMandator: Mandator;
   let mockSigner: Signer;
@@ -50,10 +47,10 @@ describe('FormCredentialService', () => {
     credentialProcedureService = {
       createProcedure: jest.fn()
     };
-  
+
     // Mock the return value of createProcedure
     credentialProcedureService.createProcedure = jest.fn().mockReturnValue(of({}));
-  
+
     mockCredential = {
       first_name: 'John',
       last_name: 'Doe',
@@ -120,7 +117,7 @@ describe('FormCredentialService', () => {
   });
 
   it('should reset the form correctly', () => {
-    const credential: CredentialMandatee = service.resetForm();
+    const credential: Mandatee = service.resetForm();
 
     expect(credential.first_name).toBe('');
     expect(credential.last_name).toBe('');
@@ -172,7 +169,7 @@ describe('FormCredentialService', () => {
     jest.spyOn(service, 'resetForm');
     jest.spyOn(popupComponent, 'showPopup');
     credentialProcedureService.createProcedure.mockReturnValue(of({}));
-  
+
     service.submitCredential(
       mockCredential,
       mockSelectedCountry,
@@ -192,15 +189,15 @@ describe('FormCredentialService', () => {
   });
 
   it('should append country prefix to mobile_phone if not present', (done) => {
-    const credential: CredentialMandatee = {
+    const credential: Mandatee = {
       first_name: 'John',
       last_name: 'Doe',
       email: 'john.doe@example.com',
       mobile_phone: '123456789',
     };
-  
+
     credentialProcedureService.createProcedure.mockReturnValue(of({}));
-  
+
     service.submitCredential(
       credential,
       mockSelectedCountry,
@@ -218,16 +215,16 @@ describe('FormCredentialService', () => {
   });
 
   it('should not append country prefix to mobile_phone if already present', (done) => {
-    const credential: CredentialMandatee = {
+    const credential: Mandatee = {
       first_name: 'John',
       last_name: 'Doe',
       email: 'john.doe@example.com',
       mobile_phone: '+34 123456789', // Already has country prefix
     };
     const resetForm = jest.fn();
-  
+
     credentialProcedureService.createProcedure.mockReturnValue(of({})); // Mock Observable return
-  
+
     service.submitCredential(
       credential,
       mockSelectedCountry,
@@ -248,7 +245,7 @@ describe('FormCredentialService', () => {
   it('should call popupComponent.showPopup on success', (done) => {
     jest.spyOn(popupComponent, 'showPopup');
     credentialProcedureService.createProcedure.mockReturnValue(of({}));
-  
+
     service.submitCredential(
       mockCredential,
       mockSelectedCountry,
@@ -267,7 +264,7 @@ describe('FormCredentialService', () => {
   it('should call popupComponent.showPopup on error', (done) => {
     jest.spyOn(popupComponent, 'showPopup');
     credentialProcedureService.createProcedure.mockReturnValue(throwError(() => new Error('error')));
-  
+
     service.submitCredential(
       mockCredential,
       mockSelectedCountry,
@@ -294,7 +291,7 @@ describe('FormCredentialService', () => {
       tmf_type: 'expectedType',
       execute: true,
     };
-  
+
     const checkTmfSpy = jest.spyOn(service, 'checkTmfFunction').mockReturnValue(expectedPower);
     credentialProcedureService.createProcedure.mockReturnValue(of({}));
 
@@ -311,7 +308,7 @@ describe('FormCredentialService', () => {
 
    expect(credentialProcedureService.createProcedure).toHaveBeenCalled();
     expect(checkTmfSpy).toHaveBeenCalled();
-      
+
     expect(credentialProcedureService.createProcedure).toHaveBeenCalledWith(
       expect.objectContaining({
         payload: expect.objectContaining({
@@ -321,7 +318,6 @@ describe('FormCredentialService', () => {
     );
     checkTmfSpy.mockRestore();
   });
-  
 
   it('should add "Upload" to tmf_action if option.upload is true', () => {
     const option: TempPower = {
@@ -406,21 +402,21 @@ describe('FormCredentialService', () => {
       upload: true,
     };
     const tmf_action = ['InitialAction'];
-  
+
     const result = isCertification(tempPower, tmf_action);
-  
+
     expect(result).toEqual(['InitialAction', 'Upload']);
   });
-  
+
   it('should return tmf_action unchanged for isCertification if no TempPower properties are true', () => {
     const tempPower: TempPower = {
       ...mockTempPower,
       tmf_action: ''
     };
     const tmf_action = ['InitialAction'];
-  
+
     const result = isCertification(tempPower, tmf_action);
-  
+
     expect(result).toEqual(['InitialAction']);
   });
 
@@ -433,24 +429,24 @@ describe('FormCredentialService', () => {
       delete: true,
     };
     const tmf_action = ['InitialAction'];
-  
+
     const result = isProductOffering(tempPower, tmf_action);
-  
+
     expect(result).toEqual(['InitialAction', 'Create', 'Update', 'Delete']);
   });
-  
+
   it('should return tmf_action unchanged for isProductOffering if create, update, and delete are false', () => {
     const tempPower: TempPower = {
       ...mockTempPower,
       tmf_action: ''
     };
     const tmf_action = ['InitialAction'];
-  
+
     const result = isProductOffering(tempPower, tmf_action);
-  
+
     expect(result).toEqual(['InitialAction']);
   });
-  
+
   it('should return the correct object when tmf_function is Onboarding', () => {
     const tempPower: TempPower = {
       ...mockTempPower,
@@ -460,9 +456,9 @@ describe('FormCredentialService', () => {
       tmf_type: 'type1',
       execute: true
     };
-  
+
     const result = service.checkTmfFunction(tempPower);
-  
+
     expect(result).toEqual({
       tmf_action: 'Execute',
       tmf_domain: 'domain1',
@@ -470,7 +466,7 @@ describe('FormCredentialService', () => {
       tmf_type: 'type1'
     });
   });
-  
+
   it('should call isCertification and return the correct object when tmf_function is Certification', () => {
     const tempPower: TempPower = {
       ...mockTempPower,
@@ -480,9 +476,9 @@ describe('FormCredentialService', () => {
       tmf_type: 'type2',
       upload: true
     };
-    
+
     const result = service.checkTmfFunction(tempPower);
-  
+
     expect(result).toEqual({
       tmf_action: ['Upload'],
       tmf_domain: 'domain2',
@@ -490,7 +486,7 @@ describe('FormCredentialService', () => {
       tmf_type: 'type2'
     });
   });
-  
+
   it('should call isProductOffering and return the correct object when tmf_function is ProductOffering', () => {
     const tempPower: TempPower = {
       ...mockTempPower,
@@ -501,9 +497,9 @@ describe('FormCredentialService', () => {
       create: true,
       update: true
     };
-    
+
     const result = service.checkTmfFunction(tempPower);
-  
+
     expect(result).toEqual({
       tmf_action: ['Create', 'Update'],
       tmf_domain: 'domain3',
@@ -511,7 +507,7 @@ describe('FormCredentialService', () => {
       tmf_type: 'type3'
     });
   });
-  
+
   it('should return the correct object when tmf_function does not match any case', () => {
     const tempPower: TempPower = {
       ...mockTempPower,
@@ -520,9 +516,9 @@ describe('FormCredentialService', () => {
       tmf_function: 'UnknownFunction',
       tmf_type: 'type4'
     };
-  
+
     const result = service.checkTmfFunction(tempPower);
-  
+
     expect(result).toEqual({
       tmf_action: [],
       tmf_domain: 'domain4',
@@ -530,8 +526,6 @@ describe('FormCredentialService', () => {
       tmf_type: 'type4'
     });
   });
-  
-
 });
 
 

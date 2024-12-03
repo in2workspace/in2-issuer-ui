@@ -13,14 +13,16 @@ import { environment } from 'src/environments/environment';
   styleUrl: './credential-offer-onboarding.component.scss'
 })
 export class CredentialOfferOnboardingComponent implements OnInit{
-  private router = inject(Router);
-  private route = inject(ActivatedRoute);
   private transactionCode = ""
   public walletUrl = environment.wallet_url;
+
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+
   public ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       this.transactionCode = params['transaction_code'];
-      
+
     });
   }
 public redirect() {

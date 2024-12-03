@@ -3,7 +3,7 @@ import { CredencialOfferComponent } from './credencial-offer.component';
 import { CommonModule } from '@angular/common';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MaterialModule } from 'src/app/material.module';
 import { RouterModule, Router } from '@angular/router';
 import { SharedModule } from 'src/app/shared/shared.module';
@@ -24,7 +24,6 @@ describe('CredencialOfferComponent', () => {
   let alertService: Partial<AlertService>;
   let router: Router;
   let route: ActivatedRoute;
-  let httpMock: HttpTestingController;
 
   beforeEach(async () => {
     alertService = {
@@ -63,7 +62,6 @@ describe('CredencialOfferComponent', () => {
     alertService = TestBed.inject(AlertService);
     route = TestBed.inject(ActivatedRoute);
     router = TestBed.inject(Router);
-    httpMock = TestBed.inject(HttpTestingController);
     fixture.detectChanges();
   });
 
@@ -113,11 +111,11 @@ describe('CredencialOfferComponent', () => {
   it('should fetch credential offer and set qrCodeData when transaction code is present and response is valid', () => {
     const spyRouterNavigate = jest.spyOn(router, 'navigate');
     const mockResponse = 'mockQRCodeData';
-    
+
     credentialProcedureService.getCredentialOffer!.mockReturnValue(of(mockResponse));
-  
+
     component.ngOnInit();
-  
+
     expect(credentialProcedureService.getCredentialOffer).toHaveBeenCalledWith('testTransactionCode');
     expect(component.qrCodeData).toBe(mockResponse);
     expect(spyRouterNavigate).toHaveBeenCalledWith([], {
@@ -126,12 +124,12 @@ describe('CredencialOfferComponent', () => {
       queryParamsHandling: 'merge'
     });
   });
-  
+
   it('should show alert when no data is returned from getCredentialOffer', () => {
     credentialProcedureService.getCredentialOffer!.mockReturnValue(of(null));
-  
+
     component.ngOnInit();
-  
+
     expect(credentialProcedureService.getCredentialOffer).toHaveBeenCalledWith('testTransactionCode');
     expect(alertService.showAlert).toHaveBeenCalledWith('No QR code available.', 'error');
   });

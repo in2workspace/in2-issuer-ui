@@ -1,10 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { CredentialProcedureService } from './credential-procedure.service';
-import { CredentialData, CredentialProcedureResponse } from '../models/credentialProcedure.interface';
 import { environment } from 'src/environments/environment';
 import { HttpErrorResponse } from '@angular/common/http';
-import { IssuanceRequest } from '../models/issuanceRequest.interface';
+import { ProcedureRequest } from '../models/dto/procedure-request.dto';
+import { ProcedureResponse } from "../models/dto/procedure-response.dto";
+import { LearCredentialEmployeeDataDetail } from "../models/dto/lear-credential-employee-data-detail.dto";
 
 const notFoundErrorResp = new HttpErrorResponse({
   error: '404 error',
@@ -13,7 +14,7 @@ const notFoundErrorResp = new HttpErrorResponse({
 
 const serverErrorResp = new HttpErrorResponse({
   error: '500 error',
-  status: 500, 
+  status: 500,
   statusText: 'Server Error'
 });
 
@@ -45,7 +46,7 @@ describe('CredentialProcedureService', () => {
   });
 
   it('should fetch credential procedures successfully', () => {
-    const mockData: CredentialProcedureResponse = {credential_procedures:[
+    const mockData: ProcedureResponse = {credential_procedures:[
       { credential_procedure:{procedure_id: '1', status: 'completed', full_name: 'John Doe', updated: '2023-01-01', credential: { mandatee: {}, mandator: {}, power: [] } as any}},
       { credential_procedure:{ procedure_id: '2', status: 'pending', full_name: 'Jane Doe', updated: '2023-01-02', credential: { mandatee: {}, mandator: {}, power: [] } as any }}
     ]};
@@ -76,7 +77,7 @@ describe('CredentialProcedureService', () => {
 
   it('should fetch credential procedure by id successfully', () => {
     const procedureId = '1';
-    const mockData: CredentialData = 
+    const mockData: LearCredentialEmployeeDataDetail =
       { procedure_id: '1', credential_status: 'completed', credential: { mandatee: {}, mandator: {}, power: [] } as any }
     ;
 
@@ -104,7 +105,7 @@ describe('CredentialProcedureService', () => {
   });
 
   it('should save credential procedure successfully', () => {
-    const IssuanceRequestMock:IssuanceRequest = {
+    const IssuanceRequestMock:ProcedureRequest = {
       schema: "LEARCredentialEmployee",
       format: "jwt_vc_json",
       payload: {
@@ -142,7 +143,7 @@ describe('CredentialProcedureService', () => {
   });
 
   it('should handle error when saving credential procedure', () => {
-    const IssuanceRequestMock:IssuanceRequest = {
+    const IssuanceRequestMock:ProcedureRequest = {
       schema: "LEARCredentialEmployee",
       format: "jwt_vc_json",
       payload: {
@@ -172,7 +173,7 @@ describe('CredentialProcedureService', () => {
     };
     const errorResponse = new HttpErrorResponse({
       error: '500 error',
-      status: 500, 
+      status: 500,
       statusText: 'Server Error'
     });
 
@@ -203,7 +204,7 @@ describe('CredentialProcedureService', () => {
     const procedureId = '1';
     const errorResponse = new HttpErrorResponse({
       error: '500 error',
-      status: 500, 
+      status: 500,
       statusText: 'Server Error'
     });
 
@@ -234,27 +235,27 @@ describe('CredentialProcedureService', () => {
   it('should return raw response if qrCode is not present in JSON response', () => {
     const transactionCode = 'abc123';
     const mockResponse = JSON.stringify({});
-  
+
     service.getCredentialOffer(transactionCode).subscribe(data => {
       expect(data).toBe(mockResponse);
     });
-  
+
     const req = httpMock.expectOne(`${credentialOfferUrl}/transaction-code/${transactionCode}`);
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });
-  
+
   it('should return raw response if JSON.parse fails', () => {
     const transactionCode = 'abc123';
     const invalidJSONResponse = 'Invalid JSON string';
-  
+
     service.getCredentialOffer(transactionCode).subscribe(data => {
       expect(data).toBe(invalidJSONResponse);
     });
-  
+
     const req = httpMock.expectOne(`${credentialOfferUrl}/transaction-code/${transactionCode}`);
     expect(req.request.method).toBe('GET');
-    req.flush(invalidJSONResponse);  
+    req.flush(invalidJSONResponse);
   });
 
   it('should handle error when getting credential offer', () => {
@@ -289,28 +290,26 @@ describe('CredentialProcedureService', () => {
     const mockErrorEvent = new ErrorEvent('Network error', {
       message: 'Client-side error occurred',
     });
-  
+
     const mockErrorResponse = new HttpErrorResponse({
       error: mockErrorEvent,
       status: 0,
       statusText: 'Client-side error'
     });
-  
+
     const errorMessage = service['handleError'](mockErrorResponse);
-  
+
     errorMessage.subscribe({
       error: (error: string) => {
         expect(error).toBe('Client-side error: Client-side error occurred');
       }
     });
   });
-  
+
   it('should return server-side error message if error is not an ErrorEvent', () => {
-    
-    const mockErrorResponse = serverErrorResp;
-  
-    const errorMessage = service['handleError'](mockErrorResponse);
-  
+
+    const errorMessage = service['handleError'](serverErrorResp);
+
     errorMessage.subscribe({
       error: (error: string) => {
         expect(error).toBe('Server-side error: 500 Internal Server Error');

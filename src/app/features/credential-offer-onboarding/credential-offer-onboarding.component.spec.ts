@@ -11,40 +11,38 @@ import { of } from 'rxjs';
 describe('CredentialOfferOnboardingComponent', () => {
   let component: CredentialOfferOnboardingComponent;
   let fixture: ComponentFixture<CredentialOfferOnboardingComponent>;
-  let route: ActivatedRoute;
   let router: Router;
   const dummyCode = 'dummy-code';
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CredentialOfferOnboardingComponent, AuthModule.forRoot({config:{}})],
-      providers:[
+      imports: [CredentialOfferOnboardingComponent, AuthModule.forRoot({config: {}})],
+      providers: [
         {
-            provide: ActivatedRoute,
-            useValue: {
-              queryParams: of({ transaction_code: dummyCode })
-            }
+          provide: ActivatedRoute,
+          useValue: {
+            queryParams: of({transaction_code: dummyCode})
+          }
         },
         Router,
         HttpClient,
         HttpHandler,
         importProvidersFrom(
-            TranslateModule.forRoot({
-              loader: {
-                provide: TranslateLoader,
-                useFactory: HttpLoaderFactory,
-                deps: [HttpClient],
-              },
-            })
-          )
+          TranslateModule.forRoot({
+            loader: {
+              provide: TranslateLoader,
+              useFactory: HttpLoaderFactory,
+              deps: [HttpClient],
+            },
+          })
+        )
       ],
       schemas: [NO_ERRORS_SCHEMA]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(CredentialOfferOnboardingComponent);
     component = fixture.componentInstance;
-    route = TestBed.inject(ActivatedRoute);
     router = TestBed.inject(Router);
     jest.spyOn(router, 'navigate');
     fixture.detectChanges();

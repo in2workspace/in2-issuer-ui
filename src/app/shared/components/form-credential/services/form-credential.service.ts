@@ -1,29 +1,21 @@
 import { Injectable } from '@angular/core';
-import { TempPower } from '../../power/power/power.component';
-import { Power } from 'src/app/core/models/power.interface';
-import { CredentialMandatee } from 'src/app/core/models/credendentialMandatee.interface';
-import { Mandator } from 'src/app/core/models/madator.interface';
+import { TempPower } from "../../../../core/models/temporal/temp-power.interface";
 import { PopupComponent } from '../../popup/popup.component';
-import { IssuanceRequest } from 'src/app/core/models/issuanceRequest.interface';
-import {BehaviorSubject, Observable} from 'rxjs';
+import { ProcedureRequest } from 'src/app/core/models/dto/procedure-request.dto';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
+import { Mandatee, Mandator, Power } from "../../../../core/models/entity/lear-credential-employee.entity";
 
 @Injectable({
   providedIn: 'root'
 })
 export class FormCredentialService {
 
-  private showMandatorSubject = new BehaviorSubject<boolean>(false);
+  private readonly showMandatorSubject = new BehaviorSubject<boolean>(false);
   showMandator$ = this.showMandatorSubject.asObservable();
-
-  constructor() {}
 
   setShowMandator(value: boolean): void {
     this.showMandatorSubject.next(value);
-  }
-
-  getShowMandator(): boolean {
-    return this.showMandatorSubject.value;
   }
 
   public convertToTempPower(power: Power): TempPower {
@@ -42,7 +34,7 @@ export class FormCredentialService {
     };
   }
 
-  public resetForm(): CredentialMandatee {
+  public resetForm(): Mandatee {
     return { first_name: '', last_name: '', email: '', mobile_phone: '' };
   }
 
@@ -57,7 +49,7 @@ export class FormCredentialService {
   }
 
   public submitCredential(
-    credential: CredentialMandatee,
+    credential: Mandatee,
     selectedCountry: string,
     addedOptions: TempPower[],
     mandator: Mandator | null,
@@ -74,7 +66,7 @@ export class FormCredentialService {
       return this.checkTmfFunction(option);
     });
 
-    const credentialProcedure: IssuanceRequest = {
+    const credentialProcedure: ProcedureRequest = {
       schema: "LEARCredentialEmployee",
       format: "jwt_vc_json",
       payload: {
@@ -129,12 +121,14 @@ export class FormCredentialService {
   }
 
 }
+
 export function isCertification(option: TempPower,tmf_action: string[]) {
   const tmf_action2=tmf_action;
   if (option.upload) tmf_action2.push('Upload');
   if (option.attest) tmf_action2.push('Attest');
   return tmf_action2;
 }
+
 export function isProductOffering(option: TempPower,tmf_action: string[]) {
   const tmf_action2=tmf_action;
   if (option.create) tmf_action2.push('Create');

@@ -1,20 +1,14 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, NgModel, Validators} from '@angular/forms';
-import {CredentialMandatee} from 'src/app/core/models/credendentialMandatee.interface';
-import {Mandator} from 'src/app/core/models/madator.interface';
-import {Power} from 'src/app/core/models/power.interface';
-import {CredentialProcedureService} from 'src/app/core/services/credential-procedure.service';
-import {TempPower} from '../power/power/power.component';
-import {Country, CountryService} from './services/country.service';
-import {FormCredentialService} from './services/form-credential.service';
-import {AuthService} from 'src/app/core/services/auth.service';
-import {PopupComponent} from '../popup/popup.component';
-import {Router} from '@angular/router';
-import {ErrorStateMatcher} from '@angular/material/core';
-
-export interface objectWithName{
-  name:string
-}
+import { Component, EventEmitter, inject, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, NgModel, Validators } from '@angular/forms';
+import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
+import { Country } from './services/country.service';
+import { FormCredentialService } from './services/form-credential.service';
+import { AuthService } from 'src/app/core/services/auth.service';
+import { PopupComponent } from '../popup/popup.component';
+import { Router } from '@angular/router';
+import { ErrorStateMatcher } from '@angular/material/core';
+import { TempPower } from "../../../core/models/temporal/temp-power.interface";
+import { Mandatee, OrganizationDetails, Power } from "../../../core/models/entity/lear-credential-employee.entity";
 
 @Component({
   selector: 'app-form-credential',
@@ -33,21 +27,9 @@ export class FormCredentialComponent implements OnInit {
   @Input() public hideButton: boolean = true;
   @Input() public power: Power[] = [];
   @Input() public credentialStatus: string = '';
-  @Input() public credential: CredentialMandatee = {
-    first_name: '',
-    last_name: '',
-    email: '',
-    mobile_phone: '',
-  };
-  @Input() public mandator: Mandator = {
-    organizationIdentifier: "",
-    organization: "",
-    commonName: "",
-    emailAddress: "",
-    serialNumber: "",
-    country: "",
-  }
-  public signer : any ={};
+  @Input() public credential: Mandatee = this.initializeCredential();
+  @Input() public mandator: OrganizationDetails = this.initializeOrganizationDetails();
+  public signer: OrganizationDetails = this.initializeOrganizationDetails();
 
   //if mobile has been introduced and unfocused and there is not country, show error
   public countryErrorMatcher: ErrorStateMatcher = {
@@ -66,34 +48,18 @@ export class FormCredentialComponent implements OnInit {
   public tempPowers: TempPower[] = [];
   public countries: Country[] = [];
   public selectedCountryCode: string = '';
-  public actualMobilePhone: string = '';
   public credentialForm!: FormGroup;
 
   public popupMessage: string = '';
   public isPopupVisible: boolean = false;
 
-  public isValidOrganizationIdentifier = false;
   public showMandator: boolean = false;
 
-  public constructor(
-    private credentialProcedureService: CredentialProcedureService,
-    private fb: FormBuilder,
-    private countryService: CountryService,
-    private formCredentialService: FormCredentialService,
-    private authService: AuthService,
-    private router: Router
-  ) {
-    this.countries = this.countryService.getSortedCountries();
-    this.isValidOrganizationIdentifier = this.authService.hasIn2OrganizationIdentifier()
-  }
-
-
-  public get mobilePhone(): string {
-    return `${this.selectedCountryCode} ${this.credential.mobile_phone}`;
-  }
-  public set mobilePhone(value: string) {
-    this.credential.mobile_phone = value.replace(`${this.selectedCountryCode} `, '').trim();
-  }
+  private readonly credentialProcedureService = inject(CredentialProcedureService);
+  private readonly fb: FormBuilder = inject(FormBuilder);
+  private readonly formCredentialService = inject(FormCredentialService);
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
 
   public markPrefixAndPhoneAsTouched(prefixControl: NgModel, phoneControl: NgModel): void {
     if (prefixControl) {
@@ -103,7 +69,6 @@ export class FormCredentialComponent implements OnInit {
       phoneControl.control.markAsTouched();
     }
   }
-
 
   public ngOnInit(): void {
 
@@ -131,12 +96,14 @@ export class FormCredentialComponent implements OnInit {
             'country':mandator2.country}
         }
         this.authService.getSigner().subscribe(signer => {
-          this.signer = { 'organizationIdentifier': signer.organizationIdentifier,
-            'organization': signer.organization,
-            'commonName':signer.commonName,
-            'emailAddress':signer.emailAddress,
-            'serialNumber':signer.serialNumber,
-            'country':signer.country}
+          this.signer = {
+            organizationIdentifier: signer?.organizationIdentifier ?? '',
+            organization: signer?.organization ?? '',
+            commonName: signer?.commonName ?? '',
+            emailAddress: signer?.emailAddress ?? '',
+            serialNumber: signer?.serialNumber ?? '',
+            country: signer?.country ?? ''
+          }
         })
       }
     });
@@ -201,7 +168,6 @@ export class FormCredentialComponent implements OnInit {
     } else {
       this.popupMessage = 'Each power must have at least one action selected.';
       this.isPopupVisible = true;
-      return;
     }
   }
 
@@ -225,5 +191,25 @@ export class FormCredentialComponent implements OnInit {
                         'country':mandator2.country}
       }
     });
+  }
+
+  private initializeCredential(): Mandatee {
+    return {
+      first_name: '',
+      last_name: '',
+      email: '',
+      mobile_phone: ''
+    };
+  }
+
+  private initializeOrganizationDetails(): OrganizationDetails {
+    return {
+      organizationIdentifier: '',
+      organization: '',
+      commonName: '',
+      emailAddress: '',
+      serialNumber: '',
+      country: ''
+    };
   }
 }

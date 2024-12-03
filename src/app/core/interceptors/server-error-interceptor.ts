@@ -1,18 +1,13 @@
-import { Injectable } from '@angular/core';
-import {
-  HttpInterceptor, HttpRequest, HttpHandler, HttpEvent,
-  HttpErrorResponse,
-} from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
 import { AlertService } from '../services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export class ServeErrorInterceptor implements HttpInterceptor {
-  public constructor(
-    private alertService: AlertService,
-    private translate: TranslateService
-  ) {}
+  private readonly alertService = inject(AlertService);
+  private readonly translate = inject(TranslateService);
 
   public intercept(
     request: HttpRequest<unknown>,
@@ -20,7 +15,7 @@ export class ServeErrorInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
-        let errorMessage = '';
+        let errorMessage: string;
         if (error.error instanceof ErrorEvent) {
           errorMessage = `Error: ${error.error.message}`;
         } else {

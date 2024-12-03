@@ -10,7 +10,6 @@ const mockAuthResponse = {
   idToken: 'dummyIdToken'
 };
 
-
 describe('AuthService', () => {
   let service: AuthService;
   let oidcSecurityService: {
@@ -318,7 +317,6 @@ describe('AuthService', () => {
   });
 
   it('should set isAuthenticated, userData, mandator, signer, email and name when the user is authenticated', done => {
-    // Mock de respuesta de autenticación
     const mockUserData = {
       vc: JSON.stringify({
         credentialSubject: {
@@ -412,10 +410,8 @@ describe('AuthService', () => {
       accessToken: ''
     };
 
-    // Mock de la función checkAuth
     oidcSecurityService.checkAuth.mockReturnValue(of(mockAuthResponse));
 
-    // Llamamos a checkAuth
     service.checkAuth().subscribe(isAuthenticated => {
       expect(isAuthenticated).toBeFalsy();
 
@@ -433,5 +429,4 @@ describe('AuthService', () => {
       });
     });
   });
-
 });

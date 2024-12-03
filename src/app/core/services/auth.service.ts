@@ -1,38 +1,33 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { UserDataAuthenticationResponse } from "../models/dto/user-data-authentication-response.dto";
+import { Mandator, Power, Signer } from "../models/entity/lear-credential-employee.entity";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  public isAuthenticated$: Observable<boolean>;
-  private isAuthenticatedSubject: BehaviorSubject<boolean>;
-  private readonly userDataSubject: BehaviorSubject<any>;
-  private tokenSubject: BehaviorSubject<string>;
-  private mandatorSubject: BehaviorSubject<any>;
-  private signerSubject: BehaviorSubject<any>;
-  private emailSubject: BehaviorSubject<string>;
-  private nameSubject: BehaviorSubject<string>;
+  private readonly isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
+  public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
+  private readonly userDataSubject = new BehaviorSubject<UserDataAuthenticationResponse |null>(null);
+  private readonly tokenSubject = new BehaviorSubject<string>('');
+  private readonly mandatorSubject = new BehaviorSubject<Mandator | null>(null);
+  private readonly signerSubject = new BehaviorSubject<Signer | null>(null);
+  private readonly emailSubject = new BehaviorSubject<string>('');
+  private readonly nameSubject = new BehaviorSubject<string>('');
 
-  private userPowers: any[] = [];
+  private userPowers: Power[] = [];
 
-  public constructor(private oidcSecurityService: OidcSecurityService) {
-    this.isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
-    this.isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
-    this.userDataSubject = new BehaviorSubject<any>(null);
-    this.tokenSubject = new BehaviorSubject<string>('');
-    this.mandatorSubject = new BehaviorSubject<any>(null);
-    this.signerSubject = new BehaviorSubject<any>(null);
-    this.emailSubject = new BehaviorSubject<string>('');
-    this.nameSubject = new BehaviorSubject<string>('');
+  private readonly oidcSecurityService = inject(OidcSecurityService);
 
+  constructor() {
     this.checkAuth().subscribe();
   }
 
   public checkAuth(): Observable<boolean> {
-    return this.oidcSecurityService.checkAuth().pipe(map(({ isAuthenticated, userData, accessToken }) => {
+    return this.oidcSecurityService.checkAuth().pipe(map(({ isAuthenticated, userData}) => {
       this.isAuthenticatedSubject.next(isAuthenticated);
 
       if (isAuthenticated) {
@@ -71,11 +66,11 @@ export class AuthService {
     }));
   }
 
-  private extractVCFromUserData(userData: any) {
+  private extractVCFromUserData(userData: UserDataAuthenticationResponse) {
     return userData.vc ? JSON.parse(userData.vc) : null;
   }
 
-  private extractUserPowers(userData: any): any[] {
+  private extractUserPowers(userData: UserDataAuthenticationResponse): Power[] {
     try {
       const vcObject = this.extractVCFromUserData(userData)
       return vcObject?.credentialSubject?.mandate?.power || [];
@@ -84,10 +79,9 @@ export class AuthService {
     }
   }
 
-
   // POLICY: login_restriction_policy
   public hasOnboardingExecutePower(): boolean {
-    return this.userPowers.some((power: any) => {
+    return this.userPowers.some((power: Power) => {
       if (power.tmf_function === "Onboarding") {
         const action = power.tmf_action;
         return action === "Execute" || (Array.isArray(action) && action.includes("Execute"));
@@ -99,14 +93,17 @@ export class AuthService {
   // POLICY: user_powers_restriction_policy
   public hasIn2OrganizationIdentifier() : boolean {
     const userData = this.userDataSubject.getValue();
-    return "VATES-B60645900" === userData.organizationIdentifier;
+    if (userData != null){
+      return "VATES-B60645900" === userData.organizationIdentifier;
+    }
+    return false
   }
 
-  public getMandator(): Observable<any> {
+  public getMandator(): Observable<Mandator | null> {
     return this.mandatorSubject.asObservable();
   }
 
-  public getSigner(): Observable<any> {
+  public getSigner(): Observable<Signer | null> {
     return this.signerSubject.asObservable();
   }
 
@@ -142,7 +139,7 @@ export class AuthService {
     return this.isAuthenticated$;
   }
 
-  public getUserData(): Observable<any> {
+  public getUserData(): Observable<UserDataAuthenticationResponse | null> {
     return this.userDataSubject.asObservable();
   }
 

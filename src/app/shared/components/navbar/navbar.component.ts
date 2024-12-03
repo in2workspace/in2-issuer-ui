@@ -1,7 +1,7 @@
-import {Component, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
-import {TranslateService} from '@ngx-translate/core';
-import {AuthService} from 'src/app/core/services/auth.service';
+import { Component, inject, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -11,18 +11,11 @@ import {AuthService} from 'src/app/core/services/auth.service';
 export class NavbarComponent implements OnInit {
   public userName: string = '';
   public organization: string = '';
-  public languages = [
-    { code: 'en', label: 'English' },
-    { code: 'es', label: 'Español' },
-    { code: 'ca', label: 'Català' },
-  ];
   public selectedLanguage = 'en';
 
-  public constructor(
-    public translate: TranslateService,
-    private authService: AuthService,
-    private router: Router,
-  ) {}
+  private readonly translate = inject(TranslateService);
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
 
   public ngOnInit() {
     this.translate.addLangs(['en', 'es', 'ca']);

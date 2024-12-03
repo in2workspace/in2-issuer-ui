@@ -66,7 +66,14 @@ describe('NavbarComponent', () => {
   });
 
   it('should initialize with username and organization', () => {
-    const mockMandator = { organization: 'Test Organization' };
+    const mockMandator = {
+      organizationIdentifier: 'VATES-B60645900',
+      organization: 'Test Organization',
+      commonName: 'Test Common Name',
+      emailAddress: 'test@organization.com',
+      serialNumber: 'SN12345',
+      country: 'Test Country'
+    };
     const mockName = 'Test User';
 
     jest.spyOn(authService, 'getMandator').mockReturnValue(of(mockMandator));
@@ -83,17 +90,6 @@ describe('NavbarComponent', () => {
   it('should initialize with default language', () => {
     component.ngOnInit();
     expect(component.selectedLanguage).toBe('en');
-  });
-
-  it('should initialize languages', ()=>{
-    jest.spyOn(translateService, 'setDefaultLang');
-    jest.spyOn(translateService, 'addLangs');
-
-    component.ngOnInit();
-    fixture.detectChanges();
-
-    expect(translateService.setDefaultLang).toHaveBeenCalled();
-    expect(translateService.addLangs).toHaveBeenCalled();
   });
 
   it('should change language', () => {
@@ -130,5 +126,4 @@ describe('NavbarComponent', () => {
     expect(userNameElement.textContent).toContain(mockUserData.name);
     expect(organizationElement.textContent).toContain(mockUserData.organization);
   });
-
 });

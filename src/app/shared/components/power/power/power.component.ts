@@ -1,18 +1,6 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import {AuthService} from "../../../../core/services/auth.service";
-
-export interface TempPower {
-  tmf_action: string | string[];
-  tmf_domain: string;
-  tmf_function: string;
-  tmf_type: string;
-  execute: boolean;
-  create: boolean;
-  update: boolean;
-  delete: boolean;
-  upload: boolean;
-  attest: boolean;
-}
+import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
+import { AuthService } from "../../../../core/services/auth.service";
+import { TempPower } from "../../../../core/models/temporal/temp-power.interface";
 
 @Component({
   selector: 'app-power',
@@ -33,7 +21,7 @@ export class PowerComponent {
   public isPopupVisible: boolean = false;
   public organizationIdentifierIsIn2: boolean = false;
 
-  constructor(private authService: AuthService) {}
+  private readonly authService = inject(AuthService);
 
   ngOnInit(): void {
     this.organizationIdentifierIsIn2 = this.authService.hasIn2OrganizationIdentifier();

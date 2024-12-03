@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { AlertService } from 'src/app/core/services/alert.service';
@@ -11,12 +11,10 @@ import { AlertService } from 'src/app/core/services/alert.service';
 export class CredencialOfferComponent implements OnInit {
   public qrCodeData?: string;
 
-  public constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private credentialProcedureService: CredentialProcedureService,
-    private alertService: AlertService
-  ) {}
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly credentialProcedureService = inject(CredentialProcedureService);
+  private readonly alertService = inject(AlertService);
 
   public ngOnInit(): void {
     this.route.queryParams.subscribe(params => {

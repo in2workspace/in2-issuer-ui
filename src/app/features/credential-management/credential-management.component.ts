@@ -1,12 +1,12 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, inject, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { Router } from '@angular/router';
-import { CredentialProcedure, CredentialProcedureResponse } from 'src/app/core/models/credentialProcedure.interface';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { MatSort } from '@angular/material/sort';
 import { FormCredentialService } from "../../shared/components/form-credential/services/form-credential.service";
+import { CredentialProcedure, ProcedureResponse } from "../../core/models/dto/procedure-response.dto";
 
 @Component({
   selector: 'app-credential-management',
@@ -19,14 +19,12 @@ export class CredentialManagementComponent implements AfterViewInit {
   public displayedColumns: string[] = ['status', 'full_name', 'updated'];
   public dataSource = new MatTableDataSource<CredentialProcedure>();
   public isValidOrganizationIdentifier = false;
-  public constructor(
-    private credentialProcedureService: CredentialProcedureService,
-    private authService: AuthService,
-    private formCredentialService: FormCredentialService,
-    private router: Router
-  ) {
 
-  }
+  private readonly credentialProcedureService = inject(CredentialProcedureService);
+  private readonly authService = inject(AuthService);
+  private readonly formCredentialService = inject(FormCredentialService);
+  private readonly router = inject(Router);
+
   public ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -49,7 +47,7 @@ export class CredentialManagementComponent implements AfterViewInit {
 
   public loadCredentialData(): void {
     this.credentialProcedureService.getCredentialProcedures().subscribe({
-      next: (data:CredentialProcedureResponse) => {
+      next: (data:ProcedureResponse) => {
         this.dataSource.data = data.credential_procedures;
       },
       error: (error) => {
@@ -59,13 +57,11 @@ export class CredentialManagementComponent implements AfterViewInit {
   }
 
   public createNewCredential(): void {
-    console.info("BUTTON createNewCredential pressed!")
     this.formCredentialService.setShowMandator(false);
     this.router.navigate(['/organization/credentials/create2',this.isValidOrganizationIdentifier ? "admin" : ""]);
   }
 
   public createCredentialAsSigner(): void {
-    console.info("BUTTON createCredentialAsSigner pressed!")
     this.formCredentialService.setShowMandator(true);
     this.router.navigate(['/organization/credentials/create2',this.isValidOrganizationIdentifier ? "admin" : ""]);
   }

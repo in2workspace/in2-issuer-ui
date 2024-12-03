@@ -9,7 +9,7 @@ export interface Country {
   providedIn: 'root'
 })
 export class CountryService {
-  private countries: Country[] = [
+  private readonly countries: Country[] = [
     { name: 'Spain', code: '34' },
     { name: 'Germany', code: '49' },
     { name: 'France', code: '33' },

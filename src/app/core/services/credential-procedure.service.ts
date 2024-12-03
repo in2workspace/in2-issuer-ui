@@ -1,44 +1,46 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { CredentialProcedureResponse,CredentialData } from '../models/credentialProcedure.interface';
-import { IssuanceRequest } from '../models/issuanceRequest.interface';
+import { ProcedureRequest } from '../models/dto/procedure-request.dto';
+import { ProcedureResponse } from "../models/dto/procedure-response.dto";
+import { LearCredentialEmployeeDataDetail } from "../models/dto/lear-credential-employee-data-detail.dto";
 
 @Injectable({
   providedIn: 'root'
 })
 export class CredentialProcedureService {
 
-  private saveCredential = `${environment.base_url}${environment.save_credential}`;
+  private readonly saveCredential = `${environment.base_url}${environment.save_credential}`;
+  private readonly organizationProcedures = `${environment.base_url}${environment.procedures}`;
+  private readonly credentialOfferUrl = `${environment.base_url}${environment.credential_offer_url}`;
+  private readonly notificationProcedure =`${environment.base_url}${environment.notification}`;
   //private sendFirma = `${environment.base_url}${environment.firma_credential}`; The`sendFirma` variable has been commented out as it was initially intended for the signature functionality,which remains incomplete. This configuration is currently unnecessary for the existing flows but is expected to be reintroduced in the future when the related use case is implemented.
-  private organizationProcedures = `${environment.base_url}${environment.procedures}`;
-  private credentialOfferUrl = `${environment.base_url}${environment.credential_offer_url}`;
-  private notificationProcedure =`${environment.base_url}${environment.notification}`;
-  public constructor(private http: HttpClient) { }
 
-  public getCredentialProcedures(): Observable<CredentialProcedureResponse> {
-    return this.http.get<CredentialProcedureResponse>(this.organizationProcedures).pipe(
+  private readonly http = inject(HttpClient);
+
+  public getCredentialProcedures(): Observable<ProcedureResponse> {
+    return this.http.get<ProcedureResponse>(this.organizationProcedures).pipe(
       catchError(this.handleError)
     );
   }
 
-  public getCredentialProcedureById(procedureId: string): Observable<CredentialData> {
-    return this.http.get<CredentialData>(`${this.organizationProcedures}/${procedureId}/credential-decoded`).pipe(
+  public getCredentialProcedureById(procedureId: string): Observable<LearCredentialEmployeeDataDetail> {
+    return this.http.get<LearCredentialEmployeeDataDetail>(`${this.organizationProcedures}/${procedureId}/credential-decoded`).pipe(
       catchError(this.handleError)
     );
   }
 
-  public createProcedure(IssuanceRequest: IssuanceRequest): Observable<any> {
+  public createProcedure(procedureRequest: ProcedureRequest): Observable<void> {
 
-    return this.http.post(this.saveCredential, IssuanceRequest).pipe(
+    return this.http.post<void>(this.saveCredential, procedureRequest).pipe(
       catchError(this.handleError)
     );
   }
 
-  public sendReminder(procedureId: string): Observable<any> {
-    return this.http.post(`${this.notificationProcedure}/${procedureId}`,{} ).pipe(
+  public sendReminder(procedureId: string): Observable<void> {
+    return this.http.post<void>(`${this.notificationProcedure}/${procedureId}`,{} ).pipe(
       catchError(this.handleError)
     );
   }
