@@ -75,14 +75,14 @@
     "forbidden": "You do not have permission to access this resource.",
     "internal_server": "An error occurred on the server. Please try again later.",
     "credential_submission": "Error occurred while submitting credential.",
-    "one_power_min":"There must be at least one power selected, and each power must have at least one action selected.",
+    "one_power_min": "There must be at least one power selected, and each power must have at least one action selected.",
     "unknown_error": "An unknown error occurred. Please try again.",
       "form":{
         "required": "This field is required.",
         "invalid_character": "Invalid character/s",
-        "only_letters_and_numbers": "Only letters and numbers",
-        "only_letters_numbers_hyphens": "Only letters, numbers and hyphens",
-        "only_numbers": "Only numbers allowed",
+        "only_letters_and_numbers": "Only letters and numbers are allowed",
+        "only_letters_numbers_hyphens": "Only letters, numbers and hyphens are allowed",
+        "only_numbers": "Only numbers are allowed",
         "max_50": "Maximum 50 characters",
         "max_15": "Maximum 15 characters",
         "max_9": "Maximum 9 characters",
@@ -96,8 +96,9 @@
           "main_domain_part_min": "The portion of the domain between '@' and the last '.' must be at least 2 characters long.",
           "top_level_domain_part_min": "The portion of the domain after the last '.' must be at least 2 characters long."
         },
-        "no_power": "Add at least one power",
-        "no_function": "Each power must have at least one function"
+        "org_id_startsWithVAT": "Enter the id without VAT nor the country prefix",
+        "no_power": "You need to add at least one power",
+        "no_function": "Each power must have at least one selected function"
       }
   }
 }
