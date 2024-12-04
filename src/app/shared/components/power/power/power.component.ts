@@ -19,20 +19,21 @@ export class PowerComponent implements OnInit{
   @Input() public power: TempPower[] = [];
   public organizationIdentifierIsIn2: boolean = false;
 
+  //streams (form states)
+  public addedPowers$: Observable<TempPower[]>;
+  public selectedPower$: Observable<string>;
+
   private readonly authService = inject(AuthService);
   private readonly dialog = inject(MatDialog);
   private readonly formService = inject(FormCredentialService);
 
-  //streams (form states)
-  public addedPowers$: Observable<TempPower[]>;
-  public selectedPower$: Observable<string>;
 
   public constructor(){
     this.addedPowers$ = this.formService.getAddedPowers();
     this.selectedPower$ = this.formService.getSelectedPowerName();
   }
 
-  public ngOnInit(): void {
+  public ngOnInit(){
     this.organizationIdentifierIsIn2 = this.authService.hasIn2OrganizationIdentifier();
   }
 

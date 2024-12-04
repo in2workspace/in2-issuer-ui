@@ -1,11 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
 import { CredentialIssuanceComponent } from './credentialIssuance.component';
-import { ActivatedRoute, RouterModule } from '@angular/router';
-import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
-import { CredentialData, Credential } from 'src/app/core/models/credentialProcedure.interface';
+import { RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 describe('CredentialDetailComponent', () => {

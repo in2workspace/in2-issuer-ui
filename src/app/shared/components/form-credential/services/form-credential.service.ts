@@ -2,9 +2,11 @@ import { Injectable } from '@angular/core';
 import { PopupComponent } from '../../popup/popup.component';
 import { ProcedureRequest } from 'src/app/core/models/dto/procedure-request.dto';
 import { tap, catchError } from 'rxjs/operators';
-import { Mandatee, Mandator, Power } from "../../../../core/models/entity/lear-credential-employee.entity";
+import { Mandatee, Mandator, Power, Signer } from "../../../../core/models/entity/lear-credential-employee.entity";
 import { Observable, BehaviorSubject } from 'rxjs';
 import { TempPower } from 'src/app/core/models/temporal/temp-power.interface';
+import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
+import { Country } from './country.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +18,6 @@ export class FormCredentialService {
   
   private readonly addedPowers$ = this.addedPowersSubject.asObservable();
   private readonly selectedPowerName$ = this.selectedPowerNameSubject.asObservable();
-
-  public constructor() {}
 
   public getPlainAddedPowers(): TempPower[]{
     return this.addedPowersSubject.getValue();
@@ -76,12 +76,12 @@ export class FormCredentialService {
 
   public submitCredential(
     credential: Mandatee,
-    selectedPhonePrefix: string,
+    selectedCountry: Country,
     addedPowers: TempPower[],
     mandator: Mandator | null,
     mandatorLastName: string,
-    signer: any,
-    credentialProcedureService: any,
+    signer: Signer,
+    credentialProcedureService: CredentialProcedureService,
     popupComponent: PopupComponent,
     resetForm: () => void
   ): Observable<any> {
@@ -97,7 +97,7 @@ export class FormCredentialService {
       //create full VAT company name
       //todo add country iso code
       //todo s'hauria d'usar sempre iso code i tenir mètodes inversos
-      const fullOrgId = 'VAT' + '-' + mandator.organizationIdentifier;
+      const fullOrgId = 'VAT' + selectedCountry.isoCountryCode + '-' + mandator.organizationIdentifier;
       mandatorToSubmit = { ...mandatorToSubmit, organizationIdentifier: fullOrgId };
     }else{
       // ? should just throw error?
@@ -111,7 +111,7 @@ export class FormCredentialService {
       };
     }
 
-    const countryPrefix = `+${selectedPhonePrefix}`;
+    const countryPrefix = `+${selectedCountry.phoneCode}`;
     //it might not be necessary to check if phone starts with prefix, since this is restricted in form
     if (credentialToSubmit.mobile_phone != '' && !credentialToSubmit.mobile_phone?.startsWith(countryPrefix)) {
       credentialToSubmit.mobile_phone = `${countryPrefix} ${credentialToSubmit.mobile_phone}`;

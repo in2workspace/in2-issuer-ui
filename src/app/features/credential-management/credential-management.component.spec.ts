@@ -6,7 +6,6 @@ import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { CredentialManagementComponent } from './credential-management.component';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
-import { CredentialProcedure, CredentialProcedureResponse } from 'src/app/core/models/credentialProcedure.interface';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';

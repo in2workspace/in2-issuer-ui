@@ -72,26 +72,31 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
 
   public ngOnInit(): void {
 
-    this.authService.getMandator().subscribe(mandator2 => {
+    this.authService.getMandator()
+    .pipe(takeUntilDestroyed(this.destroyRef))
+    .subscribe(mandator2 => {
       if (mandator2) {
         if(this.viewMode === "create" && !this.asSigner){
-          this.mandator ={ 'organizationIdentifier': mandator2.organizationIdentifier,
+          this.mandator ={ 
+            'organizationIdentifier': mandator2.organizationIdentifier,
             'organization': mandator2.organization,
             'commonName':mandator2.commonName,
             'emailAddress':mandator2.emailAddress,
             'serialNumber':mandator2.serialNumber,
             'country':mandator2.country}
         }
-        this.authService.getSigner().subscribe(signer => {
-          this.signer = {
-            organizationIdentifier: signer?.organizationIdentifier ?? '',
-            organization: signer?.organization ?? '',
-            commonName: signer?.commonName ?? '',
-            emailAddress: signer?.emailAddress ?? '',
-            serialNumber: signer?.serialNumber ?? '',
-            country: signer?.country ?? ''
-          }
-        })
+        this.authService.getSigner()
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe(signer => {
+            this.signer = {
+              organizationIdentifier: signer?.organizationIdentifier ?? '',
+              organization: signer?.organization ?? '',
+              commonName: signer?.commonName ?? '',
+              emailAddress: signer?.emailAddress ?? '',
+              serialNumber: signer?.serialNumber ?? '',
+              country: signer?.country ?? ''
+            }
+          });
       }
     });
 
@@ -112,13 +117,13 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
 
   public submitCredential(): void {
     //this condition is already applied in the template, so maybe it should be removed
-    const phonePrefix = this.countryService.getCountryPhoneFromIsoCountryCode(this.selectedCountryIsoCode);
+    const country: Country|undefined = this.countryService.getCountryFromIsoCode(this.selectedCountryIsoCode);
     
-    if (this.hasSelectedPower() && this.selectedPowersHaveFunction()) {
+    if (this.hasSelectedPower() && this.selectedPowersHaveFunction() && country) {
       this.formService
         .submitCredential(
           this.credential,
-          phonePrefix,
+          country,
           this.formService.getPlainAddedPowers(),
           this.mandator,
           this.addedMandatorLastName,

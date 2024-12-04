@@ -73,14 +73,8 @@ export class CountryService {
     return [...this.countries].sort((a, b) => a.name.localeCompare(b.name));
   }
 
-  public getCountryNameFromPhoneCode(code: string): string {
-    const country = this.countries.find(c => c.phoneCode === code);
-    if(country){
-      return country.name;
-    }else{
-      console.error('Country not found. Country phone code: ' + code);
-      return '';
-    }
+  public getCountryFromIsoCode(isoCode: string): Country | undefined {
+    return this.countries.find(c => c.isoCountryCode === isoCode);
   }
 
   public getCountryNameFromIsoCountryCode(isoCode: string): string {

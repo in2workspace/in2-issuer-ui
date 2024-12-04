@@ -26,32 +26,52 @@ describe('CountryService', () => {
     expect(sortedCountries).toEqual(sortedCountries);
   });
 
-  it('should return the name of the country if the code matches', () => {
-    (service as any).countries = [
-      { phoneCode: 'ES', name: 'Spain', isoCountryCode: 'ES' },
-      { phoneCode: 'FR', name: 'France', isoCountryCode: 'FR' },
-    ];
-
-    const result = service.getCountryNameFromPhoneCode('ES');
-    expect(result).toBe('Spain');
+  it('should return the correct country for a given ISO country code', () => {
+    const isoCode = 'ES';
+    const expectedCountry: Country = { name: 'Spain', phoneCode: '34', isoCountryCode: 'ES' };
+    const result = service.getCountryFromIsoCode(isoCode);
+    expect(result).toEqual(expectedCountry);
+  });
+  
+  it('should return undefined for an invalid ISO country code', () => {
+    const isoCode = 'INVALID';
+    const result = service.getCountryFromIsoCode(isoCode);
+    expect(result).toBeUndefined();
   });
 
-   it('should return an empty string if the code does not match any country', () => {
-    (service as any).countries = [
-      { phoneCode: 'ES', name: 'Spain', isoCountryCode: 'ES' },
-      { phoneCode: 'FR', name: 'France', isoCountryCode: 'FR' },
-    ];
-
-    const result = service.getCountryNameFromPhoneCode('IT');
+  it('should return the correct country name for a valid ISO country code', () => {
+    const isoCode = 'ES';
+    const expectedName = 'Spain';
+    const result = service.getCountryNameFromIsoCountryCode(isoCode);
+    expect(result).toBe(expectedName);
+  });
+  
+  it('should return an empty string and log an error for an invalid ISO country code when fetching country name', () => {
+    const isoCode = 'INVALID';
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+    const result = service.getCountryNameFromIsoCountryCode(isoCode);
     expect(result).toBe('');
+    expect(consoleSpy).toHaveBeenCalledWith('Country not found. Country phone code: ' + isoCode);
+    consoleSpy.mockRestore();
   });
-
-  it('should return an empty string if the countries list is empty', () => {
-    (service as any).countries = [];
-
-    const result = service.getCountryNameFromPhoneCode('ES');
+  
+  it('should return the correct phone code for a valid ISO country code', () => {
+    const isoCode = 'ES';
+    const expectedPhoneCode = '34';
+    const result = service.getCountryPhoneFromIsoCountryCode(isoCode);
+    expect(result).toBe(expectedPhoneCode);
+  });
+  
+  it('should return an empty string and log an error for an invalid ISO country code when fetching phone code', () => {
+    const isoCode = 'INVALID';
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+    const result = service.getCountryPhoneFromIsoCountryCode(isoCode);
     expect(result).toBe('');
+    expect(consoleSpy).toHaveBeenCalledWith('Country not found. Country phone code: ' + isoCode);
+    consoleSpy.mockRestore();
   });
+  
+
 });
 
 const countries: Country[] = [
