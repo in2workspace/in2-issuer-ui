@@ -84,7 +84,9 @@ describe('FormCredentialComponent', () => {
     removePower: jest.Mock<any>,
     checkIfPowerIsAdded: jest.Mock<any>,
     powersHaveFunction: jest.Mock<any>,
-    hasSelectedPower: jest.Mock<any>
+    hasSelectedPower: jest.Mock<any>,
+    getCountryNameFromIsoCode: jest.Mock<any>
+    getCountryPhoneFromIsoCountryCode: jest.Mock<any>
   };
 
   beforeEach(async () => {
@@ -110,12 +112,15 @@ describe('FormCredentialComponent', () => {
       removePower: jest.fn(),
       checkIfPowerIsAdded: jest.fn().mockReturnValue(false),
       powersHaveFunction: jest.fn(),
-      hasSelectedPower: jest.fn()
+      hasSelectedPower: jest.fn(),
+      getCountryNameFromIsoCode: jest.fn(),
+      getCountryPhoneFromIsoCountryCode: jest.fn()
     } as jest.Mocked<any>;
 
     mockCountryService = {
       getCountries: jest.fn().mockReturnValue(countries),
-      getSortedCountries: jest.fn().mockReturnValue(sortedCountries)
+      getSortedCountries: jest.fn().mockReturnValue(sortedCountries),
+      getCountryPhoneFromIsoCountryCode: jest.fn()
     };
     mockAuthService = {
       getMandator:()=> of(null),
@@ -189,7 +194,7 @@ describe('FormCredentialComponent', () => {
     } as FormGroupDirective;
 
     component.credential = { mobile_phone: '123456789' } as any;
-    component.selectedCountryPrefix = '';
+    component.selectedCountryIsoCode = '';
 
     formGroup.controls['mobile_phone'].markAsDirty();
 
@@ -201,7 +206,7 @@ describe('FormCredentialComponent', () => {
     expect(isErrorState).toBe(true);
   });
 
-  it('error matcher should return false if selectedCountryPrefix is present', () => {
+  it('error matcher should return false if selectedCountryIsoCode is present', () => {
     const formGroup = new FormGroup({
       mobile_phone: new FormControl('', { updateOn: 'change' })
     });
@@ -211,7 +216,7 @@ describe('FormCredentialComponent', () => {
     } as FormGroupDirective;
 
     component.credential = { mobile_phone: '123456789' } as any;
-    component.selectedCountryPrefix = '+34';
+    component.selectedCountryIsoCode = '+34';
 
     const isErrorState = component.countryErrorMatcher.isErrorState(
       formGroup.controls['mobile_phone'],
@@ -231,7 +236,7 @@ describe('FormCredentialComponent', () => {
     } as FormGroupDirective;
 
     component.credential = { mobile_phone: '123456789' } as any;
-    component.selectedCountryPrefix = '';
+    component.selectedCountryIsoCode = '';
 
     const isErrorState = component.countryErrorMatcher.isErrorState(
       formGroup.controls['mobile_phone'],
@@ -334,32 +339,15 @@ describe('FormCredentialComponent', () => {
   });
 
   //todo nous tests amb country service .getCountryName...
-  // it('should return the name of the country if the code matches', () => {
-  //   component.countries = [
-  //     { phoneCode: 'ES', name: 'Spain', isoCountryCode: 'ES' },
-  //     { phoneCode: 'FR', name: 'France', isoCountryCode: 'FR' },
-  //   ];
+  it('should get country name from iso code', ()=>{
+    component.getCountryNameFromIsoCode('any');
+    expect(mockCountryService.getCountryNameFromIsoCountryCode).toHaveBeenCalledWith('any');
+  });
 
-  //   const result = component.getCountryNameFromPhoneCode('ES');
-  //   expect(result).toBe('Spain');
-  // });
-
-  //  it('should return an empty string if the code does not match any country', () => {
-  //   component.countries = [
-  //     { phoneCode: 'ES', name: 'Spain', isoCountryCode: 'ES' },
-  //     { phoneCode: 'FR', name: 'France', isoCountryCode: 'FR' },
-  //   ];
-
-  //   const result = component.getCountryNameFromPhoneCode('IT');
-  //   expect(result).toBe('');
-  // });
-
-  // it('should return an empty string if the countries list is empty', () => {
-  //   component.countries = [];
-
-  //   const result = component.getCountryNameFromPhoneCode('ES');
-  //   expect(result).toBe('');
-  // });
+  it('should get country phone prefix from iso code', ()=>{
+    component.getCountryPhoneFromIsoCountryCode('any');
+    expect(mockCountryService.getCountryPhoneFromIsoCountryCode).toHaveBeenCalledWith('any');
+  });
 
   it('should check if there is selected power', ()=>{
     component.hasSelectedPower();
@@ -398,7 +386,8 @@ describe('FormCredentialComponent', () => {
   });
 
   it('it should submit credential when submitCredential is called with selected power', () => {
-    component.selectedCountryPrefix = 'US';
+    component.selectedCountryIsoCode = 'US';
+    mockCountryService.getCountryPhoneFromIsoCountryCode.mockReturnValue('States');
     mockFormCredentialService.hasSelectedPower.mockReturnValue(true);
     mockFormCredentialService.powersHaveFunction.mockReturnValue(true);
     mockFormCredentialService.getPlainAddedPowers.mockReturnValue(mockPowers);
@@ -408,7 +397,7 @@ describe('FormCredentialComponent', () => {
     expect(mockFormCredentialService.submitCredential).toHaveBeenCalled();
     expect(mockFormCredentialService.submitCredential).toHaveBeenCalledWith(
       component.credential,
-      component.selectedCountryPrefix,
+      'States',
       mockPowers,
       component.mandator,
       component.addedMandatorLastName,
@@ -420,7 +409,7 @@ describe('FormCredentialComponent', () => {
   });
 
   it('it should not submit credential when submitCredential is called with no selected powers', () => {
-    component.selectedCountryPrefix = 'US';
+    component.selectedCountryIsoCode = 'US';
     mockFormCredentialService.hasSelectedPower.mockReturnValue(false);
     mockFormCredentialService.powersHaveFunction.mockReturnValue(true);
   
@@ -434,7 +423,7 @@ describe('FormCredentialComponent', () => {
   });
 
   it('it should not submit credential when submitCredential not all selected powers have selected functions', () => {
-    component.selectedCountryPrefix = 'US';
+    component.selectedCountryIsoCode = 'US';
     mockFormCredentialService.hasSelectedPower.mockReturnValue(true);
     mockFormCredentialService.powersHaveFunction.mockReturnValue(false);
   
@@ -459,7 +448,8 @@ describe('FormCredentialComponent', () => {
       writable: true,
     });
 
-    component.selectedCountryPrefix = 'US';
+    component.selectedCountryIsoCode = 'US';
+    mockCountryService.getCountryPhoneFromIsoCountryCode.mockReturnValue('States');
     mockFormCredentialService.hasSelectedPower.mockReturnValue(true);
     mockFormCredentialService.powersHaveFunction.mockReturnValue(true);
     mockFormCredentialService.getPlainAddedPowers.mockReturnValue(mockPowers);
@@ -469,7 +459,7 @@ describe('FormCredentialComponent', () => {
   
     expect(mockFormCredentialService.submitCredential).toHaveBeenCalledWith(
       component.credential,
-      component.selectedCountryPrefix,
+      'States',
       mockPowers,
       component.mandator,
       component.addedMandatorLastName,
