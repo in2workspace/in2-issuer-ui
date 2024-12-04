@@ -77,6 +77,10 @@ export class CountryService {
     return this.countries.find(c => c.isoCountryCode === isoCode);
   }
 
+  public getCountryFromName(name: string): Country | undefined {
+    return this.countries.find(c => c.name.toLowerCase() === name.toLowerCase());
+  }
+
   public getCountryNameFromIsoCountryCode(isoCode: string): string {
     const country = this.countries.find(c => c.isoCountryCode === isoCode);
     if(country){

@@ -76,7 +76,8 @@ export class FormCredentialService {
 
   public submitCredential(
     credential: Mandatee,
-    selectedCountry: Country,
+    selectedMandateeCountry: Country,
+    selectedMandatorCountry: Country,
     addedPowers: TempPower[],
     mandator: Mandator | null,
     mandatorLastName: string,
@@ -95,9 +96,7 @@ export class FormCredentialService {
       mandatorToSubmit = { ...mandator, commonName: mandatorFullName };
 
       //create full VAT company name
-      //todo add country iso code
-      //todo s'hauria d'usar sempre iso code i tenir mètodes inversos
-      const fullOrgId = 'VAT' + selectedCountry.isoCountryCode + '-' + mandator.organizationIdentifier;
+      const fullOrgId = 'VAT' + selectedMandatorCountry.isoCountryCode + '-' + mandator.organizationIdentifier;
       mandatorToSubmit = { ...mandatorToSubmit, organizationIdentifier: fullOrgId };
     }else{
       // ? should just throw error?
@@ -111,7 +110,7 @@ export class FormCredentialService {
       };
     }
 
-    const countryPrefix = `+${selectedCountry.phoneCode}`;
+    const countryPrefix = `+${selectedMandateeCountry.phoneCode}`;
     //it might not be necessary to check if phone starts with prefix, since this is restricted in form
     if (credentialToSubmit.mobile_phone != '' && !credentialToSubmit.mobile_phone?.startsWith(countryPrefix)) {
       credentialToSubmit.mobile_phone = `${countryPrefix} ${credentialToSubmit.mobile_phone}`;

@@ -85,7 +85,8 @@ describe('FormCredentialComponent', () => {
     powersHaveFunction: jest.Mock<any>,
     hasSelectedPower: jest.Mock<any>,
     getCountryNameFromIsoCode: jest.Mock<any>
-    getCountryPhoneFromIsoCountryCode: jest.Mock<any>
+    getCountryPhoneFromIsoCountryCode: jest.Mock<any>,
+    getCountryFromName: jest.Mock<any>
   };
 
   beforeEach(async () => {
@@ -121,7 +122,8 @@ describe('FormCredentialComponent', () => {
       getSortedCountries: jest.fn().mockReturnValue(sortedCountries),
       getCountryPhoneFromIsoCountryCode: jest.fn(),
       getCountryNameFromIsoCountryCode: jest.fn(),
-      getCountryFromIsoCode: jest.fn()
+      getCountryFromIsoCode: jest.fn(),
+      getCountryFromName: jest.fn()
     };
     mockAuthService = {
       getMandator:()=> of(null),

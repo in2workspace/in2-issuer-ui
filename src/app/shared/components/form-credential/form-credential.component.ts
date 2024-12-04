@@ -117,13 +117,15 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
 
   public submitCredential(): void {
     //this condition is already applied in the template, so maybe it should be removed
-    const country: Country|undefined = this.countryService.getCountryFromIsoCode(this.selectedCountryIsoCode);
-    
-    if (this.hasSelectedPower() && this.selectedPowersHaveFunction() && country) {
+    const mandateeCountry: Country|undefined = this.countryService.getCountryFromIsoCode(this.selectedCountryIsoCode);
+    const mandatorCountry: Country|undefined = this.countryService.getCountryFromName(this.mandator.country);
+
+    if (this.hasSelectedPower() && this.selectedPowersHaveFunction() && mandatorCountry && mandateeCountry) {
       this.formService
         .submitCredential(
           this.credential,
-          country,
+          mandateeCountry,
+          mandatorCountry,
           this.formService.getPlainAddedPowers(),
           this.mandator,
           this.addedMandatorLastName,

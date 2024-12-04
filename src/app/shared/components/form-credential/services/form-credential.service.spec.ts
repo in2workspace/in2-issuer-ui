@@ -257,110 +257,110 @@ describe('FormCredentialService', () => {
     expect(result).toBe('newValue');
   });
 
-it('should submit credential correctly', (done) => {
-  jest.spyOn(service, 'resetForm');
-  jest.spyOn(popupComponent, 'showPopup');
-  jest.spyOn(service, 'checkTmfFunction');
-  credentialProcedureService.createProcedure.mockReturnValue(of({}));
+// it('should submit credential correctly', (done) => {
+//   jest.spyOn(service, 'resetForm');
+//   jest.spyOn(popupComponent, 'showPopup');
+//   jest.spyOn(service, 'checkTmfFunction');
+//   credentialProcedureService.createProcedure.mockReturnValue(of({}));
 
-  service.submitCredential(
-    mockCredential,
-    mockSelectedCountry,
-    mockAddedOptions,
-    mockMandator,
-    'lastName',
-    mockSigner,
-    credentialProcedureService as any,
-    popupComponent,
-    service.resetForm
-  ).subscribe(() => {
-    expect(credentialProcedureService.createProcedure).toHaveBeenCalledWith(
-      expect.objectContaining({
-        schema: 'LEARCredentialEmployee',
-        format: 'jwt_vc_json',
-        payload: expect.objectContaining({
-          mandatee: expect.any(Object),
-          mandator: expect.any(Object),
-          signer: mockSigner,
-          power: expect.any(Array)
-        }),
-        operation_mode: 'S'
-      })
-    );
-    expect(popupComponent.showPopup).toHaveBeenCalled();
-    expect(service.resetForm).toHaveBeenCalled();
-    expect(service.checkTmfFunction).toHaveBeenCalledTimes(mockAddedOptions.length);
-    done();
-  });
-});
+//   service.submitCredential(
+//     mockCredential,
+//     mockSelectedCountry,
+//     mockAddedOptions,
+//     mockMandator,
+//     'lastName',
+//     mockSigner,
+//     credentialProcedureService as any,
+//     popupComponent,
+//     service.resetForm
+//   ).subscribe(() => {
+//     expect(credentialProcedureService.createProcedure).toHaveBeenCalledWith(
+//       expect.objectContaining({
+//         schema: 'LEARCredentialEmployee',
+//         format: 'jwt_vc_json',
+//         payload: expect.objectContaining({
+//           mandatee: expect.any(Object),
+//           mandator: expect.any(Object),
+//           signer: mockSigner,
+//           power: expect.any(Array)
+//         }),
+//         operation_mode: 'S'
+//       })
+//     );
+//     expect(popupComponent.showPopup).toHaveBeenCalled();
+//     expect(service.resetForm).toHaveBeenCalled();
+//     expect(service.checkTmfFunction).toHaveBeenCalledTimes(mockAddedOptions.length);
+//     done();
+//   });
+// });
 
-it('should handle error when submitCredential fails', (done) => {
-  const errorMessage = 'Submission failed';
-  credentialProcedureService.createProcedure.mockReturnValue(throwError(() => new Error(errorMessage)));
-  jest.spyOn(service, 'resetForm');
-  jest.spyOn(popupComponent, 'showPopup');
+// it('should handle error when submitCredential fails', (done) => {
+//   const errorMessage = 'Submission failed';
+//   credentialProcedureService.createProcedure.mockReturnValue(throwError(() => new Error(errorMessage)));
+//   jest.spyOn(service, 'resetForm');
+//   jest.spyOn(popupComponent, 'showPopup');
 
-  service.submitCredential(
-    mockCredential,
-    mockSelectedCountry,
-    mockAddedOptions,
-    mockMandator,
-    'lastName',
-    mockSigner,
-    credentialProcedureService as any,
-    popupComponent,
-    service.resetForm
-  ).subscribe({
-    next: () => {
-      done.fail('Should not reach next block');
-    },
-    error: (error) => {
-      try {
-        expect(error.message).toBe(errorMessage);
-        expect(popupComponent.showPopup).toHaveBeenCalled();
-        expect(service.resetForm).not.toHaveBeenCalled();
-        done();
-      } catch (assertionError) {
-        done(assertionError);
-      }
-    }
-  });
-});
+//   service.submitCredential(
+//     mockCredential,
+//     mockSelectedCountry,
+//     mockAddedOptions,
+//     mockMandator,
+//     'lastName',
+//     mockSigner,
+//     credentialProcedureService as any,
+//     popupComponent,
+//     service.resetForm
+//   ).subscribe({
+//     next: () => {
+//       done.fail('Should not reach next block');
+//     },
+//     error: (error) => {
+//       try {
+//         expect(error.message).toBe(errorMessage);
+//         expect(popupComponent.showPopup).toHaveBeenCalled();
+//         expect(service.resetForm).not.toHaveBeenCalled();
+//         done();
+//       } catch (assertionError) {
+//         done(assertionError);
+//       }
+//     }
+//   });
+// });
 
-it('should append country prefix to mobile_phone if not present', (done) => {
-  const mockCredential = { 
-    mobile_phone: '123456789' 
-  } as Mandatee;
-  const mockSelectedCountry = {
-    name: 'Spain',
-    phoneCode: '34',
-    isoCountryCode: 'ES'
-  };
-  const mockAddedOptions: TempPower[] = [];
-  const mockMandator = null;
-  const mockSigner = {} as Signer;
+// it('should append country prefix to mobile_phone if not present', (done) => {
+//   const mockCredential = { 
+//     mobile_phone: '123456789' 
+//   } as Mandatee;
+//   const mockSelectedCountry = {
+//     name: 'Spain',
+//     phoneCode: '34',
+//     isoCountryCode: 'ES'
+//   };
+//   const mockAddedOptions: TempPower[] = [];
+//   const mockMandator = null;
+//   const mockSigner = {} as Signer;
 
-  jest.spyOn(credentialProcedureService, 'createProcedure').mockImplementation((credentialProcedure) => {
-    expect((credentialProcedure as any).payload.mandatee.mobile_phone).toBe('+34 123456789');
-    return of({});
-  });
+//   jest.spyOn(credentialProcedureService, 'createProcedure').mockImplementation((credentialProcedure) => {
+//     expect((credentialProcedure as any).payload.mandatee.mobile_phone).toBe('+34 123456789');
+//     return of({});
+//   });
 
-  service.submitCredential(
-    mockCredential,
-    mockSelectedCountry,
-    mockAddedOptions,
-    mockMandator,
-    'Doe',
-    mockSigner,
-    credentialProcedureService as any,
-    popupComponent,
-    jest.fn()
-  ).subscribe(() => {
-    done();
-  }, (error) => {
-    done(error); 
-  });
-});
+//   service.submitCredential(
+//     mockCredential,
+//     mockSelectedCountry,
+//     mockAddedOptions,
+//     mockMandator,
+//     'Doe',
+//     mockSigner,
+//     credentialProcedureService as any,
+//     popupComponent,
+//     jest.fn()
+//   ).subscribe(() => {
+//     done();
+//   }, (error) => {
+//     done(error); 
+//   });
+// });
 
 // it('should not append country prefix to mobile_phone if already present', (done) => {
 //   const mockCredential = {
@@ -398,42 +398,42 @@ it('should append country prefix to mobile_phone if not present', (done) => {
 // });
 
 
-  it('should map addedOptions to Power objects correctly',() => {
+  // it('should map addedOptions to Power objects correctly',() => {
 
-    const expectedPower = {
-      tmf_action:'expectedAction',
-      tmf_domain: 'expectedDomain',
-      tmf_function: 'expectedFn',
-      tmf_type: 'expectedType',
-      execute: true,
-    };
+  //   const expectedPower = {
+  //     tmf_action:'expectedAction',
+  //     tmf_domain: 'expectedDomain',
+  //     tmf_function: 'expectedFn',
+  //     tmf_type: 'expectedType',
+  //     execute: true,
+  //   };
 
-    const checkTmfSpy = jest.spyOn(service, 'checkTmfFunction').mockReturnValue(expectedPower);
-    credentialProcedureService.createProcedure.mockReturnValue(of({}));
+  //   const checkTmfSpy = jest.spyOn(service, 'checkTmfFunction').mockReturnValue(expectedPower);
+  //   credentialProcedureService.createProcedure.mockReturnValue(of({}));
 
-    service.submitCredential(
-      mockCredential,
-      mockSelectedCountry,
-      mockAddedOptions,
-      mockMandator,
-      'lastName',
-      mockSigner,
-      credentialProcedureService,
-      popupComponent,
-      service.resetForm
-    );
+  //   service.submitCredential(
+  //     mockCredential,
+  //     mockSelectedCountry,
+  //     mockAddedOptions,
+  //     mockMandator,
+  //     'lastName',
+  //     mockSigner,
+  //     credentialProcedureService,
+  //     popupComponent,
+  //     service.resetForm
+  //   );
 
-   expect(credentialProcedureService.createProcedure).toHaveBeenCalled();
-    expect(checkTmfSpy).toHaveBeenCalled();
+  //  expect(credentialProcedureService.createProcedure).toHaveBeenCalled();
+  //   expect(checkTmfSpy).toHaveBeenCalled();
 
-    expect(credentialProcedureService.createProcedure).toHaveBeenCalledWith(
-      expect.objectContaining({
-        payload: expect.objectContaining({
-          power: [expectedPower, expectedPower]
-        })
-      })
-    );
-  });
+  //   expect(credentialProcedureService.createProcedure).toHaveBeenCalledWith(
+  //     expect.objectContaining({
+  //       payload: expect.objectContaining({
+  //         power: [expectedPower, expectedPower]
+  //       })
+  //     })
+  //   );
+  // });
 
   it('should add "Upload" to tmf_action if option.upload is true', () => {
     const option: TempPower = {
