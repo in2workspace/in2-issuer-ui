@@ -120,7 +120,8 @@ describe('FormCredentialComponent', () => {
     mockCountryService = {
       getCountries: jest.fn().mockReturnValue(countries),
       getSortedCountries: jest.fn().mockReturnValue(sortedCountries),
-      getCountryPhoneFromIsoCountryCode: jest.fn()
+      getCountryPhoneFromIsoCountryCode: jest.fn(),
+      getCountryNameFromIsoCountryCode: jest.fn()
     };
     mockAuthService = {
       getMandator:()=> of(null),
