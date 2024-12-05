@@ -134,11 +134,9 @@ export class FormCredentialService {
     return credentialProcedureService.createProcedure(credentialProcedure).pipe(
       //show same popup when success and error?
       tap(() => {
-        popupComponent.showPopup();
         resetForm();
       }),
       catchError(error => {
-        popupComponent.showPopup();
         throw error;
       })
     );
