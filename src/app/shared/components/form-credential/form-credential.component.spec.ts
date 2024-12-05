@@ -394,95 +394,104 @@ describe('FormCredentialComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  // it('it should submit credential when submitCredential is called with selected power', () => {
-  //   component.selectedCountryIsoCode = 'US';
-  //   mockCountryService.getCountryPhoneFromIsoCountryCode.mockReturnValue('States');
-  //   mockFormCredentialService.hasSelectedPower.mockReturnValue(true);
-  //   mockFormCredentialService.powersHaveFunction.mockReturnValue(true);
-  //   mockFormCredentialService.getPlainAddedPowers.mockReturnValue(mockPowers);
+  it('it should submit credential when submitCredential is called with selected power', () => {
+    component.selectedMandateeCountryIsoCode = 'US';
+    component.asSigner = false;
+    mockCountryService.getCountryFromIsoCode.mockReturnValue('States');
+    mockFormCredentialService.hasSelectedPower.mockReturnValue(true);
+    mockFormCredentialService.powersHaveFunction.mockReturnValue(true);
+    mockFormCredentialService.getPlainAddedPowers.mockReturnValue(mockPowers);
   
-  //   component.submitCredential();
+    component.submitCredential();
   
-  //   expect(mockFormCredentialService.submitCredential).toHaveBeenCalled();
-  //   expect(mockFormCredentialService.submitCredential).toHaveBeenCalledWith(
-  //     component.credential,
-  //     'States',
-  //     mockPowers,
-  //     component.mandator,
-  //     component.addedMandatorLastName,
-  //     component.signer,
-  //     mockCredentialProcedureService,
-  //     expect.any(PopupComponent),
-  //     expect.any(Function)
-  //   );
-  // });
+    expect(mockFormCredentialService.submitCredential).toHaveBeenCalled();
+    expect(mockFormCredentialService.submitCredential).toHaveBeenCalledWith(
+      component.credential,
+      'States',
+      undefined,
+      mockPowers,
+      component.mandator,
+      component.addedMandatorLastName,
+      component.signer,
+      mockCredentialProcedureService,
+      expect.any(PopupComponent),
+      expect.any(Function)
+    );
+  });
 
-  // it('it should not submit credential when submitCredential is called with no selected powers', () => {
-  //   component.selectedMandateeCountryIsoCode = 'US';
-  //   mockFormCredentialService.hasSelectedPower.mockReturnValue(false);
-  //   mockFormCredentialService.powersHaveFunction.mockReturnValue(true);
+  it('it should submit credential with selected mandator country if is Signer', () => {
+    mockCountryService.getCountryFromIsoCode.mockReturnValue('States');
+    component.asSigner = true;
+    mockCountryService.getCountryFromName.mockReturnValue('mandatorCountry');
+    mockFormCredentialService.hasSelectedPower.mockReturnValue(true);
+    mockFormCredentialService.powersHaveFunction.mockReturnValue(true);
+    mockFormCredentialService.getPlainAddedPowers.mockReturnValue(mockPowers);
   
-  //   component.submitCredential();
-
-  //   expect(mockFormCredentialService.submitCredential).not.toHaveBeenCalled();
-  //   expect(translateService.instant).toHaveBeenCalledWith("error.one_power_min");
-  //   const message = translateService.instant("error.one_power_min");
-  //   expect(component.popupMessage).toBe(message);
-  //   expect(component.isPopupVisible).toBe(true);
-  // });
-
-  // it('it should not submit credential when submitCredential not all selected powers have selected functions', () => {
-  //   component.selectedMandateeCountryIsoCode = 'US';
-  //   mockFormCredentialService.hasSelectedPower.mockReturnValue(true);
-  //   mockFormCredentialService.powersHaveFunction.mockReturnValue(false);
+    component.submitCredential();
   
-  //   component.submitCredential();
+    expect(mockFormCredentialService.submitCredential).toHaveBeenCalled();
+    expect(mockFormCredentialService.submitCredential).toHaveBeenCalledWith(
+      component.credential,
+      'States',
+      'mandatorCountry',
+      mockPowers,
+      component.mandator,
+      component.addedMandatorLastName,
+      component.signer,
+      mockCredentialProcedureService,
+      expect.any(PopupComponent),
+      expect.any(Function)
+    );
+  });
 
-  //   expect(mockFormCredentialService.submitCredential).not.toHaveBeenCalled();
-  //   expect(translateService.instant).toHaveBeenCalledWith("error.one_power_min");
-  //   const message = translateService.instant("error.one_power_min");
-  //   expect(component.popupMessage).toBe(message);
-  //   expect(component.isPopupVisible).toBe(true);
-  // });
+  it('it should not submit credential when submitCredential is called with no selected powers', () => {
+    component.selectedMandateeCountryIsoCode = 'US';
+    mockFormCredentialService.hasSelectedPower.mockReturnValue(false);
+    mockFormCredentialService.powersHaveFunction.mockReturnValue(true);
+  
+    component.submitCredential();
 
-  // it('should navigate to credentials if submitting credential is successful', async () => {
-  //   const navigateSpy = mockRouter.navigate.mockResolvedValue(true);
-  //   const scrollToSpy = jest.spyOn(window, 'scrollTo').mockImplementation(() => {});
-  //   const popupSpy = jest.spyOn(component, 'openTempPopup');
-  //   Object.defineProperty(window, 'location', {
-  //     value: {
-  //       ...window.location,
-  //       reload: jest.fn(),
-  //     },
-  //     writable: true,
-  //   });
+    expect(mockFormCredentialService.submitCredential).not.toHaveBeenCalled();
+  });
 
-  //   component.selectedCountryIsoCode = 'US';
-  //   mockCountryService.getCountryPhoneFromIsoCountryCode.mockReturnValue('States');
-  //   mockFormCredentialService.hasSelectedPower.mockReturnValue(true);
-  //   mockFormCredentialService.powersHaveFunction.mockReturnValue(true);
-  //   mockFormCredentialService.getPlainAddedPowers.mockReturnValue(mockPowers);
+  it('it should not submit credential when submitCredential not all selected powers have selected functions', () => {
+    component.selectedMandateeCountryIsoCode = 'US';
+    mockFormCredentialService.hasSelectedPower.mockReturnValue(true);
+    mockFormCredentialService.powersHaveFunction.mockReturnValue(false);
+  
+    component.submitCredential();
+
+    expect(mockFormCredentialService.submitCredential).not.toHaveBeenCalled();
+  });
+
+  it('should navigate to credentials if submitting credential is successful', async () => {
+    mockCountryService.getCountryFromIsoCode.mockReturnValue('States');
+    component.asSigner = true;
+    mockCountryService.getCountryFromName.mockReturnValue('mandatorCountry');
+    mockFormCredentialService.hasSelectedPower.mockReturnValue(true);
+    mockFormCredentialService.powersHaveFunction.mockReturnValue(true);
+
+    const navigateSpy = mockRouter.navigate.mockResolvedValue(true);
+    const scrollToSpy = jest.spyOn(window, 'scrollTo').mockImplementation(() => {});
+    const popupSpy = jest.spyOn(component, 'openTempPopup');
+    Object.defineProperty(window, 'location', {
+      value: {
+        ...window.location,
+        reload: jest.fn(),
+      },
+      writable: true,
+    });
     
-  //   component.submitCredential();
-  //   await navigateSpy;
+    component.submitCredential();
+    await navigateSpy;
   
-  //   expect(mockFormCredentialService.submitCredential).toHaveBeenCalledWith(
-  //     component.credential,
-  //     'States',
-  //     mockPowers,
-  //     component.mandator,
-  //     component.addedMandatorLastName,
-  //     component.signer,
-  //     mockCredentialProcedureService,
-  //     expect.any(PopupComponent),
-  //     expect.any(Function)
-  //   );
-  //   expect(popupSpy).toHaveBeenCalled();
-  //   expect(navigateSpy).toHaveBeenCalledWith(['/organization/credentials']);
-  //   expect(scrollToSpy).toHaveBeenCalledWith(0, 0);
-  //   expect(window.location.reload).toHaveBeenCalled();
+    expect(mockFormCredentialService.submitCredential).toHaveBeenCalled();
+    expect(popupSpy).toHaveBeenCalled();
+    expect(navigateSpy).toHaveBeenCalledWith(['/organization/credentials']);
+    expect(scrollToSpy).toHaveBeenCalledWith(0, 0);
+    expect(window.location.reload).toHaveBeenCalled();
   
-  // });
+  });
 
   
   it('should close popup', fakeAsync(()=>{
