@@ -37,7 +37,6 @@ describe('MaxLengthDirective', () => {
 
     inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
     ngModel = fixture.debugElement.query(By.directive(NgModel)).injector.get(NgModel);
-    // console.log(inputEl)
     console.log(ngModel.control)
 
     validateSpy = jest.spyOn(directive, 'validate');
