@@ -2,11 +2,17 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { AlertService } from 'src/app/core/services/alert.service';
+import { TranslatePipe } from '@ngx-translate/core';
+import { QRCodeModule } from 'angularx-qrcode';
+import { NgIf } from '@angular/common';
+import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
 
 @Component({
-  selector: 'app-credencial-offer',
-  templateUrl: './credencial-offer.component.html',
-  styleUrls: ['./credencial-offer.component.scss']
+    selector: 'app-credencial-offer',
+    templateUrl: './credencial-offer.component.html',
+    styleUrls: ['./credencial-offer.component.scss'],
+    standalone: true,
+    imports: [NavbarComponent, NgIf, QRCodeModule, TranslatePipe]
 })
 export class CredencialOfferComponent implements OnInit {
   public qrCodeData?: string;

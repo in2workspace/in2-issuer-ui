@@ -11,11 +11,11 @@ describe('DialogComponent', () => {
     dialogRefMock = { close: jest.fn() };
 
     TestBed.configureTestingModule({
-      declarations: [DialogComponent],
-      providers: [
+    imports: [DialogComponent],
+    providers: [
         { provide: MatDialogRef, useValue: dialogRefMock }
-      ]
-    });
+    ]
+});
 
     fixture = TestBed.createComponent(DialogComponent);
     component = fixture.componentInstance;

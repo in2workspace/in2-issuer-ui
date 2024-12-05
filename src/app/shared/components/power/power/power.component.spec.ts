@@ -5,7 +5,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
-import { MaterialModule } from 'src/app/material.module';
 import { AuthService } from "../../../../core/services/auth.service";
 
 describe('PowerComponent', () => {
@@ -19,19 +18,18 @@ describe('PowerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PowerComponent],
-      imports: [
+    imports: [
         TranslateModule.forRoot(),
         FormsModule,
         BrowserAnimationsModule,
-        MaterialModule,
         RouterModule.forRoot([]),
-      ],
-      providers: [
+        PowerComponent,
+    ],
+    providers: [
         { provide: AuthService, useValue: mockAuthService },
-      ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA]
-    }).compileComponents();
+    ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+}).compileComponents();
   });
 
   beforeEach(() => {

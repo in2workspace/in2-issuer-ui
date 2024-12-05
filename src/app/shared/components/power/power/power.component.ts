@@ -1,11 +1,18 @@
 import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
 import { AuthService } from "../../../../core/services/auth.service";
 import { TempPower } from "../../../../core/models/temporal/temp-power.interface";
+import { TranslatePipe } from '@ngx-translate/core';
+import { MatSlideToggle } from '@angular/material/slide-toggle';
+import { PopupComponent } from '../../popup/popup.component';
+import { FormsModule } from '@angular/forms';
+import { NgIf, NgFor, NgTemplateOutlet } from '@angular/common';
 
 @Component({
-  selector: 'app-power',
-  templateUrl: './power.component.html',
-  styleUrls: ['./power.component.scss']
+    selector: 'app-power',
+    templateUrl: './power.component.html',
+    styleUrls: ['./power.component.scss'],
+    standalone: true,
+    imports: [NgIf, FormsModule, NgFor, NgTemplateOutlet, PopupComponent, MatSlideToggle, TranslatePipe]
 })
 export class PowerComponent {
   @Input() public isDisabled: boolean = false;
