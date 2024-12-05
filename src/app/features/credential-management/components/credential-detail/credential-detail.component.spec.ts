@@ -7,6 +7,8 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { LEARCredentialEmployee } from "../../../../core/models/entity/lear-credential-employee.entity";
 import { LearCredentialEmployeeDataDetail } from "../../../../core/models/dto/lear-credential-employee-data-detail.dto";
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { fakeAsync, tick } from '@angular/core/testing';
 
 describe('CredentialDetailComponent', () => {
   let component: CredentialDetailComponent;
@@ -15,6 +17,7 @@ describe('CredentialDetailComponent', () => {
     getCredentialProcedureById: jest.Mock;
     sendReminder: jest.Mock;
   };
+  let translateService:TranslateService;
 
   beforeEach(async () => {
     mockCredentialProcedureService = {
@@ -24,8 +27,9 @@ describe('CredentialDetailComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [CredentialDetailComponent],
-      imports: [BrowserAnimationsModule, RouterModule.forRoot([]), HttpClientModule],
+      imports: [BrowserAnimationsModule, RouterModule.forRoot([]), HttpClientModule, TranslateModule.forRoot({}),],
       providers: [
+        TranslateService,
         { provide: CredentialProcedureService, useValue: mockCredentialProcedureService },
         {
           provide: ActivatedRoute,
@@ -40,6 +44,7 @@ describe('CredentialDetailComponent', () => {
 
     fixture = TestBed.createComponent(CredentialDetailComponent);
     component = fixture.componentInstance;
+    translateService = TestBed.inject(TranslateService);
     jest.spyOn(console, 'error');
     jest.spyOn(console, 'log');
     fixture.detectChanges();
@@ -142,4 +147,22 @@ describe('CredentialDetailComponent', () => {
 
     expect(console.error).toHaveBeenCalledWith('Error sending reminder', 'Error');
   });
+
+  it('should set the title observable with the translated value', fakeAsync(() => {
+    const mockTranslatedValue = 'Translated Credential Details';
+    jest.spyOn(translateService, 'get').mockReturnValue(of(mockTranslatedValue));
+  
+    let emittedValue: string | undefined;
+  
+    component.title.subscribe((value) => {
+      emittedValue = value;
+    });
+  
+    tick(1000);
+  
+    expect(translateService.get).toHaveBeenCalledWith('credentialDetail.credentialDetails');
+    expect(emittedValue).toBe(mockTranslatedValue);
+  }));
+  
+  
 });

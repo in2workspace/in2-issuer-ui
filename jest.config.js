@@ -28,6 +28,6 @@ module.exports = {
       // '/src/app/app',
       // '/src/app/core/',
       // '/src/app/features/',
-      // '/src/app/shared/',
+      // '/src/app/shared/(?!components)'
     ]
    };

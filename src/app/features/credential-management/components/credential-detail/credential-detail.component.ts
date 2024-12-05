@@ -1,5 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { switchMap, timer } from 'rxjs';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { LEARCredentialEmployee } from "../../../../core/models/entity/lear-credential-employee.entity";
 import {LearCredentialEmployeeDataDetail} from "../../../../core/models/dto/lear-credential-employee-data-detail.dto";
@@ -9,12 +11,14 @@ import {LearCredentialEmployeeDataDetail} from "../../../../core/models/dto/lear
   templateUrl: './credential-detail.component.html',
 })
 export class CredentialDetailComponent implements OnInit {
+  public title = timer(0).pipe(switchMap(()=>this.translate.get("credentialDetail.credentialDetails")));
   public credentialId: string | null = null;
   public credential: LEARCredentialEmployee | null = null;
   public credentialStatus: string | null = null;
 
   private readonly route = inject(ActivatedRoute);
   private readonly credentialProcedureService = inject(CredentialProcedureService);
+  private readonly translate = inject(TranslateService);
 
   public ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
