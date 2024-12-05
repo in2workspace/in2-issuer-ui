@@ -37,7 +37,7 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
 
   public tempPowers: TempPower[] = []; //for detail view
   public countries: Country[] = [];
-  public selectedCountryIsoCode: string = '';
+  public selectedMandateeCountryIsoCode: string = '';
   public hasIn2OrganizationId = false;
   public addedMandatorLastName: string = '';
 
@@ -50,7 +50,7 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
       const mobilePhoneControl = form?.form.get('mobile_phone');
       return (
         !!this.credential.mobile_phone &&
-        (!this.selectedCountryIsoCode || this.selectedCountryIsoCode === '') &&
+        (!this.selectedMandateeCountryIsoCode || this.selectedMandateeCountryIsoCode === '') &&
         ((mobilePhoneControl?.dirty ?? false))
       );
     },
@@ -77,13 +77,14 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
     .subscribe(mandator2 => {
       if (mandator2) {
         if(this.viewMode === "create" && !this.asSigner){
-          this.mandator ={ 
+          this.mandator = { 
             'organizationIdentifier': mandator2.organizationIdentifier,
             'organization': mandator2.organization,
             'commonName':mandator2.commonName,
             'emailAddress':mandator2.emailAddress,
             'serialNumber':mandator2.serialNumber,
-            'country':mandator2.country}
+            'country':mandator2.country
+          }
         }
         this.authService.getSigner()
           .pipe(takeUntilDestroyed(this.destroyRef))
@@ -116,16 +117,21 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
   }
 
   public submitCredential(): void {
+    //optional
+    const selectedMandateeCountry: Country|undefined = this.countryService.getCountryFromIsoCode(this.selectedMandateeCountryIsoCode);
+    //mandatory if asSigner
+    let selectedMandatorCountry: Country|undefined = undefined;
+    if(this.asSigner){
+      selectedMandatorCountry = this.countryService.getCountryFromName(this.mandator.country);
+    }
+    
     //this condition is already applied in the template, so maybe it should be removed
-    const mandateeCountry: Country|undefined = this.countryService.getCountryFromIsoCode(this.selectedCountryIsoCode);
-    const mandatorCountry: Country|undefined = this.countryService.getCountryFromName(this.mandator.country);
-
-    if (this.hasSelectedPower() && this.selectedPowersHaveFunction() && mandatorCountry && mandateeCountry) {
+    if (this.hasSelectedPower() && this.selectedPowersHaveFunction()) {
       this.formService
         .submitCredential(
           this.credential,
-          mandateeCountry,
-          mandatorCountry,
+          selectedMandateeCountry,
+          selectedMandatorCountry,
           this.formService.getPlainAddedPowers(),
           this.mandator,
           this.addedMandatorLastName,
@@ -152,8 +158,7 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
           }
         });
     } else {
-      this.popupMessage = this.translate.instant("error.one_power_min");
-      this.openTempPopup();
+      console.error('Data to submit is not valid');
       return;
     }
   }

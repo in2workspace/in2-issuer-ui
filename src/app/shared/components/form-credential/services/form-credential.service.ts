@@ -76,10 +76,10 @@ export class FormCredentialService {
 
   public submitCredential(
     credential: Mandatee,
-    selectedMandateeCountry: Country,
-    selectedMandatorCountry: Country,
+    selectedMandateeCountry: Country | undefined,
+    selectedMandatorCountry: Country | undefined,
     addedPowers: TempPower[],
-    mandator: Mandator | null,
+    mandator: Mandator,
     mandatorLastName: string,
     signer: Signer,
     credentialProcedureService: CredentialProcedureService,
@@ -88,9 +88,23 @@ export class FormCredentialService {
   ): Observable<any> {
 
     const credentialToSubmit = { ...credential };
-    let mandatorToSubmit;
+    let mandatorToSubmit = structuredClone(mandator);
+
+    //Prepare mandatee
+    //todo trim name and last name
+    if(selectedMandateeCountry && credentialToSubmit.mobile_phone != ''){
+      const countryPrefix = `+${selectedMandateeCountry.phoneCode}`;
+      
+      //this condition should not be possible since it is restricted in template
+      if (!credentialToSubmit.mobile_phone?.startsWith(countryPrefix)) {
+        credentialToSubmit.mobile_phone = `${countryPrefix} ${credentialToSubmit.mobile_phone}`;
+      }
+    }
     
-    if(mandator){
+    //Prepare mandator
+    //todo trim name and last name
+    //this will only happen as a Signer
+    if(mandator && selectedMandatorCountry){
       //create full common name
       const mandatorFullName = mandator.commonName + ' ' + mandatorLastName;
       mandatorToSubmit = { ...mandator, commonName: mandatorFullName };
@@ -98,23 +112,9 @@ export class FormCredentialService {
       //create full VAT company name
       const fullOrgId = 'VAT' + selectedMandatorCountry.isoCountryCode + '-' + mandator.organizationIdentifier;
       mandatorToSubmit = { ...mandatorToSubmit, organizationIdentifier: fullOrgId };
-    }else{
-      // ? should just throw error?
-      mandatorToSubmit = {
-        organizationIdentifier: "",
-        organization: "",
-        commonName: "",
-        emailAddress: "",
-        serialNumber: "",
-        country: "",
-      };
     }
 
-    const countryPrefix = `+${selectedMandateeCountry.phoneCode}`;
-    //it might not be necessary to check if phone starts with prefix, since this is restricted in form
-    if (credentialToSubmit.mobile_phone != '' && !credentialToSubmit.mobile_phone?.startsWith(countryPrefix)) {
-      credentialToSubmit.mobile_phone = `${countryPrefix} ${credentialToSubmit.mobile_phone}`;
-    }
+    //Prepare powers
     const power: Power[] = addedPowers.map(option => {
       return this.checkTmfFunction(option);
     });
