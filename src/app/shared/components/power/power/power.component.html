@@ -86,7 +86,7 @@
     </div>
   </div>
   <button
-    *ngIf="!isDisabled"
+    [style.visibility]=" isDisabled ? 'hidden' : 'visible'"
     type="button"
     mat-mini-fab class="small-icon-button delete-power"
     color="warn"
