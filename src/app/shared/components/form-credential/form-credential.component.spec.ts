@@ -492,7 +492,6 @@ describe('FormCredentialComponent', () => {
     expect(window.location.reload).toHaveBeenCalled();
   
   });
-
   
   it('should close popup', fakeAsync(()=>{
     component.openTempPopup();

@@ -108,52 +108,31 @@ describe('PowerComponent', () => {
     expect(mockFormService.addPower).not.toHaveBeenCalled();
   });
 
-  // it('should add "Onboarding" option if organizationIdentifierIsIn2 is true', () => {
-  //   mockAuthService.hasIn2OrganizationIdentifier.mockReturnValue(true);
-  //   component.isDisabled = false;
-  //   mockFormService.getPlainSelectedPower.mockReturnValue('Onboarding');
-
-  //   component.ngOnInit();
-  //   component.addPower();
-
-  //   expect(mockFormService.addPower).toHaveBeenCalledWith(
-  //     {
-  //       tmf_action: '',
-  //       tmf_domain: 'DOME',
-  //       tmf_function: 'Onboarding',
-  //       tmf_type: 'Domain',
-  //       execute: false,
-  //       create: false,
-  //       update: false,
-  //       delete: false,
-  //       upload: false,
-  //       attest: false
-  //     });
-  
-
-  //   expect(mockFormService.setSelectedPowerName).toHaveBeenCalledWith('');
-  // });
-
-  it('should not add an option if selectedOption is empty', () => {
-    mockAuthService.hasIn2OrganizationIdentifier.mockReturnValue(false);
+  it('should add "Onboarding" option if organizationIdentifierIsIn2 is true', () => {
+    mockAuthService.hasIn2OrganizationIdentifier.mockReturnValue(true);
     component.isDisabled = false;
-    mockFormService.getPlainSelectedPower.mockReturnValue('Certification');
+    mockFormService.getPlainSelectedPower.mockReturnValue('Onboarding');
 
     component.ngOnInit();
     component.addPower();
 
-    expect(mockFormService.addPower).not.toHaveBeenCalled();
+    expect(mockFormService.addPower).toHaveBeenCalledWith(
+      {
+        tmf_action: '',
+        tmf_domain: 'DOME',
+        tmf_function: 'Onboarding',
+        tmf_type: 'Domain',
+        execute: false,
+        create: false,
+        update: false,
+        delete: false,
+        upload: false,
+        attest: false
+      }, false);
+  
+
+    expect(mockFormService.setSelectedPowerName).toHaveBeenCalledWith('');
   });
-
-  // it('should add an option if it does not already exist', () => {
-  //   component.isDisabled = false;
-  //   mockFormService.getPlainSelectedPower.mockReturnValue('Certification');
-
-  //   component.ngOnInit();
-  //   component.addPower();
-
-  //   expect(mockFormService.addPower).not.toHaveBeenCalled();
-  // });
 
   it('should add "Certification" option if organizationIdentifierIsIn2 is true', () => {
     mockAuthService.hasIn2OrganizationIdentifier.mockReturnValue(true);
@@ -180,6 +159,17 @@ describe('PowerComponent', () => {
     );
 
     expect(mockFormService.setSelectedPowerName).toHaveBeenCalledWith('');
+  });
+
+  it('should not add an option if component is disabled (detail view)', () => {
+    component.isDisabled = true;
+    mockAuthService.hasIn2OrganizationIdentifier.mockReturnValue(true);
+    mockFormService.getPlainSelectedPower.mockReturnValue('Certification');
+ 
+    component.ngOnInit();
+    component.addPower();
+
+    expect(mockFormService.addPower).not.toHaveBeenCalled();
   });
 
   it('should not add an option if it already exists', () => {
