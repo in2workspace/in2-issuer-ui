@@ -1,19 +1,52 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, NgModel, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, NgModel, Validators, FormsModule } from '@angular/forms';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { Country } from './services/country.service';
 import { FormCredentialService } from './services/form-credential.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { PopupComponent } from '../popup/popup.component';
-import { Router } from '@angular/router';
-import { ErrorStateMatcher } from '@angular/material/core';
+import { Router, RouterLink } from '@angular/router';
+import { ErrorStateMatcher, MatOption } from '@angular/material/core';
 import { TempPower } from "../../../core/models/temporal/temp-power.interface";
 import { Mandatee, OrganizationDetails, Power } from "../../../core/models/entity/lear-credential-employee.entity";
+import { TranslatePipe } from '@ngx-translate/core';
+import { MatButton } from '@angular/material/button';
+import { PowerComponent } from '../power/power/power.component';
+import { MatSelect, MatSelectTrigger } from '@angular/material/select';
+import { NgIf, NgStyle, NgFor, NgTemplateOutlet } from '@angular/common';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError, MatPrefix } from '@angular/material/form-field';
+import { MatCard, MatCardContent } from '@angular/material/card';
+import { NavbarComponent } from '../navbar/navbar.component';
 
 @Component({
-  selector: 'app-form-credential',
-  templateUrl: './form-credential.component.html',
-  styleUrls: ['./form-credential.component.scss'],
+    selector: 'app-form-credential',
+    templateUrl: './form-credential.component.html',
+    styleUrls: ['./form-credential.component.scss'],
+    standalone: true,
+    imports: [
+        NavbarComponent,
+        MatCard,
+        MatCardContent,
+        FormsModule,
+        MatFormField,
+        MatLabel,
+        MatInput,
+        NgIf,
+        MatError,
+        NgStyle,
+        MatSelect,
+        MatSelectTrigger,
+        MatOption,
+        NgFor,
+        MatPrefix,
+        PowerComponent,
+        MatButton,
+        RouterLink,
+        NgTemplateOutlet,
+        PopupComponent,
+        TranslatePipe,
+    ],
 })
 export class FormCredentialComponent implements OnInit {
 

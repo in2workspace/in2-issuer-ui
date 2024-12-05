@@ -1,12 +1,16 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
-import { LEARCredentialEmployee } from "../../../../core/models/entity/lear-credential-employee.entity";
-import {LearCredentialEmployeeDataDetail} from "../../../../core/models/dto/lear-credential-employee-data-detail.dto";
+import { LEARCredentialEmployee } from "../../core/models/entity/lear-credential-employee.entity";
+import {LearCredentialEmployeeDataDetail} from "../../core/models/dto/lear-credential-employee-data-detail.dto";
+import { FormCredentialComponent } from '../../shared/components/form-credential/form-credential.component';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'app-credential-detail',
-  templateUrl: './credential-detail.component.html',
+    selector: 'app-credential-detail',
+    templateUrl: './credential-detail.component.html',
+    standalone: true,
+    imports: [NgIf, FormCredentialComponent],
 })
 export class CredentialDetailComponent implements OnInit {
   public credentialId: string | null = null;

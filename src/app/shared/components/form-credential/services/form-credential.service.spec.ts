@@ -8,7 +8,6 @@ import { MatTableModule } from '@angular/material/table';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { AuthModule } from 'angular-auth-oidc-client';
-import { SharedModule } from 'src/app/shared/shared.module';
 import { PopupComponent } from '../../popup/popup.component';
 import { TempPower } from "../../../../core/models/temporal/temp-power.interface";
 import { Mandatee, Mandator, Power, Signer } from "../../../../core/models/entity/lear-credential-employee.entity";
@@ -34,7 +33,6 @@ describe('FormCredentialService', () => {
       imports: [
         MatTableModule,
         MatPaginatorModule,
-        SharedModule,
         HttpClientTestingModule,
         BrowserAnimationsModule,
         RouterModule.forRoot([]),
