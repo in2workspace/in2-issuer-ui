@@ -27,7 +27,8 @@ export class CustomEmailValidatorDirective implements Validator {
    *   - Allows maximum 255 characters [this is validated outside the regex]
    */
   private readonly emailPattern = 
-  /^[a-zA-Z0-9](?:[a-zA-Z0-9+_-]|(?:\.[a-zA-Z0-9+_-]))*@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*\.[a-zA-Z]+$/;
+  /^[a-zA-Z0-9](?:[a-zA-Z0-9+_-]|(?:\.[a-zA-Z0-9+_-]))*@[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?)*\.[a-zA-Z]+$/;
+
 
   public validate(control: AbstractControl): ValidationErrors | null {
     const email = control.value;
