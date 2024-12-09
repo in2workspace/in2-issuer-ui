@@ -211,7 +211,7 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
 
   public showReminderButton(): boolean{
     // todo state WITHDRAWN is temporary, this reference shall be removed when there are no more VCs with this state
-    return (this.viewMode === 'detail') && ((this.credentialStatus === 'WITHDRAWN') || (this.credentialStatus === 'PEND_DOWNLOAD'))
+    return (this.viewMode === 'detail') && ((this.credentialStatus === 'WITHDRAWN') || (this.credentialStatus === 'DRAFT') || (this.credentialStatus === 'PEND_DOWNLOAD'))
   }
 
   public ngOnDestroy(): void {

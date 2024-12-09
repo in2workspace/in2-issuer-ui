@@ -36,16 +36,22 @@ export class CredentialManagementComponent implements OnInit, AfterViewInit {
 
     this.dataSource.sortingDataAccessor = (item: CredentialProcedure, property: string) => {
       switch (property) {
-        case 'status':
-          return item.credential_procedure.status.toLowerCase();
-        case 'full_name':
+        case 'status': {
+          // todo this is temporary, only while there are VCs with status WITHDRAWN
+          const status = item.credential_procedure.status.toLowerCase();
+          return status === 'withdrawn' ? 'draft' : status;
+        }
+        case 'full_name': {
           return item.credential_procedure.full_name.toLowerCase();
-        case 'updated':
+        }
+        case 'updated': {
           return item.credential_procedure.updated.toLowerCase();
+        }
         default:
           return '';
       }
     };
+    
   }
 
   public loadCredentialData(): void {

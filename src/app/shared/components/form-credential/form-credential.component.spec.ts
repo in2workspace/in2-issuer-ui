@@ -382,6 +382,10 @@ describe('FormCredentialComponent', () => {
     showBtn = component.showReminderButton();
     expect(showBtn).toBe(true);
 
+    component.credentialStatus = 'DRAFT';
+    showBtn = component.showReminderButton();
+    expect(showBtn).toBe(true);
+
     component.credentialStatus = 'VALID';
     showBtn = component.showReminderButton();
     expect(showBtn).toBe(false);
