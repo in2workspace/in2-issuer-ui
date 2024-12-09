@@ -132,11 +132,12 @@ export class FormCredentialService {
     };
     
     return credentialProcedureService.createProcedure(credentialProcedure).pipe(
-      //show same popup when success and error?
+      //show same popup when success?
       tap(() => {
         resetForm();
       }),
       catchError(error => {
+        //server-error-interceptor acts here
         throw error;
       })
     );

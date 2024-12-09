@@ -152,8 +152,7 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
             });
           },
           error: (err:Error) => {
-            this.popupMessage = this.translate.instant("error.credential_submission");
-            this.openTempPopup();
+            //server-error-interceptor acts here
             console.error(err);
           }
         });
@@ -211,6 +210,7 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
   }
 
   public showReminderButton(): boolean{
+    // todo state WITHDRAWN is temporary, this reference shall be removed when there are no more VCs with this state
     return (this.viewMode === 'detail') && ((this.credentialStatus === 'WITHDRAWN') || (this.credentialStatus === 'PEND_DOWNLOAD'))
   }
 
