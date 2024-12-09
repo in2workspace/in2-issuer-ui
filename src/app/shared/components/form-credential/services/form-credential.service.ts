@@ -1,21 +1,146 @@
 import { Injectable } from '@angular/core';
-import { TempPower } from "../../../../core/models/temporal/temp-power.interface";
 import { PopupComponent } from '../../popup/popup.component';
 import { ProcedureRequest } from 'src/app/core/models/dto/procedure-request.dto';
-import { BehaviorSubject, Observable } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
-import { Mandatee, Mandator, Power } from "../../../../core/models/entity/lear-credential-employee.entity";
+import { Mandatee, Mandator, Power, Signer } from "../../../../core/models/entity/lear-credential-employee.entity";
+import { Observable, BehaviorSubject } from 'rxjs';
+import { TempPower } from 'src/app/core/models/temporal/temp-power.interface';
+import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
+import { Country } from './country.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FormCredentialService {
+  //states
+  public addedPowersSubject = new BehaviorSubject<TempPower[]>([]);
+  public selectedPowerNameSubject = new BehaviorSubject<string>('');
+  
+  private readonly addedPowers$ = this.addedPowersSubject.asObservable();
+  private readonly selectedPowerName$ = this.selectedPowerNameSubject.asObservable();
 
-  private readonly showMandatorSubject = new BehaviorSubject<boolean>(false);
-  showMandator$ = this.showMandatorSubject.asObservable();
+  public getPlainAddedPowers(): TempPower[]{
+    return this.addedPowersSubject.getValue();
+  }
 
-  setShowMandator(value: boolean): void {
-    this.showMandatorSubject.next(value);
+  public getPlainSelectedPower(): string{
+    return this.selectedPowerNameSubject.getValue();
+  }
+
+  public getAddedPowers(): Observable<TempPower[]>{
+    return this.addedPowers$;
+  }
+
+  public getSelectedPowerName(): Observable<string>{
+    return this.selectedPowerName$;
+  }
+
+  public setAddedPowers(powers:TempPower[]): void{
+    const newaddedPowers = structuredClone(powers);
+    this.addedPowersSubject.next(newaddedPowers);
+  }
+
+  public setSelectedPowerName(powerName:string): void{
+    this.selectedPowerNameSubject.next(powerName);
+  }
+
+  public addPower(newPower: TempPower, isDisabled: boolean): void {
+    if (isDisabled) return;
+
+    const addedPowers = structuredClone([...this.getPlainAddedPowers(), newPower]);
+    this.setAddedPowers(addedPowers);
+  }
+
+
+  public removePower(optionToRemove:string){
+    let currentAddedPowers = this.getPlainAddedPowers();
+    currentAddedPowers = currentAddedPowers.filter(
+      (option) => option.tmf_function !== optionToRemove
+    );
+    this.setAddedPowers(currentAddedPowers);
+  }
+
+  public reset(){
+    this.setAddedPowers([]);
+    this.setSelectedPowerName('');
+  }
+
+  public resetForm(): Mandatee {
+    return { first_name: '', last_name: '', email: '', mobile_phone: '' };
+  }
+
+  public handleSelectChange(event: Event): string {
+    const selectElement = event.target as HTMLSelectElement;
+    return selectElement.value;
+  }
+
+  public submitCredential(
+    credential: Mandatee,
+    selectedMandateeCountry: Country | undefined,
+    selectedMandatorCountry: Country | undefined,
+    addedPowers: TempPower[],
+    mandator: Mandator,
+    mandatorLastName: string,
+    signer: Signer,
+    credentialProcedureService: CredentialProcedureService,
+    popupComponent: PopupComponent,
+    resetForm: () => void
+  ): Observable<any> {
+
+    const credentialToSubmit = { ...credential };
+    let mandatorToSubmit = structuredClone(mandator);
+
+    //Prepare mandatee
+    //todo trim name and last name
+    if(selectedMandateeCountry && credentialToSubmit.mobile_phone != ''){
+      const countryPrefix = `+${selectedMandateeCountry.phoneCode}`;
+      
+      //this condition should not be possible since it is restricted in template
+      if (!credentialToSubmit.mobile_phone?.startsWith(countryPrefix)) {
+        credentialToSubmit.mobile_phone = `${countryPrefix} ${credentialToSubmit.mobile_phone}`;
+      }
+    }
+    
+    //Prepare mandator
+    //todo trim name and last name
+    //this will only happen as a Signer
+    if(mandator && selectedMandatorCountry){
+      //create full common name
+      const mandatorFullName = mandator.commonName + ' ' + mandatorLastName;
+      mandatorToSubmit = { ...mandator, commonName: mandatorFullName };
+
+      //create full VAT company name
+      const fullOrgId = 'VAT' + selectedMandatorCountry.isoCountryCode + '-' + mandator.organizationIdentifier;
+      mandatorToSubmit = { ...mandatorToSubmit, organizationIdentifier: fullOrgId };
+    }
+
+    //Prepare powers
+    const power: Power[] = addedPowers.map(option => {
+      return this.checkTmfFunction(option);
+    });
+
+    const credentialProcedure: ProcedureRequest = {
+      schema: "LEARCredentialEmployee",
+      format: "jwt_vc_json",
+      payload: {
+        mandatee: credentialToSubmit,
+        mandator: mandatorToSubmit,
+        signer: signer,
+        power: power
+      },
+      operation_mode: "S"
+    };
+    
+    return credentialProcedureService.createProcedure(credentialProcedure).pipe(
+      //show same popup when success?
+      tap(() => {
+        resetForm();
+      }),
+      catchError(error => {
+        //server-error-interceptor acts here
+        throw error;
+      })
+    );
   }
 
   public convertToTempPower(power: Power): TempPower {
@@ -32,62 +157,6 @@ export class FormCredentialService {
       upload: tmf_action.includes('Upload'),
       attest: tmf_action.includes('Attest')
     };
-  }
-
-  public resetForm(): Mandatee {
-    return { first_name: '', last_name: '', email: '', mobile_phone: '' };
-  }
-
-  public addOption(addedOptions: TempPower[], options: TempPower[], isDisabled: boolean): TempPower[] {
-    if (isDisabled) return addedOptions;
-    return options;
-  }
-
-  public handleSelectChange(event: Event): string {
-    const selectElement = event.target as HTMLSelectElement;
-    return selectElement.value;
-  }
-
-  public submitCredential(
-    credential: Mandatee,
-    selectedCountry: string,
-    addedOptions: TempPower[],
-    mandator: Mandator | null,
-    signer: any,
-    credentialProcedureService: any,
-    popupComponent: PopupComponent,
-    resetForm: () => void
-  ): Observable<any> {
-    const countryPrefix = `+${selectedCountry}`;
-    if (credential.mobile_phone != '' && !credential.mobile_phone?.startsWith(countryPrefix)) {
-      credential.mobile_phone = `${countryPrefix} ${credential.mobile_phone}`;
-    }
-    const power: Power[] = addedOptions.map(option => {
-      return this.checkTmfFunction(option);
-    });
-
-    const credentialProcedure: ProcedureRequest = {
-      schema: "LEARCredentialEmployee",
-      format: "jwt_vc_json",
-      payload: {
-        mandatee: credential,
-        mandator: mandator!,
-        signer: signer,
-        power: power
-      },
-      operation_mode: "S"
-    };
-
-    return credentialProcedureService.createProcedure(credentialProcedure).pipe(
-      tap(() => {
-        popupComponent.showPopup();
-        resetForm();
-      }),
-      catchError(error => {
-        popupComponent.showPopup();
-        throw error;
-      })
-    );
   }
 
   public checkTmfFunction(option: TempPower): any {
@@ -118,6 +187,21 @@ export class FormCredentialService {
       tmf_type: option.tmf_type
     };
 
+  }
+
+  public checkIfPowerIsAdded(powerName: string): boolean{
+    const addedPowers = this.getPlainAddedPowers();
+    return addedPowers.some(pow => pow.tmf_function === powerName);
+  }
+
+  public powersHaveFunction(): boolean{
+    return this.getPlainAddedPowers().every((option:TempPower) =>
+      option.execute || option.create || option.update || option.delete || option.upload
+    );
+  }
+
+  public hasSelectedPower(): boolean{
+    return this.getPlainAddedPowers().length > 0;
   }
 
 }

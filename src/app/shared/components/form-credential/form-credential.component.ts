@@ -1,35 +1,48 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, NgModel, Validators } from '@angular/forms';
+import { Component, DestroyRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
+import { FormControl, FormGroupDirective, NgForm, NgModel } from '@angular/forms';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
-import { Country } from './services/country.service';
+import { Country, CountryService } from './services/country.service';
 import { FormCredentialService } from './services/form-credential.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { PopupComponent } from '../popup/popup.component';
 import { Router } from '@angular/router';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { TempPower } from "../../../core/models/temporal/temp-power.interface";
-import { Mandatee, OrganizationDetails, Power } from "../../../core/models/entity/lear-credential-employee.entity";
+import { TranslateService } from '@ngx-translate/core';
+import { Observable } from 'rxjs';
+import { Mandatee, OrganizationDetails, Power } from 'src/app/core/models/entity/lear-credential-employee.entity';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-form-credential',
   templateUrl: './form-credential.component.html',
   styleUrls: ['./form-credential.component.scss'],
 })
-export class FormCredentialComponent implements OnInit {
+export class FormCredentialComponent implements OnInit, OnDestroy {
 
   @ViewChild(PopupComponent) public popupComponent!: PopupComponent;
   @ViewChild('formDirective') public formDirective!: FormGroupDirective;
   @Output() public sendReminder = new EventEmitter<void>();
   @Input() public viewMode: 'create' | 'detail' = 'create';
+  @Input() public asSigner: boolean = false;
   @Input() public isDisabled: boolean = false;
   @Input() public title: string = '';
-  @Input() public showButton: boolean = false;
-  @Input() public hideButton: boolean = true;
   @Input() public power: Power[] = [];
   @Input() public credentialStatus: string = '';
   @Input() public credential: Mandatee = this.initializeCredential();
   @Input() public mandator: OrganizationDetails = this.initializeOrganizationDetails();
   public signer: OrganizationDetails = this.initializeOrganizationDetails();
+
+  public addedPowers$: Observable<TempPower[]>;
+
+  public tempPowers: TempPower[] = []; //for detail view
+  public countries: Country[] = [];
+  public selectedMandateeCountryIsoCode: string = '';
+  public hasIn2OrganizationId = false;
+  public addedMandatorLastName: string = '';
+
+  public popupMessage: string = '';
+  public isPopupVisible: boolean = false;
 
   //if mobile has been introduced and unfocused and there is not country, show error
   public countryErrorMatcher: ErrorStateMatcher = {
@@ -37,160 +50,172 @@ export class FormCredentialComponent implements OnInit {
       const mobilePhoneControl = form?.form.get('mobile_phone');
       return (
         !!this.credential.mobile_phone &&
-        (!this.selectedCountryCode || this.selectedCountryCode === '') &&
-        ((mobilePhoneControl?.touched ?? false))
+        (!this.selectedMandateeCountryIsoCode || this.selectedMandateeCountryIsoCode === '') &&
+        ((mobilePhoneControl?.dirty ?? false))
       );
     },
   };
 
-  public selectedOption = '';
-  public addedOptions: TempPower[] = [];
-  public tempPowers: TempPower[] = [];
-  public countries: Country[] = [];
-  public selectedCountryCode: string = '';
-  public credentialForm!: FormGroup;
-
-  public popupMessage: string = '';
-  public isPopupVisible: boolean = false;
-
-  public showMandator: boolean = false;
-
+  public readonly translate = inject(TranslateService);
   private readonly credentialProcedureService = inject(CredentialProcedureService);
-  private readonly fb: FormBuilder = inject(FormBuilder);
-  private readonly formCredentialService = inject(FormCredentialService);
+  private readonly formService = inject(FormCredentialService);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly countryService = inject(CountryService);
+  private readonly destroyRef = inject(DestroyRef);
 
-  public markPrefixAndPhoneAsTouched(prefixControl: NgModel, phoneControl: NgModel): void {
-    if (prefixControl) {
-      prefixControl.control.markAsTouched();
-    }
-    if (phoneControl) {
-      phoneControl.control.markAsTouched();
-    }
+  public constructor(){
+    this.countries = this.countryService.getSortedCountries();
+    this.addedPowers$ = this.formService.getAddedPowers();
+    this.hasIn2OrganizationId = this.authService.hasIn2OrganizationIdentifier();
   }
 
   public ngOnInit(): void {
 
-    this.formCredentialService.showMandator$.subscribe((value) => {
-      this.showMandator = value;
-    });
-
-    this.credentialForm = this.fb.group({
-      first_name: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*')]],
-      last_name: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*')]],
-      email: ['', [Validators.required, Validators.email]],
-      mobile_phone: ['', [Validators.pattern('[0-9 ]*')]],
-      country: ['', Validators.required],
-
-    });
-
-    this.authService.getMandator().subscribe(mandator2 => {
+    this.authService.getMandator()
+    .pipe(takeUntilDestroyed(this.destroyRef))
+    .subscribe(mandator2 => {
       if (mandator2) {
-        if(this.viewMode === "create" && !this.showMandator){
-          this.mandator ={ 'organizationIdentifier': mandator2.organizationIdentifier,
+        if(this.viewMode === "create" && !this.asSigner){
+          this.mandator = { 
+            'organizationIdentifier': mandator2.organizationIdentifier,
             'organization': mandator2.organization,
             'commonName':mandator2.commonName,
             'emailAddress':mandator2.emailAddress,
             'serialNumber':mandator2.serialNumber,
-            'country':mandator2.country}
-        }
-        this.authService.getSigner().subscribe(signer => {
-          this.signer = {
-            organizationIdentifier: signer?.organizationIdentifier ?? '',
-            organization: signer?.organization ?? '',
-            commonName: signer?.commonName ?? '',
-            emailAddress: signer?.emailAddress ?? '',
-            serialNumber: signer?.serialNumber ?? '',
-            country: signer?.country ?? ''
+            'country':mandator2.country
           }
-        })
+        }
+        this.authService.getSigner()
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe(signer => {
+            this.signer = {
+              organizationIdentifier: signer?.organizationIdentifier ?? '',
+              organization: signer?.organization ?? '',
+              commonName: signer?.commonName ?? '',
+              emailAddress: signer?.emailAddress ?? '',
+              serialNumber: signer?.serialNumber ?? '',
+              country: signer?.country ?? ''
+            }
+          });
       }
     });
 
     if (this.viewMode === 'detail') {
-      this.tempPowers = this.power.map(power => this.formCredentialService.convertToTempPower(power));
+      this.tempPowers = this.power.map(power => this.formService.convertToTempPower(power));
     }
   }
 
-  public getCountryName(code: string): string {
-    const country = this.countries.find(c => c.code === code);
-    return country ? country.name : '';
-  }
-
-  public addOption(options: TempPower[]): void {
-    this.addedOptions = this.formCredentialService.addOption(this.addedOptions, options, this.isDisabled);
-  }
-
-  public handleSelectChange(event: Event): void {
-    this.selectedOption = this.formCredentialService.handleSelectChange(event);
-  }
-
-  public hasSelectedPowers(): boolean {
-    return this.addedOptions.every(option =>
-      option.execute || option.create || option.update || option.delete || option.upload
-    );
-  }
-
-  public showReminderButton(){
-    return (this.credentialStatus === 'WITHDRAWN') || (this.credentialStatus === 'PEND_DOWNLOAD')
+  public markPrefixAndPhoneAsTouched(prefixControl: NgModel, phoneControl: NgModel): void {
+    if (prefixControl) {
+      //so angular material can mark the input as invalid
+      prefixControl.control.markAsTouched();
+    }
+    if (phoneControl) {
+      phoneControl.control.markAsDirty();
+    }
   }
 
   public submitCredential(): void {
-    console.log('submit')
-    if (this.addedOptions.length > 0 && this.hasSelectedPowers()) {
-      this.formCredentialService
+    //optional
+    const selectedMandateeCountry: Country|undefined = this.countryService.getCountryFromIsoCode(this.selectedMandateeCountryIsoCode);
+    //mandatory if asSigner
+    let selectedMandatorCountry: Country|undefined = undefined;
+    if(this.asSigner){
+      selectedMandatorCountry = this.countryService.getCountryFromName(this.mandator.country);
+    }
+    
+    //this condition is already applied in the template, so maybe it should be removed
+    if (this.hasSelectedPower() && this.selectedPowersHaveFunction()) {
+      this.formService
         .submitCredential(
           this.credential,
-          this.selectedCountryCode,
-          this.addedOptions,
+          selectedMandateeCountry,
+          selectedMandatorCountry,
+          this.formService.getPlainAddedPowers(),
           this.mandator,
+          this.addedMandatorLastName,
           this.signer,
           this.credentialProcedureService,
           this.popupComponent,
           this.resetForm.bind(this)
         )
         .subscribe({
+          //service opens popup too
           next: () => {
-            // Navigate after successful submission
+            this.popupMessage = this.translate.instant("credentialIssuance.success");
+            //navigates before popup is shown
+            this.openTempPopup();
             this.router.navigate(['/organization/credentials']).then(() => {
-              window.scrollTo(0, 0); // Reset scroll position
-              location.reload(); // Refresh the page
+              window.scrollTo(0, 0);
+              location.reload(); 
             });
           },
-          error: (err) => {
-            this.popupMessage = 'Error occurred while submitting credential.';
-            this.isPopupVisible = true;
-            setTimeout(()=>{this.isPopupVisible=false}, 1000)
+          error: (err:Error) => {
+            //server-error-interceptor acts here
             console.error(err);
           }
         });
     } else {
-      this.popupMessage = 'Each power must have at least one action selected.';
-      this.isPopupVisible = true;
+      console.error('Data to submit is not valid');
+      return;
     }
+  }
+
+  public openTempPopup(){
+    this.isPopupVisible = true;
+    setTimeout(()=>{this.isPopupVisible=false}, 1000);
   }
 
   public triggerSendReminder(): void {
     this.sendReminder.emit();
   }
 
-  private resetForm(): void {
-    this.credential = this.formCredentialService.resetForm();
+  //this function is currently unused, since user is redirected after successful submit
+  public resetForm(): void {
+    this.credential = this.formService.resetForm();
     this.formDirective.resetForm();
-    this.addedOptions = [];
-    this.credentialForm.reset();
-    this.authService.getMandator().subscribe(mandator2 => {
+    this.formService.setAddedPowers([]);
+    this.authService.getMandator()
+    .pipe(takeUntilDestroyed(this.destroyRef))
+    .subscribe(mandator2 => {
       if (mandator2) {
         this.mandator = mandator2;
-        this.signer = { 'organizationIdentifier': mandator2.organizationIdentifier,
-                        'organization': mandator2.organization,
-                        'commonName':mandator2.commonName,
-                        'emailAddress':mandator2.emailAddress,
-                        'serialNumber':mandator2.serialNumber,
-                        'country':mandator2.country}
+        this.signer = { 
+          'organizationIdentifier': mandator2.organizationIdentifier,
+          'organization': mandator2.organization,
+          'commonName':mandator2.commonName,
+          'emailAddress':mandator2.emailAddress,
+          'serialNumber':mandator2.serialNumber,
+          'country':mandator2.country
+        }
       }
     });
+  }
+
+   //functions that are used in template; it may be better to avoid executing them in template
+  public getCountryNameFromIsoCode(code: string): string {
+    return this.countryService.getCountryNameFromIsoCountryCode(code);
+  }
+  public getCountryPhoneFromIsoCountryCode(code: string): string {
+    return this.countryService.getCountryPhoneFromIsoCountryCode(code);
+  }
+
+  public hasSelectedPower(): boolean{
+    return this.formService.hasSelectedPower();
+  }
+
+  public selectedPowersHaveFunction(): boolean {
+    return this.formService.powersHaveFunction();
+  }
+
+  public showReminderButton(): boolean{
+    // todo state WITHDRAWN is temporary, this reference shall be removed when there are no more VCs with this state
+    return (this.viewMode === 'detail') && ((this.credentialStatus === 'WITHDRAWN') || (this.credentialStatus === 'DRAFT') || (this.credentialStatus === 'PEND_DOWNLOAD'))
+  }
+
+  public ngOnDestroy(): void {
+    this.formService.reset();
   }
 
   private initializeCredential(): Mandatee {
@@ -212,4 +237,5 @@ export class FormCredentialComponent implements OnInit {
       country: ''
     };
   }
+
 }

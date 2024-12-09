@@ -1,10 +1,13 @@
 {
   "mandator": {
-    "organizationid": "ID de la organización",
-    "organization": "Organización",
+    "organizationid": "Número VAT de empresa",
+    "organizationidHint": "Introduzca solo los caracteres de después de 'VAT-'.Por ejemplo, si el número completo es 'VAT-123ABC', introduzca '123ABC'",
+    "organization": "Nombre de empresa",
     "name": "Nombre",
-    "email": "Dirección de correo",
-    "serialNumber": "Número de serie",
+    "first-name": "Nombre",
+    "last-name": "Apellidos",
+    "email": "Dirección electrónica",
+    "serialNumber": "Número de tarjeta ID",
     "country": "País",
     "select-country": "Seleccione un país",
     "no-country-error": "Seleccione un prefijo",
@@ -60,17 +63,43 @@
       "delete": "Delete",
       "upload": "Upload",
       "attest": "Attest",
+      "select": "Selecciona un poder",
       "invalid_power_title": "Acceso Denegado",
       "invalid_power": "No tienes la política necesaria para acceder"
     },
     "credentialIssuance":{
-      "create": "Create Credential"
+      "learCredentialEmployee": "LEARCredentialEmployee",
+       "success": "LEARCredentialEmployee creada con éxito"
     },
     "error": {
       "not_found": "The requested resource was not found.",
       "unauthorized": "You are not authorized to perform this action.",
       "forbidden": "You do not have permission to access this resource.",
       "internal_server": "An error occurred on the server. Please try again later.",
-      "unknown_error": "An unknown error occurred. Please try again."
+      "unknown_error": "An unknown error occurred. Please try again.",
+      "credential_submission": "Ha habido un error al crear la credencial.",
+      "one_power_min":"Se requiere por lo menos un poder, y cada power requiere por los menos una acción.",
+      "form":{
+        "required": "Campo obligatorio.",
+        "invalid_character": "Caracteres inválidos",
+        "only_letters_and_numbers": "Solo letras y cifras",
+        "only_letters_numbers_hyphens": "Solo letras, cifras y guiones",
+        "only_numbers": "Solo cifras",
+        "max_50": "50 caracteres como máximo",
+        "max_15": "15 caracteres como máximo",
+        "max_9": "9 caracteres como máximo",
+        "min_9": "9 caracteres como mínimo",
+        "min_7": "7 caracteres como mínimo",
+        "min_2": "2 caracteres como mínimo",
+        "email":{
+          "invalid": "Email inválido",
+          "local_part_max": "La parte local del email no puede superar los 64 caracteres.",
+          "domain_part_max": "El dominio del email no puede superar los 189 caracteres.",
+          "main_domain_part_min": "La parte entre '@' y '.' debe tener un mínimo de 2 caracteres.",
+          "top_level_domain_part_min": "La parte entre el último punto y el final debe tener un mínimo de 2 caracteres."
+        },
+        "no_power": "Añade por lo menos un poder",
+        "no_function": "Cada poder debe tener por lo menos una acción"
+      }
     }
 }
