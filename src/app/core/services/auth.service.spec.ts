@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { AuthService } from './auth.service';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { of } from 'rxjs';
+import {UserDataAuthenticationResponse} from "../models/dto/user-data-authentication-response.dto";
 
 const mockAuthResponse = {
   isAuthenticated: false,
@@ -231,14 +232,59 @@ describe('AuthService', () => {
   });
 
   it('should set isAuthenticated, userData, and token if the user is authenticated and has onboarding execute power', done => {
-    const mockUserData = {
-      vc: JSON.stringify({
+    const mockUserData: UserDataAuthenticationResponse = {
+      sub: 'subValue',
+      commonName: 'commonNameValue',
+      country: 'countryValue',
+      serialNumber: 'serialNumberValue',
+      email_verified: true,
+      preferred_username: 'preferred_usernameValue',
+      given_name: 'givenNameValue',
+      vc: {
+        id: 'some-id',
+        type: ['VerifiableCredential', 'LEARCredentialEmployee'],
         credentialSubject: {
           mandate: {
-            power: [{ tmf_function: 'Onboarding', tmf_action: 'Execute' }]
+            id: 'mandate-id',
+            life_span: {
+              start_date_time: '2021-01-01T00:00:00Z',
+              end_date_time: '2021-12-31T23:59:59Z'
+            },
+            mandatee: {
+              first_name: 'John',
+              last_name: 'Doe',
+              email: 'john.doe@example.com'
+            },
+            mandator: {
+              organizationIdentifier: 'ORG123',
+              organization: 'Test Organization',
+              commonName: 'Mandator Name',
+              emailAddress: 'mandator@example.com',
+              serialNumber: '123456',
+              country: 'Testland'
+            },
+            signer: {
+              organizationIdentifier: 'SIGNER123',
+              organization: 'Signer Organization',
+              commonName: 'Signer Name',
+              emailAddress: 'signer@example.com',
+              serialNumber: '7891011',
+              country: 'Signerland'
+            },
+            power: [{ tmf_function: 'Onboarding', tmf_action: 'Execute' , tmf_domain: 'domain', tmf_type: 'type' }]
           }
-        }
-      })
+        },
+        expirationDate: '2024-12-31T23:59:59Z',
+        issuanceDate: '2024-01-01T00:00:00Z',
+        issuer: 'issuer-id',
+        validFrom: '2024-01-01T00:00:00Z'
+      },
+      'tenant-id': 'tenant-idValue',
+      emailAddress: 'someone@example.com',
+      organizationIdentifier: 'ORG123',
+      organization: 'Test Organization',
+      name: 'John Doe',
+      family_name: 'Doe'
     };
 
     const mockAuthResponse = {
@@ -252,7 +298,7 @@ describe('AuthService', () => {
     service.handleLoginCallback();
 
     service.isLoggedIn().subscribe(isAuthenticated => {
-      expect(isAuthenticated).toBeTruthy()
+      expect(isAuthenticated).toBeTruthy();
 
       service.getUserData().subscribe(userData => {
         expect(userData).toEqual(mockUserData);
@@ -266,14 +312,60 @@ describe('AuthService', () => {
   });
 
   it('should call logout if the user is authenticated but does not have onboarding execute power', () => {
-    const mockUserData = {
-      vc: JSON.stringify({
+    const mockUserData: UserDataAuthenticationResponse = {
+      sub: 'sub',
+      commonName: 'commonName',
+      country: 'country',
+      serialNumber: 'serialNumber',
+      email_verified: true,
+      preferred_username: 'preferred_username',
+      given_name: 'given_name',
+      vc: {
+        id: 'some-id',
+        type: ['VerifiableCredential', 'LEARCredentialEmployee'],
         credentialSubject: {
           mandate: {
-            power: [{ tmf_function: 'OtherFunction', tmf_action: 'Read' }]
+            id: 'mandate-id',
+            life_span: {
+              end_date_time: '2024-12-31T23:59:59Z',
+              start_date_time: '2024-01-01T00:00:00Z'
+            },
+            mandator: {
+              organizationIdentifier: 'ORG123',
+              organization: 'Test Organization',
+              commonName: 'Mandator Name',
+              emailAddress: 'mandator@example.com',
+              serialNumber: '123456',
+              country: 'Testland'
+            },
+            signer: {
+              organizationIdentifier: 'SIGNER123',
+              organization: 'Signer Organization',
+              commonName: 'Signer Name',
+              emailAddress: 'signer@example.com',
+              serialNumber: '7891011',
+              country: 'Signerland'
+            },
+            mandatee: {
+              first_name: 'John',
+              last_name: 'Doe',
+              email: '',
+              mobile_phone: ''
+            },
+            power: [{ tmf_function: 'OtherFunction', tmf_action: 'Read', tmf_type: 'type', tmf_domain: 'domain' }]
           }
-        }
-      })
+        },
+        expirationDate: '2024-12-31T23:59:59Z',
+        issuanceDate: '2024-01-01T00:00:00Z',
+        issuer: 'issuer-id',
+        validFrom: '2024-01-01T00:00:00Z'
+      },
+      'tenant-id': 'tenant-id',
+      emailAddress: 'someone@example.com',
+      organizationIdentifier: 'ORG123',
+      organization: 'Test Organization',
+      name: 'John Doe',
+      family_name: 'Doe'
     };
 
     const mockAuthResponse = {
@@ -283,13 +375,13 @@ describe('AuthService', () => {
     };
 
     oidcSecurityService.checkAuth.mockReturnValue(of(mockAuthResponse));
-
     jest.spyOn(service, 'logout');
 
     service.handleLoginCallback();
 
     expect(service.logout).toHaveBeenCalled();
   });
+
 
   it('should not set any subjects if the user is not authenticated', done => {
     const mockAuthResponse = {
@@ -317,10 +409,24 @@ describe('AuthService', () => {
   });
 
   it('should set isAuthenticated, userData, mandator, signer, email and name when the user is authenticated', done => {
-    const mockUserData = {
-      vc: JSON.stringify({
+    const mockUserData: UserDataAuthenticationResponse = {
+      sub: 'sub',
+      commonName: 'commonName',
+      country: 'country',
+      serialNumber: 'serialNumber',
+      email_verified: true,
+      preferred_username: 'preferred_username',
+      given_name: 'given_name',
+      vc: {
+        id: 'some-id',
+        type: ['VerifiableCredential', 'LEARCredentialEmployee'],
         credentialSubject: {
           mandate: {
+            id: 'mandate-id',
+            life_span: {
+              end_date_time: '2024-12-31T23:59:59Z',
+              start_date_time: '2024-01-01T00:00:00Z'
+            },
             mandator: {
               organizationIdentifier: 'ORG123',
               organization: 'Test Organization',
@@ -339,12 +445,24 @@ describe('AuthService', () => {
             },
             mandatee: {
               first_name: 'John',
-              last_name: 'Doe'
+              last_name: 'Doe',
+              email: 'jhonDoe@example.com',
+              mobile_phone: ''
             },
-            power: [{ tmf_function: 'Onboarding', tmf_action: 'Execute' }]
+            power: [{ tmf_function: 'Onboarding', tmf_action: 'Execute', tmf_domain: 'domain', tmf_type: 'type' }]
           }
-        }
-      })
+        },
+        expirationDate: '2024-12-31T23:59:59Z',
+        issuanceDate: '2024-01-01T00:00:00Z',
+        issuer: 'issuer-id',
+        validFrom: '2024-01-01T00:00:00Z'
+      },
+      'tenant-id': 'tenant-id',
+      emailAddress: 'someone@example.com',
+      organizationIdentifier: 'ORG123',
+      organization: 'Test Organization',
+      name: 'John Doe',
+      family_name: 'Doe'
     };
 
     const mockAuthResponse = {
@@ -365,6 +483,7 @@ describe('AuthService', () => {
           expect(userData).toEqual(mockUserData);
 
           service.getToken().subscribe(token => {
+            // Según el código actual, el token no se setea aquí
             expect(token).toEqual('');
 
             service.getMandator().subscribe(mandator => {

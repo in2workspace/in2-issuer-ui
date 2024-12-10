@@ -34,49 +34,36 @@ export class AuthService {
         this.userPowers = this.extractUserPowers(userData);
         this.userDataSubject.next(userData);
 
-        const vcObject = this.extractVCFromUserData(userData)
+        const learCredential = this.extractVCFromUserData(userData)
 
         const mandator = {
-          organizationIdentifier: vcObject.credentialSubject.mandate.mandator.organizationIdentifier,
-          organization: vcObject.credentialSubject.mandate.mandator.organization,
-          commonName: vcObject.credentialSubject.mandate.mandator.commonName,
-          emailAddress: vcObject.credentialSubject.mandate.mandator.emailAddress,
-          serialNumber: vcObject.credentialSubject.mandate.mandator.serialNumber,
-          country: vcObject.credentialSubject.mandate.mandator.country
+          organizationIdentifier: learCredential.credentialSubject.mandate.mandator.organizationIdentifier,
+          organization: learCredential.credentialSubject.mandate.mandator.organization,
+          commonName: learCredential.credentialSubject.mandate.mandator.commonName,
+          emailAddress: learCredential.credentialSubject.mandate.mandator.emailAddress,
+          serialNumber: learCredential.credentialSubject.mandate.mandator.serialNumber,
+          country: learCredential.credentialSubject.mandate.mandator.country
         };
         this.mandatorSubject.next(mandator);
 
         const  signer = {
-          organizationIdentifier: vcObject.credentialSubject.mandate.signer.organizationIdentifier,
-          organization: vcObject.credentialSubject.mandate.signer.organization,
-          commonName: vcObject.credentialSubject.mandate.signer.commonName,
-          emailAddress: vcObject.credentialSubject.mandate.signer.emailAddress,
-          serialNumber: vcObject.credentialSubject.mandate.signer.serialNumber,
-          country: vcObject.credentialSubject.mandate.signer.country
+          organizationIdentifier: learCredential.credentialSubject.mandate.signer.organizationIdentifier,
+          organization: learCredential.credentialSubject.mandate.signer.organization,
+          commonName: learCredential.credentialSubject.mandate.signer.commonName,
+          emailAddress: learCredential.credentialSubject.mandate.signer.emailAddress,
+          serialNumber: learCredential.credentialSubject.mandate.signer.serialNumber,
+          country: learCredential.credentialSubject.mandate.signer.country
         }
         this.signerSubject.next(signer)
 
-        const emailName = vcObject.credentialSubject.mandate.mandator.emailAddress.split('@')[0];
-        const name = vcObject.credentialSubject.mandate.mandatee.first_name + ' ' + vcObject.credentialSubject.mandate.mandatee.last_name;
+        const emailName = learCredential.credentialSubject.mandate.mandator.emailAddress.split('@')[0];
+        const name = learCredential.credentialSubject.mandate.mandatee.first_name + ' ' + learCredential.credentialSubject.mandate.mandatee.last_name;
 
         this.emailSubject.next(emailName);
         this.nameSubject.next(name);
       }
       return isAuthenticated;
     }));
-  }
-
-  private extractVCFromUserData(userData: UserDataAuthenticationResponse) {
-    return userData.vc ? JSON.parse(userData.vc) : null;
-  }
-
-  private extractUserPowers(userData: UserDataAuthenticationResponse): Power[] {
-    try {
-      const vcObject = this.extractVCFromUserData(userData)
-      return vcObject?.credentialSubject?.mandate?.power || [];
-    } catch (error) {
-      return [];
-    }
   }
 
   // POLICY: login_restriction_policy
@@ -153,6 +140,19 @@ export class AuthService {
 
   public getName(): Observable<string> {
     return this.nameSubject.asObservable()
+  }
+
+  private extractVCFromUserData(userData: UserDataAuthenticationResponse) {
+    return userData.vc || null;
+  }
+
+  private extractUserPowers(userData: UserDataAuthenticationResponse): Power[] {
+    try {
+      const learCredential = this.extractVCFromUserData(userData)
+      return learCredential?.credentialSubject.mandate.power || [];
+    } catch (error) {
+      return [];
+    }
   }
 
 }

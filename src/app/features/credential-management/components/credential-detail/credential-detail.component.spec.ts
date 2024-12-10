@@ -1,14 +1,13 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http';
-import { of, throwError } from 'rxjs';
-import { CredentialDetailComponent } from './credential-detail.component';
-import { ActivatedRoute, RouterModule } from '@angular/router';
-import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
-import { LEARCredentialEmployee } from "../../../../core/models/entity/lear-credential-employee.entity";
-import { LearCredentialEmployeeDataDetail } from "../../../../core/models/dto/lear-credential-employee-data-detail.dto";
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { fakeAsync, tick } from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {HttpClientModule} from '@angular/common/http';
+import {of, throwError} from 'rxjs';
+import {CredentialDetailComponent} from './credential-detail.component';
+import {ActivatedRoute, RouterModule} from '@angular/router';
+import {CredentialProcedureService} from 'src/app/core/services/credential-procedure.service';
+import {LEARCredentialEmployeeJwtPayload} from "../../../../core/models/entity/lear-credential-employee.entity";
+import {LearCredentialEmployeeDataDetail} from "../../../../core/models/dto/lear-credential-employee-data-detail.dto";
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
 
 describe('CredentialDetailComponent', () => {
   let component: CredentialDetailComponent;
@@ -60,7 +59,7 @@ describe('CredentialDetailComponent', () => {
   });
 
   it('should load credential details on init', () => {
-    const mockCredentialManagement: LEARCredentialEmployee = {
+    const mockCredentialManagement: LEARCredentialEmployeeJwtPayload = {
 
         "sub": null,
         "nbf": "2024-05-30T14:01:03.809829546Z",
@@ -93,6 +92,14 @@ describe('CredentialDetailComponent', () => {
                         "organization": "IN2, Ingeniería de la Información, S.L.",
                         "organizationIdentifier": "VATES-B60645900",
                         "serialNumber": "B60645900"
+                    },
+                    "signer": {
+                      "commonName": "IN2",
+                      "country": "ES",
+                      "emailAddress": "rrhh@in2.es",
+                      "organization": "IN2, Ingeniería de la Información, S.L.",
+                      "organizationIdentifier": "VATES-B60645900",
+                      "serialNumber": "B60645900"
                     },
                     "power": []
                 }
@@ -151,18 +158,18 @@ describe('CredentialDetailComponent', () => {
   it('should set the title observable with the translated value', fakeAsync(() => {
     const mockTranslatedValue = 'Translated Credential Details';
     jest.spyOn(translateService, 'get').mockReturnValue(of(mockTranslatedValue));
-  
+
     let emittedValue: string | undefined;
-  
+
     component.title.subscribe((value) => {
       emittedValue = value;
     });
-  
+
     tick(1000);
-  
+
     expect(translateService.get).toHaveBeenCalledWith('credentialDetail.credentialDetails');
     expect(emittedValue).toBe(mockTranslatedValue);
   }));
-  
-  
+
+
 });
