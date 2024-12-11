@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { of, throwError } from 'rxjs';
@@ -7,6 +7,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { LEARCredentialEmployee } from "../../core/models/entity/lear-credential-employee.entity";
 import { LearCredentialEmployeeDataDetail } from "../../core/models/dto/lear-credential-employee-data-detail.dto";
+import {TranslateService} from "@ngx-translate/core";
 
 describe('CredentialDetailComponent', () => {
   let component: CredentialDetailComponent;
@@ -15,6 +16,7 @@ describe('CredentialDetailComponent', () => {
     getCredentialProcedureById: jest.Mock;
     sendReminder: jest.Mock;
   };
+  let translateService:TranslateService;
 
   beforeEach(async () => {
     mockCredentialProcedureService = {
@@ -25,6 +27,7 @@ describe('CredentialDetailComponent', () => {
     await TestBed.configureTestingModule({
     imports: [BrowserAnimationsModule, RouterModule.forRoot([]), HttpClientModule, CredentialDetailComponent],
     providers: [
+        TranslateService,
         { provide: CredentialProcedureService, useValue: mockCredentialProcedureService },
         {
             provide: ActivatedRoute,
@@ -39,6 +42,7 @@ describe('CredentialDetailComponent', () => {
 
     fixture = TestBed.createComponent(CredentialDetailComponent);
     component = fixture.componentInstance;
+    translateService = TestBed.inject(TranslateService);
     jest.spyOn(console, 'error');
     jest.spyOn(console, 'log');
     fixture.detectChanges();
@@ -56,47 +60,47 @@ describe('CredentialDetailComponent', () => {
   it('should load credential details on init', () => {
     const mockCredentialManagement: LEARCredentialEmployee = {
 
-        "sub": null,
-        "nbf": "2024-05-30T14:01:03.809829546Z",
-        "iss": "VATES-B60645900",
-        "exp": "2024-06-29T14:01:03.809829546Z",
-        "iat": "2024-05-30T14:01:03.809829546Z",
-        "vc": {
-            "id": "78bcf8bc-6f65-4e4c-9ac2-3167cf92ad8f",
-            "type": [
-                "LEARCredentialEmployee",
-                "VerifiableCredential"
-            ],
-            "credentialSubject": {
-                "mandate": {
-                    "id": "2e29531f-1762-4dc7-8bb1-6f800e1dfd33",
-                    "life_span": {
-                        "end_date_time": "2024-06-29T14:01:03.809829546Z",
-                        "start_date_time": "2024-05-30T14:01:03.809829546Z"
-                    },
-                    "mandatee": {
-                        "email": "test@test.es",
-                        "first_name": "test",
-                        "last_name": "test",
-                        "mobile_phone": "+34 12451212"
-                    },
-                    "mandator": {
-                        "commonName": "IN2",
-                        "country": "ES",
-                        "emailAddress": "rrhh@in2.es",
-                        "organization": "IN2, Ingeniería de la Información, S.L.",
-                        "organizationIdentifier": "VATES-B60645900",
-                        "serialNumber": "B60645900"
-                    },
-                    "power": []
-                }
+      "sub": null,
+      "nbf": "2024-05-30T14:01:03.809829546Z",
+      "iss": "VATES-B60645900",
+      "exp": "2024-06-29T14:01:03.809829546Z",
+      "iat": "2024-05-30T14:01:03.809829546Z",
+      "vc": {
+        "id": "78bcf8bc-6f65-4e4c-9ac2-3167cf92ad8f",
+        "type": [
+          "LEARCredentialEmployee",
+          "VerifiableCredential"
+        ],
+        "credentialSubject": {
+          "mandate": {
+            "id": "2e29531f-1762-4dc7-8bb1-6f800e1dfd33",
+            "life_span": {
+              "end_date_time": "2024-06-29T14:01:03.809829546Z",
+              "start_date_time": "2024-05-30T14:01:03.809829546Z"
             },
-            "expirationDate": "2024-06-29T14:01:03.809829546Z",
-            "issuanceDate": "2024-05-30T14:01:03.809829546Z",
-            "issuer": "VATES-B60645900",
-            "validFrom": "2024-05-30T14:01:03.809829546Z"
+            "mandatee": {
+              "email": "test@test.es",
+              "first_name": "test",
+              "last_name": "test",
+              "mobile_phone": "+34 12451212"
+            },
+            "mandator": {
+              "commonName": "IN2",
+              "country": "ES",
+              "emailAddress": "rrhh@in2.es",
+              "organization": "IN2, Ingeniería de la Información, S.L.",
+              "organizationIdentifier": "VATES-B60645900",
+              "serialNumber": "B60645900"
+            },
+            "power": []
+          }
         },
-        "jti": "e2975afc-6df2-4183-b84b-d797133650eb"
+        "expirationDate": "2024-06-29T14:01:03.809829546Z",
+        "issuanceDate": "2024-05-30T14:01:03.809829546Z",
+        "issuer": "VATES-B60645900",
+        "validFrom": "2024-05-30T14:01:03.809829546Z"
+      },
+      "jti": "e2975afc-6df2-4183-b84b-d797133650eb"
     }
 
     const mockCredential: LearCredentialEmployeeDataDetail = {
@@ -141,4 +145,20 @@ describe('CredentialDetailComponent', () => {
 
     expect(console.error).toHaveBeenCalledWith('Error sending reminder', 'Error');
   });
+
+  it('should set the title observable with the translated value', fakeAsync(() => {
+    const mockTranslatedValue = 'Translated Credential Details';
+    jest.spyOn(translateService, 'get').mockReturnValue(of(mockTranslatedValue));
+
+    let emittedValue: string | undefined;
+
+    component.title.subscribe((value) => {
+      emittedValue = value;
+    });
+
+    tick(1000);
+
+    expect(translateService.get).toHaveBeenCalledWith('credentialDetail.credentialDetails');
+    expect(emittedValue).toBe(mockTranslatedValue);
+  }));
 });

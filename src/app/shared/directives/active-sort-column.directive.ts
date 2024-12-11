@@ -7,7 +7,7 @@ import { MatSort, Sort } from '@angular/material/sort';
 
 @Directive({
     selector: '[appActiveSortColumn]',
-    standalone: true,
+    standalone: true
 })
 
 export class ActiveSortColumnDirective implements OnInit, OnDestroy {

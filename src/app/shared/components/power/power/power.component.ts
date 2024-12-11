@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { AuthService } from "../../../../core/services/auth.service";
 import { TempPower } from "../../../../core/models/temporal/temp-power.interface";
 import { TranslatePipe } from '@ngx-translate/core';
@@ -6,6 +6,11 @@ import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { PopupComponent } from '../../popup/popup.component';
 import { FormsModule } from '@angular/forms';
 import { NgIf, NgFor, NgTemplateOutlet } from '@angular/common';
+import {Observable} from "rxjs";
+import {MatDialog} from "@angular/material/dialog";
+import {FormCredentialService} from "../../form-credential/services/form-credential.service";
+import {MatSelectChange} from "@angular/material/select";
+import {ConfirmDialogComponent} from "../../confirm-dialog/confirm-dialog.component";
 
 @Component({
     selector: 'app-power',
@@ -15,49 +20,47 @@ import { NgIf, NgFor, NgTemplateOutlet } from '@angular/common';
     imports: [NgIf, FormsModule, NgFor, NgTemplateOutlet, PopupComponent, MatSlideToggle, TranslatePipe]
 })
 export class PowerComponent {
+  // set-once-and-don't-change properties
   @Input() public isDisabled: boolean = false;
-  @Input() public viewMode: 'create' | 'detail' = 'create';
+  @Input() public viewMode: 'create' | 'detail' = 'create'; //currently isDisabled and viewMode are interchangeable
   @Input() public power: TempPower[] = [];
-  @Input() public addedOptions: TempPower[] = [];
-  @Output() public addedOptionsChange = new EventEmitter<TempPower[]>();
-  @Output() public selectedOptionChange = new EventEmitter<string>();
-  @Output() public handleSelectChange = new EventEmitter<Event>();
-
-  public selectedOption: string = '';
-  public popupMessage: string = '';
-  public isPopupVisible: boolean = false;
   public organizationIdentifierIsIn2: boolean = false;
 
+  //streams (form states)
+  public addedPowers$: Observable<TempPower[]>
+  public selectedPower$: Observable<string>;
+
   private readonly authService = inject(AuthService);
+  private readonly dialog = inject(MatDialog);
+  private readonly formService = inject(FormCredentialService);
 
   ngOnInit(): void {
     this.organizationIdentifierIsIn2 = this.authService.hasIn2OrganizationIdentifier();
   }
 
-  public addOption(): void {
+  public constructor(){
+    this.addedPowers$ = this.formService.getAddedPowers();
+    this.selectedPower$ = this.formService.getSelectedPowerName();
+  }
+
+  public addPower(): void {
     if (this.isDisabled) return;
+    const selectedPower = this.formService.getPlainSelectedPower();
 
-    if (this.addedOptions.some((option) => option.tmf_function === this.selectedOption)) {
-      this.showPopup('This option has already been added.');
-      return;
-    }
-    if (!this.selectedOption) {
-      this.showPopup('Please select an option.');
-      return;
-    }
+    if(this.isOptionDisabled(selectedPower)) return;
 
-    if (this.selectedOption === 'Onboarding' && !this.organizationIdentifierIsIn2) {
+    if (selectedPower === 'Onboarding' && !this.organizationIdentifierIsIn2) {
       return;
     }
 
-    if (this.selectedOption === 'Certification' && !this.organizationIdentifierIsIn2) {
+    if (selectedPower === 'Certification' && !this.organizationIdentifierIsIn2) {
       return;
     }
 
-    const newOption: TempPower = {
+    const newPower: TempPower = {
       tmf_action: '',
       tmf_domain: 'DOME',
-      tmf_function: this.selectedOption,
+      tmf_function: selectedPower,
       tmf_type: 'Domain',
       execute: false,
       create: false,
@@ -67,37 +70,47 @@ export class PowerComponent {
       attest: false
     };
 
-    switch(this.selectedOption) {
+    switch(selectedPower) {
       case 'Certification':
-        newOption.upload = false;
-        newOption.attest = false;
+        newPower.upload = false;
+        newPower.attest = false;
         break;
       case 'ProductOffering':
-        newOption.create = false;
-        newOption.update = false;
-        newOption.delete = false;
+        newPower.create = false;
+        newPower.update = false;
+        newPower.delete = false;
         break;
       case 'Onboarding':
-        newOption.execute = false;
+        newPower.execute = false;
         break;
       default:
         break;
     }
 
-    this.addedOptions.push(newOption);
-    this.addedOptionsChange.emit(this.addedOptions);
-    this.selectedOption = '';
+    this.formService.addPower(newPower, this.isDisabled);
+    this.formService.setSelectedPowerName('');
   }
 
-  public onHandleSelectChange(event: Event): void {
-    this.handleSelectChange.emit(event);
+  public removePower(powerToRemove: string): void {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: `Remove Power ${powerToRemove}`,
+        message: `Are you sure you want to remove this power: ${powerToRemove}?`,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result: boolean) => {
+      if (result) {
+        this.formService.removePower(powerToRemove);
+      }
+    });
   }
 
-  private showPopup(message: string): void {
-    this.popupMessage = message;
-    this.isPopupVisible = true;
-    setTimeout(()=>{
-      this.isPopupVisible=false
-    }, 1000);
+  public onHandleSelectChange(event: MatSelectChange): void {
+    this.formService.setSelectedPowerName(event.value);
+  }
+
+  public isOptionDisabled(power: string): boolean {
+    return this.formService.checkIfPowerIsAdded(power);
   }
 }

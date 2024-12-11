@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, inject, ViewChild } from '@angular/core';
+import {AfterViewInit, Component, inject, OnInit, ViewChild} from '@angular/core';
 import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { Router } from '@angular/router';
@@ -41,7 +41,7 @@ import { NavbarComponent } from '../../shared/components/navbar/navbar.component
         TranslatePipe,
     ],
 })
-export class CredentialManagementComponent implements AfterViewInit {
+export class CredentialManagementComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) public paginator!: MatPaginator;
   @ViewChild(MatSort) public sort!: MatSort;
   public displayedColumns: string[] = ['status', 'full_name', 'updated'];
@@ -53,24 +53,33 @@ export class CredentialManagementComponent implements AfterViewInit {
   private readonly formCredentialService = inject(FormCredentialService);
   private readonly router = inject(Router);
 
+  public ngOnInit(){
+    this.isValidOrganizationIdentifier = this.authService.hasIn2OrganizationIdentifier();
+  }
+
   public ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    this.isValidOrganizationIdentifier = this.authService.hasIn2OrganizationIdentifier()
     this.loadCredentialData();
 
     this.dataSource.sortingDataAccessor = (item: CredentialProcedure, property: string) => {
       switch (property) {
-        case 'status':
-          return item.credential_procedure.status.toLowerCase();
-        case 'full_name':
+        case 'status': {
+          // todo this is temporary, only while there are VCs with status WITHDRAWN
+          const status = item.credential_procedure.status.toLowerCase();
+          return status === 'withdrawn' ? 'draft' : status;
+        }
+        case 'full_name': {
           return item.credential_procedure.full_name.toLowerCase();
-        case 'updated':
+        }
+        case 'updated': {
           return item.credential_procedure.updated.toLowerCase();
+        }
         default:
           return '';
       }
     };
+
   }
 
   public loadCredentialData(): void {
@@ -85,13 +94,11 @@ export class CredentialManagementComponent implements AfterViewInit {
   }
 
   public createNewCredential(): void {
-    this.formCredentialService.setShowMandator(false);
-    this.router.navigate(['/organization/credentials/create2',this.isValidOrganizationIdentifier ? "admin" : ""]);
+    this.router.navigate(['/organization/credentials/create']);
   }
 
   public createCredentialAsSigner(): void {
-    this.formCredentialService.setShowMandator(true);
-    this.router.navigate(['/organization/credentials/create2',this.isValidOrganizationIdentifier ? "admin" : ""]);
+    this.router.navigate(['/organization/credentials/create2', this.isValidOrganizationIdentifier ? "admin" : ""]);
   }
 
   public goToCredentialDetails(credential_procedures: CredentialProcedure): void {
