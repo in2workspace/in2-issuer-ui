@@ -62,6 +62,20 @@ export class AuthService {
     }));
   }
 
+
+  private extractVCFromUserData(userData: UserDataAuthenticationResponse) {
+    return userData.vc || null;
+  }
+
+  private extractUserPowers(userData: UserDataAuthenticationResponse): Power[] {
+    try {
+      const learCredential = this.extractVCFromUserData(userData)
+      return learCredential?.credentialSubject.mandate.power || [];
+    } catch (error) {
+      return [];
+    }
+  }
+
   private getProfileSigner() {
       if (this.profile && this.profile !== 'production') {
         console.log("AuthService --> getProfileSigner() --> Should not PRD: " + this.profile);
@@ -85,19 +99,6 @@ export class AuthService {
       }
     }
 
-
-  private extractVCFromUserData(userData: UserDataAuthenticationResponse) {
-    return userData.vc ? JSON.parse(userData.vc) : null;
-  }
-
-  private extractUserPowers(userData: UserDataAuthenticationResponse): Power[] {
-    try {
-      const vcObject = this.extractVCFromUserData(userData)
-      return vcObject?.credentialSubject?.mandate?.power || [];
-    } catch (error) {
-      return [];
-    }
-  }
 
   // POLICY: login_restriction_policy
   public hasOnboardingExecutePower(): boolean {
@@ -175,17 +176,5 @@ export class AuthService {
     return this.nameSubject.asObservable()
   }
 
-  private extractVCFromUserData(userData: UserDataAuthenticationResponse) {
-    return userData.vc || null;
-  }
-
-  private extractUserPowers(userData: UserDataAuthenticationResponse): Power[] {
-    try {
-      const learCredential = this.extractVCFromUserData(userData)
-      return learCredential?.credentialSubject.mandate.power || [];
-    } catch (error) {
-      return [];
-    }
-  }
 
 }
