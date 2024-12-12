@@ -78,7 +78,6 @@ export class AuthService {
 
   private getProfileSigner() {
       if (this.profile && this.profile !== 'production') {
-        console.log("AuthService --> getProfileSigner() --> Should not PRD: " + this.profile);
         return {
           organizationIdentifier: "VATEU-B99999999",
           organization: "OLIMPO",
