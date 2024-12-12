@@ -49,7 +49,7 @@ export class AuthService {
         };
         this.mandatorSubject.next(mandator);
 
-        const  signer = this.getProfileSigner()
+        const signer = this.getProfileSigner()
         this.signerSubject.next(signer)
 
         const emailName = vcObject.credentialSubject.mandate.mandator.emailAddress.split('@')[0];
@@ -62,7 +62,7 @@ export class AuthService {
     }));
   }
 
-  private getProfileSigner() : Signer {
+  private getProfileSigner() {
       if (this.profile && this.profile !== 'production') {
         console.log("AuthService --> getProfileSigner() --> Should not PRD: " + this.profile);
         return {
