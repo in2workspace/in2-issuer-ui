@@ -6,7 +6,7 @@ import {CredentialDetailComponent} from './credential-detail.component';
 import {ActivatedRoute, RouterModule} from '@angular/router';
 import {CredentialProcedureService} from 'src/app/core/services/credential-procedure.service';
 import {LEARCredentialEmployeeJwtPayload} from "../../../../core/models/entity/lear-credential-employee.entity";
-import {LearCredentialEmployeeDataDetail} from "../../../../core/models/dto/lear-credential-employee-data-detail.dto";
+import {CredentialProcedureDetail} from "../../../../core/models/dto/lear-credential-employee-data-detail.dto";
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 
 describe('CredentialDetailComponent', () => {
@@ -112,7 +112,7 @@ describe('CredentialDetailComponent', () => {
         "jti": "e2975afc-6df2-4183-b84b-d797133650eb"
     }
 
-    const mockCredential: LearCredentialEmployeeDataDetail = {
+    const mockCredential: CredentialProcedureDetail = {
       procedure_id: '1',
       credential_status:'Active',
       credential: mockCredentialManagement,

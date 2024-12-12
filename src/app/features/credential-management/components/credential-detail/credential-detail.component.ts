@@ -4,7 +4,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { switchMap, timer } from 'rxjs';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { LEARCredentialEmployeeJwtPayload } from "../../../../core/models/entity/lear-credential-employee.entity";
-import {LearCredentialEmployeeDataDetail} from "../../../../core/models/dto/lear-credential-employee-data-detail.dto";
+import {CredentialProcedureDetail} from "../../../../core/models/dto/lear-credential-employee-data-detail.dto";
+import {VerifiableCertificationJwtPayload} from "../../../../core/models/entity/verifiable-certification.entity";
 
 @Component({
   selector: 'app-credential-detail',
@@ -13,7 +14,7 @@ import {LearCredentialEmployeeDataDetail} from "../../../../core/models/dto/lear
 export class CredentialDetailComponent implements OnInit {
   public title = timer(0).pipe(switchMap(()=>this.translate.get("credentialDetail.credentialDetails")));
   public credentialId: string | null = null;
-  public credential: LEARCredentialEmployeeJwtPayload | null = null;
+  public credential: LEARCredentialEmployeeJwtPayload | VerifiableCertificationJwtPayload | null = null;
   public credentialStatus: string | null = null;
 
   private readonly route = inject(ActivatedRoute);
@@ -31,9 +32,9 @@ export class CredentialDetailComponent implements OnInit {
 
   public loadCredentialDetail(procedureId: string): void {
     this.credentialProcedureService.getCredentialProcedureById(procedureId).subscribe({
-      next: (credentials: LearCredentialEmployeeDataDetail) => {
-        this.credential = credentials['credential'];
-        this.credentialStatus = credentials['credential_status'];
+      next: (details: CredentialProcedureDetail) => {
+        this.credential = details.credential;
+        this.credentialStatus = details.credential_status;
       },
       error: (error: any) => {
         console.error('Error fetching credential details', error);
@@ -52,5 +53,17 @@ export class CredentialDetailComponent implements OnInit {
         }
       });
     }
+  }
+
+  public isLearCredential(payload: LEARCredentialEmployeeJwtPayload | VerifiableCertificationJwtPayload): payload is LEARCredentialEmployeeJwtPayload {
+    return 'vc' in payload
+      && 'credentialSubject' in (payload as LEARCredentialEmployeeJwtPayload).vc
+      && 'mandate' in (payload as LEARCredentialEmployeeJwtPayload).vc.credentialSubject;
+  }
+
+  public isVerifiableCertification(payload: LEARCredentialEmployeeJwtPayload | VerifiableCertificationJwtPayload): payload is VerifiableCertificationJwtPayload {
+    return 'vc' in payload
+      && 'credentialSubject' in (payload as VerifiableCertificationJwtPayload).vc
+      && 'company' in (payload as VerifiableCertificationJwtPayload).vc.credentialSubject;
   }
 }

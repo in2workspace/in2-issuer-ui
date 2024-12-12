@@ -5,7 +5,7 @@ import { environment } from 'src/environments/environment';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ProcedureRequest } from '../models/dto/procedure-request.dto';
 import { ProcedureResponse } from "../models/dto/procedure-response.dto";
-import { LearCredentialEmployeeDataDetail } from "../models/dto/lear-credential-employee-data-detail.dto";
+import { CredentialProcedureDetail } from "../models/dto/lear-credential-employee-data-detail.dto";
 
 const notFoundErrorResp = new HttpErrorResponse({
   error: '404 error',
@@ -77,7 +77,7 @@ describe('CredentialProcedureService', () => {
 
   it('should fetch credential procedure by id successfully', () => {
     const procedureId = '1';
-    const mockData: LearCredentialEmployeeDataDetail =
+    const mockData: CredentialProcedureDetail =
       { procedure_id: '1', credential_status: 'completed', credential: { mandatee: {}, mandator: {}, power: [] } as any }
     ;
 

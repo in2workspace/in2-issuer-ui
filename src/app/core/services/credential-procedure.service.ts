@@ -5,7 +5,7 @@ import { catchError, map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { ProcedureRequest } from '../models/dto/procedure-request.dto';
 import { ProcedureResponse } from "../models/dto/procedure-response.dto";
-import { LearCredentialEmployeeDataDetail } from "../models/dto/lear-credential-employee-data-detail.dto";
+import { CredentialProcedureDetail } from "../models/dto/lear-credential-employee-data-detail.dto";
 
 @Injectable({
   providedIn: 'root'
@@ -26,8 +26,8 @@ export class CredentialProcedureService {
     );
   }
 
-  public getCredentialProcedureById(procedureId: string): Observable<LearCredentialEmployeeDataDetail> {
-    return this.http.get<LearCredentialEmployeeDataDetail>(`${this.organizationProcedures}/${procedureId}/credential-decoded`).pipe(
+  public getCredentialProcedureById(procedureId: string): Observable<CredentialProcedureDetail> {
+    return this.http.get<CredentialProcedureDetail>(`${this.organizationProcedures}/${procedureId}/credential-decoded`).pipe(
       catchError(this.handleError)
     );
   }
