@@ -1,14 +1,14 @@
-export interface LEARCredentialEmployee {
+export interface LEARCredentialEmployeeJwtPayload {
   sub: string | null;
   nbf: string;
   iss: string;
   exp: string;
   iat: string;
-  vc: VerifiableCredential;
+  vc: LEARCredentialEmployee;
   jti: string;
 }
 
-export interface VerifiableCredential {
+export interface LEARCredentialEmployee {
   id: string;
   type: string[];
   credentialSubject: CredentialSubject;
@@ -27,6 +27,7 @@ export interface Mandate {
   life_span: LifeSpan;
   mandatee: Mandatee;
   mandator: Mandator;
+  signer: Signer;
   power: Power[];
 }
 

@@ -10,6 +10,7 @@ export const environment = {
   base_url: 'http://localhost:8081',
   wallet_url: 'http://localhost:4200',
   knowledgebase_url: "https://knowledgebase.dome-marketplace-sbx.org/",
+  profile: "local",
   procedures: '/api/v1/procedures',
   save_credential: '/vci/v1/issuances',
   credential_offer_url: '/api/v1/credential-offer',

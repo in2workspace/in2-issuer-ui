@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { UserDataAuthenticationResponse } from "../models/dto/user-data-authentication-response.dto";
 import { Mandator, Power, Signer } from "../models/entity/lear-credential-employee.entity";
+import {environment} from "../../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,8 @@ export class AuthService {
   private readonly signerSubject = new BehaviorSubject<Signer | null>(null);
   private readonly emailSubject = new BehaviorSubject<string>('');
   private readonly nameSubject = new BehaviorSubject<string>('');
+  private readonly profile =`${environment.profile}`;
+
 
   private userPowers: Power[] = [];
 
@@ -34,30 +37,23 @@ export class AuthService {
         this.userPowers = this.extractUserPowers(userData);
         this.userDataSubject.next(userData);
 
-        const vcObject = this.extractVCFromUserData(userData)
+        const learCredential = this.extractVCFromUserData(userData)
 
         const mandator = {
-          organizationIdentifier: vcObject.credentialSubject.mandate.mandator.organizationIdentifier,
-          organization: vcObject.credentialSubject.mandate.mandator.organization,
-          commonName: vcObject.credentialSubject.mandate.mandator.commonName,
-          emailAddress: vcObject.credentialSubject.mandate.mandator.emailAddress,
-          serialNumber: vcObject.credentialSubject.mandate.mandator.serialNumber,
-          country: vcObject.credentialSubject.mandate.mandator.country
+          organizationIdentifier: learCredential.credentialSubject.mandate.mandator.organizationIdentifier,
+          organization: learCredential.credentialSubject.mandate.mandator.organization,
+          commonName: learCredential.credentialSubject.mandate.mandator.commonName,
+          emailAddress: learCredential.credentialSubject.mandate.mandator.emailAddress,
+          serialNumber: learCredential.credentialSubject.mandate.mandator.serialNumber,
+          country: learCredential.credentialSubject.mandate.mandator.country
         };
         this.mandatorSubject.next(mandator);
 
-        const  signer = {
-          organizationIdentifier: vcObject.credentialSubject.mandate.signer.organizationIdentifier,
-          organization: vcObject.credentialSubject.mandate.signer.organization,
-          commonName: vcObject.credentialSubject.mandate.signer.commonName,
-          emailAddress: vcObject.credentialSubject.mandate.signer.emailAddress,
-          serialNumber: vcObject.credentialSubject.mandate.signer.serialNumber,
-          country: vcObject.credentialSubject.mandate.signer.country
-        }
+        const signer = this.getProfileSigner()
         this.signerSubject.next(signer)
 
-        const emailName = vcObject.credentialSubject.mandate.mandator.emailAddress.split('@')[0];
-        const name = vcObject.credentialSubject.mandate.mandatee.first_name + ' ' + vcObject.credentialSubject.mandate.mandatee.last_name;
+        const emailName = learCredential.credentialSubject.mandate.mandator.emailAddress.split('@')[0];
+        const name = learCredential.credentialSubject.mandate.mandatee.first_name + ' ' + learCredential.credentialSubject.mandate.mandatee.last_name;
 
         this.emailSubject.next(emailName);
         this.nameSubject.next(name);
@@ -66,18 +62,42 @@ export class AuthService {
     }));
   }
 
+
   private extractVCFromUserData(userData: UserDataAuthenticationResponse) {
-    return userData.vc ? JSON.parse(userData.vc) : null;
+    return userData.vc || null;
   }
 
   private extractUserPowers(userData: UserDataAuthenticationResponse): Power[] {
     try {
-      const vcObject = this.extractVCFromUserData(userData)
-      return vcObject?.credentialSubject?.mandate?.power || [];
+      const learCredential = this.extractVCFromUserData(userData)
+      return learCredential?.credentialSubject.mandate.power || [];
     } catch (error) {
       return [];
     }
   }
+
+  private getProfileSigner() {
+      if (this.profile && this.profile !== 'production') {
+        return {
+          organizationIdentifier: "VATEU-B99999999",
+          organization: "OLIMPO",
+          commonName: "ZEUS OLIMPOS",
+          emailAddress: "domesupport@in2.es",
+          serialNumber: "IDCEU-99999999P",
+          country: "EU",
+        };
+      } else {
+        return {
+          organizationIdentifier: "VATES-Q0000000J",
+          organization: "DOME Credential Issuer",
+          commonName: "56565656P Jesus Ruiz",
+          emailAddress: "jesus.ruiz@in2.es",
+          serialNumber: "IDCES-56565656P",
+          country: "ES",
+        };
+      }
+    }
+
 
   // POLICY: login_restriction_policy
   public hasOnboardingExecutePower(): boolean {
@@ -154,5 +174,6 @@ export class AuthService {
   public getName(): Observable<string> {
     return this.nameSubject.asObservable()
   }
+
 
 }

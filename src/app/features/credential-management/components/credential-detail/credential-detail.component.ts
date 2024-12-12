@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { switchMap, timer } from 'rxjs';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
-import { LEARCredentialEmployee } from "../../../../core/models/entity/lear-credential-employee.entity";
+import { LEARCredentialEmployeeJwtPayload } from "../../../../core/models/entity/lear-credential-employee.entity";
 import {LearCredentialEmployeeDataDetail} from "../../../../core/models/dto/lear-credential-employee-data-detail.dto";
 
 @Component({
@@ -13,7 +13,7 @@ import {LearCredentialEmployeeDataDetail} from "../../../../core/models/dto/lear
 export class CredentialDetailComponent implements OnInit {
   public title = timer(0).pipe(switchMap(()=>this.translate.get("credentialDetail.credentialDetails")));
   public credentialId: string | null = null;
-  public credential: LEARCredentialEmployee | null = null;
+  public credential: LEARCredentialEmployeeJwtPayload | null = null;
   public credentialStatus: string | null = null;
 
   private readonly route = inject(ActivatedRoute);
