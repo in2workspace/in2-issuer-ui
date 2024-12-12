@@ -15,12 +15,16 @@ import { UnicodeValidatorDirective } from './directives/validators/unicode-valid
 import { OrganizationNameValidatorDirective } from './directives/validators/organization-name.validator.directive';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { OrganizationIdentifierValidatorDirective } from './directives/validators/organization-identifier.directive';
+import {
+  CertificationCredentialComponent
+} from "../features/credential-management/components/certification/certification-credential-component";
 
 
 
 @NgModule({
   declarations: [
     FormCredentialComponent,
+    CertificationCredentialComponent,
     NavbarComponent,
     PowerComponent,
     PopupComponent,
@@ -35,6 +39,6 @@ import { OrganizationIdentifierValidatorDirective } from './directives/validator
   imports: [
     CommonModule, MaterialModule, FormsModule, RouterModule, TranslateModule, ReactiveFormsModule
   ],
-  exports:[CommonModule,MaterialModule, FormsModule,FormCredentialComponent, NavbarComponent, PowerComponent, PopupComponent,DialogComponent]
+  exports: [CommonModule, MaterialModule, FormsModule, FormCredentialComponent, NavbarComponent, PowerComponent, PopupComponent, DialogComponent, CertificationCredentialComponent]
 })
 export class SharedModule { }
