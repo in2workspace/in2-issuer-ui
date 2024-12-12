@@ -330,12 +330,12 @@ describe('AuthService', () => {
               country: 'Testland'
             },
             signer: {
-              organizationIdentifier: 'SIGNER123',
-              organization: 'Signer Organization',
-              commonName: 'Signer Name',
-              emailAddress: 'signer@example.com',
-              serialNumber: '7891011',
-              country: 'Signerland'
+              organizationIdentifier: 'VATEU-B99999999',
+              organization: 'OLIMPO',
+              commonName: 'ZEUS OLIMPOS',
+              emailAddress: 'domesupport@in2.es',
+              serialNumber: 'IDCEU-99999999P',
+              country: 'EU'
             },
             mandatee: {
               first_name: 'John',
@@ -379,12 +379,12 @@ describe('AuthService', () => {
 
               service.getSigner().subscribe(signer => {
                 expect(signer).toEqual({
-                  organizationIdentifier: 'SIGNER123',
-                  organization: 'Signer Organization',
-                  commonName: 'Signer Name',
-                  emailAddress: 'signer@example.com',
-                  serialNumber: '7891011',
-                  country: 'Signerland'
+                  organizationIdentifier: 'VATEU-B99999999',
+                  organization: 'OLIMPO',
+                  commonName: 'ZEUS OLIMPOS',
+                  emailAddress: 'domesupport@in2.es',
+                  serialNumber: 'IDCEU-99999999P',
+                  country: 'EU'
                 });
 
                 service.getEmailName().subscribe(emailName => {

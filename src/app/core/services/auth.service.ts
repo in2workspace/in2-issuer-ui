@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { UserDataAuthenticationResponse } from "../models/dto/user-data-authentication-response.dto";
 import { Mandator, Power, Signer } from "../models/entity/lear-credential-employee.entity";
+import {environment} from "../../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,8 @@ export class AuthService {
   private readonly signerSubject = new BehaviorSubject<Signer | null>(null);
   private readonly emailSubject = new BehaviorSubject<string>('');
   private readonly nameSubject = new BehaviorSubject<string>('');
+  private readonly profile =`${environment.profile}`;
+
 
   private userPowers: Power[] = [];
 
@@ -46,14 +49,7 @@ export class AuthService {
         };
         this.mandatorSubject.next(mandator);
 
-        const  signer = {
-          organizationIdentifier: vcObject.credentialSubject.mandate.signer.organizationIdentifier,
-          organization: vcObject.credentialSubject.mandate.signer.organization,
-          commonName: vcObject.credentialSubject.mandate.signer.commonName,
-          emailAddress: vcObject.credentialSubject.mandate.signer.emailAddress,
-          serialNumber: vcObject.credentialSubject.mandate.signer.serialNumber,
-          country: vcObject.credentialSubject.mandate.signer.country
-        }
+        const  signer = this.getProfileSigner()
         this.signerSubject.next(signer)
 
         const emailName = vcObject.credentialSubject.mandate.mandator.emailAddress.split('@')[0];
@@ -65,6 +61,29 @@ export class AuthService {
       return isAuthenticated;
     }));
   }
+
+  private getProfileSigner() : Signer {
+      if (this.profile && this.profile !== 'production') {
+        return {
+          organizationIdentifier: "VATEU-B99999999",
+          organization: "OLIMPO",
+          commonName: "ZEUS OLIMPOS",
+          emailAddress: "domesupport@in2.es",
+          serialNumber: "IDCEU-99999999P",
+          country: "EU",
+        };
+      } else {
+        return {
+          organizationIdentifier: "VATES-Q0000000J",
+          organization: "DOME Credential Issuer",
+          commonName: "56565656P Jesus Ruiz",
+          emailAddress: "jesus.ruiz@in2.es",
+          serialNumber: "IDCES-56565656P",
+          country: "ES",
+        };
+      }
+    }
+
 
   private extractVCFromUserData(userData: UserDataAuthenticationResponse) {
     return userData.vc ? JSON.parse(userData.vc) : null;

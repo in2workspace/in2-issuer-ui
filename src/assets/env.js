@@ -9,6 +9,7 @@
   window["env"]["base_url"] = "${BASE_URL}";
   window["env"]["wallet_url"] = "${WALLET_URL}";
   window["env"]["knowledgebase_url"] = "${KNOWLEDGEBASE_URL}";
+  window["env"]["profile"] = "${PROFILE}";
   window["env"]["procedures"] = "${PROCEDURES}";
   window["env"]["save_credential"] = "${SAVE_CREDENTIAL}";
   window["env"]["credential_offer_url"] = "${CREDENTIAL_OFFER_URI}";
