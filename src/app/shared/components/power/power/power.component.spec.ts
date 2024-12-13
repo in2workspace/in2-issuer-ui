@@ -5,7 +5,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
-import { MaterialModule } from 'src/app/material.module';
 import { AuthService } from "../../../../core/services/auth.service";
 import { FormCredentialService } from '../../form-credential/services/form-credential.service';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
@@ -52,21 +51,20 @@ describe('PowerComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      declarations: [PowerComponent],
-      imports: [
+    imports: [
         TranslateModule.forRoot(),
         FormsModule,
         BrowserAnimationsModule,
-        MaterialModule,
         RouterModule.forRoot([]),
-      ],
-      providers: [
-        { provide: MatDialog, useValue: mockDialog},
+        PowerComponent,
+    ],
+    providers: [
+        { provide: MatDialog, useValue: mockDialog },
         { provide: AuthService, useValue: mockAuthService },
         { provide: FormCredentialService, useValue: mockFormService }
-      ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA]
-    }).compileComponents();
+    ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+}).compileComponents();
   });
 
   beforeEach(() => {
@@ -129,7 +127,7 @@ describe('PowerComponent', () => {
         upload: false,
         attest: false
       }, false);
-  
+
 
     expect(mockFormService.setSelectedPowerName).toHaveBeenCalledWith('');
   });
@@ -165,7 +163,7 @@ describe('PowerComponent', () => {
     component.isDisabled = true;
     mockAuthService.hasIn2OrganizationIdentifier.mockReturnValue(true);
     mockFormService.getPlainSelectedPower.mockReturnValue('Certification');
- 
+
     component.ngOnInit();
     component.addPower();
 
@@ -175,7 +173,7 @@ describe('PowerComponent', () => {
   it('should not add an option if it already exists', () => {
     component.isDisabled = false;
     mockFormService.getPlainSelectedPower.mockReturnValue('Certification');
- 
+
     component.ngOnInit();
     component.addPower();
 

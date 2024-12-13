@@ -6,9 +6,9 @@ import { AlertService } from 'src/app/core/services/alert.service';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { CountryService } from './services/country.service';
 import { FormCredentialService } from './services/form-credential.service';
-import { CUSTOM_ELEMENTS_SCHEMA, inject } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { Router, RouterModule } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { of } from 'rxjs';
 import { PopupComponent } from '../popup/popup.component';
@@ -18,6 +18,7 @@ import { UnicodeValidatorDirective } from '../../directives/validators/unicode-v
 import { OrganizationNameValidatorDirective } from '../../directives/validators/organization-name.validator.directive';
 import { TempPower } from 'src/app/core/models/temporal/temp-power.interface';
 import { Power, Signer } from 'src/app/core/models/entity/lear-credential-employee.entity';
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 const mockTempPower: TempPower = {
   tmf_action: 'action1',
@@ -47,7 +48,7 @@ const sortedCountries: any[] = [
   {name:'Portugal'},
   {name:'Spain'}
 ];
-const mockSigner:Signer = { 
+const mockSigner:Signer = {
   'organizationIdentifier': 'orgId',
   'organization': 'org',
   'commonName':'common',
@@ -90,6 +91,13 @@ describe('FormCredentialComponent', () => {
   };
 
   beforeEach(async () => {
+    let mockActivatedRoute = {
+      snapshot: {
+        paramMap: {
+          get: jest.fn().mockReturnValue(null)
+        }
+      }
+    };
     mockCredentialProcedureService = {
     } as jest.Mocked<CredentialProcedureService>;
 
@@ -130,6 +138,9 @@ describe('FormCredentialComponent', () => {
       getEmailName() {
         return of('User Name');
       },
+      getName() {
+        return of('Name');
+      },
       logout() {
         return of(void 0);
       },
@@ -146,24 +157,26 @@ describe('FormCredentialComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      declarations: [FormCredentialComponent, PopupComponent, MaxLengthDirective, CustomEmailValidatorDirective, UnicodeValidatorDirective, OrganizationNameValidatorDirective],
-      imports: [
+    imports: [
         ReactiveFormsModule,
         FormsModule,
         TranslateModule.forRoot({}),
         HttpClientModule,
-      ],
-      providers: [
+        FormCredentialComponent, PopupComponent, MaxLengthDirective, CustomEmailValidatorDirective, UnicodeValidatorDirective, OrganizationNameValidatorDirective,
+        BrowserAnimationsModule
+    ],
+    providers: [
         TranslateService,
         { provide: CredentialProcedureService, useValue: mockCredentialProcedureService },
         { provide: AlertService, useValue: mockAlertService },
-        { provide: CountryService, useValue: mockCountryService},
+        { provide: CountryService, useValue: mockCountryService },
         { provide: FormCredentialService, useValue: mockFormCredentialService },
         { provide: AuthService, useValue: mockAuthService },
-        { provide: Router, useValue: mockRouter }
-      ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA]
-    }).compileComponents();
+        { provide: Router, useValue: mockRouter },
+        { provide: ActivatedRoute, useValue: { snapshot: { paramMap: {} } } }
+    ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+}).compileComponents();
   });
 
   beforeEach(() => {
@@ -181,7 +194,7 @@ describe('FormCredentialComponent', () => {
     TestBed.resetTestingModule();
     jest.clearAllMocks();
   });
-  
+
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -285,7 +298,7 @@ describe('FormCredentialComponent', () => {
       serialNumber: '12345',
       country: 'Country',
     };
-    
+
     jest.spyOn(mockAuthService, 'hasIn2OrganizationIdentifier').mockReturnValue(false);
     jest.spyOn(mockAuthService, 'getMandator').mockReturnValue(of(mockMandator));
     component.viewMode='create';
@@ -294,7 +307,7 @@ describe('FormCredentialComponent', () => {
     component.ngOnInit();
     fixture.detectChanges();
     tick();
-    
+
     expect(component.mandator).toEqual({
       organizationIdentifier: mockMandator.organizationIdentifier,
       organization: mockMandator.organization,
@@ -306,7 +319,7 @@ describe('FormCredentialComponent', () => {
     expect(component.signer).toEqual(mockSigner);
     expect(component.asSigner).toBe(false);
   }));
-  
+
 
   it('should not add mandator nor signer if mandator is null', ()=>{
     component.ngOnInit();
@@ -344,7 +357,7 @@ describe('FormCredentialComponent', () => {
 
     component.ngOnInit();
 
-    expect(component.tempPowers).toEqual([]);;
+    expect(component.tempPowers).toEqual([]);
     expect(mockFormCredentialService.convertToTempPower).not.toHaveBeenCalled();
   });
 
@@ -405,9 +418,9 @@ describe('FormCredentialComponent', () => {
     mockFormCredentialService.hasSelectedPower.mockReturnValue(true);
     mockFormCredentialService.powersHaveFunction.mockReturnValue(true);
     mockFormCredentialService.getPlainAddedPowers.mockReturnValue(mockPowers);
-  
+
     component.submitCredential();
-  
+
     expect(mockFormCredentialService.submitCredential).toHaveBeenCalled();
     expect(mockFormCredentialService.submitCredential).toHaveBeenCalledWith(
       component.credential,
@@ -430,9 +443,9 @@ describe('FormCredentialComponent', () => {
     mockFormCredentialService.hasSelectedPower.mockReturnValue(true);
     mockFormCredentialService.powersHaveFunction.mockReturnValue(true);
     mockFormCredentialService.getPlainAddedPowers.mockReturnValue(mockPowers);
-  
+
     component.submitCredential();
-  
+
     expect(mockFormCredentialService.submitCredential).toHaveBeenCalled();
     expect(mockFormCredentialService.submitCredential).toHaveBeenCalledWith(
       component.credential,
@@ -452,7 +465,7 @@ describe('FormCredentialComponent', () => {
     component.selectedMandateeCountryIsoCode = 'US';
     mockFormCredentialService.hasSelectedPower.mockReturnValue(false);
     mockFormCredentialService.powersHaveFunction.mockReturnValue(true);
-  
+
     component.submitCredential();
 
     expect(mockFormCredentialService.submitCredential).not.toHaveBeenCalled();
@@ -462,7 +475,7 @@ describe('FormCredentialComponent', () => {
     component.selectedMandateeCountryIsoCode = 'US';
     mockFormCredentialService.hasSelectedPower.mockReturnValue(true);
     mockFormCredentialService.powersHaveFunction.mockReturnValue(false);
-  
+
     component.submitCredential();
 
     expect(mockFormCredentialService.submitCredential).not.toHaveBeenCalled();
@@ -485,18 +498,18 @@ describe('FormCredentialComponent', () => {
       },
       writable: true,
     });
-    
+
     component.submitCredential();
     await navigateSpy;
-  
+
     expect(mockFormCredentialService.submitCredential).toHaveBeenCalled();
     expect(popupSpy).toHaveBeenCalled();
     expect(navigateSpy).toHaveBeenCalledWith(['/organization/credentials']);
     expect(scrollToSpy).toHaveBeenCalledWith(0, 0);
     expect(window.location.reload).toHaveBeenCalled();
-  
+
   });
-  
+
   it('should close popup', fakeAsync(()=>{
     component.openTempPopup();
     expect(component.isPopupVisible).toBe(true);

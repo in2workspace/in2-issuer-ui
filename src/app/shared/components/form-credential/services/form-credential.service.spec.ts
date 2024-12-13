@@ -8,7 +8,6 @@ import { MatTableModule } from '@angular/material/table';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { AuthModule } from 'angular-auth-oidc-client';
-import { SharedModule } from 'src/app/shared/shared.module';
 import { PopupComponent } from '../../popup/popup.component';
 import { Mandatee, Mandator, Power, Signer } from "../../../../core/models/entity/lear-credential-employee.entity";
 import { TempPower } from "../../../../core/models/temporal/temp-power.interface";
@@ -37,7 +36,6 @@ describe('FormCredentialService', () => {
       imports: [
         MatTableModule,
         MatPaginatorModule,
-        SharedModule,
         HttpClientTestingModule,
         BrowserAnimationsModule,
         RouterModule.forRoot([]),
@@ -162,16 +160,16 @@ describe('FormCredentialService', () => {
     const newPower: TempPower = { ...mockTempPower, tmf_function: 'NewPower' };
     jest.spyOn(service, 'getPlainAddedPowers').mockReturnValue(existingPowers);
     const setAddedPowersSpy = jest.spyOn(service, 'setAddedPowers');
-  
+
     service.addPower(newPower, false);
-  
+
     expect(setAddedPowersSpy).toHaveBeenCalledWith([...existingPowers, newPower]);
   });
 
   it('should not add a new power if disabled', () => {
     const newPower: TempPower = { ...mockTempPower, tmf_function: 'NewPower' };
     const setAddedPowersSpy = jest.spyOn(service, 'setAddedPowers');
-  
+
     service.addPower(newPower, true);
 
     expect(setAddedPowersSpy).not.toHaveBeenCalled();
@@ -183,40 +181,40 @@ describe('FormCredentialService', () => {
       { ...mockTempPower, tmf_function: 'Power2' },
       { ...mockTempPower, tmf_function: 'Power3' },
     ];
-  
+
     const powerToRemove = 'Power2';
     jest.spyOn(service, 'getPlainAddedPowers').mockReturnValue(existingPowers);
     const setAddedPowersSpy = jest.spyOn(service, 'setAddedPowers');
-  
+
     service.removePower(powerToRemove);
-  
+
     const expectedPowers = existingPowers.filter(
       (power) => power.tmf_function !== powerToRemove
     );
     expect(setAddedPowersSpy).toHaveBeenCalledWith(expectedPowers);
   });
-  
+
   it('should not modify added powers if the specified power is not found', () => {
     const existingPowers: TempPower[] = [
       { ...mockTempPower, tmf_function: 'Power1' },
       { ...mockTempPower, tmf_function: 'Power3' },
     ];
-  
+
     const powerToRemove = 'Power2'; // Not in the list
     jest.spyOn(service, 'getPlainAddedPowers').mockReturnValue(existingPowers);
     const setAddedPowersSpy = jest.spyOn(service, 'setAddedPowers');
-  
+
     service.removePower(powerToRemove);
-  
+
     expect(setAddedPowersSpy).toHaveBeenCalledWith(existingPowers);
   });
 
   it('should reset added powers and selected power name', () => {
     const setAddedPowersSpy = jest.spyOn(service, 'setAddedPowers');
     const setSelectedPowerNameSpy = jest.spyOn(service, 'setSelectedPowerName');
-  
+
     service.reset();
-  
+
     expect(setAddedPowersSpy).toHaveBeenCalledWith([]);
     expect(setSelectedPowerNameSpy).toHaveBeenCalledWith('');
   });
@@ -328,8 +326,8 @@ it('should handle error when submitCredential fails', (done) => {
 });
 
 it('should append country prefix to mobile_phone if not present', (done) => {
-  const mockCredential = { 
-    mobile_phone: '123456789' 
+  const mockCredential = {
+    mobile_phone: '123456789'
   } as Mandatee;
   const mockSelectedCountry = {
     name: 'Spain',
@@ -359,19 +357,19 @@ it('should append country prefix to mobile_phone if not present', (done) => {
   ).subscribe(() => {
     done();
   }, (error) => {
-    done(error); 
+    done(error);
   });
 });
 
 it('should not append country prefix to mobile_phone if already present', (done) => {
   const mockCredential = {
     mobile_phone: '+34 123456789'
-  } as Mandatee; 
+  } as Mandatee;
   const mockSelectedCountry = {
     name: 'name',
     phoneCode: '34',
     isoCountryCode: 'iso'
-  }; 
+  };
   const mockAddedOptions: TempPower[] = [];
   const mockMandator = {} as Mandator;
   const mockSigner = {} as Signer;
@@ -393,7 +391,7 @@ it('should not append country prefix to mobile_phone if already present', (done)
     popupComponent,
     jest.fn()
   ).subscribe(() => {
-    done(); 
+    done();
   }, (error) => {
     done(error);
   });
@@ -652,19 +650,19 @@ it('should not append country prefix to mobile_phone if already present', (done)
       { ...mockTempPower, tmf_function: 'Power1' },
       { ...mockTempPower, tmf_function: 'Power2' },
     ];
-  
+
     const powerToCheck = 'Power2';
-  
+
     // Mock getPlainAddedPowers to return existing powers
     jest.spyOn(service, 'getPlainAddedPowers').mockReturnValue(existingPowers);
-  
+
     // Call the method with the power to check
     const result = service.checkIfPowerIsAdded(powerToCheck);
-  
+
     // Verify the method returns true
     expect(result).toBe(true);
   });
-  
+
   it('should return false if the power is not added', () => {
     const existingPowers: TempPower[] = [
       { ...mockTempPower, tmf_function: 'Power1' },
@@ -673,10 +671,10 @@ it('should not append country prefix to mobile_phone if already present', (done)
     const powerToCheck = 'Power2'; // Not in the list
     jest.spyOn(service, 'getPlainAddedPowers').mockReturnValue(existingPowers);
     const result = service.checkIfPowerIsAdded(powerToCheck);
-  
+
     expect(result).toBe(false);
   });
-  
+
   it('should return false if there are no added powers', () => {
     jest.spyOn(service, 'getPlainAddedPowers').mockReturnValue([]);
     const powerToCheck = 'Power2';
@@ -693,14 +691,14 @@ it('should not append country prefix to mobile_phone if already present', (done)
       { ...mockTempPower, delete: true },
       { ...mockTempPower, upload: true },
     ];
-  
+
     jest.spyOn(service, 'getPlainAddedPowers').mockReturnValue(powersWithActions);
-  
+
     const result = service.powersHaveFunction();
-  
+
     expect(result).toBe(true);
   });
-  
+
   it('should return false if any power has no valid action', () => {
     const powersWithInvalidAction: TempPower[] = [
       { ...mockTempPower, execute: true },
@@ -709,21 +707,21 @@ it('should not append country prefix to mobile_phone if already present', (done)
       { ...mockTempPower, delete: true },
       { ...mockTempPower, execute: false, create: false, update: false, delete: false, upload: false },
     ];
-  
+
     jest.spyOn(service, 'getPlainAddedPowers').mockReturnValue(powersWithInvalidAction);
-  
+
     const result = service.powersHaveFunction();
-  
+
     expect(result).toBe(false);
   });
-  
+
   it('should return true if there are no added powers (edge case)', () => {
     jest.spyOn(service, 'getPlainAddedPowers').mockReturnValue([]);
     const result = service.powersHaveFunction();
-  
+
     expect(result).toBe(true);
   });
-  
+
   it('should check if there are selected powers', ()=>{
     jest.spyOn(service, 'getPlainAddedPowers').mockReturnValue([]);
     let checkPowers = service.hasSelectedPower();
@@ -733,7 +731,7 @@ it('should not append country prefix to mobile_phone if already present', (done)
     checkPowers = service.hasSelectedPower();
     expect(checkPowers).toBe(true);
   });
-  
+
 
 });
 

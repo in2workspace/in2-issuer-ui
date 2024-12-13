@@ -1,17 +1,44 @@
 import { AfterViewInit, Component, OnInit, inject, ViewChild } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { AuthService } from 'src/app/core/services/auth.service';
-import { MatSort } from '@angular/material/sort';
-import { FormCredentialService } from "../../shared/components/form-credential/services/form-credential.service";
+import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { CredentialProcedure, ProcedureResponse } from "../../core/models/dto/procedure-response.dto";
+import { TranslatePipe } from '@ngx-translate/core';
+import { ActiveSortColumnDirective } from '../../shared/directives/validators/active-sort-column.directive';
+import { NgIf, NgClass, DatePipe } from '@angular/common';
+import { MatButton } from '@angular/material/button';
+import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
 
 @Component({
-  selector: 'app-credential-management',
-  templateUrl: './credential-management.component.html',
-  styleUrls: ['./credential-management.component.scss'],
+    selector: 'app-credential-management',
+    templateUrl: './credential-management.component.html',
+    styleUrls: ['./credential-management.component.scss'],
+    standalone: true,
+    imports: [
+        NavbarComponent,
+        MatButton,
+        NgIf,
+        MatTable,
+        MatSort,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        MatSortHeader,
+        ActiveSortColumnDirective,
+        MatCellDef,
+        MatCell,
+        MatHeaderRowDef,
+        MatHeaderRow,
+        MatRowDef,
+        MatRow,
+        NgClass,
+        MatPaginator,
+        DatePipe,
+        TranslatePipe,
+    ],
 })
 export class CredentialManagementComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) public paginator!: MatPaginator;
@@ -22,7 +49,6 @@ export class CredentialManagementComponent implements OnInit, AfterViewInit {
 
   private readonly credentialProcedureService = inject(CredentialProcedureService);
   private readonly authService = inject(AuthService);
-  private readonly formCredentialService = inject(FormCredentialService);
   private readonly router = inject(Router);
 
   public ngOnInit(){
@@ -51,7 +77,7 @@ export class CredentialManagementComponent implements OnInit, AfterViewInit {
           return '';
       }
     };
-    
+
   }
 
   public loadCredentialData(): void {

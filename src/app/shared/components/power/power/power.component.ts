@@ -1,16 +1,26 @@
-import { FormCredentialService } from './../../form-credential/services/form-credential.service';
+import { FormCredentialService } from '../../form-credential/services/form-credential.service';
 import { Component, Input, OnInit, inject } from '@angular/core';
 import {  AuthService  } from "../../../../core/services/auth.service";
-import { MatSelectChange } from '@angular/material/select';
+import { MatSelectChange, MatSelect, MatSelectTrigger } from '@angular/material/select';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 import { Observable } from 'rxjs';
 import { TempPower } from 'src/app/core/models/temporal/temp-power.interface';
+import { TranslatePipe } from '@ngx-translate/core';
+import { MatIcon } from '@angular/material/icon';
+import { FormsModule } from '@angular/forms';
+import { MatSlideToggle } from '@angular/material/slide-toggle';
+import { MatButton, MatMiniFabButton } from '@angular/material/button';
+import { MatOption } from '@angular/material/core';
+import { MatFormField } from '@angular/material/form-field';
+import { NgIf, NgFor, NgTemplateOutlet, AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'app-power',
-  templateUrl: './power.component.html',
-  styleUrls: ['./power.component.scss']
+    selector: 'app-power',
+    templateUrl: './power.component.html',
+    styleUrls: ['./power.component.scss'],
+    standalone: true,
+    imports: [NgIf, MatFormField, MatSelect, MatSelectTrigger, MatOption, MatButton, NgFor, NgTemplateOutlet, MatSlideToggle, FormsModule, MatMiniFabButton, MatIcon, AsyncPipe, TranslatePipe]
 })
 export class PowerComponent implements OnInit{
   // set-once-and-don't-change properties

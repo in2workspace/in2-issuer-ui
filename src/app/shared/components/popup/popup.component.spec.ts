@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PopupComponent } from './popup.component';
-import { SharedModule } from '../../shared.module';
 import { SimpleChange } from '@angular/core';
 import { By } from '@angular/platform-browser';
 
@@ -11,7 +10,6 @@ describe('PopupComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SharedModule]
     })
     .compileComponents();
 

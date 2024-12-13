@@ -13,15 +13,15 @@ describe('ConfirmDialogComponent', () => {
     } as any;
 
     await TestBed.configureTestingModule({
-      declarations: [ConfirmDialogComponent],
-      providers: [
+    imports: [ConfirmDialogComponent],
+    providers: [
         { provide: MatDialogRef, useValue: mockDialogRef },
         {
-          provide: MAT_DIALOG_DATA,
-          useValue: { title: 'Test Title', message: 'Test Message' },
+            provide: MAT_DIALOG_DATA,
+            useValue: { title: 'Test Title', message: 'Test Message' },
         },
-      ],
-    }).compileComponents();
+    ],
+}).compileComponents();
   });
 
   beforeEach(() => {

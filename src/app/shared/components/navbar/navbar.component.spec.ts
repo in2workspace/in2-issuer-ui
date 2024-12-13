@@ -31,18 +31,18 @@ describe('NavbarComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [NavbarComponent],
-      imports: [
+    imports: [
         TranslateModule.forRoot(),
         MatIconModule,
         RouterModule.forRoot([]),
-      ],
-      providers: [
+        NavbarComponent,
+    ],
+    providers: [
         { provide: AuthService, useClass: MockAuthService },
         { provide: Router, useClass: MockRouter },
         { provide: ActivatedRoute, useValue: {} },
-      ],
-    }).compileComponents();
+    ],
+}).compileComponents();
   });
 
   beforeEach(() => {

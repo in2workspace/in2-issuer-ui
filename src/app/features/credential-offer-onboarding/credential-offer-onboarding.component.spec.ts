@@ -3,10 +3,10 @@ import { CredentialOfferOnboardingComponent } from './credential-offer-onboardin
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { importProvidersFrom, NO_ERRORS_SCHEMA } from '@angular/core';
-import { HttpLoaderFactory } from 'src/app/app.module';
 import { HttpClient, HttpHandler } from '@angular/common/http';
 import { AuthModule } from 'angular-auth-oidc-client';
 import { of } from 'rxjs';
+import {HttpLoaderFactory} from "../../core/services/translate-http-loader.factory";
 
 describe('CredentialOfferOnboardingComponent', () => {
   let component: CredentialOfferOnboardingComponent;

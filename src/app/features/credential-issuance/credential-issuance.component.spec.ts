@@ -1,26 +1,26 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { of } from 'rxjs';
-import { CredentialIssuanceComponent } from './credentialIssuance.component';
+import { CredentialIssuanceComponent } from './credential-issuance.component';
 import { RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import {StsConfigLoader} from "angular-auth-oidc-client";
 
-describe('CredentialDetailComponent', () => {
+describe('Credential Issuance Component', () => {
   let component: CredentialIssuanceComponent;
   let fixture: ComponentFixture<CredentialIssuanceComponent>;
- 
+
   let translateService:TranslateService;
 
   beforeEach(async () => {
 
     await TestBed.configureTestingModule({
-      declarations: [CredentialIssuanceComponent],
-      imports: [BrowserAnimationsModule, RouterModule.forRoot([]), HttpClientModule, TranslateModule.forRoot({}),],
-      providers: [
-        TranslateService
-      ],
-    }).compileComponents();
+    imports: [BrowserAnimationsModule, RouterModule.forRoot([]), HttpClientModule, TranslateModule.forRoot({}), CredentialIssuanceComponent,],
+    providers: [
+        TranslateService,StsConfigLoader
+    ],
+}).compileComponents();
 
     fixture = TestBed.createComponent(CredentialIssuanceComponent);
     component = fixture.componentInstance;
@@ -38,16 +38,20 @@ describe('CredentialDetailComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should set the title observable with the translated value', (done) => {
+  it('should set the title observable with the translated value', fakeAsync(() => {
     const mockTranslatedValue = 'Translated Credential Details';
     jest.spyOn(translateService, 'get').mockReturnValue(of(mockTranslatedValue));
-  
-    component.title.subscribe((value) => {
 
-    expect(translateService.get).toHaveBeenCalledWith("credentialIssuance.learCredentialEmployee");
-    expect(value).toBe(mockTranslatedValue);
-    done(); 
+    let emittedValue: string | undefined;
+
+    component.title.subscribe((value) => {
+      emittedValue = value;
     });
-  });
-  
+
+    tick(1000);
+
+    expect(translateService.get).toHaveBeenCalledWith('credentialIssuance.learCredentialEmployee');
+    expect(emittedValue).toBe(mockTranslatedValue);
+  }));
+
 });

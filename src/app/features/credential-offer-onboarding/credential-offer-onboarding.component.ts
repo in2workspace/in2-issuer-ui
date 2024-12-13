@@ -1,14 +1,14 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { SharedModule } from "../../shared/shared.module";
+
 import { TranslateModule } from '@ngx-translate/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
+import {NavbarComponent} from "../../shared/components/navbar/navbar.component";
 
 @Component({
   selector: 'app-credential-offer-onboarding',
   standalone: true,
-  imports: [SharedModule, TranslateModule,
-  ],
+  imports: [TranslateModule, NavbarComponent,],
   templateUrl: './credential-offer-onboarding.component.html',
   styleUrl: './credential-offer-onboarding.component.scss'
 })

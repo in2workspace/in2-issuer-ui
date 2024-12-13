@@ -6,7 +6,8 @@ import { MatSort, Sort } from '@angular/material/sort';
 //it reacts to MatSort "sort state" to mark the selected column with class "active-sort-column"
 
 @Directive({
-  selector: '[appActiveSortColumn]',
+    selector: '[appActiveSortColumn]',
+    standalone: true,
 })
 
 export class ActiveSortColumnDirective implements OnInit, OnDestroy {

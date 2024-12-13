@@ -5,8 +5,8 @@ import {of, throwError} from 'rxjs';
 import {CredentialDetailComponent} from './credential-detail.component';
 import {ActivatedRoute, RouterModule} from '@angular/router';
 import {CredentialProcedureService} from 'src/app/core/services/credential-procedure.service';
-import {LEARCredentialEmployeeJwtPayload} from "../../../../core/models/entity/lear-credential-employee.entity";
-import {LearCredentialEmployeeDataDetail} from "../../../../core/models/dto/lear-credential-employee-data-detail.dto";
+import {LEARCredentialEmployeeJwtPayload} from "../../core/models/entity/lear-credential-employee.entity";
+import {LearCredentialEmployeeDataDetail} from "../../core/models/dto/lear-credential-employee-data-detail.dto";
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 
 describe('CredentialDetailComponent', () => {
@@ -25,21 +25,20 @@ describe('CredentialDetailComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      declarations: [CredentialDetailComponent],
-      imports: [BrowserAnimationsModule, RouterModule.forRoot([]), HttpClientModule, TranslateModule.forRoot({}),],
-      providers: [
+    imports: [BrowserAnimationsModule, RouterModule.forRoot([]), HttpClientModule, TranslateModule.forRoot({}), CredentialDetailComponent,],
+    providers: [
         TranslateService,
         { provide: CredentialProcedureService, useValue: mockCredentialProcedureService },
         {
-          provide: ActivatedRoute,
-          useValue: {
-            paramMap: of({
-              get: (key: string) => '1',
-            }),
-          },
+            provide: ActivatedRoute,
+            useValue: {
+                paramMap: of({
+                    get: (key: string) => '1',
+                }),
+            },
         },
-      ],
-    }).compileComponents();
+    ],
+}).compileComponents();
 
     fixture = TestBed.createComponent(CredentialDetailComponent);
     component = fixture.componentInstance;

@@ -1,18 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
 import { CredentialManagementComponent } from './credential-management.component';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
-import { SharedModule } from 'src/app/shared/shared.module';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { AuthModule } from 'angular-auth-oidc-client';
 import { By } from '@angular/platform-browser';
-import { environment } from 'src/environments/environment';
 
 const mockCredential = {
   mandatee: {
@@ -76,34 +74,34 @@ describe('CredentialManagementComponent', () => {
     } as jest.Mocked<any>
 
     await TestBed.configureTestingModule({
-      declarations: [CredentialManagementComponent],
-      imports: [
+    imports: [
+        NoopAnimationsModule,
         MatTableModule,
         MatPaginatorModule,
-        SharedModule,
         HttpClientTestingModule,
         BrowserAnimationsModule,
         RouterModule.forRoot([]),
         TranslateModule.forRoot({}),
-        AuthModule.forRoot({config:{}}),
-      ],
-      providers: [
+        AuthModule.forRoot({ config: {} }),
+        CredentialManagementComponent,
+    ],
+    providers: [
         CredentialProcedureService,
         Router,
         TranslateService,
         { provide: AuthService, useValue: authService },
         {
-          provide: ActivatedRoute,
-          useValue: {
-            snapshot: {
-              paramMap: {
-                get: () => '1',
-              },
+            provide: ActivatedRoute,
+            useValue: {
+                snapshot: {
+                    paramMap: {
+                        get: () => '1',
+                    },
+                },
             },
-          },
         },
-      ],
-    }).compileComponents();
+    ],
+}).compileComponents();
 
     credentialProcedureService = TestBed.inject(
       CredentialProcedureService
@@ -234,13 +232,13 @@ describe('CredentialManagementComponent', () => {
   //       procedure_id: '12345'
   //     }
   //   };
-    
+
   //   const signCredentialSpy = jest.spyOn(credentialProcedureService, 'signCredential').mockReturnValue(of({}));
-  
+
   //   const consoleLogSpy = jest.spyOn(console, 'log');
-  
+
   //   component.performAction(mockElement);
-  
+
   //   expect(signCredentialSpy).toHaveBeenCalledWith('12345');
   //   expect(consoleLogSpy).toHaveBeenCalledWith('firma enviada');
   // });
@@ -251,15 +249,15 @@ describe('CredentialManagementComponent', () => {
   //       procedure_id: '12345'
   //     }
   //   };
-    
+
   //   const signCredentialSpy = jest.spyOn(credentialProcedureService, 'signCredential').mockReturnValue(
   //     throwError(() => new Error('Error en el servei'))
   //   );
-  
+
   //   const consoleLogSpy = jest.spyOn(console, 'log');
-  
+
   //   component.performAction(mockElement);
-  
+
   //   expect(signCredentialSpy).toHaveBeenCalledWith('12345');
   //   expect(consoleLogSpy).toHaveBeenCalledWith('firma no enviada');
   // });
@@ -269,23 +267,23 @@ describe('CredentialManagementComponent', () => {
   //   // component.rol = 'admin';
   //   //component.displayedColumns.push('actions');
   //   fixture.detectChanges();
-  
+
   //   await fixture.whenStable(); // Esperar que el cicle de canvi estigui complet
-  
+
   //   const adminButton = fixture.debugElement.query(By.css("#admin-button"));
   //   expect(adminButton).toBeTruthy();
-  
+
   //   const adminColumn = fixture.debugElement.query(By.css('#actions-column'));
   //   expect(adminColumn).toBeNull();
   // });
-  
+
   // it('should show the admin column when role is "local-signer"', async () => {
   //   // component.rol = 'local-signer';
   //   component.displayedColumns.push('actions');
   //   fixture.detectChanges();
-  
+
   //   await fixture.whenStable(); // Esperar que el cicle de canvi estigui complet
-  
+
   //   const adminColumn = fixture.debugElement.query(By.css('#actions-column'));
   //   expect(adminColumn).toBeTruthy();
   // });
@@ -293,7 +291,7 @@ describe('CredentialManagementComponent', () => {
   // it('should not show the admin button when role is not "admin"', () => {
   //   component.rol = 'user';
   //   fixture.detectChanges();
-  
+
   //   const adminButton = fixture.debugElement.query(By.css('#actions-column'));
   //   expect(adminButton).toBeNull();
 
@@ -304,21 +302,21 @@ describe('CredentialManagementComponent', () => {
   it('should call createNewCredential when the regular button is clicked', () => {
     const createNewCredentialSpy = jest.spyOn(component, 'createNewCredential');
     fixture.detectChanges();
-  
+
     const createButton = fixture.debugElement.query(By.css('#create-button')).nativeElement;
     createButton.click();
-  
+
     expect(createNewCredentialSpy).toHaveBeenCalled();
   });
-  
+
   // it('should call createNewCredential2 when the admin button is clicked', () => {
   //   component.rol = 'admin';
   //   fixture.detectChanges();
-  
+
   //   const createNewCredential2Spy = jest.spyOn(component, 'createNewCredential2');
   //   const adminButton = fixture.debugElement.query(By.css('#admin-button')).nativeElement;
   //   adminButton.click();
-  
+
   //   expect(createNewCredential2Spy).toHaveBeenCalled();
   // });
 
