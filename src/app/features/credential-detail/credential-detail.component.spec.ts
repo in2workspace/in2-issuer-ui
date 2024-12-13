@@ -170,5 +170,4 @@ describe('CredentialDetailComponent', () => {
     expect(emittedValue).toBe(mockTranslatedValue);
   }));
 
-
 });

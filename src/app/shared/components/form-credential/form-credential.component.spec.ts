@@ -6,7 +6,7 @@ import { AlertService } from 'src/app/core/services/alert.service';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { CountryService } from './services/country.service';
 import { FormCredentialService } from './services/form-credential.service';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
@@ -54,7 +54,8 @@ const mockSigner:Signer = {
   'commonName':'common',
   'emailAddress':'email',
   'serialNumber':'serialNum',
-  'country':'EU'};
+  'country':'EU'
+};
 
 describe('FormCredentialComponent', () => {
   let component: FormCredentialComponent;
@@ -157,7 +158,8 @@ describe('FormCredentialComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-    imports: [
+      declarations: [FormCredentialComponent, PopupComponent, MaxLengthDirective, CustomEmailValidatorDirective, UnicodeValidatorDirective, OrganizationNameValidatorDirective],
+      imports: [
         FormsModule,
         TranslateModule.forRoot({}),
         HttpClientModule,
@@ -176,7 +178,7 @@ describe('FormCredentialComponent', () => {
         { provide: Router, useValue: mockRouter },
         { provide: ActivatedRoute, useValue: { snapshot: { paramMap: {} } } }
     ],
-    schemas: [NO_ERRORS_SCHEMA]
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 }).compileComponents();
   });
 

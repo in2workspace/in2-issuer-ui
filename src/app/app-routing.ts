@@ -16,7 +16,7 @@ export const routes: Routes = [
       import(
         './features/credential-management/credential-management.routes'
         ).then((m) => m.default),
-    canActivate: [AutoLoginPartialRoutesGuard,OnboardingPolicy],
+    canActivate: [AutoLoginPartialRoutesGuard, OnboardingPolicy],
   },
   {
     path: 'organization/credentials/create',
@@ -24,7 +24,7 @@ export const routes: Routes = [
       import('./features/credential-issuance/credential-issuance-routes').then(
         (m) => m.default
       ),
-    canActivate: [AutoLoginPartialRoutesGuard,OnboardingPolicy],
+    canActivate: [AutoLoginPartialRoutesGuard, OnboardingPolicy],
   },
   {
     path: 'organization/credentials/create2/:id',
@@ -32,7 +32,7 @@ export const routes: Routes = [
       import('./features/credential-issuance/credential-issuance-routes').then(
         (m) => m.default
       ),
-    canActivate: [AutoLoginPartialRoutesGuard,OnboardingPolicy],
+    canActivate: [AutoLoginPartialRoutesGuard, OnboardingPolicy],
   },
   {
     path: 'credential-offer',
