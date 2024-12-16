@@ -1,9 +1,10 @@
-import {Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import {Subscription, switchMap, timer} from 'rxjs';
+import {Observable, switchMap, timer} from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { FormCredentialComponent } from '../../shared/components/form-credential/form-credential.component';
+import {map} from "rxjs/operators";
 
 @Component({
     selector: 'app-credential-issuance-admin',
@@ -11,23 +12,13 @@ import { FormCredentialComponent } from '../../shared/components/form-credential
     standalone: true,
     imports: [FormCredentialComponent, AsyncPipe]
 })
-export class CredentialIssuanceComponent implements OnInit, OnDestroy {
+export class CredentialIssuanceComponent {
   public rol = "admin";
   public translate = inject(TranslateService);
   public title = timer(0).pipe(switchMap(() => this.translate.get("credentialIssuance.learCredentialEmployee")));
-  private subscription : Subscription | undefined
+  public asSigner$ : Observable<boolean|null> = this.route.paramMap.pipe(map(params => !!params.get('id')))
   public constructor(
     private route: ActivatedRoute,
-  ) {
-  }
+  ) {}
 
-  public ngOnInit(): void {
-    this.subscription = this.route.paramMap.subscribe(params => {
-      this.rol = params.get('id') ?? "";
-    });
-  }
-
-  public ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
-  }
 }
