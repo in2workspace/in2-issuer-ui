@@ -18,7 +18,7 @@ export class CredentialIssuanceComponent {
   public title = timer(0).pipe(switchMap(() => this.translate.get("credentialIssuance.learCredentialEmployee")));
   public asSigner$ : Observable<boolean|null> = this.route.paramMap.pipe(map(params => !!params.get('id')))
   public constructor(
-    private route: ActivatedRoute,
+    private readonly route: ActivatedRoute,
   ) {}
 
 }

@@ -4,14 +4,12 @@ import { environment } from 'src/environments/environment';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
-import { AlertService } from './app/core/services/alert.service';
 import { ServeErrorInterceptor } from './app/core/interceptors/server-error-interceptor';
 import { AuthInterceptor, AuthModule } from 'angular-auth-oidc-client';
 import { HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http';
-import {RouterModule} from "@angular/router";
-import {routes} from "./app/app-routing";
-import {AuthService} from "./app/core/services/auth.service";
-import {HttpLoaderFactory} from "./app/core/services/translate-http-loader.factory";
+import { RouterModule } from "@angular/router";
+import { routes } from "./app/app-routing";
+import { HttpLoaderFactory } from "./app/core/services/translate-http-loader.factory";
 
 
 bootstrapApplication(AppComponent, {
