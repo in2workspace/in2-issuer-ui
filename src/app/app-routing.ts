@@ -40,7 +40,10 @@ export const routes: Routes = [
   },
   {
     path: 'credential-offer-detail',
-    component:CredentialOfferComponent,
+    loadChildren: () =>
+      import('./features/credential-offer/credential-offer.routes').then(
+        (m) => m.default
+      ),
   },
   { path: '**', redirectTo: 'home' }
 ];
