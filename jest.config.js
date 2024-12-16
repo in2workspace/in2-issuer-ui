@@ -20,8 +20,7 @@ module.exports = {
       "src/app/**/*.ts",
       "!<rootDir>/node_modules/",
       "!<rootDir>/test/",
-      "!src/app/**/*.module.ts",
-      "!src/app/**/routes/**"
+      "!src/app/**/*.module.ts"
     ],
     testPathIgnorePatterns: [
       '/node_modules/',
