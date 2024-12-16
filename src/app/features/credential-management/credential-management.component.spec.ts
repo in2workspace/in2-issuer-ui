@@ -79,11 +79,10 @@ describe('CredentialManagementComponent', () => {
         MatTableModule,
         MatPaginatorModule,
         HttpClientTestingModule,
-        BrowserAnimationsModule,
         RouterModule.forRoot([]),
         TranslateModule.forRoot({}),
         AuthModule.forRoot({ config: {} }),
-        CredentialManagementComponent,
+        CredentialManagementComponent
     ],
     providers: [
         CredentialProcedureService,

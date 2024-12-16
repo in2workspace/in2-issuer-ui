@@ -41,8 +41,6 @@ bootstrapApplication(AppComponent, {
         })),
         { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ServeErrorInterceptor, multi: true },
-        AlertService,
-        AuthService,
         provideAnimations(),
     ]
 })

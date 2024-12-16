@@ -18,7 +18,8 @@ import { UnicodeValidatorDirective } from '../../directives/validators/unicode-v
 import { OrganizationNameValidatorDirective } from '../../directives/validators/organization-name.validator.directive';
 import { TempPower } from 'src/app/core/models/temporal/temp-power.interface';
 import { Power, Signer } from 'src/app/core/models/entity/lear-credential-employee.entity';
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import { BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {AsyncPipe, CommonModule} from "@angular/common";
 
 const mockTempPower: TempPower = {
   tmf_action: 'action1',
@@ -162,8 +163,10 @@ describe('FormCredentialComponent', () => {
         FormsModule,
         TranslateModule.forRoot({}),
         HttpClientModule,
-        FormCredentialComponent, PopupComponent, MaxLengthDirective, CustomEmailValidatorDirective, UnicodeValidatorDirective, OrganizationNameValidatorDirective,
-        BrowserAnimationsModule
+        FormCredentialComponent,
+        PopupComponent, MaxLengthDirective, CustomEmailValidatorDirective, UnicodeValidatorDirective, OrganizationNameValidatorDirective,
+        BrowserAnimationsModule,
+      AsyncPipe
     ],
     providers: [
         TranslateService,
