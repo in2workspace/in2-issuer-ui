@@ -40,7 +40,7 @@ export const routes: Routes = [
   {
     path: 'credential-offer-detail',
     loadChildren: () =>
-      import('./features/credencial-offer/credencial-offer.routes').then(
+      import('./features/credential-offer/credential-offer.routes').then(
         (m) => m.default
       ),
   },

@@ -31,7 +31,6 @@ describe('PowerComponent', () => {
     checkIfPowerIsAdded: jest.Mock<any>,
   }
 
-
   beforeEach(async () => {
     mockDialog={
       open:jest.fn().mockReturnValue(mockDialogRef)

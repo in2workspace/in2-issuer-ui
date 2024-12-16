@@ -1,12 +1,12 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { ReactiveFormsModule, FormsModule, FormGroupDirective, FormGroup, FormControl } from '@angular/forms';
+import { FormsModule, FormGroupDirective, FormGroup, FormControl } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { FormCredentialComponent } from './form-credential.component';
 import { AlertService } from 'src/app/core/services/alert.service';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { CountryService } from './services/country.service';
 import { FormCredentialService } from './services/form-credential.service';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import {NO_ERRORS_SCHEMA} from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
@@ -19,7 +19,6 @@ import { OrganizationNameValidatorDirective } from '../../directives/validators/
 import { TempPower } from 'src/app/core/models/temporal/temp-power.interface';
 import { Power, Signer } from 'src/app/core/models/entity/lear-credential-employee.entity';
 import { BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {AsyncPipe, CommonModule} from "@angular/common";
 
 const mockTempPower: TempPower = {
   tmf_action: 'action1',
@@ -113,9 +112,9 @@ describe('FormCredentialComponent', () => {
       resetForm: jest.fn(),
       convertToTempPower: jest.fn(),
       checkTmfFunction: jest.fn(),
-      getAddedPowers: jest.fn().mockReturnValue(mockPowers),
+      getAddedPowers: jest.fn().mockReturnValue(of(mockPowers)),
       getPlainAddedPowers: jest.fn().mockReturnValue([]),
-      getSelectedPowerName: jest.fn(),
+      getSelectedPowerName: jest.fn().mockReturnValue(of("mock_name")),
       getPlainSelectedPower: jest.fn().mockReturnValue(''),
       setSelectedPowerName: jest.fn(),
       removePower: jest.fn(),
@@ -159,14 +158,13 @@ describe('FormCredentialComponent', () => {
 
     await TestBed.configureTestingModule({
     imports: [
-        ReactiveFormsModule,
         FormsModule,
         TranslateModule.forRoot({}),
         HttpClientModule,
         FormCredentialComponent,
         PopupComponent, MaxLengthDirective, CustomEmailValidatorDirective, UnicodeValidatorDirective, OrganizationNameValidatorDirective,
-        BrowserAnimationsModule,
-      AsyncPipe
+        BrowserAnimationsModule
+
     ],
     providers: [
         TranslateService,
@@ -178,7 +176,7 @@ describe('FormCredentialComponent', () => {
         { provide: Router, useValue: mockRouter },
         { provide: ActivatedRoute, useValue: { snapshot: { paramMap: {} } } }
     ],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    schemas: [NO_ERRORS_SCHEMA]
 }).compileComponents();
   });
 
@@ -272,8 +270,9 @@ describe('FormCredentialComponent', () => {
   });
 
   it('should get added powers from service', ()=>{
-    const observable = of('power');
-    expect(component.addedPowers$).toEqual(mockPowers);
+    component.addedPowers$.subscribe((powers) => {
+      expect(powers).toEqual(mockPowers);
+    });
   });
 
   it('should check if has IN2 organization id', ()=>{

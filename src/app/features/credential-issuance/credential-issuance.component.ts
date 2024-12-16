@@ -28,7 +28,6 @@ export class CredentialIssuanceComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    console.log(this.subscription)
-    this.subscription?.unsubscribe()
+    this.subscription?.unsubscribe();
   }
 }

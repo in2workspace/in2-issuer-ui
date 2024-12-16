@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { CredencialOfferComponent } from './credencial-offer.component';
+import { CredentialOfferComponent } from './credential-offer.component';
 import { CommonModule } from '@angular/common';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
@@ -14,8 +14,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { AuthModule } from 'angular-auth-oidc-client';
 
 describe('CredencialOfferComponent', () => {
-  let component: CredencialOfferComponent;
-  let fixture: ComponentFixture<CredencialOfferComponent>;
+  let component: CredentialOfferComponent;
+  let fixture: ComponentFixture<CredentialOfferComponent>;
   let credentialProcedureService: {
     getCredentialOffer: jest.Mock
   };
@@ -38,7 +38,7 @@ describe('CredencialOfferComponent', () => {
         TranslateModule.forRoot(),
         HttpClientTestingModule,
         AuthModule.forRoot({ config: {} }),
-        CredencialOfferComponent
+        CredentialOfferComponent
     ],
     providers: [
         AuthService,
@@ -53,7 +53,7 @@ describe('CredencialOfferComponent', () => {
     ]
 }).compileComponents();
 
-    fixture = TestBed.createComponent(CredencialOfferComponent);
+    fixture = TestBed.createComponent(CredentialOfferComponent);
     component = fixture.componentInstance;
     alertService = TestBed.inject(AlertService);
     route = TestBed.inject(ActivatedRoute);

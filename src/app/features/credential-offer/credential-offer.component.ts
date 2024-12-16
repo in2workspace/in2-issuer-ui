@@ -9,12 +9,12 @@ import { NavbarComponent } from '../../shared/components/navbar/navbar.component
 
 @Component({
     selector: 'app-credencial-offer',
-    templateUrl: './credencial-offer.component.html',
-    styleUrls: ['./credencial-offer.component.scss'],
+    templateUrl: './credential-offer.component.html',
+    styleUrls: ['./credential-offer.component.scss'],
     standalone: true,
     imports: [NavbarComponent, NgIf, QRCodeModule, TranslatePipe]
 })
-export class CredencialOfferComponent implements OnInit {
+export class CredentialOfferComponent implements OnInit {
   public qrCodeData?: string;
 
   private readonly route = inject(ActivatedRoute);
