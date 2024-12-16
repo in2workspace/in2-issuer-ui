@@ -1,13 +1,13 @@
-import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {HttpClientModule} from '@angular/common/http';
-import {of, throwError} from 'rxjs';
-import {CredentialDetailComponent} from './credential-detail.component';
-import {ActivatedRoute, RouterModule} from '@angular/router';
-import {CredentialProcedureService} from 'src/app/core/services/credential-procedure.service';
-import {LEARCredentialEmployeeJwtPayload} from "../../core/models/entity/lear-credential-employee.entity";
-import {LearCredentialEmployeeDataDetail} from "../../core/models/dto/lear-credential-employee-data-detail.dto";
-import {TranslateModule, TranslateService} from '@ngx-translate/core';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpClientModule } from '@angular/common/http';
+import { of, throwError } from 'rxjs';
+import { CredentialDetailComponent } from './credential-detail.component';
+import { ActivatedRoute, RouterModule } from '@angular/router';
+import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
+import { LEARCredentialEmployeeJwtPayload } from "../../core/models/entity/lear-credential-employee.entity";
+import { LearCredentialEmployeeDataDetail } from "../../core/models/dto/lear-credential-employee-data-detail.dto";
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 describe('CredentialDetailComponent', () => {
   let component: CredentialDetailComponent;

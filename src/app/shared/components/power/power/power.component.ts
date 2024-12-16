@@ -1,6 +1,6 @@
 import { FormCredentialService } from '../../form-credential/services/form-credential.service';
 import { Component, Input, OnInit, inject } from '@angular/core';
-import {  AuthService  } from "../../../../core/services/auth.service";
+import { AuthService } from "../../../../core/services/auth.service";
 import { MatSelectChange, MatSelect, MatSelectTrigger } from '@angular/material/select';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';

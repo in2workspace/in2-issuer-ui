@@ -1,10 +1,10 @@
-import {Component, inject} from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import {Observable, switchMap, timer} from 'rxjs';
+import { Observable, switchMap, timer } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { FormCredentialComponent } from '../../shared/components/form-credential/form-credential.component';
-import {map} from "rxjs/operators";
+import { map } from "rxjs/operators";
 
 @Component({
     selector: 'app-credential-issuance-admin',

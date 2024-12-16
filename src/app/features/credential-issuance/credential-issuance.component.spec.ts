@@ -5,8 +5,8 @@ import { of } from 'rxjs';
 import { CredentialIssuanceComponent } from './credential-issuance.component';
 import { RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import {OidcSecurityService, StsConfigLoader} from "angular-auth-oidc-client";
-import {AuthService} from "../../core/services/auth.service";
+import { OidcSecurityService, StsConfigLoader } from "angular-auth-oidc-client";
+import { AuthService } from "../../core/services/auth.service";
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 global.structuredClone = (obj: any) => JSON.parse(JSON.stringify(obj));

@@ -1,5 +1,5 @@
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import {DestroyRef, Directive, inject, Input, numberAttribute, OnInit} from '@angular/core';
+import { DestroyRef, Directive, inject, Input, numberAttribute, OnInit } from '@angular/core';
 import { NgModel } from '@angular/forms';
 
 @Directive({

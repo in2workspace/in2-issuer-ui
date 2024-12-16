@@ -1,6 +1,6 @@
 
 import { Routes } from '@angular/router';
-import {CredentialIssuanceComponent} from "./credential-issuance.component";
+import { CredentialIssuanceComponent } from "./credential-issuance.component";
 
 export default [
   {

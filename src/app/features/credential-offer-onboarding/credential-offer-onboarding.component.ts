@@ -1,9 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
-
 import { TranslateModule } from '@ngx-translate/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
-import {NavbarComponent} from "../../shared/components/navbar/navbar.component";
+import { NavbarComponent } from "../../shared/components/navbar/navbar.component";
 
 @Component({
   selector: 'app-credential-offer-onboarding',
