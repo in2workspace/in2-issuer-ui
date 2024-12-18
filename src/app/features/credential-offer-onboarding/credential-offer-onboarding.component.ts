@@ -9,7 +9,7 @@ import { NavbarComponent } from "../../shared/components/navbar/navbar.component
   standalone: true,
   imports: [TranslateModule, NavbarComponent,],
   templateUrl: './credential-offer-onboarding.component.html',
-  styleUrl: './credential-offer.component.scss'
+  styleUrl: ' ../credential-offer/credential-offer.component.scss'
 })
 export class CredentialOfferOnboardingComponent implements OnInit{
   private transactionCode = ""
