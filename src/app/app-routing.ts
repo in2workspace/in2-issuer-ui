@@ -2,13 +2,14 @@ import { Routes } from '@angular/router';
 import { AutoLoginPartialRoutesGuard } from 'angular-auth-oidc-client';
 import { CredentialOfferOnboardingComponent } from './features/credential-offer-onboarding/credential-offer-onboarding.component';
 import { OnboardingPolicy } from "./core/policies/onboarding-policy";
-import {CredentialOfferComponent} from "./features/credential-offer/credential-offer.component";
+import { CredentialOfferComponent } from "./features/credential-offer/credential-offer.component";
+import { HomeComponent } from "./features/home/home.component";
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'home' },
   {
     path: 'home',
-    loadChildren: () => import('./features/home/home.routes').then(m => m.default)
+    component: HomeComponent,
   },
   {
     path: 'organization/credentials',
