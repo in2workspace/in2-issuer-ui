@@ -15,8 +15,8 @@ export const OnboardingPolicy = () => {
     const dialogRef = dialog.open(DialogComponent, {
       panelClass: 'custom-dialog-error'
     });
-    authService.logout().subscribe(() => {
-      dialogRef.afterClosed().subscribe(() => {
+    dialogRef.afterClosed().subscribe(() => {
+      authService.logout().subscribe(() => {
         router.navigate(['/home']).then(() => false);
       });
     });
