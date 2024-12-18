@@ -2,6 +2,7 @@ import { AutoLoginPartialRoutesGuard } from 'angular-auth-oidc-client';
 import { CredentialOfferOnboardingComponent } from './features/credential-offer-onboarding/credential-offer-onboarding.component';
 import { OnboardingPolicy } from './core/policies/onboarding-policy';
 import { routes } from "./app-routing";
+import {HomeComponent} from "./features/home/home.component";
 
 describe('App Routes', () => {
   it('should contain a default redirect to home', () => {
@@ -10,11 +11,10 @@ describe('App Routes', () => {
     expect(defaultRoute?.pathMatch).toBe('full');
   });
 
-  it('should define lazy loading for the home module', () => {
+  it('should define the home route with the standalone component', () => {
     const homeRoute = routes.find((route) => route.path === 'home');
     expect(homeRoute).toBeTruthy();
-    expect(homeRoute?.loadChildren).toBeDefined();
-    expect(typeof homeRoute?.loadChildren).toBe('function');
+    expect(homeRoute?.component).toBe(HomeComponent);
   });
 
   it('should define lazy loading for credential management with guards', () => {
