@@ -196,7 +196,7 @@ export class FormCredentialService {
 
   public powersHaveFunction(): boolean{
     return this.getPlainAddedPowers().every((option:TempPower) =>
-      option.execute || option.create || option.update || option.delete || option.upload
+      option.execute || option.create || option.update || option.delete || option.upload || option.attest
     );
   }
 
