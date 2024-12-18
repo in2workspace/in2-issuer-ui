@@ -4,12 +4,11 @@ import { CredentialProcedureService } from 'src/app/core/services/credential-pro
 import { Country, CountryService } from './services/country.service';
 import { FormCredentialService } from './services/form-credential.service';
 import { AuthService } from 'src/app/core/services/auth.service';
-import { PopupComponent } from '../popup/popup.component';
 import { Router, RouterLink } from '@angular/router';
 import { ErrorStateMatcher, MatOption } from '@angular/material/core';
 import { TempPower } from "../../../core/models/temporal/temp-power.interface";
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
+import { Observable, Observer } from 'rxjs';
 import { Mandatee, OrganizationDetails, Power } from 'src/app/core/models/entity/lear-credential-employee.entity';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButton } from '@angular/material/button';
@@ -25,6 +24,8 @@ import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatError, MatPrefix } from '@angular/material/form-field';
 import { MatCard, MatCardContent } from '@angular/material/card';
 import { NavbarComponent } from '../navbar/navbar.component';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent, DialogData } from '../dialog/dialog.component';
 
 @Component({
     selector: 'app-form-credential',
@@ -56,13 +57,10 @@ import { NavbarComponent } from '../navbar/navbar.component';
         MatButton,
         RouterLink,
         NgTemplateOutlet,
-        PopupComponent,
         TranslatePipe,
     ],
 })
 export class FormCredentialComponent implements OnInit, OnDestroy {
-
-  @ViewChild(PopupComponent) public popupComponent!: PopupComponent;
   @ViewChild('formDirective') public formDirective!: FormGroupDirective;
   @Output() public sendReminder = new EventEmitter<void>();
   @Input() public viewMode: 'create' | 'detail' = 'create';
@@ -83,9 +81,6 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
   public hasIn2OrganizationId = false;
   public addedMandatorLastName: string = '';
 
-  public popupMessage: string = '';
-  public isPopupVisible: boolean = false;
-
   //if mobile has been introduced and unfocused and there is not country, show error
   public countryErrorMatcher: ErrorStateMatcher = {
     isErrorState: (control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean => {
@@ -105,6 +100,7 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
   private readonly router = inject(Router);
   private readonly countryService = inject(CountryService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly dialog = inject(MatDialog);
 
   public constructor(){
     this.countries = this.countryService.getSortedCountries();
@@ -158,6 +154,36 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
     }
   }
 
+  public openDialog(dialogData:DialogData, callback:Partial<Observer<any>>|undefined){
+    const dialogRef = this.dialog.open(
+      DialogComponent, 
+      { data: { ...dialogData } }
+    );
+    
+      dialogRef.afterClosed()
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(callback);
+  }
+
+  public openSubmitDialog(){
+    //todo translate
+    const dialogData: DialogData = {
+      title: `Create credential`,
+      message: `Are you sure you want to create this credential?`,
+      isConfirmDialog: true,
+      status: 'default'
+    };
+    const callbackAfterDialogClose:Partial<Observer<any>> = {
+      next: (result: boolean) => {
+        if (result) {
+          this.submitCredential();
+        }
+      }
+    };
+
+    this.openDialog(dialogData, callbackAfterDialogClose);
+  }
+
   public submitCredential(): void {
     //optional
     const selectedMandateeCountry: Country|undefined = this.countryService.getCountryFromIsoCode(this.selectedMandateeCountryIsoCode);
@@ -179,19 +205,26 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
           this.addedMandatorLastName,
           this.signer,
           this.credentialProcedureService,
-          this.popupComponent,
           this.resetForm.bind(this)
         )
         .subscribe({
-          //service opens popup too
           next: () => {
-            this.popupMessage = this.translate.instant("credentialIssuance.success");
-            //navigates before popup is shown
-            this.openTempPopup();
-            this.router.navigate(['/organization/credentials']).then(() => {
-              window.scrollTo(0, 0);
-              location.reload();
-            });
+            //todo translate
+            const dialogData: DialogData = {
+                title: `Credential created`,
+                message: this.translate.instant("credentialIssuance.success"),
+                isConfirmDialog: false,
+                status: `default`
+            }
+            const callbackAfterDialogClose = {
+              next: ()=>{
+                this.router.navigate(['/organization/credentials']).then(() => {
+                  window.scrollTo(0, 0);
+                  location.reload(); 
+                });
+              }
+            }
+            this.openDialog(dialogData, callbackAfterDialogClose);
           },
           error: (err:Error) => {
             //server-error-interceptor acts here
@@ -202,11 +235,6 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
       console.error('Data to submit is not valid');
       return;
     }
-  }
-
-  public openTempPopup(){
-    this.isPopupVisible = true;
-    setTimeout(()=>{this.isPopupVisible=false}, 1000);
   }
 
   public triggerSendReminder(): void {

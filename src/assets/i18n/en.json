@@ -101,6 +101,11 @@
         "no_power": "You need to add at least one power",
         "no_function": "Each power must have at least one selected function"
       }
+  },
+  "dialog": {
+    "ok": "Ok",
+    "cancel": "Cancel",
+    "accept": "Accept"
   }
 }
 

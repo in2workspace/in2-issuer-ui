@@ -1,7 +1,18 @@
-<h1 mat-dialog-title>Access Denied</h1>
+<h1 mat-dialog-title>{{ data.title }}</h1>
 <div mat-dialog-content>
-  <p>You do not have the required power to access</p>
+  <p>{{ data.message }}</p>
 </div>
-<div mat-dialog-actions>
-  <button mat-button (click)="onConfirm()">OK</button>
+<!-- todo remove inline style -->
+<div mat-dialog-actions 
+  class="confirm-or-cancel" 
+  style="padding-inline: 18px;"
+  >
+  @if(data.isConfirmDialog){
+    <button mat-button (click)="onCancel()">{{ "dialog.cancel" | translate }}</button>
+    <button mat-raised-button 
+    [color]="statusColor"
+    (click)="onConfirm()">{{ "dialog.accept" | translate }}</button>
+  }@else{
+    <button [color]="statusColor" mat-raised-button (click)="onConfirm()">{{ "dialog.ok" | translate }}</button>
+  }
 </div>

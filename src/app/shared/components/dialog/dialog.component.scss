@@ -1,54 +1,7 @@
-@import "../../../../styles.scss";
-
-// Custom error dialog styling
-.mat-dialog.custom-dialog-error .mat-dialog-container {
-  background-color: #fdf0f0 !important;
-  color: white !important;
-  border-radius: 8px;
+:host{
+    height:300px;
 }
 
-.mat-dialog.custom-dialog-error .mat-dialog-content {
-  color: #7b2531 !important;
-}
-
-.mat-dialog.custom-dialog-error .mat-dialog-actions button {
-  color: #7b2531 !important;
-}
-
-.mat-dialog.custom-dialog-error .mat-dialog-content mat-icon {
-  font-size: 38px;
-  color: #7b2531;
-}
-
-// Custom success dialog styling
-.mat-dialog.custom-dialog-ok .mat-dialog-container {
-  background-color: #e7f8e4 !important;
-  color: white !important;
-  border-radius: 8px;
-}
-
-.mat-dialog.custom-dialog-ok .mat-dialog-content {
-  color: #215112 !important;
-}
-
-.mat-dialog.custom-dialog-ok .mat-dialog-content mat-icon {
-  font-size: 38px;
-  color: #215112;
-}
-
-// Center the action buttons in the error dialog
-.mat-dialog.custom-dialog-error .mat-dialog-actions {
-  justify-content: center !important;
-}
-
-// Adjust spacing for message content and icons
-.mat-dialog .mat-dialog-content div {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-// Ensure the text line-height is adjusted
-.mat-dialog .mat-dialog-content span {
-  line-height: 1.2;
+.mat-mdc-dialog-actions.mdc-dialog__actions.confirm-or-cancel{
+    padding: 24px; 
 }

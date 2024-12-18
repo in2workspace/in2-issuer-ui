@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { PopupComponent } from '../../popup/popup.component';
 import { ProcedureRequest } from 'src/app/core/models/dto/procedure-request.dto';
 import { tap, catchError } from 'rxjs/operators';
 import { Mandatee, Mandator, Power, Signer } from "../../../../core/models/entity/lear-credential-employee.entity";
@@ -83,7 +82,6 @@ export class FormCredentialService {
     mandatorLastName: string,
     signer: Signer,
     credentialProcedureService: CredentialProcedureService,
-    popupComponent: PopupComponent,
     resetForm: () => void
   ): Observable<void> {
 
@@ -132,7 +130,6 @@ export class FormCredentialService {
     };
 
     return credentialProcedureService.createProcedure(credentialProcedure).pipe(
-      //show same popup when success?
       tap(() => {
         resetForm();
       }),

@@ -8,7 +8,6 @@ import { MatTableModule } from '@angular/material/table';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { AuthModule } from 'angular-auth-oidc-client';
-import { PopupComponent } from '../../popup/popup.component';
 import { Mandatee, Mandator, Power, Signer } from "../../../../core/models/entity/lear-credential-employee.entity";
 import { TempPower } from "../../../../core/models/temporal/temp-power.interface";
 import { Country } from './country.service';
@@ -17,7 +16,6 @@ global.structuredClone = (obj: any) => JSON.parse(JSON.stringify(obj));
 
 describe('FormCredentialService', () => {
   let service: FormCredentialService;
-  let popupComponent: PopupComponent;
   let credentialProcedureService: any;
   let mockCredential: Mandatee;
   let mockMandateeSelectedCountry: Country;
@@ -31,7 +29,6 @@ describe('FormCredentialService', () => {
       providers: [
         FormCredentialService,
         TranslateService,
-        PopupComponent
       ],
       imports: [
         MatTableModule,
@@ -44,7 +41,7 @@ describe('FormCredentialService', () => {
       ],
     });
     service = TestBed.inject(FormCredentialService);
-    popupComponent = TestBed.inject(PopupComponent);
+    // popupComponent = TestBed.inject(PopupComponent);
     credentialProcedureService = {
       createProcedure: jest.fn()
     };
@@ -258,7 +255,7 @@ describe('FormCredentialService', () => {
 it('should submit credential correctly', (done) => {
   const mockMandatorCountry = undefined;
   jest.spyOn(service, 'resetForm');
-  jest.spyOn(popupComponent, 'showPopup');
+  // jest.spyOn(popupComponent, 'showPopup');
   jest.spyOn(service, 'checkTmfFunction');
   credentialProcedureService.createProcedure.mockReturnValue(of({}));
 
@@ -271,7 +268,6 @@ it('should submit credential correctly', (done) => {
     'lastName',
     mockSigner,
     credentialProcedureService as any,
-    popupComponent,
     service.resetForm
   ).subscribe(() => {
     expect(credentialProcedureService.createProcedure).toHaveBeenCalledWith(
@@ -297,7 +293,7 @@ it('should handle error when submitCredential fails', (done) => {
   const errorMessage = 'Submission failed';
   credentialProcedureService.createProcedure.mockReturnValue(throwError(() => new Error(errorMessage)));
   jest.spyOn(service, 'resetForm');
-  jest.spyOn(popupComponent, 'showPopup');
+  // jest.spyOn(popupComponent, 'showPopup');
 
   service.submitCredential(
     mockCredential,
@@ -308,7 +304,6 @@ it('should handle error when submitCredential fails', (done) => {
     'lastName',
     mockSigner,
     credentialProcedureService as any,
-    popupComponent,
     service.resetForm
   ).subscribe({
     next: () => {
@@ -352,7 +347,6 @@ it('should append country prefix to mobile_phone if not present', (done) => {
     'Doe',
     mockSigner,
     credentialProcedureService as any,
-    popupComponent,
     jest.fn()
   ).subscribe(() => {
     done();
@@ -388,7 +382,6 @@ it('should not append country prefix to mobile_phone if already present', (done)
     'Doe',
     mockSigner,
     credentialProcedureService as any,
-    popupComponent,
     jest.fn()
   ).subscribe(() => {
     done();
@@ -420,7 +413,6 @@ it('should not append country prefix to mobile_phone if already present', (done)
       'lastName',
       mockSigner,
       credentialProcedureService,
-      popupComponent,
       service.resetForm
     );
 

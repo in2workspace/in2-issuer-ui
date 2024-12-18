@@ -101,5 +101,10 @@
         "no_power": "Añade por lo menos un poder",
         "no_function": "Cada poder debe tener por lo menos una acción"
       }
+    },
+    "dialog": {
+      "ok": "De acuerdo",
+      "cancel": "Cancelar",
+      "accept": "Aceptar"
     }
 }

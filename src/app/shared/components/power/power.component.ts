@@ -1,9 +1,9 @@
 import { FormCredentialService } from '../form-credential/services/form-credential.service';
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, Input, OnInit, inject, DestroyRef } from '@angular/core';
 import { AuthService } from "../../../core/services/auth.service";
 import { MatSelectChange, MatSelect, MatSelectTrigger } from '@angular/material/select';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { DialogComponent, DialogData } from '../dialog/dialog.component';
 import { Observable } from 'rxjs';
 import { TempPower } from 'src/app/core/models/temporal/temp-power.interface';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -14,6 +14,7 @@ import { MatButton, MatMiniFabButton } from '@angular/material/button';
 import { MatOption } from '@angular/material/core';
 import { MatFormField } from '@angular/material/form-field';
 import { NgIf, NgFor, NgTemplateOutlet, AsyncPipe } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
     selector: 'app-power',
@@ -34,6 +35,7 @@ export class PowerComponent implements OnInit{
   public selectedPower$: Observable<string>;
 
   private readonly authService = inject(AuthService);
+  private readonly destroyRef = inject(DestroyRef);
   private readonly dialog = inject(MatDialog);
   private readonly formService = inject(FormCredentialService);
 
@@ -96,17 +98,20 @@ export class PowerComponent implements OnInit{
   }
 
   public removePower(powerToRemove: string): void {
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: {
+    const dialogData: DialogData = {
         title: `Remove Power ${powerToRemove}`,
         message: `Are you sure you want to remove this power: ${powerToRemove}?`,
-      },
-    });
+        isConfirmDialog: true,
+        status: `default`
+    }
+    const dialogRef = this.dialog.open(DialogComponent, { data: dialogData });
 
-    dialogRef.afterClosed().subscribe((result: boolean) => {
-      if (result) {
-        this.formService.removePower(powerToRemove);
-      }
+    dialogRef.afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((result: boolean) => {
+        if (result) {
+          this.formService.removePower(powerToRemove);
+        }
     });
   }
 
