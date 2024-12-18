@@ -1,38 +1,46 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialogRef } from '@angular/material/dialog';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { DialogComponent } from './dialog.component';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 describe('DialogComponent', () => {
   let component: DialogComponent;
   let fixture: ComponentFixture<DialogComponent>;
-  let dialogRefMock: { close: jest.Mock };
+  let mockDialogRef: jest.Mocked<MatDialogRef<DialogComponent>>;
 
-  beforeEach(() => {
-    dialogRefMock = { close: jest.fn() };
+  beforeEach(async () => {
+    mockDialogRef = {
+      close: jest.fn(),
+    } as any;
 
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
     imports: [DialogComponent],
     providers: [
-        { provide: MatDialogRef, useValue: dialogRefMock }
-    ]
-});
+        { provide: MatDialogRef, useValue: mockDialogRef },
+        {
+            provide: MAT_DIALOG_DATA,
+            useValue: { title: 'Test Title', message: 'Test Message' },
+        },
+    ],
+}).compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(DialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it('should create the dialog component', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call dialogRef.close(true) when onConfirm is called', () => {
+  it('should close the dialog with true when onConfirm is called', () => {
     component.onConfirm();
+    expect(mockDialogRef.close).toHaveBeenCalledWith(true);
+  });
 
-    expect(dialogRefMock.close).toHaveBeenCalledWith(true);
+  it('should close the dialog with false when onCancel is called', () => {
+    component.onCancel();
+    expect(mockDialogRef.close).toHaveBeenCalledWith(false);
   });
 });

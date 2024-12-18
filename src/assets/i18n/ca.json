@@ -100,5 +100,10 @@
         "no_power": "Afegeix almenys un poder",
         "no_function": "Cada poder ha de tenir almenys una funció"
       }
+    },
+    "dialog": {
+      "ok": "D'acord",
+      "cancel": "Cancel·lar",
+      "accept": "Acceptar"
     }
 }

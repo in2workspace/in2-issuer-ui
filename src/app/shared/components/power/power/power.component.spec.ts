@@ -7,7 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { AuthService } from "../../../../core/services/auth.service";
 import { FormCredentialService } from '../../form-credential/services/form-credential.service';
-import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
+import { DialogComponent } from '../../dialog/dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { of } from 'rxjs';
 
@@ -208,7 +208,7 @@ describe('PowerComponent', () => {
   it('should open dialog before removing power', ()=>{
     const powerName = 'testPowerName';
     component.removePower(powerName);
-    expect(mockDialog.open).toHaveBeenCalledWith(ConfirmDialogComponent, {
+    expect(mockDialog.open).toHaveBeenCalledWith(DialogComponent, {
       data: {
         title: `Remove Power ${powerName}`,
         message: `Are you sure you want to remove this power: ${powerName}?`,

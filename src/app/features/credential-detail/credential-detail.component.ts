@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, DestroyRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { switchMap, timer } from 'rxjs';
@@ -7,6 +7,9 @@ import { LEARCredentialEmployeeJwtPayload } from "../../core/models/entity/lear-
 import {LearCredentialEmployeeDataDetail} from "../../core/models/dto/lear-credential-employee-data-detail.dto";
 import { FormCredentialComponent } from '../../shared/components/form-credential/form-credential.component';
 import { NgIf, AsyncPipe } from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent, DialogData } from 'src/app/shared/components/dialog/dialog.component';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
     selector: 'app-credential-detail',
@@ -27,6 +30,8 @@ export class CredentialDetailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly credentialProcedureService = inject(CredentialProcedureService);
   private readonly translate = inject(TranslateService);
+  private readonly dialog = inject(MatDialog);
+  private readonly destroyRef = inject(DestroyRef);
 
   public ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -47,18 +52,49 @@ export class CredentialDetailComponent implements OnInit {
         console.error('Error fetching credential details', error);
       }
     });
+   
   }
 
   public sendReminder(): void {
-    if (this.credentialId) {
-      this.credentialProcedureService.sendReminder(this.credentialId).subscribe({
-        next: (response: void) => {
-          console.log('Reminder sent successfully', response);
-        },
-        error: (error: void) => {
-          console.error('Error sending reminder', error);
-        }
-      });
-    }
+    const credentialId = this.credentialId;
+    if (!credentialId) return;
+
+    //todo translate
+    const dialogData: DialogData = {
+      title: `Send Reminder`,
+      message: `Are you sure you want to send a reminder for this credential offer?`,
+      isConfirmDialog: true,
+      status: 'warn'
+    };
+    const confirmDialogRef = this.openDialog(dialogData);
+
+    confirmDialogRef.afterClosed()
+    .pipe(takeUntilDestroyed(this.destroyRef))
+    .subscribe((result: boolean) => {
+      if (result) {
+        this.credentialProcedureService.sendReminder(credentialId)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: () => {
+            const dialogData: DialogData = { 
+              title:'Success',
+              message:'Reminder sent successfully',
+              isConfirmDialog: false,
+              status: 'default'
+            };
+            this.openDialog(dialogData);
+          }
+        });
+      }
+    });
+
+  }
+
+  public openDialog(dialogData:DialogData){
+    return this.dialog.open(DialogComponent, {
+      data: {
+        ...dialogData
+      },
+    });
   }
 }

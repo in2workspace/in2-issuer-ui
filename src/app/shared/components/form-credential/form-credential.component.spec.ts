@@ -11,7 +11,6 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { of } from 'rxjs';
-import { PopupComponent } from '../popup/popup.component';
 import { MaxLengthDirective } from '../../directives/validators/max-length-directive.directive';
 import { CustomEmailValidatorDirective } from '../../directives/validators/custom-email-validator.directive';
 import { UnicodeValidatorDirective } from '../../directives/validators/unicode-validator.directive';
@@ -162,7 +161,7 @@ describe('FormCredentialComponent', () => {
         TranslateModule.forRoot({}),
         HttpClientModule,
         FormCredentialComponent,
-        PopupComponent, MaxLengthDirective, CustomEmailValidatorDirective, UnicodeValidatorDirective, OrganizationNameValidatorDirective,
+        MaxLengthDirective, CustomEmailValidatorDirective, UnicodeValidatorDirective, OrganizationNameValidatorDirective,
         BrowserAnimationsModule
 
     ],
@@ -433,7 +432,6 @@ describe('FormCredentialComponent', () => {
       component.addedMandatorLastName,
       component.signer,
       mockCredentialProcedureService,
-      expect.any(PopupComponent),
       expect.any(Function)
     );
   });
@@ -458,7 +456,6 @@ describe('FormCredentialComponent', () => {
       component.addedMandatorLastName,
       component.signer,
       mockCredentialProcedureService,
-      expect.any(PopupComponent),
       expect.any(Function)
     );
   });
@@ -492,7 +489,7 @@ describe('FormCredentialComponent', () => {
 
     const navigateSpy = mockRouter.navigate.mockResolvedValue(true);
     const scrollToSpy = jest.spyOn(window, 'scrollTo').mockImplementation(() => {});
-    const popupSpy = jest.spyOn(component, 'openTempPopup');
+    // const popupSpy = jest.spyOn(component, 'openTempPopup');
     Object.defineProperty(window, 'location', {
       value: {
         ...window.location,
@@ -505,19 +502,11 @@ describe('FormCredentialComponent', () => {
     await navigateSpy;
 
     expect(mockFormCredentialService.submitCredential).toHaveBeenCalled();
-    expect(popupSpy).toHaveBeenCalled();
+    // expect(popupSpy).toHaveBeenCalled();
     expect(navigateSpy).toHaveBeenCalledWith(['/organization/credentials']);
     expect(scrollToSpy).toHaveBeenCalledWith(0, 0);
     expect(window.location.reload).toHaveBeenCalled();
 
   });
-
-  it('should close popup', fakeAsync(()=>{
-    component.openTempPopup();
-    expect(component.isPopupVisible).toBe(true);
-    tick(1000);
-    expect(component.isPopupVisible).toBe(false);
-
-  }));
 
 });
