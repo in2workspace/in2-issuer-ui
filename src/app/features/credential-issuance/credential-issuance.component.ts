@@ -13,7 +13,6 @@ import { map } from "rxjs/operators";
     imports: [FormCredentialComponent, AsyncPipe]
 })
 export class CredentialIssuanceComponent {
-  public rol = "admin";
   public translate = inject(TranslateService);
   public title = timer(0).pipe(switchMap(() => this.translate.get("credentialIssuance.learCredentialEmployee")));
   public asSigner$ : Observable<boolean|null> = this.route.paramMap.pipe(map(params => !!params.get('id')))

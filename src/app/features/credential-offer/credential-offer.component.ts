@@ -38,7 +38,7 @@ export class CredentialOfferComponent implements OnInit {
       next: (data) => {
         if (data) {
           this.qrCodeData = data;
-          console.log('QR Code Data:', this.qrCodeData);
+          console.info('QR Code Data:', this.qrCodeData);
           this.router.navigate([], {
             relativeTo: this.route,
             queryParams: { transaction_code: transactionCode },

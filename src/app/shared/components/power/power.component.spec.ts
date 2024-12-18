@@ -5,9 +5,9 @@ import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
-import { AuthService } from "../../../../core/services/auth.service";
-import { FormCredentialService } from '../../form-credential/services/form-credential.service';
-import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
+import { AuthService } from "../../../core/services/auth.service";
+import { FormCredentialService } from '../form-credential/services/form-credential.service';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { of } from 'rxjs';
 
@@ -19,16 +19,16 @@ describe('PowerComponent', () => {
   let debugElement: DebugElement;
 
   let mockDialog : {open:jest.Mock<any>};
-  let mockAuthService: {hasIn2OrganizationIdentifier: jest.Mock<any>};
+  let mockAuthService: {hasIn2OrganizationIdentifier: jest.Mock};
   let mockFormService: {
-    getAddedPowers: jest.Mock<any>,
-    getPlainAddedPowers: jest.Mock<any>,
-    getSelectedPowerName: jest.Mock<any>,
-    getPlainSelectedPower: jest.Mock<any>,
-    addPower: jest.Mock<any>,
-    setSelectedPowerName: jest.Mock<any>,
-    removePower: jest.Mock<any>,
-    checkIfPowerIsAdded: jest.Mock<any>,
+    getAddedPowers: jest.Mock,
+    getPlainAddedPowers: jest.Mock,
+    getSelectedPowerName: jest.Mock,
+    getPlainSelectedPower: jest.Mock,
+    addPower: jest.Mock,
+    setSelectedPowerName: jest.Mock,
+    removePower: jest.Mock,
+    checkIfPowerIsAdded: jest.Mock,
   }
 
   beforeEach(async () => {

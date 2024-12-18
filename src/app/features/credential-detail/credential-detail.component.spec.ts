@@ -44,7 +44,7 @@ describe('CredentialDetailComponent', () => {
     component = fixture.componentInstance;
     translateService = TestBed.inject(TranslateService);
     jest.spyOn(console, 'error');
-    jest.spyOn(console, 'log');
+    jest.spyOn(console, 'info');
     fixture.detectChanges();
   });
 
@@ -142,7 +142,7 @@ describe('CredentialDetailComponent', () => {
     component.sendReminder();
 
     expect(mockCredentialProcedureService.sendReminder).toHaveBeenCalledWith('1');
-    expect(console.log).toHaveBeenCalledWith('Reminder sent successfully', 'Reminder sent');
+    expect(console.info).toHaveBeenCalledWith('Reminder sent successfully', 'Reminder sent');
   });
 
   it('should handle error while sending reminder', () => {

@@ -53,7 +53,7 @@ export class CredentialDetailComponent implements OnInit {
     if (this.credentialId) {
       this.credentialProcedureService.sendReminder(this.credentialId).subscribe({
         next: (response: void) => {
-          console.log('Reminder sent successfully', response);
+          console.info('Reminder sent successfully', response);
         },
         error: (error: void) => {
           console.error('Error sending reminder', error);

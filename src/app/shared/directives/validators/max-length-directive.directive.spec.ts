@@ -38,7 +38,6 @@ describe('MaxLengthDirective', () => {
 
     inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
     ngModel = fixture.debugElement.query(By.directive(NgModel)).injector.get(NgModel);
-    console.log(ngModel.control)
 
     validateSpy = jest.spyOn(directive, 'validate');
     setErrorSpy = jest.spyOn(ngModel.control, 'setErrors');
@@ -62,8 +61,6 @@ describe('MaxLengthDirective', () => {
     fixture.whenStable().then(()=>{
       fixture.detectChanges();
 
-      console.log('console test:');
-      console.log(ngModel.control);
       expect(validateSpy).toHaveBeenCalled();
       expect(setErrorSpy).toHaveBeenCalled()
       expect(setErrorSpy).toHaveBeenCalledWith(errors);

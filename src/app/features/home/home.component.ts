@@ -16,15 +16,15 @@ export class HomeComponent {
   public knowledgebase_url = environment.knowledgebase_url;
 
   private readonly router = inject(Router);
-  public authService = inject(AuthService);
+  private authService = inject(AuthService);
 
   public login() {
-    console.log('HomeComponent: login button clicked');
+    console.info('HomeComponent: login button clicked');
     this.authService.login();
   }
 
   public logout() {
-    console.log('HomeComponent: logging out');
+    console.info('HomeComponent: logging out');
     this.authService.logout();
     this.router.navigate(['/login']);
   }

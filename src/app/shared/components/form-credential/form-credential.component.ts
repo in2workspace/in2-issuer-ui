@@ -13,7 +13,7 @@ import { Observable } from 'rxjs';
 import { Mandatee, OrganizationDetails, Power } from 'src/app/core/models/entity/lear-credential-employee.entity';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButton } from '@angular/material/button';
-import { PowerComponent } from '../power/power/power.component';
+import { PowerComponent } from '../power/power.component';
 import { OrganizationIdentifierValidatorDirective } from '../../directives/validators/organization-identifier.directive';
 import { OrganizationNameValidatorDirective } from '../../directives/validators/organization-name.validator.directive';
 import { MatSelect, MatSelectTrigger } from '@angular/material/select';
@@ -119,7 +119,7 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
     .subscribe(mandator2 => {
       if (mandator2) {
         if(this.viewMode === "create" && !this.asSigner){
-          this.mandator = { 
+          this.mandator = {
             'organizationIdentifier': mandator2.organizationIdentifier,
             'organization': mandator2.organization,
             'commonName':mandator2.commonName,
@@ -166,7 +166,7 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
     if(this.asSigner){
       selectedMandatorCountry = this.countryService.getCountryFromName(this.mandator.country);
     }
-    
+
     //this condition is already applied in the template, so maybe it should be removed
     if (this.hasSelectedPower() && this.selectedPowersHaveFunction()) {
       this.formService
@@ -190,7 +190,7 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
             this.openTempPopup();
             this.router.navigate(['/organization/credentials']).then(() => {
               window.scrollTo(0, 0);
-              location.reload(); 
+              location.reload();
             });
           },
           error: (err:Error) => {
@@ -223,7 +223,7 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
     .subscribe(mandator2 => {
       if (mandator2) {
         this.mandator = mandator2;
-        this.signer = { 
+        this.signer = {
           'organizationIdentifier': mandator2.organizationIdentifier,
           'organization': mandator2.organization,
           'commonName':mandator2.commonName,

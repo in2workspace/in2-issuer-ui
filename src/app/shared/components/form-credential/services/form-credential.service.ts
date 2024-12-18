@@ -15,7 +15,7 @@ export class FormCredentialService {
   //states
   public addedPowersSubject = new BehaviorSubject<TempPower[]>([]);
   public selectedPowerNameSubject = new BehaviorSubject<string>('');
-  
+
   private readonly addedPowers$ = this.addedPowersSubject.asObservable();
   private readonly selectedPowerName$ = this.selectedPowerNameSubject.asObservable();
 
@@ -85,7 +85,7 @@ export class FormCredentialService {
     credentialProcedureService: CredentialProcedureService,
     popupComponent: PopupComponent,
     resetForm: () => void
-  ): Observable<any> {
+  ): Observable<void> {
 
     const credentialToSubmit = { ...credential };
     let mandatorToSubmit = structuredClone(mandator);
@@ -94,13 +94,13 @@ export class FormCredentialService {
     //todo trim name and last name
     if(selectedMandateeCountry && credentialToSubmit.mobile_phone != ''){
       const countryPrefix = `+${selectedMandateeCountry.phoneCode}`;
-      
+
       //this condition should not be possible since it is restricted in template
       if (!credentialToSubmit.mobile_phone?.startsWith(countryPrefix)) {
         credentialToSubmit.mobile_phone = `${countryPrefix} ${credentialToSubmit.mobile_phone}`;
       }
     }
-    
+
     //Prepare mandator
     //todo trim name and last name
     //this will only happen as a Signer
@@ -130,7 +130,7 @@ export class FormCredentialService {
       },
       operation_mode: "S"
     };
-    
+
     return credentialProcedureService.createProcedure(credentialProcedure).pipe(
       //show same popup when success?
       tap(() => {
@@ -159,7 +159,7 @@ export class FormCredentialService {
     };
   }
 
-  public checkTmfFunction(option: TempPower): any {
+  public checkTmfFunction(option: TempPower): Power {
     if (option.tmf_function === 'Onboarding') {
       return {
         tmf_action: option.execute ? 'Execute' : '',
