@@ -3,11 +3,9 @@ import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { DialogComponent } from "../../shared/components/dialog/dialog.component";
 import { MatDialog } from "@angular/material/dialog";
-import { OidcSecurityService } from "angular-auth-oidc-client";
 
 export const OnboardingPolicy = () => {
   const authService = inject(AuthService);
-  const oidcService = inject(OidcSecurityService);
   const router = inject(Router);
   const dialog = inject(MatDialog);
 
@@ -18,8 +16,9 @@ export const OnboardingPolicy = () => {
       panelClass: 'custom-dialog-error'
     });
     dialogRef.afterClosed().subscribe(() => {
-      oidcService.logoff()
-      router.navigate(['/home']).then(() => false);
+      authService.logout().subscribe(() => {
+        router.navigate(['/home']).then(() => false);
+      });
     });
     return false;
   }
