@@ -5,13 +5,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [1.2.5](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.2.5)
-### Changed
-- Standalone architecture into project
+### Fixed
+- When logging out, the cache is cleared, and the session with the identity provider is terminated
 
 ## [1.2.4](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.2.4)
 ### Fixed
-- When selecting the power "Certification" with the action "Attest," it didn’t allow the credential to be created.
-- Clean caché after logout
+- When selecting the power "Certification" with the action "Attest", it didn't allow the credential to be created.
+
 ## [1.2.3](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.2.3)
 ### Added
 - Added profile env variable

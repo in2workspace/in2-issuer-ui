@@ -16,14 +16,14 @@ describe('AuthService', () => {
   let oidcSecurityService: {
     checkAuth: jest.Mock,
     authorize: jest.Mock,
-    logoff: jest.Mock
+    logoffAndRevokeTokens: jest.Mock
   };
 
   beforeEach(() => {
     oidcSecurityService = {
       checkAuth: jest.fn().mockReturnValue(of(mockAuthResponse)),
       authorize: jest.fn(),
-      logoff: jest.fn()
+      logoffAndRevokeTokens: jest.fn()
     };
 
     TestBed.configureTestingModule({
@@ -56,10 +56,10 @@ describe('AuthService', () => {
     expect(oidcSecurityService.authorize).toHaveBeenCalled();
   });
 
-  it('should call logoff and clear localStorage when logout is called', () => {
+  it('should call logoffAndRevokeTokens and clear localStorage when logout is called', () => {
     service.logout();
     expect(localStorage.clear).toHaveBeenCalled();
-    expect(oidcSecurityService.logoff).toHaveBeenCalled();
+    expect(oidcSecurityService.logoffAndRevokeTokens).toHaveBeenCalled();
   });
 
   it('should return isAuthenticatedSubject as observable when isLoggedIn is called', done => {
