@@ -1,14 +1,16 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule, FormControl, ValidationErrors } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { CustomEmailValidatorDirective } from './custom-email-validator.directive';
 
 @Component({
-  template: `
+    template: `
     <form>
       <input type="email" [formControl]="emailControl" appEmailValidator />
     </form>
   `,
+    standalone: true,
+  imports: [ReactiveFormsModule, FormsModule, CustomEmailValidatorDirective],
 })
 class TestComponent {
   emailControl = new FormControl('');
@@ -21,9 +23,8 @@ describe('EmailLengthValidatorDirective', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [TestComponent, CustomEmailValidatorDirective],
-      imports: [ReactiveFormsModule, FormsModule],
-    }).compileComponents();
+    imports: [ReactiveFormsModule, FormsModule, TestComponent, CustomEmailValidatorDirective],
+}).compileComponents();
 
     fixture = TestBed.createComponent(TestComponent);
     component = fixture.componentInstance;

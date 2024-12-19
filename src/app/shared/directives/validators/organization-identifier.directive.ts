@@ -7,14 +7,15 @@ import {
 } from '@angular/forms';
 
 @Directive({
-  selector: '[appOrganizationIdentifierValidator]',
-  providers: [
-    {
-      provide: NG_VALIDATORS,
-      useExisting: OrganizationIdentifierValidatorDirective,
-      multi: true,
-    },
-  ],
+    selector: '[appOrganizationIdentifierValidator]',
+    providers: [
+        {
+            provide: NG_VALIDATORS,
+            useExisting: OrganizationIdentifierValidatorDirective,
+            multi: true,
+        },
+    ],
+    standalone: true,
 })
 export class OrganizationIdentifierValidatorDirective implements Validator {
   public validate(control: AbstractControl): ValidationErrors | null {

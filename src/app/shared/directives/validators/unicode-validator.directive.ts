@@ -7,14 +7,15 @@ import {
 } from '@angular/forms';
 
 @Directive({
-  selector: '[appUnicodeValidator]',
-  providers: [
-    {
-      provide: NG_VALIDATORS,
-      useExisting: UnicodeValidatorDirective,
-      multi: true,
-    },
-  ],
+    selector: '[appUnicodeValidator]',
+    providers: [
+        {
+            provide: NG_VALIDATORS,
+            useExisting: UnicodeValidatorDirective,
+            multi: true,
+        },
+    ],
+    standalone: true,
 })
 export class UnicodeValidatorDirective implements Validator {
   public validate(control: AbstractControl): ValidationErrors | null {

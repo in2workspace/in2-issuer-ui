@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { AuthService } from './auth.service';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { of } from 'rxjs';
-import {UserDataAuthenticationResponse} from "../models/dto/user-data-authentication-response.dto";
+import { UserDataAuthenticationResponse } from "../models/dto/user-data-authentication-response.dto";
 
 const mockAuthResponse = {
   isAuthenticated: false,

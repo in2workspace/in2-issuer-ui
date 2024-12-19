@@ -4,11 +4,13 @@ import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { UnicodeValidatorDirective } from './unicode-validator.directive';
 
 @Component({
-  template: `
+    template: `
     <form>
       <input type="text" [formControl]="unicodeControl" appUnicodeValidator />
     </form>
   `,
+    standalone: true,
+  imports: [ReactiveFormsModule, UnicodeValidatorDirective],
 })
 class TestComponent {
   unicodeControl = new FormControl('');
@@ -21,9 +23,8 @@ describe('UnicodeValidatorDirective', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [TestComponent, UnicodeValidatorDirective],
-      imports: [ReactiveFormsModule],
-    }).compileComponents();
+    imports: [ReactiveFormsModule, TestComponent, UnicodeValidatorDirective],
+}).compileComponents();
 
     fixture = TestBed.createComponent(TestComponent);
     component = fixture.componentInstance;
@@ -43,13 +44,13 @@ describe('UnicodeValidatorDirective', () => {
       'Joan Martí',    // Space
       'Renée',         // Accent simple name
     ];
-  
+
     validValues.forEach((value) => {
       unicodeControl.setValue(value);
       expect(unicodeControl.errors).toBeNull();
     });
   });
-  
+
   it('should set an error for invalid text', () => {
     const invalidValues = [
       'Γειά',         // Greek
@@ -64,12 +65,12 @@ describe('UnicodeValidatorDirective', () => {
       '12345',        // Numbers
       '🙂',            // Emoji
     ];
-  
+
     invalidValues.forEach((value) => {
       unicodeControl.setValue(value);
       expect(unicodeControl.errors).not.toBeNull();
     });
-  });  
+  });
 
   it('should not set an error for an empty value', () => {
     unicodeControl.setValue('');

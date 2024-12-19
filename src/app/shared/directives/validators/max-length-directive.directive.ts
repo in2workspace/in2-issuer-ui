@@ -1,13 +1,14 @@
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { DestroyRef, Directive, inject, Input, OnInit } from '@angular/core';
+import { DestroyRef, Directive, inject, Input, numberAttribute, OnInit } from '@angular/core';
 import { NgModel } from '@angular/forms';
 
 @Directive({
-  selector: '[appMaxLength]',
-  exportAs: 'appMaxLength',
+    selector: '[appMaxLength]',
+    exportAs: 'appMaxLength',
+    standalone: true,
 })
 export class MaxLengthDirective implements OnInit{
-  @Input('appMaxLength') public maxLength!: number; 
+  @Input({transform: numberAttribute, alias: "appMaxLength"}) public maxLength!: number;
 
   private readonly ngModel = inject(NgModel);
   private readonly destroyRef = inject(DestroyRef);

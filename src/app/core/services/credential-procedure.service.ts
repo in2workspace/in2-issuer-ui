@@ -75,7 +75,7 @@ export class CredentialProcedureService {
     but left incomplete. Currently, this functionality is not required in the existing flows.
     However, it is expected to be revisited and fully implemented in the future when the use case demands it.
    **/
-  // public signCredential(id: string): Observable<any> {
+  // public signCredential(id: string): Observable<void> {
   //   return this.http.post(this.sendFirma, {'procedure-id':id}).pipe(
   //     catchError(this.handleError)
   //   );

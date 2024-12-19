@@ -2,14 +2,15 @@ import { Directive } from '@angular/core';
 import { AbstractControl, NG_VALIDATORS, ValidationErrors, Validator } from '@angular/forms';
 
 @Directive({
-  selector: '[appEmailValidator]',
-  providers: [
-    {
-      provide: NG_VALIDATORS,
-      useExisting: CustomEmailValidatorDirective,
-      multi: true,
-    },
-  ],
+    selector: '[appEmailValidator]',
+    providers: [
+        {
+            provide: NG_VALIDATORS,
+            useExisting: CustomEmailValidatorDirective,
+            multi: true,
+        },
+    ],
+    standalone: true,
 })
 export class CustomEmailValidatorDirective implements Validator {
   /**

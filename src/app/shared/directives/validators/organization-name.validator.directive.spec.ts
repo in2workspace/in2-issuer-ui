@@ -4,11 +4,13 @@ import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { OrganizationNameValidatorDirective } from './organization-name.validator.directive';
 
 @Component({
-  template: `
+    template: `
     <form>
       <input type="text" [formControl]="orgNameControl" appOrgNameValidator />
     </form>
   `,
+    standalone: true,
+  imports: [ReactiveFormsModule, OrganizationNameValidatorDirective],
 })
 class TestComponent {
   orgNameControl = new FormControl('');
@@ -21,9 +23,8 @@ describe('OrganizationNameValidatorDirective', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [TestComponent, OrganizationNameValidatorDirective],
-      imports: [ReactiveFormsModule],
-    }).compileComponents();
+    imports: [ReactiveFormsModule, TestComponent, OrganizationNameValidatorDirective],
+}).compileComponents();
 
     fixture = TestBed.createComponent(TestComponent);
     component = fixture.componentInstance;
@@ -54,7 +55,7 @@ describe('OrganizationNameValidatorDirective', () => {
       "Dr. John's Org", // Dots, apostrofs, spaces
       "Org(2024)",      // Parenthesis and numbers
     ];
-  
+
     validNames.forEach((name) => {
       orgNameControl.setValue(name);
       expect(orgNameControl.errors).toBeNull();
@@ -64,41 +65,41 @@ describe('OrganizationNameValidatorDirective', () => {
   it('should set an error for names containing special characters not allowed', () => {
     const invalidNames = [
       'Org@Name',  // '@'
-      'Org#Name',  // '#' 
-      'Org$Name',  // '$' 
-      'Org%Name',  // '%' 
-      'Org^Name',  // '^' 
+      'Org#Name',  // '#'
+      'Org$Name',  // '$'
+      'Org%Name',  // '%'
+      'Org^Name',  // '^'
       'Org*Name',  // '*'
-      'Org=Name',  // '=' 
-      'Org+Name',  // '+' 
-      'Org~Name',  // '~' 
-      'Org!Name',  // '!' 
-      'Org?Name',  // '?' 
-      'Org|Name',  // '|' 
-      'Org\\Name', // '\' 
+      'Org=Name',  // '='
+      'Org+Name',  // '+'
+      'Org~Name',  // '~'
+      'Org!Name',  // '!'
+      'Org?Name',  // '?'
+      'Org|Name',  // '|'
+      'Org\\Name', // '\'
       'Org<Name>', // '<', '>'
       'Org[Name]', // '[', ']'
       'Org{Name}', // '{', '}'
     ];
-  
+
     invalidNames.forEach((name) => {
       orgNameControl.setValue(name);
       expect(orgNameControl.errors).toEqual({ invalidOrgName: true });
     });
   });
-  
+
   it('should set an error for names containing emojis', () => {
     const invalidNames = [
-      'Org😀Name',  
+      'Org😀Name',
       'Org🚀Name',
       'Org❤️Name',
     ];
-  
+
     invalidNames.forEach((name) => {
       orgNameControl.setValue(name);
       expect(orgNameControl.errors).toEqual({ invalidOrgName: true });
     });
   });
-  
- 
+
+
 });

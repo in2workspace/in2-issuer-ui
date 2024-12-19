@@ -1,4 +1,4 @@
-import {LEARCredentialEmployee} from "../entity/lear-credential-employee.entity";
+import { LEARCredentialEmployee } from "../entity/lear-credential-employee.entity";
 
 export interface UserDataAuthenticationResponse {
   sub: string;

@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.6](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.2.6)
+### Changed
+- Refactor architecture to Standalone
+
 ## [1.2.5](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.2.5)
 ### Fixed
 - When logging out, the cache is cleared, and the session with the identity provider is terminated

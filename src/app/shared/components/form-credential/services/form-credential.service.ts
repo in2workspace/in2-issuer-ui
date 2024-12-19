@@ -85,7 +85,7 @@ export class FormCredentialService {
     credentialProcedureService: CredentialProcedureService,
     popupComponent: PopupComponent,
     resetForm: () => void
-  ): Observable<any> {
+  ): Observable<void> {
 
     const credentialToSubmit = { ...credential };
     let mandatorToSubmit = structuredClone(mandator);
@@ -159,7 +159,7 @@ export class FormCredentialService {
     };
   }
 
-  public checkTmfFunction(option: TempPower): any {
+  public checkTmfFunction(option: TempPower): Power {
     if (option.tmf_function === 'Onboarding') {
       return {
         tmf_action: option.execute ? 'Execute' : '',

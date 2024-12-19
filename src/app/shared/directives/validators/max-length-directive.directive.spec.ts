@@ -5,9 +5,11 @@ import { MaxLengthDirective } from './max-length-directive.directive';
 import { By } from '@angular/platform-browser';
 
 @Component({
-  template: `
+    template: `
     <input [(ngModel)]="inputValue" appMaxLength="5" />
   `,
+    standalone: true,
+  imports: [FormsModule, MaxLengthDirective],
 })
 class TestComponent {
   inputValue = '';
@@ -24,9 +26,8 @@ describe('MaxLengthDirective', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [TestComponent, MaxLengthDirective],
-      imports: [FormsModule],
-    }).compileComponents();
+    imports: [FormsModule, TestComponent, MaxLengthDirective],
+}).compileComponents();
 
     fixture = TestBed.createComponent(TestComponent);
     component = fixture.componentInstance;
@@ -37,7 +38,6 @@ describe('MaxLengthDirective', () => {
 
     inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
     ngModel = fixture.debugElement.query(By.directive(NgModel)).injector.get(NgModel);
-    console.log(ngModel.control)
 
     validateSpy = jest.spyOn(directive, 'validate');
     setErrorSpy = jest.spyOn(ngModel.control, 'setErrors');
@@ -61,8 +61,6 @@ describe('MaxLengthDirective', () => {
     fixture.whenStable().then(()=>{
       fixture.detectChanges();
 
-      console.log('console test:');
-      console.log(ngModel.control);
       expect(validateSpy).toHaveBeenCalled();
       expect(setErrorSpy).toHaveBeenCalled()
       expect(setErrorSpy).toHaveBeenCalledWith(errors);

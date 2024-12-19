@@ -1,22 +1,64 @@
 import { Component, DestroyRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
-import { FormControl, FormGroupDirective, NgForm, NgModel } from '@angular/forms';
+import { FormControl, FormGroupDirective, NgForm, NgModel, FormsModule } from '@angular/forms';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { Country, CountryService } from './services/country.service';
 import { FormCredentialService } from './services/form-credential.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { PopupComponent } from '../popup/popup.component';
-import { Router } from '@angular/router';
-import { ErrorStateMatcher } from '@angular/material/core';
+import { Router, RouterLink } from '@angular/router';
+import { ErrorStateMatcher, MatOption } from '@angular/material/core';
 import { TempPower } from "../../../core/models/temporal/temp-power.interface";
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { Mandatee, OrganizationDetails, Power } from 'src/app/core/models/entity/lear-credential-employee.entity';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatButton } from '@angular/material/button';
+import { PowerComponent } from '../power/power.component';
+import { OrganizationIdentifierValidatorDirective } from '../../directives/validators/organization-identifier.directive';
+import { OrganizationNameValidatorDirective } from '../../directives/validators/organization-name.validator.directive';
+import { MatSelect, MatSelectTrigger } from '@angular/material/select';
+import { CustomEmailValidatorDirective } from '../../directives/validators/custom-email-validator.directive';
+import { NgIf, NgStyle, NgFor, NgTemplateOutlet } from '@angular/common';
+import { MaxLengthDirective } from '../../directives/validators/max-length-directive.directive';
+import { UnicodeValidatorDirective } from '../../directives/validators/unicode-validator.directive';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError, MatPrefix } from '@angular/material/form-field';
+import { MatCard, MatCardContent } from '@angular/material/card';
+import { NavbarComponent } from '../navbar/navbar.component';
 
 @Component({
-  selector: 'app-form-credential',
-  templateUrl: './form-credential.component.html',
-  styleUrls: ['./form-credential.component.scss'],
+    selector: 'app-form-credential',
+    templateUrl: './form-credential.component.html',
+    styleUrls: ['./form-credential.component.scss'],
+    standalone: true,
+    imports: [
+        NavbarComponent,
+        MatCard,
+        MatCardContent,
+        FormsModule,
+        MatFormField,
+        MatLabel,
+        MatInput,
+        UnicodeValidatorDirective,
+        MaxLengthDirective,
+        NgIf,
+        MatError,
+        CustomEmailValidatorDirective,
+        NgStyle,
+        MatSelect,
+        MatSelectTrigger,
+        MatOption,
+        NgFor,
+        MatPrefix,
+        OrganizationNameValidatorDirective,
+        OrganizationIdentifierValidatorDirective,
+        PowerComponent,
+        MatButton,
+        RouterLink,
+        NgTemplateOutlet,
+        PopupComponent,
+        TranslatePipe,
+    ],
 })
 export class FormCredentialComponent implements OnInit, OnDestroy {
 
@@ -77,7 +119,7 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
     .subscribe(mandator2 => {
       if (mandator2) {
         if(this.viewMode === "create" && !this.asSigner){
-          this.mandator = { 
+          this.mandator = {
             'organizationIdentifier': mandator2.organizationIdentifier,
             'organization': mandator2.organization,
             'commonName':mandator2.commonName,
@@ -124,7 +166,7 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
     if(this.asSigner){
       selectedMandatorCountry = this.countryService.getCountryFromName(this.mandator.country);
     }
-    
+
     //this condition is already applied in the template, so maybe it should be removed
     if (this.hasSelectedPower() && this.selectedPowersHaveFunction()) {
       this.formService
@@ -148,7 +190,7 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
             this.openTempPopup();
             this.router.navigate(['/organization/credentials']).then(() => {
               window.scrollTo(0, 0);
-              location.reload(); 
+              location.reload();
             });
           },
           error: (err:Error) => {
@@ -181,7 +223,7 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
     .subscribe(mandator2 => {
       if (mandator2) {
         this.mandator = mandator2;
-        this.signer = { 
+        this.signer = {
           'organizationIdentifier': mandator2.organizationIdentifier,
           'organization': mandator2.organization,
           'commonName':mandator2.commonName,
