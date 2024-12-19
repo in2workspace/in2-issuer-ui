@@ -16,7 +16,7 @@ export class HomeComponent {
   public knowledgebase_url = environment.knowledgebase_url;
 
   private readonly router = inject(Router);
-  private authService = inject(AuthService);
+  private readonly authService = inject(AuthService);
 
   public login() {
     console.info('HomeComponent: login button clicked');
