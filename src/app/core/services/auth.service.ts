@@ -152,7 +152,7 @@ export class AuthService {
 
   public logout() {
     localStorage.clear();
-    return this.oidcSecurityService.logoff();
+    return this.oidcSecurityService.logoffAndRevokeTokens();
   }
 
   public isLoggedIn(): Observable<boolean> {
