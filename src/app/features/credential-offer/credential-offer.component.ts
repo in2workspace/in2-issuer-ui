@@ -1,5 +1,5 @@
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { CredentialProcedureService, refreshCredentialOfferResponse } from 'src/app/core/services/credential-procedure.service';
 import { AlertService } from 'src/app/core/services/alert.service';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -21,7 +21,7 @@ export class CredentialOfferComponent implements OnInit {
   public transactionCode?: string;
   public cTransactionCode?: string;
 
-  private credentialOfferObserver = {
+  private readonly credentialOfferObserver = {
     next: (data: refreshCredentialOfferResponse) => {
         this.qrCodeData = data.credential_offer_uri;
         this.cTransactionCode = data.c_transaction_code;
