@@ -1,11 +1,16 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { ProcedureRequest } from '../models/dto/procedure-request.dto';
 import { ProcedureResponse } from "../models/dto/procedure-response.dto";
 import { LearCredentialEmployeeDataDetail } from "../models/dto/lear-credential-employee-data-detail.dto";
+
+export interface refreshCredentialOfferResponse {
+  credential_offer_uri:string;
+  c_transaction_code:string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -45,16 +50,18 @@ export class CredentialProcedureService {
     );
   }
 
-  public getCredentialOffer(transactionCode: string): Observable<string> {
-    return this.http.get(`${this.credentialOfferUrl}/transaction-code/${transactionCode}`, { responseType: 'text' }).pipe(
-      map(response => {
-        try {
-          const jsonResponse = JSON.parse(response);
-          return jsonResponse.qrCode || response;
-        } catch (e) {
-          return response;
-        }
-      }),
+  public getCredentialOffer(transactionCode: string): Observable<refreshCredentialOfferResponse> {
+    //todo remove
+    console.info('getCredentialOffer: '+transactionCode);
+    return this.http.get<refreshCredentialOfferResponse>(`${this.credentialOfferUrl}/transaction-code/${transactionCode}`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  public refreshCredentialOffer(cTransactionCode: string): Observable<refreshCredentialOfferResponse> {
+    //todo remove
+    console.info('refresh CredentialOffer: ' + cTransactionCode);
+    return this.http.get<refreshCredentialOfferResponse>(`${this.credentialOfferUrl}/transaction-code/c/${cTransactionCode}`).pipe(
       catchError(this.handleError)
     );
   }

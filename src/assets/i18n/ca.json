@@ -24,13 +24,14 @@
     "textinformation": "S'ha emès una nova credencial DOME per a vostè amb la següent informació"
   },
   "credentialOffer": {
-    "credentialDetail": "Credential Offer",
-    "textinformation": "You have a new credential offer. Please follow the next steps:",
-    "first-step":"1. Register and log into the ",
-    "second-step":"2. Click the button below to get the QR code.",
-    "third-step":"3. Scan the QR code with the ",
-    "fourth-step":"4. Enter the pin that you'll receive in your email.",
-    "button-text":"Get QR code"
+    "credentialDetail": "Oferta de Credencial",
+    "textinformation": "Tens una nova oferta de credencial. Si us plau, segueix els passos següents:",
+    "first-step": "1. Registra't i inicia sessió a ",
+    "second-step": "2. Fes clic al botó de sota per obtenir el codi QR.",
+    "third-step": "3. Escaneja el codi QR amb la ",
+    "fourth-step": "4. Introdueix el PIN que rebràs al teu correu electrònic.",
+    "button-text": "Obtenir codi QR",
+    "refresh-qr": "Refrescar el codi QR"
   },
   "scaner": {
     "textinformation": "Escaneig de l'organització amb la seva cartera per descarregar la credencial"
