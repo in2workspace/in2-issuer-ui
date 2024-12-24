@@ -25,8 +25,8 @@ export class CredentialOfferComponent implements OnInit {
 
   private readonly credentialOfferObserver = {
     next: (data: refreshCredentialOfferResponse) => {
-        this.qrCodeData = data.credential_offer_uri;
-        this.cTransactionCode = data.c_transaction_code;
+        this.qrCodeData = data?.credential_offer_uri;
+        this.cTransactionCode = data?.c_transaction_code;
         console.info('QR Code Data:', this.qrCodeData);
     }
   };
@@ -73,7 +73,7 @@ export class CredentialOfferComponent implements OnInit {
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError((error: HttpErrorResponse) => {
-          const errorStatus = error.status || error.error.status;
+          const errorStatus = error?.status || error?.error?.status || 0;
           let errorMessage = 'An unexpected error occurred. Please try again later.';
           if (errorStatus === 404) {
             errorMessage = 'This credential offer has expired.';
