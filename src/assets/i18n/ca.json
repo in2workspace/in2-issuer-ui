@@ -34,7 +34,7 @@
     "refresh-qr": "Refrescar el codi QR"
   },
   "scaner": {
-    "textinformation": "Escaneig de l'organització amb la seva cartera per descarregar la credencial"
+    "textinformation": "Escanegi el codi QR amb la seva cartera per descarregar la credencial"
   },
 
   "credentialManagement": {

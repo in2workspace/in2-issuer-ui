@@ -34,7 +34,7 @@
     "refresh-qr": "Refrescar el código QR"
   },
   "scaner": {
-    "textinformation": "Escaneo de la organización con su cartera para descargar la credencial"
+    "textinformation": "Escanee el código QR con su cartera para descargar la credencial"
   },
 
   "credentialManagement": {

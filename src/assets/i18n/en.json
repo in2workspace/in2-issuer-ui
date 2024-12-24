@@ -34,7 +34,7 @@
     "refresh-qr": "Refresh QR code"
   },
   "scaner": {
-    "textinformation": "OrganizationScan with your wallet to download the credential"
+    "textinformation": "Scan the QR code with your wallet to download the credential"
   },
   "credentialManagement": {
     "title": "List of issued credentials",
