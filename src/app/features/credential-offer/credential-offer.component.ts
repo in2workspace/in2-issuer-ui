@@ -52,7 +52,13 @@ export class CredentialOfferComponent implements OnInit {
     }
 
     this.credentialProcedureService.getCredentialOfferByTransactionCode(transactionCode!)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+    .pipe(
+      takeUntilDestroyed(this.destroyRef),
+      catchError(() => {
+        this.alertService.showAlert('The credential offer is expired or incorrect.', 'error');
+        return EMPTY;
+      })
+    )
       .subscribe(this.credentialOfferObserver);
   }
 
