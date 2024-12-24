@@ -50,7 +50,7 @@ export class CredentialProcedureService {
     );
   }
 
-  public getCredentialOffer(transactionCode: string): Observable<refreshCredentialOfferResponse> {
+  public getCredentialOfferByTransactionCode(transactionCode: string): Observable<refreshCredentialOfferResponse> {
     //todo remove
     console.info('getCredentialOffer: '+transactionCode);
     return this.http.get<refreshCredentialOfferResponse>(`${this.credentialOfferUrl}/transaction-code/${transactionCode}`).pipe(
@@ -58,7 +58,7 @@ export class CredentialProcedureService {
     );
   }
 
-  public refreshCredentialOffer(cTransactionCode: string): Observable<refreshCredentialOfferResponse> {
+  public getCredentialOfferByCTransactionCode(cTransactionCode: string): Observable<refreshCredentialOfferResponse> {
     //todo remove
     console.info('refresh CredentialOffer: ' + cTransactionCode);
     return this.http.get<refreshCredentialOfferResponse>(`${this.credentialOfferUrl}/transaction-code/c/${cTransactionCode}`).pipe(
