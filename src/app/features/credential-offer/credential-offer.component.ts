@@ -8,6 +8,8 @@ import { NgIf } from '@angular/common';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
 import { MatButton } from '@angular/material/button';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { catchError, EMPTY } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
     selector: 'app-credencial-offer',
@@ -54,13 +56,28 @@ export class CredentialOfferComponent implements OnInit {
       .subscribe(this.credentialOfferObserver);
   }
 
-  public getCredentialOfferByCTransactionCode(): void{
+  public getCredentialOfferByCTransactionCode(): void {
     const cTransactionCode = this.cTransactionCode;
-    if(!cTransactionCode){
+    if (!cTransactionCode) {
       this.alertService.showAlert('No c-transaction code found.', 'error');
+      return;
     }
+  
     this.credentialProcedureService.getCredentialOfferByCTransactionCode(cTransactionCode!)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError((error: HttpErrorResponse) => {
+          const errorStatus = error.status || error.error.status;
+          let errorMessage = 'An unexpected error occurred. Please try again later.';
+          if (errorStatus === 404) {
+            errorMessage = 'This credential offer has expired.';
+          } else if (errorStatus === 409) {
+            errorMessage = 'This credential offer has already been activated.';
+          }
+          this.alertService.showAlert(errorMessage, 'error');
+          return EMPTY;
+        })
+      )
       .subscribe(this.credentialOfferObserver);
   }
 
