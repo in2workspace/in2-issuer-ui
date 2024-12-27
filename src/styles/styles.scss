@@ -25,8 +25,11 @@
 @include mat.core();
 
 $custom-primary: mat.define-palette($custom-palette);
+//todo: not clear what should be accent according to brand guidelines; not used currently
 $custom-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
 $custom-warn: mat.define-palette(mat.$red-palette);
+
+$custom-typography: mat.define-typography-config($font-family: $font-stack);
 
 $custom-theme: mat.define-light-theme((
   color: (
@@ -35,6 +38,7 @@ $custom-theme: mat.define-light-theme((
     warn: $custom-warn,
     use-system-variables: true
   ),
+  typography: $custom-typography
 ));
 
 :root {
@@ -53,18 +57,7 @@ body {
 }
 body {
   margin: 0;
-}
-
-body,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-a {
-  font-family: "Blinker", sans-serif;
+  font-family: $font-stack; //apply font stack to non-angular-material text
 }
 
 

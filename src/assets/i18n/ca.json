@@ -72,7 +72,11 @@
       "attest": "Attest",
       "select": "Selecciona un poder",
       "invalid_power_title": "Accés Denegat",
-      "invalid_power": "No teniu la política necessaria per accedir"
+      "invalid_power": "No teniu la política necessaria per accedir",
+      "remove-dialog": {
+        "title":"Eliminar power",
+        "message": "Segur que vols eliminar aquest power? "
+      }
     },
     "credentialIssuance":{
       "learCredentialEmployee": "LEARCredentialEmployee",

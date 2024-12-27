@@ -73,7 +73,7 @@
     "invalid_power_title": "Access Denied",
     "invalid_power_message": "You do not have the required power to access",
     "remove-dialog": {
-      "title":"Remove power: ",
+      "title":"Remove power",
       "message": "Are you sure you want to remove this power? "
     }
   },

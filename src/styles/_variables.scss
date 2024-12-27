@@ -10,7 +10,7 @@ $custom-palette: (
   200: #9cb8eb,
   300: #7097e2,
   400: #4a75d3,
-  500: #2d58a7,
+  500: $Blue,
   600: #25468b,
   700: #1d3673,
   800: #162a5b,
@@ -32,3 +32,5 @@ $custom-palette: (
     900: white,
   )
 );
+
+$font-stack: 'Blinker', 'Arial', sans-serif;
