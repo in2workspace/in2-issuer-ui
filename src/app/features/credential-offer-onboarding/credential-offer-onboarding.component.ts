@@ -3,17 +3,18 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { NavbarComponent } from "../../shared/components/navbar/navbar.component";
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-credential-offer-onboarding',
   standalone: true,
-  imports: [TranslateModule, NavbarComponent,],
+  imports: [TranslateModule, NavbarComponent, MatButton],
   templateUrl: './credential-offer-onboarding.component.html',
-  styleUrl: '../credential-offer/credential-offer.component.scss'
+  styleUrl: './credential-offer-onboarding.component.scss'
 })
 export class CredentialOfferOnboardingComponent implements OnInit{
-  private transactionCode = ""
   public walletUrl = environment.wallet_url;
+  private transactionCode = ""
 
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
