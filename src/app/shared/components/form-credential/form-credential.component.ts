@@ -26,6 +26,7 @@ import { MatCard, MatCardContent } from '@angular/material/card';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { DialogWrapperService } from '../dialog/dialog-wrapper/dialog-wrapper.service';
 import { DialogData } from '../dialog/dialog.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
     selector: 'app-form-credential',
@@ -33,37 +34,38 @@ import { DialogData } from '../dialog/dialog.component';
     styleUrls: ['./form-credential.component.scss'],
     standalone: true,
     imports: [
-        NavbarComponent,
-        MatCard,
-        MatCardContent,
-        FormsModule,
-        MatFormField,
-        MatLabel,
-        MatInput,
-        UnicodeValidatorDirective,
-        MaxLengthDirective,
-        NgIf,
-        MatError,
-        CustomEmailValidatorDirective,
-        NgStyle,
-        MatSelect,
-        MatSelectTrigger,
-        MatOption,
-        NgFor,
-        MatPrefix,
-        OrganizationNameValidatorDirective,
-        OrganizationIdentifierValidatorDirective,
-        PowerComponent,
-        MatButton,
-        RouterLink,
-        NgTemplateOutlet,
-        TranslatePipe,
-    ],
+      CustomEmailValidatorDirective,
+      FormsModule,
+      MatButton,
+      MatCard,
+      MatCardContent,
+      MatError,
+      MatFormField,
+      MatInput,
+      MatLabel,
+      MatOption,
+      MatPrefix,
+      MatProgressSpinnerModule,
+      MatSelect,
+      MatSelectTrigger,
+      MaxLengthDirective,
+      NavbarComponent,
+      NgFor,
+      NgIf,
+      NgStyle,
+      NgTemplateOutlet,
+      OrganizationIdentifierValidatorDirective,
+      OrganizationNameValidatorDirective,
+      PowerComponent,
+      RouterLink,
+      TranslatePipe,
+      UnicodeValidatorDirective,
+  ],  
 })
 export class FormCredentialComponent implements OnInit, OnDestroy {
   @ViewChild('formDirective') public formDirective!: FormGroupDirective;
   @Output() public sendReminder = new EventEmitter<void>();
-  @Input() public viewMode: 'create' | 'detail' = 'create';
+  @Input({required:true}) public viewMode: 'create' | 'detail' = 'create';
   @Input() public asSigner: boolean = false;
   @Input() public isDisabled: boolean = false;
   @Input() public title: string = '';
@@ -71,6 +73,7 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
   @Input() public credentialStatus: string = '';
   @Input() public credential: Mandatee = this.initializeCredential();
   @Input() public mandator: OrganizationDetails = this.initializeOrganizationDetails();
+  @Input() public isSendingReminder: boolean = false;
   public signer: OrganizationDetails = this.initializeOrganizationDetails();
 
   public addedPowers$: Observable<TempPower[]>;
@@ -80,6 +83,7 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
   public selectedMandateeCountryIsoCode: string = '';
   public hasIn2OrganizationId = false;
   public addedMandatorLastName: string = '';
+  public isCreating: boolean = false;
 
   //if mobile has been introduced and unfocused and there is not country, show error
   public countryErrorMatcher: ErrorStateMatcher = {
@@ -184,6 +188,8 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
 
     //this condition is already applied in the template, so maybe it should be removed
     if (this.hasSelectedPower() && this.selectedPowersHaveFunction()) {
+      this.isCreating = true;
+
       this.formService
         .submitCredential(
           this.credential,
@@ -198,6 +204,7 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
         )
         .subscribe({
           next: () => {
+            this.isCreating = false;
             //todo translate
             const dialogData: DialogData = {
                 title: this.translate.instant("credentialIssuance.create-success-dialog.title"),
@@ -216,7 +223,7 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
             this.dialog.openDialogWithCallback(dialogData, callbackAfterDialogClose);
           },
           error: (err:Error) => {
-            //server-error-interceptor acts here
+            this.isCreating = false;
             console.error(err);
           }
         });

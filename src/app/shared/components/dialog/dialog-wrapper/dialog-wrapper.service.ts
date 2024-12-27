@@ -30,7 +30,7 @@ export class DialogWrapperService {
         .subscribe(callback);
   }
 
-  public openErrorInfoDialog(message: string, title?:string):MatDialogRef<DialogComponent, any>{
+  public openErrorInfoDialog(message: string, title?:string): MatDialogRef<DialogComponent, any>{
     return this.dialog.open(DialogComponent, {
       data: { 
         title: title ?? 'Error',

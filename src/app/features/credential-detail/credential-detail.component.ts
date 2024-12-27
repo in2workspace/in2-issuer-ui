@@ -26,6 +26,7 @@ export class CredentialDetailComponent implements OnInit {
   public credentialId: string | null = null;
   public credential: LEARCredentialEmployeeJwtPayload | null = null;
   public credentialStatus: string | null = null;
+  public isSendingReminder: boolean = false;
 
   private readonly route = inject(ActivatedRoute);
   private readonly credentialProcedureService = inject(CredentialProcedureService);
@@ -48,7 +49,7 @@ export class CredentialDetailComponent implements OnInit {
         this.credential = credentials['credential'];
         this.credentialStatus = credentials['credential_status'];
       },
-      error: (error: any) => {
+      error: (error: Error) => {
         console.error('Error fetching credential details', error);
       }
     });
@@ -74,19 +75,24 @@ export class CredentialDetailComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((result: boolean) => {
         if (result) {
+          this.isSendingReminder = true;
           this.credentialProcedureService.sendReminder(credentialId)
-          .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe({
-            next: () => {
-              const dialogData: DialogData = { 
-                title: this.translate.instant("credentialDetail.sendReminderSuccess.title"),
-                message: this.translate.instant("credentialDetail.sendReminderSuccess.message"),
-                isConfirmDialog: false,
-                status: 'default'
-              };
-              this.dialog.openDialog(dialogData);
-            }
-          });
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+              next: () => {
+                this.isSendingReminder = false;
+                const dialogData: DialogData = { 
+                  title: this.translate.instant("credentialDetail.sendReminderSuccess.title"),
+                  message: this.translate.instant("credentialDetail.sendReminderSuccess.message"),
+                  isConfirmDialog: false,
+                  status: 'default'
+                };
+                this.dialog.openDialog(dialogData);
+              },
+              error: () => {
+                this.isSendingReminder = false;
+              }
+            });
         }
       });
 
