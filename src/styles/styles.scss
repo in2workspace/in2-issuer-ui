@@ -1,0 +1,72 @@
+@use '@angular/material' as mat;
+@import './variables';
+@import './ng-material/dialog';
+@import './ng-material/snackbar';
+
+@import url("https://fonts.googleapis.com/css2?family=Blinker:wght@400;600&display=swap");
+
+@font-face {
+  font-family: "Blinker";
+  font-weight: 400;
+  src: url("./assets/fonts/Blinker-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Blinker";
+  font-weight: 600;
+  src: url("./assets/fonts/Blinker-SemiBold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Blinker";
+  font-weight: 700;
+  src: url("./assets/fonts/Blinker-Bold.ttf") format("truetype");
+}
+
+@include mat.core();
+
+$custom-primary: mat.define-palette($custom-palette);
+$custom-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+$custom-warn: mat.define-palette(mat.$red-palette);
+
+$custom-theme: mat.define-light-theme((
+  color: (
+    primary: $custom-primary,
+    accent: $custom-accent,
+    warn: $custom-warn,
+    use-system-variables: true
+  ),
+));
+
+:root {
+  --Blue: #{$Blue};
+  --Light-Blue-Primary: #{$Light-Blue-Primary};
+  --Dark-Blue: #{$Dark-Blue};
+  --Light-Blue-Secondary: #{$Light-Blue-Secondary};
+  --white: #{$White};
+
+  @include mat.all-component-themes($custom-theme);
+}
+
+html,
+body {
+  min-height: 100vh;
+}
+body {
+  margin: 0;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a {
+  font-family: "Blinker", sans-serif;
+}
+
+
+

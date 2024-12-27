@@ -247,20 +247,20 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
     this.formDirective.resetForm();
     this.formService.setAddedPowers([]);
     this.authService.getMandator()
-    .pipe(takeUntilDestroyed(this.destroyRef))
-    .subscribe(mandator2 => {
-      if (mandator2) {
-        this.mandator = mandator2;
-        this.signer = {
-          'organizationIdentifier': mandator2.organizationIdentifier,
-          'organization': mandator2.organization,
-          'commonName':mandator2.commonName,
-          'emailAddress':mandator2.emailAddress,
-          'serialNumber':mandator2.serialNumber,
-          'country':mandator2.country
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(mandator2 => {
+        if (mandator2) {
+          this.mandator = mandator2;
+          this.signer = { 
+            'organizationIdentifier': mandator2.organizationIdentifier,
+            'organization': mandator2.organization,
+            'commonName':mandator2.commonName,
+            'emailAddress':mandator2.emailAddress,
+            'serialNumber':mandator2.serialNumber,
+            'country':mandator2.country
+          }
         }
-      }
-    });
+      });
   }
 
    //functions that are used in template; it may be better to avoid executing them in template

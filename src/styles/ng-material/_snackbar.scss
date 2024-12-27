@@ -1,0 +1,28 @@
+//todo remove when removing snackbar
+.mdc-snackbar__surface {
+    color: red !important;
+    background-color: $Light-Blue-Secondary !important;
+    border: 1px solid black !important;
+    border-radius: 5px !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5), 0 6px 20px rgba(0, 0, 0, 0.19) !important;
+  }
+  .mat-mdc-snack-bar-label .mdc-snackbar__label {
+    color: red !important;
+  }
+  
+  
+  #mat-snack-bar-container-live-1 div simple-snack-bar div.mat-mdc-snack-bar-actions.mdc-snackbar__actions.ng-star-inserted > button {
+    background-color: #f2f2f2 !important;
+    border: 1px solid black !important;
+    border-radius: 5px !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5), 0 6px 20px rgba(0, 0, 0, 0.19) !important;
+  }
+  
+  #mat-snack-bar-container-live-1 div simple-snack-bar div.mat-mdc-snack-bar-actions.mdc-snackbar__actions.ng-star-inserted > button:active {
+    transform: scale(0.9) !important;
+  }
+  
+  #mat-snack-bar-container-live-1 div simple-snack-bar div.mat-mdc-snack-bar-actions.mdc-snackbar__actions.ng-star-inserted > button:hover {
+    background-color: darken(#f2f2f2, 10%) !important;
+  }
+  

@@ -3,9 +3,7 @@
   <p>{{ data.message }}</p>
 </div>
 <!-- todo remove inline style -->
-<div mat-dialog-actions 
-  class="confirm-or-cancel" 
-  style="padding-inline: 18px;"
+<div mat-dialog-actions
   >
   @if(data.isConfirmDialog){
     <button mat-button (click)="onCancel()">{{ "dialog.cancel" | translate }}</button>
