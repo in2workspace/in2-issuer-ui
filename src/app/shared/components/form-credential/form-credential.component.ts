@@ -205,7 +205,6 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
         .subscribe({
           next: () => {
             this.isCreating = false;
-            //todo translate
             const dialogData: DialogData = {
                 title: this.translate.instant("credentialIssuance.create-success-dialog.title"),
                 message: this.translate.instant("credentialIssuance.create-success-dialog.message"),

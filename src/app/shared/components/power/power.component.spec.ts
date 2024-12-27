@@ -1,24 +1,27 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PowerComponent } from './power.component';
 import { DebugElement, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { FormCredentialService } from '../form-credential/services/form-credential.service';
-import { DialogComponent } from '../dialog/dialog.component';
+import { DialogComponent, DialogData } from '../dialog/dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { of } from 'rxjs';
+import { DialogWrapperService } from '../dialog/dialog-wrapper/dialog-wrapper.service';
 
-const mockDialogRef = { afterClosed:jest.fn().mockReturnValue(of(true)) };
+const mockDialogRef = { 
+  afterClosed:jest.fn().mockReturnValue(of(true)) };
 
 describe('PowerComponent', () => {
   let component: PowerComponent;
   let fixture: ComponentFixture<PowerComponent>;
   let debugElement: DebugElement;
 
-  let mockDialog : {open:jest.Mock<any>};
+  let translateService: TranslateService;
+  let mockDialog : {openDialogWithCallback:jest.Mock<any>};
   let mockAuthService: {hasIn2OrganizationIdentifier: jest.Mock};
   let mockFormService: {
     getAddedPowers: jest.Mock,
@@ -33,7 +36,7 @@ describe('PowerComponent', () => {
 
   beforeEach(async () => {
     mockDialog={
-      open:jest.fn().mockReturnValue(mockDialogRef)
+      openDialogWithCallback:jest.fn().mockReturnValue(mockDialogRef)
     }
     mockAuthService = {
       hasIn2OrganizationIdentifier: jest.fn().mockReturnValue(true),
@@ -58,7 +61,8 @@ describe('PowerComponent', () => {
         PowerComponent,
     ],
     providers: [
-        { provide: MatDialog, useValue: mockDialog },
+      TranslateService,
+        { provide: DialogWrapperService, useValue: mockDialog },
         { provide: AuthService, useValue: mockAuthService },
         { provide: FormCredentialService, useValue: mockFormService }
     ],
@@ -70,6 +74,7 @@ describe('PowerComponent', () => {
     fixture = TestBed.createComponent(PowerComponent);
     component = fixture.componentInstance;
     debugElement = fixture.debugElement;
+    translateService = TestBed.inject(TranslateService);
     fixture.detectChanges();
   });
 
@@ -205,16 +210,54 @@ describe('PowerComponent', () => {
     expect(mockFormService.addPower).not.toHaveBeenCalled();
   });
 
-  it('should open dialog before removing power', ()=>{
+  it('should open dialog before removing power', () => {
     const powerName = 'testPowerName';
+  
+    // Mock del retorn de la funció després que el diàleg es tanqui
+    mockDialogRef.afterClosed.mockReturnValue(of(true));
+  
+    // Executem el mètode
     component.removePower(powerName);
-    expect(mockDialog.open).toHaveBeenCalledWith(DialogComponent, {
-      data: {
-        title: `Remove Power ${powerName}`,
-        message: `Are you sure you want to remove this power: ${powerName}?`,
-      },
-    });
+  
+    // Definim les dades esperades per obrir el diàleg
+    const expectedDialogData: DialogData = {
+      title: translateService.instant("power.remove-dialog.title"),
+      message: translateService.instant("power.remove-dialog.message") + powerName,
+      isConfirmDialog: true,
+      status: `default`
+    };
+  
+    // Verifiquem que `openDialogWithCallback` s'ha cridat amb les dades correctes
+    expect(mockDialog.openDialogWithCallback).toHaveBeenCalledWith(
+      expect.objectContaining(expectedDialogData),
+      expect.objectContaining({
+        next: expect.any(Function),
+      })
+    );
+  
+    // Simulem l'execució del callback amb un resultat positiu
+    const removeAfterClose = mockDialog.openDialogWithCallback.mock.calls[0][1];
+    removeAfterClose.next(true);
+  
+    // Verifiquem que `removePower` del servei s'ha cridat amb el nom correcte
     expect(mockFormService.removePower).toHaveBeenCalledWith(powerName);
+  });
+  
+  it('should not remove power if dialog is cancelled', () => {
+    const powerName = 'testPowerName';
+  
+    // Mock del retorn de la funció després que el diàleg es tanqui
+    mockDialogRef.afterClosed.mockReturnValue(of(false));
+  
+    // Executem el mètode
+    component.removePower(powerName);
+  
+    // Simulem l'execució del callback amb un resultat negatiu
+    const removeAfterClose = mockDialog.openDialogWithCallback.mock.calls[0][1];
+    removeAfterClose.next(false);
+  
+    // Verifiquem que `removePower` del servei no s'ha cridat
+    expect(mockFormService.removePower).not.toHaveBeenCalled();
   });
 
 

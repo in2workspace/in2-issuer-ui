@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from '../services/auth.service';
 import { OnboardingPolicy } from "./onboarding-policy";
 import { TestBed } from '@angular/core/testing';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 describe('OnboardingPolicyGuard', () => {
   let authService: {hasOnboardingExecutePower: jest.Mock};
@@ -17,7 +18,9 @@ describe('OnboardingPolicyGuard', () => {
     activatedRoute = { snapshot: {}}
 
   TestBed.configureTestingModule({
+    imports:[TranslateModule.forRoot({})],
     providers: [
+      TranslateService,
        { provide: AuthService, useValue: authService},
        { provide: Router, useValue: router},
        { provide: MatDialog, useValue: dialog},

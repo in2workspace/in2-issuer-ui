@@ -8,6 +8,8 @@ import { CredentialProcedureService } from 'src/app/core/services/credential-pro
 import { LEARCredentialEmployeeJwtPayload } from "../../core/models/entity/lear-credential-employee.entity";
 import { LearCredentialEmployeeDataDetail } from "../../core/models/dto/lear-credential-employee-data-detail.dto";
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { DialogWrapperService } from 'src/app/shared/components/dialog/dialog-wrapper/dialog-wrapper.service';
+import { DialogData } from 'src/app/shared/components/dialog/dialog.component';
 
 describe('CredentialDetailComponent', () => {
   let component: CredentialDetailComponent;
@@ -16,6 +18,9 @@ describe('CredentialDetailComponent', () => {
     getCredentialProcedureById: jest.Mock;
     sendReminder: jest.Mock;
   };
+  let dialogService: {
+    openDialog: jest.Mock
+  }
   let translateService:TranslateService;
 
   beforeEach(async () => {
@@ -23,11 +28,17 @@ describe('CredentialDetailComponent', () => {
       getCredentialProcedureById: jest.fn(),
       sendReminder: jest.fn()
     };
+    dialogService = {
+      openDialog: jest.fn().mockReturnValue({
+        afterClosed: jest.fn().mockReturnValue(of(true))
+      })
+    }
 
     await TestBed.configureTestingModule({
     imports: [BrowserAnimationsModule, RouterModule.forRoot([]), HttpClientModule, TranslateModule.forRoot({}), CredentialDetailComponent,],
     providers: [
         TranslateService,
+        { provide: DialogWrapperService, useValue: dialogService},
         { provide: CredentialProcedureService, useValue: mockCredentialProcedureService },
         {
             provide: ActivatedRoute,
@@ -135,15 +146,22 @@ describe('CredentialDetailComponent', () => {
     expect(console.error).toHaveBeenCalledWith('Error fetching credential details', 'Error');
   });
 
-  it('should send reminder', () => {
+  it('should send reminder', fakeAsync(() => {
     component.credentialId = '1';
     mockCredentialProcedureService.sendReminder.mockReturnValue(of('Reminder sent'));
+    const dialogData: DialogData = { 
+      title: translateService.instant("credentialDetail.sendReminderSuccess.title"),
+      message: translateService.instant("credentialDetail.sendReminderSuccess.message"),
+      isConfirmDialog: false,
+      status: 'default'
+    };
 
     component.sendReminder();
+    tick();
 
     expect(mockCredentialProcedureService.sendReminder).toHaveBeenCalledWith('1');
-    expect(console.info).toHaveBeenCalledWith('Reminder sent successfully', 'Reminder sent');
-  });
+    expect(dialogService.openDialog).toHaveBeenCalledWith(expect.objectContaining(dialogData));
+  }));
 
   it('should handle error while sending reminder', () => {
     component.credentialId = '1';
@@ -151,7 +169,7 @@ describe('CredentialDetailComponent', () => {
 
     component.sendReminder();
 
-    expect(console.error).toHaveBeenCalledWith('Error sending reminder', 'Error');
+    expect(component.isSendingReminder).toBe(false);
   });
 
   it('should set the title observable with the translated value', fakeAsync(() => {

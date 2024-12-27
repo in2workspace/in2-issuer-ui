@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CredentialOfferComponent } from './credential-offer.component';
 import { CommonModule } from '@angular/common';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
@@ -11,20 +11,24 @@ import { ActivatedRoute } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthModule } from 'angular-auth-oidc-client';
+import { DialogWrapperService } from 'src/app/shared/components/dialog/dialog-wrapper/dialog-wrapper.service';
 
 describe('CredencialOfferComponent', () => {
   let component: CredentialOfferComponent;
   let fixture: ComponentFixture<CredentialOfferComponent>;
+  let translate: TranslateService;
   let credentialProcedureService: {
     getCredentialOffer: jest.Mock
   };
-  let alertService: Partial<AlertService>;
+  let dialogService: {
+    openErrorInfoDialog: jest.Mock,
+  };
   let router: Router;
   let route: ActivatedRoute;
 
   beforeEach(async () => {
-    alertService = {
-      showAlert:jest.fn()
+    dialogService = {
+      openErrorInfoDialog:jest.fn()
     };
     credentialProcedureService = {
       getCredentialOffer: jest.fn()
@@ -41,8 +45,9 @@ describe('CredencialOfferComponent', () => {
     ],
     providers: [
         AuthService,
+        TranslateService,
         { provide: CredentialProcedureService, useValue: credentialProcedureService },
-        { provide: AlertService, useValue: alertService },
+        { provide: DialogWrapperService, useValue: dialogService },
         {
             provide: ActivatedRoute,
             useValue: {
@@ -54,7 +59,7 @@ describe('CredencialOfferComponent', () => {
 
     fixture = TestBed.createComponent(CredentialOfferComponent);
     component = fixture.componentInstance;
-    alertService = TestBed.inject(AlertService);
+    translate = TestBed.inject(TranslateService);
     route = TestBed.inject(ActivatedRoute);
     router = TestBed.inject(Router);
     fixture.detectChanges();
@@ -87,20 +92,22 @@ describe('CredencialOfferComponent', () => {
 
   it('should show alert when transaction code is not present', () => {
     (route.queryParams as any) = of({});
+    const translatedMessage = translate.instant('error.credentialOffer.no_transaction_code');
 
     component.ngOnInit();
 
-    expect(alertService.showAlert).toHaveBeenCalledWith('No transaction code found in URL.', 'error');
+    expect(dialogService.openErrorInfoDialog).toHaveBeenCalledWith(translatedMessage);
   });
 
   it('should show alert when there is an error fetching credential offer', () => {
     const errorResponse = new HttpErrorResponse({ status: 500, statusText: 'Server Error' });
     credentialProcedureService.getCredentialOffer.mockReturnValue(throwError(() => errorResponse));
+    const translatedMessage = translate.instant("error.credentialOffer.default");
 
     component.ngOnInit();
 
     expect(credentialProcedureService.getCredentialOffer).toHaveBeenCalledWith('testTransactionCode');
-    expect(alertService.showAlert).toHaveBeenCalledWith('The credential offer is expired or already used.', 'error');
+    expect(dialogService.openErrorInfoDialog).toHaveBeenCalledWith(translatedMessage);
   });
 
   it('should fetch credential offer and set qrCodeData when transaction code is present and response is valid', () => {
@@ -122,10 +129,11 @@ describe('CredencialOfferComponent', () => {
 
   it('should show alert when no data is returned from getCredentialOffer', () => {
     credentialProcedureService.getCredentialOffer!.mockReturnValue(of(null));
+    const translatedMessage = translate.instant("error.credentialOffer.no_qr");
 
     component.ngOnInit();
 
     expect(credentialProcedureService.getCredentialOffer).toHaveBeenCalledWith('testTransactionCode');
-    expect(alertService.showAlert).toHaveBeenCalledWith('No QR code available.', 'error');
+    expect(dialogService.openErrorInfoDialog).toHaveBeenCalledWith(translatedMessage);
   });
 });
