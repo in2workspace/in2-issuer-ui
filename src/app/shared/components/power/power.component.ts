@@ -6,7 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent, DialogData } from '../dialog/dialog.component';
 import { Observable } from 'rxjs';
 import { TempPower } from 'src/app/core/models/temporal/temp-power.interface';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MatIcon } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
@@ -38,6 +38,7 @@ export class PowerComponent implements OnInit{
   private readonly destroyRef = inject(DestroyRef);
   private readonly dialog = inject(MatDialog);
   private readonly formService = inject(FormCredentialService);
+  private readonly translate = inject(TranslateService);
 
 
   public constructor(){
@@ -99,8 +100,8 @@ export class PowerComponent implements OnInit{
 
   public removePower(powerToRemove: string): void {
     const dialogData: DialogData = {
-        title: `Remove Power ${powerToRemove}`,
-        message: `Are you sure you want to remove this power: ${powerToRemove}?`,
+        title: this.translate.instant("power.remove-dialog.title"),
+        message: this.translate.instant("power.remove-dialog.message") + powerToRemove,
         isConfirmDialog: true,
         status: `default`
     }

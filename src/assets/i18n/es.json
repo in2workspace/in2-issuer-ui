@@ -21,16 +21,24 @@
   },
   "credentialDetail": {
     "credentialDetail": "Detalle de la credencial",
-    "textinformation": "Se ha emitido una nueva credencial DOME para usted con la siguiente información"
+    "textinformation": "Se ha emitido una nueva credencial DOME para usted con la siguiente información",
+    "sendReminderConfirm": {
+      "title": "Enviar recordatorio",
+      "message": "Está seguro de enviar un recordatorio de esta oferta de credencial?"
+    },
+    "sendReminderSuccess": {
+      "title": "Recordatorio enviado con éxito",
+      "message": "El recordatorio ha sido enviado con éxito. El 'mandatee' dispone de 72 horas para descargar la credencial."
+    }
   },
   "credentialOffer": {
-    "credentialDetail": "Credential Offer",
-    "textinformation": "You have a new credential offer. Please follow the next steps:",
-    "first-step":"1. Register and log into the ",
-    "second-step":"2. Click the button below to get the QR code.",
-    "third-step":"3. Scan the QR code with the ",
-    "fourth-step":"4. Enter the pin that you'll receive in your email.",
-    "button-text":"Get QR code"
+    "credentialDetail": "Oferta de credencial",
+    "textinformation": "Tienes una oferta de credencial. Por favor, sigue los siguientes pasos:",
+    "first-step": "1. Regístrate e inicia sesión en el ",
+    "second-step": "2. Haz clic en el botón de abajo para obtener el código QR.",
+    "third-step": "3. Escanea el código QR con el ",
+    "fourth-step": "4. Introduce el PIN que recibirás en tu correo electrónico.",
+    "button-text": "Obtén el QR"
   },
   "scaner": {
     "textinformation": "Escaneo de la organización con su cartera para descargar la credencial"
@@ -42,7 +50,6 @@
     "status": "Estatus",
     "fullName": "Nombre completo",
     "updated": "Actualizado",
-    "sendReminder": "Enviar recordatorio",
     "cancel": "Cancelar",
     "create" : "Crear Credencial",
     "buttonAdmin":"Nueva Credencial como Signer"
@@ -69,16 +76,29 @@
     },
     "credentialIssuance":{
       "learCredentialEmployee": "LEARCredentialEmployee",
-       "success": "LEARCredentialEmployee creada con éxito"
+      "create-confirm-dialog": {
+        "title": "Crear credencial",
+        "message": "Seguro que quiere crear esta credencial?"
+      },
+      "create-success-dialog": {
+        "title": "Credencial creada",
+        "message": "La LEARCredentialEmployee ha sido creada con éxito"
+      }
     },
     "error": {
-      "not_found": "The requested resource was not found.",
-      "unauthorized": "You are not authorized to perform this action.",
-      "forbidden": "You do not have permission to access this resource.",
-      "internal_server": "An error occurred on the server. Please try again later.",
-      "unknown_error": "An unknown error occurred. Please try again.",
-      "credential_submission": "Ha habido un error al crear la credencial.",
+      "not_found": "El recurso solicitado no fue encontrado.",
+      "unauthorized": "No estás autorizado para realizar esta acción.",
+      "forbidden": "No tienes permiso para acceder a este recurso.",
+      "internal_server": "Se produjo un error en el servidor. Por favor, inténtalo de nuevo más tarde.",
+      "unknown_error": "Se produjo un error desconocido. Por favor, inténtalo de nuevo.",
+      "credential_submission": "Ha ocurrido un error al crear la credencial.",
       "one_power_min":"Se requiere por lo menos un poder, y cada power requiere por los menos una acción.",
+      "policiy": {
+        "onboarding": {
+          "title": "Acceso Denegado",
+          "message": "No tienes los poderes necesarios para acceder."
+        }
+      },
       "form":{
         "required": "Campo obligatorio.",
         "invalid_character": "Caracteres inválidos",

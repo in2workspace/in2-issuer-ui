@@ -2,9 +2,7 @@
 <div mat-dialog-content>
   <p>{{ data.message }}</p>
 </div>
-<!-- todo remove inline style -->
-<div mat-dialog-actions
-  >
+<div mat-dialog-actions>
   @if(data.isConfirmDialog){
     <button mat-button (click)="onCancel()">{{ "dialog.cancel" | translate }}</button>
     <button mat-raised-button 

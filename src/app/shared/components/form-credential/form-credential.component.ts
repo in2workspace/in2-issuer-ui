@@ -168,8 +168,8 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
   public openSubmitDialog(){
     //todo translate
     const dialogData: DialogData = {
-      title: `Create credential`,
-      message: `Are you sure you want to create this credential?`,
+      title: this.translate.instant("credentialIssuance.create-confirm-dialog.title"),
+      message: this.translate.instant("credentialIssuance.create-confirm-dialog.message"),
       isConfirmDialog: true,
       status: 'default'
     };
@@ -211,8 +211,8 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
           next: () => {
             //todo translate
             const dialogData: DialogData = {
-                title: `Credential created`,
-                message: this.translate.instant("credentialIssuance.success"),
+                title: this.translate.instant("credentialIssuance.create-success-dialog.title"),
+                message: this.translate.instant("credentialIssuance.create-success-dialog.message"),
                 isConfirmDialog: false,
                 status: `default`
             }

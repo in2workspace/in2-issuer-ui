@@ -21,16 +21,24 @@
   },
   "credentialDetail": {
     "credentialDetail": "Detall de la credencial",
-    "textinformation": "S'ha emès una nova credencial DOME per a vostè amb la següent informació"
+    "textinformation": "S'ha emès una nova credencial DOME per a vostè amb la següent informació",
+    "sendReminderConfirm": {
+      "title": "Enviar recordatori",
+      "message": "Estàs segur que vols enviar un recordatori d'aquesta oferta de credencial?"
+    },
+    "sendReminderSuccess": {
+      "title": "Recordatori enviat amb èxit",
+      "message": "El recordatori ha estat enviat amb èxit. El 'mandatee' disposa de 72 hores per descarregar la credencial."
+    }
   },
   "credentialOffer": {
-    "credentialDetail": "Credential Offer",
-    "textinformation": "You have a new credential offer. Please follow the next steps:",
-    "first-step":"1. Register and log into the ",
-    "second-step":"2. Click the button below to get the QR code.",
-    "third-step":"3. Scan the QR code with the ",
-    "fourth-step":"4. Enter the pin that you'll receive in your email.",
-    "button-text":"Get QR code"
+    "credentialDetail": "Oferta de Credencial",
+    "textinformation": "Tens una nova oferta de credencial. Si us plau, segueix aquests passos:",
+    "first-step": "1. Registra't i inicia sessió al ",
+    "second-step": "2. Fes clic al botó de sota per obtenir el codi QR.",
+    "third-step": "3. Escaneja el codi QR amb el ",
+    "fourth-step": "4. Introdueix el PIN que rebràs al teu correu electrònic.",
+    "button-text": "Obtenir codi QR"
   },
   "scaner": {
     "textinformation": "Escaneig de l'organització amb la seva cartera per descarregar la credencial"
@@ -42,10 +50,9 @@
     "status": "Estatus",
     "fullName": "Nom complet",
     "updated": "Actualitzat",
-    "sendReminder": "Enviar recordatori",
     "cancel": "Cancel·lar",
     "create" : "Crear Credencial",
-    "buttonAdmin":"Nova Credencial com a Signer"
+    "buttonAdmin": "Nova Credencial com a Signer"
   },
     "power": {
       "power": "Powers",
@@ -69,16 +76,29 @@
     },
     "credentialIssuance":{
       "learCredentialEmployee": "LEARCredentialEmployee",
-      "success": "LEARCredentialEmployee creada amb èxit"
+      "create-confirm-dialog": {
+        "title": "Crear credencial",
+        "message": "Segur que vols crear aquesta credencial?"
+      },
+      "create-success-dialog": {
+        "title": "Credencial creada",
+        "message": "La LEARCredentialEmployee ha estat creada amb èxit."
+      }
     },
     "error": {
-      "not_found": "The requested resource was not found.",
-      "unauthorized": "You are not authorized to perform this action.",
-      "forbidden": "You do not have permission to access this resource.",
-      "internal_server": "An error occurred on the server. Please try again later.",
-      "unknown_error": "An unknown error occurred. Please try again.",
+      "not_found": "El recurs sol·licitat no s'ha trobat.",
+      "unauthorized": "No estàs autoritzat per realitzar aquesta acció.",
+      "forbidden": "No tens permís per accedir a aquest recurs.",
+      "internal_server": "S'ha produït un error al servidor. Si us plau, torna-ho a intentar més tard.",
+      "unknown_error": "S'ha produït un error desconegut. Si us plau, torna-ho a intentar.",
       "credential_submission": "S'ha produït un error en crear la credencial.",
       "one_power_min":"Hi ha d'haver almenys un poder seleccionat, i cada poder requereix almenys una acció.",
+      "policiy": {
+        "onboarding": {
+          "title": "Accés Denegat",
+          "message": "No tens els poders necessaris per accedir-hi."
+        }
+      },
       "form":{
         "required": "Camp obligatori.",
         "invalid_character": "Caràcter/s invàlid/s",
