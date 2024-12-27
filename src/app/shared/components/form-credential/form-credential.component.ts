@@ -24,8 +24,8 @@ import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatError, MatPrefix } from '@angular/material/form-field';
 import { MatCard, MatCardContent } from '@angular/material/card';
 import { NavbarComponent } from '../navbar/navbar.component';
-import { MatDialog } from '@angular/material/dialog';
-import { DialogComponent, DialogData } from '../dialog/dialog.component';
+import { DialogWrapperService } from '../dialog/dialog-wrapper/dialog-wrapper.service';
+import { DialogData } from '../dialog/dialog.component';
 
 @Component({
     selector: 'app-form-credential',
@@ -100,7 +100,7 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
   private readonly router = inject(Router);
   private readonly countryService = inject(CountryService);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly dialog = inject(MatDialog);
+  private readonly dialog = inject(DialogWrapperService);
 
   public constructor(){
     this.countries = this.countryService.getSortedCountries();
@@ -154,17 +154,6 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
     }
   }
 
-  public openDialog(dialogData:DialogData, callback:Partial<Observer<any>>|undefined){
-    const dialogRef = this.dialog.open(
-      DialogComponent, 
-      { data: { ...dialogData } }
-    );
-    
-      dialogRef.afterClosed()
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe(callback);
-  }
-
   public openSubmitDialog(){
     //todo translate
     const dialogData: DialogData = {
@@ -173,7 +162,7 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
       isConfirmDialog: true,
       status: 'default'
     };
-    const callbackAfterDialogClose:Partial<Observer<any>> = {
+    const submitAfterDialogClose:Partial<Observer<any>> = {
       next: (result: boolean) => {
         if (result) {
           this.submitCredential();
@@ -181,7 +170,7 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
       }
     };
 
-    this.openDialog(dialogData, callbackAfterDialogClose);
+    this.dialog.openDialogWithCallback(dialogData, submitAfterDialogClose);
   }
 
   public submitCredential(): void {
@@ -224,7 +213,7 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
                 });
               }
             }
-            this.openDialog(dialogData, callbackAfterDialogClose);
+            this.dialog.openDialogWithCallback(dialogData, callbackAfterDialogClose);
           },
           error: (err:Error) => {
             //server-error-interceptor acts here

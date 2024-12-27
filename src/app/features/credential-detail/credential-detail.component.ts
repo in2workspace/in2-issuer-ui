@@ -7,9 +7,9 @@ import { LEARCredentialEmployeeJwtPayload } from "../../core/models/entity/lear-
 import { LearCredentialEmployeeDataDetail } from "../../core/models/dto/lear-credential-employee-data-detail.dto";
 import { FormCredentialComponent } from '../../shared/components/form-credential/form-credential.component';
 import { NgIf, AsyncPipe } from '@angular/common';
-import { MatDialog } from '@angular/material/dialog';
-import { DialogComponent, DialogData } from 'src/app/shared/components/dialog/dialog.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { DialogWrapperService } from 'src/app/shared/components/dialog/dialog-wrapper/dialog-wrapper.service';
+import { DialogData } from 'src/app/shared/components/dialog/dialog.component';
 
 @Component({
     selector: 'app-credential-detail',
@@ -30,7 +30,7 @@ export class CredentialDetailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly credentialProcedureService = inject(CredentialProcedureService);
   private readonly translate = inject(TranslateService);
-  private readonly dialog = inject(MatDialog);
+  private readonly dialog = inject(DialogWrapperService);
   private readonly destroyRef = inject(DestroyRef);
 
   public ngOnInit(): void {
@@ -68,7 +68,7 @@ export class CredentialDetailComponent implements OnInit {
       isConfirmDialog: true,
       status: 'warn'
     };
-    const confirmDialogRef = this.openDialog(dialogData);
+    const confirmDialogRef = this.dialog.openDialog(dialogData);
 
     confirmDialogRef.afterClosed()
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -84,7 +84,7 @@ export class CredentialDetailComponent implements OnInit {
                 isConfirmDialog: false,
                 status: 'default'
               };
-              this.openDialog(dialogData);
+              this.dialog.openDialog(dialogData);
             }
           });
         }
@@ -92,11 +92,4 @@ export class CredentialDetailComponent implements OnInit {
 
   }
 
-  public openDialog(dialogData:DialogData){
-    return this.dialog.open(DialogComponent, {
-      data: {
-        ...dialogData
-      },
-    });
-  }
 }

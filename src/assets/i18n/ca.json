@@ -99,6 +99,11 @@
           "message": "No tens els poders necessaris per accedir-hi."
         }
       },
+      "credentialOffer": {
+        "default": "La credencial està expirada o ja ha estat descarregada.",
+        "no_transaction_code": "No s'ha trobat un codi de transacció a la URL.",
+        "no_qr": "No hi ha codi QR disponible."
+      },
       "form":{
         "required": "Camp obligatori.",
         "invalid_character": "Caràcter/s invàlid/s",

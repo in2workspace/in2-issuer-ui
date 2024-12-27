@@ -7,7 +7,6 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
-import { AlertService } from 'src/app/core/services/alert.service';
 import { ActivatedRoute } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';

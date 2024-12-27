@@ -2,7 +2,6 @@ import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testin
 import { FormsModule, FormGroupDirective, FormGroup, FormControl } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { FormCredentialComponent } from './form-credential.component';
-import { AlertService } from 'src/app/core/services/alert.service';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { CountryService } from './services/country.service';
 import { FormCredentialService } from './services/form-credential.service';
@@ -61,7 +60,7 @@ describe('FormCredentialComponent', () => {
   let fixture: ComponentFixture<FormCredentialComponent>;
 
   let mockCredentialProcedureService: jest.Mocked<CredentialProcedureService>;
-  let mockAlertService: jest.Mocked<AlertService>;
+  let dialogService: jest.Mocked<AlertService>;
   let mockCountryService: any;
   let mockAuthService: jest.Mocked<AuthService>;
   let translateService:TranslateService;

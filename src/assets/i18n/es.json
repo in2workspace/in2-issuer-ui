@@ -99,6 +99,11 @@
           "message": "No tienes los poderes necesarios para acceder."
         }
       },
+      "credentialOffer": {
+        "default": "La credencial ha expirado o ya ha sido descargada.",
+        "no_transaction_code": "Código de transacción no encontrado en la URL.",
+        "no_qr": "Código QR no disponible."
+      },
       "form":{
         "required": "Campo obligatorio.",
         "invalid_character": "Caracteres inválidos",

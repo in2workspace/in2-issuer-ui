@@ -2,7 +2,6 @@ import { FormCredentialService } from '../form-credential/services/form-credenti
 import { Component, Input, OnInit, inject, DestroyRef } from '@angular/core';
 import { AuthService } from "../../../core/services/auth.service";
 import { MatSelectChange, MatSelect, MatSelectTrigger } from '@angular/material/select';
-import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent, DialogData } from '../dialog/dialog.component';
 import { Observable } from 'rxjs';
 import { TempPower } from 'src/app/core/models/temporal/temp-power.interface';
@@ -15,6 +14,7 @@ import { MatOption } from '@angular/material/core';
 import { MatFormField } from '@angular/material/form-field';
 import { NgIf, NgFor, NgTemplateOutlet, AsyncPipe } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { DialogWrapperService } from '../dialog/dialog-wrapper/dialog-wrapper.service';
 
 @Component({
     selector: 'app-power',
@@ -36,7 +36,7 @@ export class PowerComponent implements OnInit{
 
   private readonly authService = inject(AuthService);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly dialog = inject(MatDialog);
+  private readonly dialog = inject(DialogWrapperService);
   private readonly formService = inject(FormCredentialService);
   private readonly translate = inject(TranslateService);
 
@@ -105,15 +105,14 @@ export class PowerComponent implements OnInit{
         isConfirmDialog: true,
         status: `default`
     }
-    const dialogRef = this.dialog.open(DialogComponent, { data: dialogData });
-
-    dialogRef.afterClosed()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((result: boolean) => {
+    const removeAfterClose = {
+      next: (result: boolean) => {
         if (result) {
           this.formService.removePower(powerToRemove);
         }
-    });
+      }
+    };
+    this.dialog.openDialogWithCallback(dialogData, removeAfterClose);
   }
 
   public onHandleSelectChange(event: MatSelectChange): void {

@@ -1,14 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpErrorResponse, HttpResponse, HttpStatusCode, HttpRequest, HttpEvent } from '@angular/common/http';
 import { of, throwError } from 'rxjs';
-import { AlertService } from '../services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
 import { ServeErrorInterceptor } from './server-error-interceptor';
+import { MatDialog } from '@angular/material/dialog';
 
 describe('ServeErrorInterceptor', () => {
   let interceptor: ServeErrorInterceptor;
 
-  let alertServiceSpy: { showAlert: jest.Mock };
+  let dialogServiceSpy: { open: jest.Mock };
   let translateServiceSpy: { instant: jest.Mock };
   let httpRequest: Partial<HttpRequest<any>>;
   let httpHandler: { handle: jest.Mock };
@@ -16,13 +16,13 @@ describe('ServeErrorInterceptor', () => {
   beforeEach(() => {
     httpRequest = { url: 'mocked-url', method: 'GET' } as Partial<HttpRequest<any>>;
     httpHandler = { handle: jest.fn() };
-    alertServiceSpy = { showAlert: jest.fn() };
+    dialogServiceSpy = { open: jest.fn() };
     translateServiceSpy = { instant: jest.fn() };
 
     TestBed.configureTestingModule({
       providers: [
         ServeErrorInterceptor,
-        { provide: AlertService, useValue: alertServiceSpy },
+        { provide: MatDialog, useValue: dialogServiceSpy },
         { provide: TranslateService, useValue: translateServiceSpy }
       ]
     });
@@ -52,7 +52,7 @@ describe('ServeErrorInterceptor', () => {
         error: (err: HttpErrorResponse) => {
           expect(err.status).toBe(404);
           expect(translateServiceSpy.instant).toHaveBeenCalledWith('error.not_found');
-          expect(alertServiceSpy.showAlert).toHaveBeenCalledWith('error.not_found', 'error');
+          expect(dialogServiceSpy.open).toHaveBeenCalledWith('error.not_found', 'error');
           done();
         }
       });
@@ -69,7 +69,7 @@ describe('ServeErrorInterceptor', () => {
         error: (err: HttpErrorResponse) => {
           expect(err.status).toBe(401);
           expect(translateServiceSpy.instant).toHaveBeenCalledWith('error.unauthorized');
-          expect(alertServiceSpy.showAlert).toHaveBeenCalledWith('error.unauthorized', 'error');
+          expect(dialogServiceSpy.open).toHaveBeenCalledWith('error.unauthorized', 'error');
           done();
         }
       });
@@ -86,7 +86,7 @@ describe('ServeErrorInterceptor', () => {
         error: (err: HttpErrorResponse) => {
           expect(err.status).toBe(403);
           expect(translateServiceSpy.instant).toHaveBeenCalledWith('error.forbidden');
-          expect(alertServiceSpy.showAlert).toHaveBeenCalledWith('error.forbidden', 'error');
+          expect(dialogServiceSpy.open).toHaveBeenCalledWith('error.forbidden', 'error');
           done();
         }
       });
@@ -103,7 +103,7 @@ describe('ServeErrorInterceptor', () => {
         error: (err: HttpErrorResponse) => {
           expect(err.status).toBe(500);
           expect(translateServiceSpy.instant).toHaveBeenCalledWith('error.internal_server');
-          expect(alertServiceSpy.showAlert).toHaveBeenCalledWith('error.internal_server', 'error');
+          expect(dialogServiceSpy.open).toHaveBeenCalledWith('error.internal_server', 'error');
           done();
         }
       });
@@ -120,7 +120,7 @@ describe('ServeErrorInterceptor', () => {
         error: (err: HttpErrorResponse) => {
           expect(err.status).toBe(0);
           expect(translateServiceSpy.instant).toHaveBeenCalledWith('error.unknown_error');
-          expect(alertServiceSpy.showAlert).toHaveBeenCalledWith('error.unknown_error', 'error');
+          expect(dialogServiceSpy.open).toHaveBeenCalledWith('error.unknown_error', 'error');
           done();
         }
       });
