@@ -80,7 +80,7 @@ export class CredentialManagementComponent implements OnInit, AfterViewInit {
 
   public loadCredentialData(): void {
     this.credentialProcedureService.getCredentialProcedures().subscribe({
-      next: (data:ProcedureResponse) => {
+      next: (data: ProcedureResponse) => {
         this.dataSource.data = data.credential_procedures;
       },
       error: (error) => {

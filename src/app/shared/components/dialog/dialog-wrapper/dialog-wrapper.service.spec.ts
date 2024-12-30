@@ -32,7 +32,7 @@ describe('DialogWrapperService', () => {
       const dialogData: DialogData = {
         title: 'Test Title',
         message: 'Test Message',
-        isConfirmDialog: true,
+        confirmationType: 'close',
         status: 'default',
       };
       service.openDialog(dialogData);
@@ -48,7 +48,7 @@ describe('DialogWrapperService', () => {
       const dialogData: DialogData = {
         title: 'Test Title',
         message: 'Test Message',
-        isConfirmDialog: true,
+        confirmationType: 'close',
         status: 'default',
       };
 

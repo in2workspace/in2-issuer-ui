@@ -152,7 +152,7 @@ describe('CredentialDetailComponent', () => {
     const dialogData: DialogData = { 
       title: translateService.instant("credentialDetail.sendReminderSuccess.title"),
       message: translateService.instant("credentialDetail.sendReminderSuccess.message"),
-      isConfirmDialog: false,
+      confirmationType: 'none',
       status: 'default'
     };
 

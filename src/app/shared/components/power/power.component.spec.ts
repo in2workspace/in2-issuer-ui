@@ -223,7 +223,7 @@ describe('PowerComponent', () => {
     const expectedDialogData: DialogData = {
       title: translateService.instant("power.remove-dialog.title"),
       message: translateService.instant("power.remove-dialog.message") + powerName,
-      isConfirmDialog: true,
+      confirmationType: 'close',
       status: `default`
     };
   

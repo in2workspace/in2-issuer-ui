@@ -101,7 +101,7 @@ export class PowerComponent implements OnInit{
     const dialogData: DialogData = {
         title: this.translate.instant("power.remove-dialog.title"),
         message: this.translate.instant("power.remove-dialog.message") + powerToRemove,
-        isConfirmDialog: true,
+        confirmationType: 'close',
         status: `default`
     }
     const removeAfterClose = {

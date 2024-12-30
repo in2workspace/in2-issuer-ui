@@ -17,7 +17,7 @@ import { OrganizationIdentifierValidatorDirective } from '../../directives/valid
 import { OrganizationNameValidatorDirective } from '../../directives/validators/organization-name.validator.directive';
 import { MatSelect, MatSelectTrigger } from '@angular/material/select';
 import { CustomEmailValidatorDirective } from '../../directives/validators/custom-email-validator.directive';
-import { NgIf, NgStyle, NgFor, NgTemplateOutlet } from '@angular/common';
+import { NgIf, NgStyle, NgFor, NgTemplateOutlet, AsyncPipe } from '@angular/common';
 import { MaxLengthDirective } from '../../directives/validators/max-length-directive.directive';
 import { UnicodeValidatorDirective } from '../../directives/validators/unicode-validator.directive';
 import { MatInput } from '@angular/material/input';
@@ -27,6 +27,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
 import { DialogWrapperService } from '../dialog/dialog-wrapper/dialog-wrapper.service';
 import { DialogData } from '../dialog/dialog.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { LoaderService } from 'src/app/core/services/loader.service';
 
 @Component({
     selector: 'app-form-credential',
@@ -34,6 +35,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     styleUrls: ['./form-credential.component.scss'],
     standalone: true,
     imports: [
+      AsyncPipe,
       CustomEmailValidatorDirective,
       FormsModule,
       MatButton,
@@ -73,8 +75,8 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
   @Input() public credentialStatus: string = '';
   @Input() public credential: Mandatee = this.initializeCredential();
   @Input() public mandator: OrganizationDetails = this.initializeOrganizationDetails();
-  @Input() public isSendingReminder: boolean = false;
   public signer: OrganizationDetails = this.initializeOrganizationDetails();
+  public isLoading$: Observable<boolean>;
 
   public addedPowers$: Observable<TempPower[]>;
 
@@ -83,7 +85,6 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
   public selectedMandateeCountryIsoCode: string = '';
   public hasIn2OrganizationId = false;
   public addedMandatorLastName: string = '';
-  public isCreating: boolean = false;
 
   //if mobile has been introduced and unfocused and there is not country, show error
   public countryErrorMatcher: ErrorStateMatcher = {
@@ -105,11 +106,13 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
   private readonly countryService = inject(CountryService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly dialog = inject(DialogWrapperService);
+  private readonly loader = inject(LoaderService);
 
   public constructor(){
     this.countries = this.countryService.getSortedCountries();
     this.addedPowers$ = this.formService.getAddedPowers();
     this.hasIn2OrganizationId = this.authService.hasIn2OrganizationIdentifier();
+    this.isLoading$ = this.loader.isLoading$;
   }
 
   public ngOnInit(): void {
@@ -159,11 +162,10 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
   }
 
   public openSubmitDialog(){
-    //todo translate
     const dialogData: DialogData = {
       title: this.translate.instant("credentialIssuance.create-confirm-dialog.title"),
       message: this.translate.instant("credentialIssuance.create-confirm-dialog.message"),
-      isConfirmDialog: true,
+      confirmationType: 'close',
       status: 'default'
     };
     const submitAfterDialogClose:Partial<Observer<any>> = {
@@ -173,7 +175,8 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
         }
       }
     };
-
+    // const dialogRef = this.dialog.openDialog(dialogData);
+    // dialogRef.componentInstance.hasConfirmedSubj$.subscribe(submitAfterDialogClose);
     this.dialog.openDialogWithCallback(dialogData, submitAfterDialogClose);
   }
 
@@ -188,7 +191,7 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
 
     //this condition is already applied in the template, so maybe it should be removed
     if (this.hasSelectedPower() && this.selectedPowersHaveFunction()) {
-      this.isCreating = true;
+      this.loader.updateIsLoading(true);
 
       this.formService
         .submitCredential(
@@ -204,25 +207,24 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
         )
         .subscribe({
           next: () => {
-            this.isCreating = false;
+            this.loader.updateIsLoading(false);
             const dialogData: DialogData = {
                 title: this.translate.instant("credentialIssuance.create-success-dialog.title"),
                 message: this.translate.instant("credentialIssuance.create-success-dialog.message"),
-                isConfirmDialog: false,
+                confirmationType: 'load',
                 status: `default`
             }
             const callbackAfterDialogClose = {
               next: ()=>{
                 this.router.navigate(['/organization/credentials']).then(() => {
-                  window.scrollTo(0, 0);
-                  location.reload(); 
+                  location.reload();
                 });
               }
             }
             this.dialog.openDialogWithCallback(dialogData, callbackAfterDialogClose);
           },
           error: (err:Error) => {
-            this.isCreating = false;
+            this.loader.updateIsLoading(false);
             console.error(err);
           }
         });
@@ -302,5 +304,4 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
       country: ''
     };
   }
-
 }

@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, DestroyRef } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { switchMap, timer } from 'rxjs';
+import { Observable, Observer, switchMap, timer } from 'rxjs';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { LEARCredentialEmployeeJwtPayload } from "../../core/models/entity/lear-credential-employee.entity";
 import { LearCredentialEmployeeDataDetail } from "../../core/models/dto/lear-credential-employee-data-detail.dto";
@@ -10,6 +10,8 @@ import { NgIf, AsyncPipe } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DialogWrapperService } from 'src/app/shared/components/dialog/dialog-wrapper/dialog-wrapper.service';
 import { DialogData } from 'src/app/shared/components/dialog/dialog.component';
+import { credentialMock } from 'src/app/core/mocks/credential.mock';
+import { LoaderService } from 'src/app/core/services/loader.service';
 
 @Component({
     selector: 'app-credential-detail',
@@ -26,13 +28,19 @@ export class CredentialDetailComponent implements OnInit {
   public credentialId: string | null = null;
   public credential: LEARCredentialEmployeeJwtPayload | null = null;
   public credentialStatus: string | null = null;
-  public isSendingReminder: boolean = false;
+  public isLoading$: Observable<boolean>;
 
   private readonly route = inject(ActivatedRoute);
   private readonly credentialProcedureService = inject(CredentialProcedureService);
-  private readonly translate = inject(TranslateService);
-  private readonly dialog = inject(DialogWrapperService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly dialog = inject(DialogWrapperService);
+  private readonly loader = inject(LoaderService);
+  private readonly router = inject(Router);
+  private readonly translate = inject(TranslateService);
+
+  public constructor(){
+    this.isLoading$ = this.loader.isLoading$;
+  }
 
   public ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -66,35 +74,32 @@ export class CredentialDetailComponent implements OnInit {
     const dialogData: DialogData = {
       title: this.translate.instant("credentialDetail.sendReminderConfirm.title"),
       message: this.translate.instant("credentialDetail.sendReminderConfirm.message"),
-      isConfirmDialog: true,
+      confirmationType: 'load',
       status: 'default'
     };
-    const confirmDialogRef = this.dialog.openDialog(dialogData);
 
-    confirmDialogRef.afterClosed()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((result: boolean) => {
+    const sendReminderAfterConfirm: Partial<Observer<any>> = {
+      next: (result: boolean) => {
         if (result) {
-          this.isSendingReminder = true;
+          this.loader.updateIsLoading(true);
           this.credentialProcedureService.sendReminder(credentialId)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
               next: () => {
-                this.isSendingReminder = false;
-                const dialogData: DialogData = { 
-                  title: this.translate.instant("credentialDetail.sendReminderSuccess.title"),
-                  message: this.translate.instant("credentialDetail.sendReminderSuccess.message"),
-                  isConfirmDialog: false,
-                  status: 'default'
-                };
-                this.dialog.openDialog(dialogData);
+                this.loader.updateIsLoading(false);
+                this.router.navigate(['/organization/credentials']).then(() => {
+                  location.reload();
+                });
               },
               error: () => {
-                this.isSendingReminder = false;
+                this.loader.updateIsLoading(false);
               }
             });
         }
-      });
+      }
+    }
+    this.dialog.openDialogWithCallback(dialogData, sendReminderAfterConfirm);
+
 
   }
 

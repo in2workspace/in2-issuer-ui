@@ -24,19 +24,31 @@ export class DialogWrapperService {
       DialogComponent, 
       { data: { ...dialogData } }
     );
-    
-      dialogRef.afterClosed()
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe(callback);
+
+    let confirmMethod;
+    if(dialogData.confirmationType === 'close'){
+      confirmMethod = dialogRef.afterClosed();
+    }else if(dialogData.confirmationType === 'load'){
+      confirmMethod = dialogRef.componentInstance.hasConfirmedSubj$;
+    }else{
+      return;
+    }
+    confirmMethod
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(callback);
+
   }
 
   public openErrorInfoDialog(message: string, title?:string): MatDialogRef<DialogComponent, any>{
+    const errorDialogData: DialogData = { 
+      title: title ?? 'Error',
+      message: message,
+      confirmationType: 'none',
+      status: 'error'
+    };
     return this.dialog.open(DialogComponent, {
-      data: { 
-        title: title ?? 'Error',
-        message: message,
-        isConfirmDialog: false,
-        status: 'error'
+      data: {
+        ...errorDialogData
       }
     });
   }

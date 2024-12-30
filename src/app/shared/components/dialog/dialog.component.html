@@ -3,12 +3,16 @@
   <p>{{ data.message }}</p>
 </div>
 <div mat-dialog-actions>
-  @if(data.isConfirmDialog){
+  @if(isLoading$|async){
+    <mat-spinner></mat-spinner>
+  }
+  @else if(data.confirmationType !== 'none'){
     <button mat-button (click)="onCancel()">{{ "dialog.cancel" | translate }}</button>
     <button mat-raised-button 
     [color]="statusColor"
     (click)="onConfirm()">{{ "dialog.accept" | translate }}</button>
-  }@else{
+  }
+  @else{
     <button [color]="statusColor" mat-raised-button (click)="onConfirm()">{{ "dialog.ok" | translate }}</button>
   }
 </div>

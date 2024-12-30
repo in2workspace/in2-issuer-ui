@@ -421,7 +421,7 @@ describe('FormCredentialComponent', () => {
     const dialogData: DialogData = {
       title: translateService.instant("credentialIssuance.create-confirm-dialog.title"),
       message: translateService.instant("credentialIssuance.create-confirm-dialog.message"),
-      isConfirmDialog: true,
+      confirmationType: 'close',
       status: 'default',
     };
   
@@ -523,7 +523,7 @@ describe('FormCredentialComponent', () => {
     const dialogData: DialogData = {
       title: translateService.instant("credentialIssuance.create-success-dialog.title"),
       message: translateService.instant("credentialIssuance.create-success-dialog.message"),
-      isConfirmDialog: false,
+      confirmationType: 'none',
       status: `default`
   }
     const submitAfterDialogClose: Partial<Observer<any>> = {

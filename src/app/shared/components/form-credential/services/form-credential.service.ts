@@ -89,7 +89,6 @@ export class FormCredentialService {
     let mandatorToSubmit = structuredClone(mandator);
 
     //Prepare mandatee
-    //todo trim name and last name
     if(selectedMandateeCountry && credentialToSubmit.mobile_phone != ''){
       const countryPrefix = `+${selectedMandateeCountry.phoneCode}`;
 
@@ -100,7 +99,6 @@ export class FormCredentialService {
     }
 
     //Prepare mandator
-    //todo trim name and last name
     //this will only happen as a Signer
     if(mandator && selectedMandatorCountry){
       //create full common name
