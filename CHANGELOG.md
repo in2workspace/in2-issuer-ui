@@ -5,13 +5,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### [1.2.7](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.2.7)
+### Added
+- Dialog is shown after sending reminder and creating credential
+- In form, a spinner appears in button while loading
+
 ### Changed
 - Now there is only one type of "popup" element (dialog)
 - Unified styles (Blinker font, primary color)
 
-### Added
-- Dialog is shown after sending reminder and creating credential
-- In form, a spinner appears in button while loading
+### Fixed
+- Sort arrow and header in credentials table looks deactivated when corresponding column isn't sorting
 
 
 ## [1.2.6](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.2.6)

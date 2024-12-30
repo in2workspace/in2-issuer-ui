@@ -121,7 +121,7 @@
         "min_7": "7 caracteres como mínimo",
         "min_2": "2 caracteres como mínimo",
         "email":{
-          "invalid": "Email inválido",
+          "invalid": "Email inválido. Puede que contenga un carácter inválido o en una posición inválida.",
           "local_part_max": "La parte local del email no puede superar los 64 caracteres.",
           "domain_part_max": "El dominio del email no puede superar los 189 caracteres.",
           "main_domain_part_min": "La parte entre '@' y '.' debe tener un mínimo de 2 caracteres.",
