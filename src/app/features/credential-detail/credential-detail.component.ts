@@ -67,7 +67,7 @@ export class CredentialDetailComponent implements OnInit {
       title: this.translate.instant("credentialDetail.sendReminderConfirm.title"),
       message: this.translate.instant("credentialDetail.sendReminderConfirm.message"),
       isConfirmDialog: true,
-      status: 'warn'
+      status: 'default'
     };
     const confirmDialogRef = this.dialog.openDialog(dialogData);
 
