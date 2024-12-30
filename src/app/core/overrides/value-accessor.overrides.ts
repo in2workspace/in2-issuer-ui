@@ -2,7 +2,7 @@ import { DefaultValueAccessor } from '@angular/forms';
 
 //trims and deletes double spaces from values received in inputs
 export function overrideDefaultValueAccessor(): void {
-  function isString(value: any): boolean {
+  function isString(value: unknown): boolean {
     return typeof value === 'string';
   }
 

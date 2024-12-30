@@ -7,19 +7,19 @@
 @font-face {
   font-family: "Blinker";
   font-weight: 400;
-  src: url("./assets/fonts/Blinker-Regular.ttf") format("truetype");
+  src: url("../assets/fonts/Blinker-Regular.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "Blinker";
   font-weight: 600;
-  src: url("./assets/fonts/Blinker-SemiBold.ttf") format("truetype");
+  src: url("../assets/fonts/Blinker-SemiBold.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "Blinker";
   font-weight: 700;
-  src: url("./assets/fonts/Blinker-Bold.ttf") format("truetype");
+  src: url("../assets/fonts/Blinker-Bold.ttf") format("truetype");
 }
 
 @include mat.core();
