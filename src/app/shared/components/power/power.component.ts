@@ -2,7 +2,7 @@ import { FormCredentialService } from '../form-credential/services/form-credenti
 import { Component, Input, OnInit, inject, DestroyRef } from '@angular/core';
 import { AuthService } from "../../../core/services/auth.service";
 import { MatSelectChange, MatSelect, MatSelectTrigger } from '@angular/material/select';
-import { DialogComponent, DialogData } from '../dialog/dialog.component';
+import { DialogData } from '../dialog/dialog.component';
 import { Observable } from 'rxjs';
 import { TempPower } from 'src/app/core/models/temporal/temp-power.interface';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -13,7 +13,6 @@ import { MatButton, MatMiniFabButton } from '@angular/material/button';
 import { MatOption } from '@angular/material/core';
 import { MatFormField } from '@angular/material/form-field';
 import { NgIf, NgFor, NgTemplateOutlet, AsyncPipe } from '@angular/common';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DialogWrapperService } from '../dialog/dialog-wrapper/dialog-wrapper.service';
 
 @Component({
