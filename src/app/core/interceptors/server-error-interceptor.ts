@@ -1,12 +1,12 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
-import { AlertService } from '../services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
+import { DialogWrapperService } from 'src/app/shared/components/dialog/dialog-wrapper/dialog-wrapper.service';
 
 @Injectable()
 export class ServeErrorInterceptor implements HttpInterceptor {
-  private readonly alertService = inject(AlertService);
+  private readonly dialog = inject(DialogWrapperService);
   private readonly translate = inject(TranslateService);
 
   public intercept(
@@ -21,11 +21,9 @@ export class ServeErrorInterceptor implements HttpInterceptor {
         } else {
           errorMessage = this.getServerErrorMessage(error);
         }
-
-        this.alertService.showAlert(
-          this.translate.instant(errorMessage),
-          'error'
-        );
+        const translatedMessage = this.translate.instant(errorMessage);
+        this.dialog.openErrorInfoDialog(translatedMessage);
+        
         return throwError(() => error);
       })
     );

@@ -7,7 +7,6 @@ import { AuthService } from 'src/app/core/services/auth.service';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { CredentialProcedure, ProcedureResponse } from "../../core/models/dto/procedure-response.dto";
 import { TranslatePipe } from '@ngx-translate/core';
-import { ActiveSortColumnDirective } from '../../shared/directives/active-sort-column.directive';
 import { NgIf, NgClass, DatePipe } from '@angular/common';
 import { MatButton } from '@angular/material/button';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
@@ -27,7 +26,6 @@ import { NavbarComponent } from '../../shared/components/navbar/navbar.component
         MatHeaderCellDef,
         MatHeaderCell,
         MatSortHeader,
-        ActiveSortColumnDirective,
         MatCellDef,
         MatCell,
         MatHeaderRowDef,
@@ -82,7 +80,7 @@ export class CredentialManagementComponent implements OnInit, AfterViewInit {
 
   public loadCredentialData(): void {
     this.credentialProcedureService.getCredentialProcedures().subscribe({
-      next: (data:ProcedureResponse) => {
+      next: (data: ProcedureResponse) => {
         this.dataSource.data = data.credential_procedures;
       },
       error: (error) => {

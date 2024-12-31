@@ -1,0 +1,41 @@
+@import './../variables';
+
+.mat-mdc-dialog-content{
+    min-width: 500px;
+    max-width: 500px;
+}
+
+.dialog-custom{
+    .mat-mdc-dialog-container .mdc-dialog__surface {
+        border-radius: 8px !important;
+      }
+
+      div[mat-dialog-container]{
+        background-color: white;
+    }
+
+      div[mat-dialog-content]{
+        display:flex;
+        gap: 12px;
+      }
+
+    div[mat-dialog-actions]{
+        padding: 24px 24px 24px 18px;
+        justify-content: center !important;
+        gap: 8px;
+    
+        button{
+            width: 80px;
+
+            //cancel button
+            &.mat-cancel{
+                background-color: $cancel;
+            }
+                
+
+            .mdc-button__label{
+                text-transform: uppercase;
+            }
+        }
+    }
+}

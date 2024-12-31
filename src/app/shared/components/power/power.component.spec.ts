@@ -1,25 +1,27 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PowerComponent } from './power.component';
 import { DebugElement, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
-import { AuthService } from "../../../core/services/auth.service";
+import { AuthService } from 'src/app/core/services/auth.service';
 import { FormCredentialService } from '../form-credential/services/form-credential.service';
-import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
+import { DialogData } from '../dialog/dialog.component';
 import { of } from 'rxjs';
+import { DialogWrapperService } from '../dialog/dialog-wrapper/dialog-wrapper.service';
 
-const mockDialogRef = {afterClosed:jest.fn().mockReturnValue(of(true))};
+const mockDialogRef = { 
+  afterClosed:jest.fn().mockReturnValue(of(true)) };
 
 describe('PowerComponent', () => {
   let component: PowerComponent;
   let fixture: ComponentFixture<PowerComponent>;
   let debugElement: DebugElement;
 
-  let mockDialog : {open:jest.Mock<any>};
-  let mockAuthService: {hasIn2OrganizationIdentifier: jest.Mock};
+  let translateService: TranslateService;
+  let mockDialog : { openDialogWithCallback:jest.Mock<any> };
+  let mockAuthService: { hasIn2OrganizationIdentifier: jest.Mock };
   let mockFormService: {
     getAddedPowers: jest.Mock,
     getPlainAddedPowers: jest.Mock,
@@ -33,7 +35,7 @@ describe('PowerComponent', () => {
 
   beforeEach(async () => {
     mockDialog={
-      open:jest.fn().mockReturnValue(mockDialogRef)
+      openDialogWithCallback:jest.fn().mockReturnValue(mockDialogRef)
     }
     mockAuthService = {
       hasIn2OrganizationIdentifier: jest.fn().mockReturnValue(true),
@@ -58,7 +60,8 @@ describe('PowerComponent', () => {
         PowerComponent,
     ],
     providers: [
-        { provide: MatDialog, useValue: mockDialog },
+      TranslateService,
+        { provide: DialogWrapperService, useValue: mockDialog },
         { provide: AuthService, useValue: mockAuthService },
         { provide: FormCredentialService, useValue: mockFormService }
     ],
@@ -70,6 +73,7 @@ describe('PowerComponent', () => {
     fixture = TestBed.createComponent(PowerComponent);
     component = fixture.componentInstance;
     debugElement = fixture.debugElement;
+    translateService = TestBed.inject(TranslateService);
     fixture.detectChanges();
   });
 
@@ -205,16 +209,29 @@ describe('PowerComponent', () => {
     expect(mockFormService.addPower).not.toHaveBeenCalled();
   });
 
-  it('should open dialog before removing power', ()=>{
-    const powerName = 'testPowerName';
-    component.removePower(powerName);
-    expect(mockDialog.open).toHaveBeenCalledWith(ConfirmDialogComponent, {
-      data: {
-        title: `Remove Power ${powerName}`,
-        message: `Are you sure you want to remove this power: ${powerName}?`,
-      },
-    });
-    expect(mockFormService.removePower).toHaveBeenCalledWith(powerName);
+  it('should remove power', () => {
+    const powerToRemove = 'update';
+    const dialogData: DialogData = {
+      title: translateService.instant("power.remove-dialog.title"),
+      message: translateService.instant("power.remove-dialog.message") + powerToRemove,
+      confirmationType: 'sync',
+      status: 'default',
+      loadingData: undefined
+    };
+  
+    jest.spyOn(mockFormService, 'removePower').mockImplementation();
+  
+    component.removePower(powerToRemove);
+  
+    expect(mockDialog.openDialogWithCallback).toHaveBeenCalledWith(
+      expect.objectContaining(dialogData),
+      expect.any(Function)
+    );
+  
+    const [, callbackFn] = mockDialog.openDialogWithCallback.mock.calls[0];
+  
+    callbackFn();
+    expect(mockFormService.removePower).toHaveBeenCalledWith(powerToRemove);
   });
 
 

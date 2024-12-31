@@ -1,12 +1,11 @@
 import { FormCredentialService } from '../form-credential/services/form-credential.service';
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, Input, OnInit, inject, DestroyRef } from '@angular/core';
 import { AuthService } from "../../../core/services/auth.service";
 import { MatSelectChange, MatSelect, MatSelectTrigger } from '@angular/material/select';
-import { MatDialog } from '@angular/material/dialog';
-import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
-import { Observable } from 'rxjs';
+import { DialogData } from '../dialog/dialog.component';
+import { EMPTY, Observable } from 'rxjs';
 import { TempPower } from 'src/app/core/models/temporal/temp-power.interface';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MatIcon } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
@@ -14,6 +13,7 @@ import { MatButton, MatMiniFabButton } from '@angular/material/button';
 import { MatOption } from '@angular/material/core';
 import { MatFormField } from '@angular/material/form-field';
 import { NgIf, NgFor, NgTemplateOutlet, AsyncPipe } from '@angular/common';
+import { DialogWrapperService } from '../dialog/dialog-wrapper/dialog-wrapper.service';
 
 @Component({
     selector: 'app-power',
@@ -34,8 +34,10 @@ export class PowerComponent implements OnInit{
   public selectedPower$: Observable<string>;
 
   private readonly authService = inject(AuthService);
-  private readonly dialog = inject(MatDialog);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly dialog = inject(DialogWrapperService);
   private readonly formService = inject(FormCredentialService);
+  private readonly translate = inject(TranslateService);
 
 
   public constructor(){
@@ -96,18 +98,18 @@ export class PowerComponent implements OnInit{
   }
 
   public removePower(powerToRemove: string): void {
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: {
-        title: `Remove Power ${powerToRemove}`,
-        message: `Are you sure you want to remove this power: ${powerToRemove}?`,
-      },
-    });
-
-    dialogRef.afterClosed().subscribe((result: boolean) => {
-      if (result) {
-        this.formService.removePower(powerToRemove);
-      }
-    });
+    const dialogData: DialogData = {
+        title: this.translate.instant("power.remove-dialog.title"),
+        message: this.translate.instant("power.remove-dialog.message") + powerToRemove,
+        confirmationType: 'sync',
+        status: `default`,
+        loadingData: undefined
+    }
+    const removeAfterClose =  (): Observable<any> => {
+      this.formService.removePower(powerToRemove);
+      return EMPTY;
+    };
+    this.dialog.openDialogWithCallback(dialogData, removeAfterClose);
   }
 
   public onHandleSelectChange(event: MatSelectChange): void {

@@ -1,14 +1,13 @@
-import { TestBed } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { HttpErrorResponse, HttpResponse, HttpStatusCode, HttpRequest, HttpEvent } from '@angular/common/http';
 import { of, throwError } from 'rxjs';
-import { AlertService } from '../services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
 import { ServeErrorInterceptor } from './server-error-interceptor';
+import { DialogWrapperService } from 'src/app/shared/components/dialog/dialog-wrapper/dialog-wrapper.service';
 
 describe('ServeErrorInterceptor', () => {
   let interceptor: ServeErrorInterceptor;
-
-  let alertServiceSpy: { showAlert: jest.Mock };
+  let dialogServiceSpy: { openErrorInfoDialog: jest.Mock };
   let translateServiceSpy: { instant: jest.Mock };
   let httpRequest: Partial<HttpRequest<any>>;
   let httpHandler: { handle: jest.Mock };
@@ -16,13 +15,13 @@ describe('ServeErrorInterceptor', () => {
   beforeEach(() => {
     httpRequest = { url: 'mocked-url', method: 'GET' } as Partial<HttpRequest<any>>;
     httpHandler = { handle: jest.fn() };
-    alertServiceSpy = { showAlert: jest.fn() };
+    dialogServiceSpy = { openErrorInfoDialog: jest.fn().mockReturnValue('') };
     translateServiceSpy = { instant: jest.fn() };
 
     TestBed.configureTestingModule({
       providers: [
+        { provide: DialogWrapperService, useValue: dialogServiceSpy },
         ServeErrorInterceptor,
-        { provide: AlertService, useValue: alertServiceSpy },
         { provide: TranslateService, useValue: translateServiceSpy }
       ]
     });
@@ -41,7 +40,7 @@ describe('ServeErrorInterceptor', () => {
   });
 
   describe('when HttpErrorResponse is received', () => {
-    it('should call showAlert with the proper message for 404 error', done => {
+    it('should call showAlert with the proper message for 404 error', fakeAsync(() => {
       const httpErrorResponse = new HttpErrorResponse({ status: 404, statusText: 'Not Found' });
 
       httpHandler.handle.mockReturnValue(throwError(() => httpErrorResponse));
@@ -52,11 +51,11 @@ describe('ServeErrorInterceptor', () => {
         error: (err: HttpErrorResponse) => {
           expect(err.status).toBe(404);
           expect(translateServiceSpy.instant).toHaveBeenCalledWith('error.not_found');
-          expect(alertServiceSpy.showAlert).toHaveBeenCalledWith('error.not_found', 'error');
-          done();
+          expect(dialogServiceSpy.openErrorInfoDialog).toHaveBeenCalledWith('error.not_found');
         }
       });
-    });
+      tick();
+    }));
 
     it('should call showAlert with the proper message for 401 error', done => {
       const httpErrorResponse = new HttpErrorResponse({ status: 401, statusText: 'Unauthorized' });
@@ -69,7 +68,7 @@ describe('ServeErrorInterceptor', () => {
         error: (err: HttpErrorResponse) => {
           expect(err.status).toBe(401);
           expect(translateServiceSpy.instant).toHaveBeenCalledWith('error.unauthorized');
-          expect(alertServiceSpy.showAlert).toHaveBeenCalledWith('error.unauthorized', 'error');
+          expect(dialogServiceSpy.openErrorInfoDialog).toHaveBeenCalledWith('error.unauthorized');
           done();
         }
       });
@@ -86,7 +85,7 @@ describe('ServeErrorInterceptor', () => {
         error: (err: HttpErrorResponse) => {
           expect(err.status).toBe(403);
           expect(translateServiceSpy.instant).toHaveBeenCalledWith('error.forbidden');
-          expect(alertServiceSpy.showAlert).toHaveBeenCalledWith('error.forbidden', 'error');
+          expect(dialogServiceSpy.openErrorInfoDialog).toHaveBeenCalledWith('error.forbidden');
           done();
         }
       });
@@ -103,7 +102,7 @@ describe('ServeErrorInterceptor', () => {
         error: (err: HttpErrorResponse) => {
           expect(err.status).toBe(500);
           expect(translateServiceSpy.instant).toHaveBeenCalledWith('error.internal_server');
-          expect(alertServiceSpy.showAlert).toHaveBeenCalledWith('error.internal_server', 'error');
+          expect(dialogServiceSpy.openErrorInfoDialog).toHaveBeenCalledWith('error.internal_server');
           done();
         }
       });
@@ -120,7 +119,7 @@ describe('ServeErrorInterceptor', () => {
         error: (err: HttpErrorResponse) => {
           expect(err.status).toBe(0);
           expect(translateServiceSpy.instant).toHaveBeenCalledWith('error.unknown_error');
-          expect(alertServiceSpy.showAlert).toHaveBeenCalledWith('error.unknown_error', 'error');
+          expect(dialogServiceSpy.openErrorInfoDialog).toHaveBeenCalledWith('error.unknown_error');
           done();
         }
       });

@@ -19,12 +19,10 @@ export class HomeComponent {
   private readonly authService = inject(AuthService);
 
   public login() {
-    console.info('HomeComponent: login button clicked');
     this.authService.login();
   }
 
   public logout() {
-    console.info('HomeComponent: logging out');
     this.authService.logout();
     this.router.navigate(['/login']);
   }

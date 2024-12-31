@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { PopupComponent } from '../../popup/popup.component';
 import { ProcedureRequest } from 'src/app/core/models/dto/procedure-request.dto';
 import { tap, catchError } from 'rxjs/operators';
 import { Mandatee, Mandator, Power, Signer } from "../../../../core/models/entity/lear-credential-employee.entity";
@@ -83,7 +82,6 @@ export class FormCredentialService {
     mandatorLastName: string,
     signer: Signer,
     credentialProcedureService: CredentialProcedureService,
-    popupComponent: PopupComponent,
     resetForm: () => void
   ): Observable<void> {
 
@@ -91,7 +89,6 @@ export class FormCredentialService {
     let mandatorToSubmit = structuredClone(mandator);
 
     //Prepare mandatee
-    //todo trim name and last name
     if(selectedMandateeCountry && credentialToSubmit.mobile_phone != ''){
       const countryPrefix = `+${selectedMandateeCountry.phoneCode}`;
 
@@ -102,7 +99,6 @@ export class FormCredentialService {
     }
 
     //Prepare mandator
-    //todo trim name and last name
     //this will only happen as a Signer
     if(mandator && selectedMandatorCountry){
       //create full common name
@@ -132,7 +128,6 @@ export class FormCredentialService {
     };
 
     return credentialProcedureService.createProcedure(credentialProcedure).pipe(
-      //show same popup when success?
       tap(() => {
         resetForm();
       }),

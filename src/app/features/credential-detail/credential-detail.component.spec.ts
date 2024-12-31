@@ -3,19 +3,25 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { of, throwError } from 'rxjs';
 import { CredentialDetailComponent } from './credential-detail.component';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { LEARCredentialEmployeeJwtPayload } from "../../core/models/entity/lear-credential-employee.entity";
 import { LearCredentialEmployeeDataDetail } from "../../core/models/dto/lear-credential-employee-data-detail.dto";
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { DialogWrapperService } from 'src/app/shared/components/dialog/dialog-wrapper/dialog-wrapper.service';
+import { DialogData } from 'src/app/shared/components/dialog/dialog.component';
 
 describe('CredentialDetailComponent', () => {
+  let router: { navigate:jest.Mock };
   let component: CredentialDetailComponent;
   let fixture: ComponentFixture<CredentialDetailComponent>;
   let mockCredentialProcedureService: {
     getCredentialProcedureById: jest.Mock;
     sendReminder: jest.Mock;
   };
+  let dialogService: {
+    openDialogWithCallback: jest.Mock
+  }
   let translateService:TranslateService;
 
   beforeEach(async () => {
@@ -23,11 +29,19 @@ describe('CredentialDetailComponent', () => {
       getCredentialProcedureById: jest.fn(),
       sendReminder: jest.fn()
     };
+    dialogService = {
+      openDialogWithCallback: jest.fn()
+    }
+    router = {
+      navigate: jest.fn().mockResolvedValue(() => Promise.resolve(undefined))
+    }
 
     await TestBed.configureTestingModule({
     imports: [BrowserAnimationsModule, RouterModule.forRoot([]), HttpClientModule, TranslateModule.forRoot({}), CredentialDetailComponent,],
     providers: [
         TranslateService,
+        { provide: Router, useValue: router },
+        { provide: DialogWrapperService, useValue: dialogService},
         { provide: CredentialProcedureService, useValue: mockCredentialProcedureService },
         {
             provide: ActivatedRoute,
@@ -135,24 +149,33 @@ describe('CredentialDetailComponent', () => {
     expect(console.error).toHaveBeenCalledWith('Error fetching credential details', 'Error');
   });
 
-  it('should send reminder', () => {
-    component.credentialId = '1';
+  it('should send reminder', fakeAsync(() => {
+    const credentialId = '1';
+    component.credentialId = credentialId;
     mockCredentialProcedureService.sendReminder.mockReturnValue(of('Reminder sent'));
-
+    const dialogData: DialogData = { 
+      title: translateService.instant("credentialDetail.sendReminderConfirm.title"),
+      message: translateService.instant("credentialDetail.sendReminderConfirm.message"),
+      confirmationType: 'async',
+      status: 'default',
+      loadingData: undefined
+    };
+  
     component.sendReminder();
-
-    expect(mockCredentialProcedureService.sendReminder).toHaveBeenCalledWith('1');
-    expect(console.info).toHaveBeenCalledWith('Reminder sent successfully', 'Reminder sent');
-  });
-
-  it('should handle error while sending reminder', () => {
-    component.credentialId = '1';
-    mockCredentialProcedureService.sendReminder.mockReturnValue(throwError(()=>'Error'));
-
-    component.sendReminder();
-
-    expect(console.error).toHaveBeenCalledWith('Error sending reminder', 'Error');
-  });
+    tick();
+  
+    expect(dialogService.openDialogWithCallback).toHaveBeenCalledWith(
+      expect.objectContaining(dialogData),
+      expect.any(Function)
+    );
+  
+    const [, callbackFn] = dialogService.openDialogWithCallback.mock.calls[0];
+    callbackFn().subscribe();
+    tick();
+  
+    expect(mockCredentialProcedureService.sendReminder).toHaveBeenCalledWith(credentialId);
+  }));
+  
 
   it('should set the title observable with the translated value', fakeAsync(() => {
     const mockTranslatedValue = 'Translated Credential Details';
@@ -169,6 +192,5 @@ describe('CredentialDetailComponent', () => {
     expect(translateService.get).toHaveBeenCalledWith('credentialDetail.credentialDetails');
     expect(emittedValue).toBe(mockTranslatedValue);
   }));
-
 
 });

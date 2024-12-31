@@ -9,6 +9,10 @@ h2.title{
 
 .domain-function{
   display:flex;
+
+  h3{
+    font-weight: 600;
+  }
 }
 
 .selector-container{
@@ -16,7 +20,7 @@ h2.title{
   align-items: center;
 
   .dome{
-    margin-bottom:16px;
+    margin-block: 0 18px;
   }
 
   button{
@@ -42,6 +46,7 @@ h2.title{
   max-width: 100%;
 
     p {
+      margin-top: 0;
       padding-right: 1rem;
       margin-bottom: 0;
     }

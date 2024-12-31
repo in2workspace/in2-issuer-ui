@@ -10,7 +10,9 @@ import { HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http';
 import { RouterModule } from "@angular/router";
 import { routes } from "./app/app-routing";
 import { HttpLoaderFactory } from "./app/core/services/translate-http-loader.factory";
+import { overrideDefaultValueAccessor } from './app/core/overrides/value-accessor.overrides';
 
+overrideDefaultValueAccessor();
 
 bootstrapApplication(AppComponent, {
     providers: [

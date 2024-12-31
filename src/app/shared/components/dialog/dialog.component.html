@@ -1,7 +1,34 @@
-<h1 mat-dialog-title>Access Denied</h1>
-<div mat-dialog-content>
-  <p>You do not have the required power to access</p>
-</div>
-<div mat-dialog-actions>
-  <button mat-button (click)="onConfirm()">OK</button>
-</div>
+@if((isLoading$|async) && data.confirmationType === 'async'){
+  <h2 mat-dialog-title>{{ data.loadingData?.title || 'Please wait while the process is completed...'}}</h2>
+  <div mat-dialog-content>
+    <p>
+      {{ data.loadingData?.message || ''}}
+    </p>
+    @if(data.loadingData?.template; as loadingTemplate){
+      <ng-template [cdkPortalOutlet]="loadingTemplate"></ng-template>
+    }@else{
+      <mat-spinner [diameter]="50"></mat-spinner>
+    }
+  </div>
+}@else{
+  <h2 mat-dialog-title>{{ data.title }}</h2>
+  <div mat-dialog-content>
+    <p>
+      {{ data.message || ''}}
+    </p>
+  </div>
+  <div mat-dialog-actions>
+      @if(data.confirmationType !== 'none'){
+        <button mat-flat-button color="cancel" (click)="onCancel()">{{ "dialog.cancel" | translate }}</button>
+        <button mat-raised-button color="primary"
+        (click)="onConfirm()">{{ "dialog.accept" | translate }}</button>
+      }
+      @else{
+        @if(data.status!=='error'){
+          <button mat-flat-button (click)="onConfirm()">{{ "dialog.close" | translate }}</button>
+        }@else{
+          <button mat-flat-button color="warn" (click)="onConfirm()">{{ "dialog.close" | translate }}</button>
+        }
+      }
+  </div>
+}

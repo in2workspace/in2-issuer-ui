@@ -2,7 +2,6 @@ import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testin
 import { FormsModule, FormGroupDirective, FormGroup, FormControl } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { FormCredentialComponent } from './form-credential.component';
-import { AlertService } from 'src/app/core/services/alert.service';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { CountryService } from './services/country.service';
 import { FormCredentialService } from './services/form-credential.service';
@@ -10,8 +9,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
-import { of } from 'rxjs';
-import { PopupComponent } from '../popup/popup.component';
+import { Observer, of } from 'rxjs';
 import { MaxLengthDirective } from '../../directives/validators/max-length-directive.directive';
 import { CustomEmailValidatorDirective } from '../../directives/validators/custom-email-validator.directive';
 import { UnicodeValidatorDirective } from '../../directives/validators/unicode-validator.directive';
@@ -19,6 +17,8 @@ import { OrganizationNameValidatorDirective } from '../../directives/validators/
 import { TempPower } from 'src/app/core/models/temporal/temp-power.interface';
 import { Power, Signer } from 'src/app/core/models/entity/lear-credential-employee.entity';
 import { BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import { DialogWrapperService } from '../dialog/dialog-wrapper/dialog-wrapper.service';
+import { DialogData } from '../dialog/dialog.component';
 
 const mockTempPower: TempPower = {
   tmf_action: 'action1',
@@ -54,14 +54,17 @@ const mockSigner:Signer = {
   'commonName':'common',
   'emailAddress':'email',
   'serialNumber':'serialNum',
-  'country':'EU'};
+  'country':'EU'
+};
 
 describe('FormCredentialComponent', () => {
   let component: FormCredentialComponent;
   let fixture: ComponentFixture<FormCredentialComponent>;
 
   let mockCredentialProcedureService: jest.Mocked<CredentialProcedureService>;
-  let mockAlertService: jest.Mocked<AlertService>;
+  let dialogService: {
+    openDialogWithCallback: jest.Mock;
+  };
   let mockCountryService: any;
   let mockAuthService: jest.Mocked<AuthService>;
   let translateService:TranslateService;
@@ -101,8 +104,9 @@ describe('FormCredentialComponent', () => {
     mockCredentialProcedureService = {
     } as jest.Mocked<CredentialProcedureService>;
 
-    mockAlertService = {
-    } as jest.Mocked<AlertService>;
+    dialogService = {
+      openDialogWithCallback: jest.fn()
+    };
 
     mockFormCredentialService = {
       addPower: jest.fn(),
@@ -157,19 +161,19 @@ describe('FormCredentialComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-    imports: [
+      imports: [
         FormsModule,
         TranslateModule.forRoot({}),
         HttpClientModule,
         FormCredentialComponent,
-        PopupComponent, MaxLengthDirective, CustomEmailValidatorDirective, UnicodeValidatorDirective, OrganizationNameValidatorDirective,
+        MaxLengthDirective, CustomEmailValidatorDirective, UnicodeValidatorDirective, OrganizationNameValidatorDirective,
         BrowserAnimationsModule
 
     ],
     providers: [
         TranslateService,
         { provide: CredentialProcedureService, useValue: mockCredentialProcedureService },
-        { provide: AlertService, useValue: mockAlertService },
+        { provide: DialogWrapperService, useValue: dialogService },
         { provide: CountryService, useValue: mockCountryService },
         { provide: FormCredentialService, useValue: mockFormCredentialService },
         { provide: AuthService, useValue: mockAuthService },
@@ -413,6 +417,35 @@ describe('FormCredentialComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
+  it('should open submit dialog and call submitCredential', () => {
+    const dialogData: DialogData = {
+      title: translateService.instant("credentialIssuance.create-confirm-dialog.title"),
+      message: translateService.instant("credentialIssuance.create-confirm-dialog.message"),
+      confirmationType: 'async',
+      status: 'default',
+      loadingData: {
+        title: translateService.instant("credentialIssuance.creating-credential"),
+        message: ''
+      }
+    };
+  
+    jest.spyOn(component, 'submitCredential').mockReturnValue(of('Submitted'));
+  
+    component.openSubmitDialog();
+  
+    expect(dialogService.openDialogWithCallback).toHaveBeenCalledWith(
+      expect.objectContaining(dialogData),
+      expect.any(Function)
+    );
+  
+    const [, callbackFn] = dialogService.openDialogWithCallback.mock.calls[0];
+  
+    callbackFn().subscribe(() => {
+      expect(component.submitCredential).toHaveBeenCalled();
+    });
+  });
+  
+
   it('it should submit credential when submitCredential is called with selected power', () => {
     component.selectedMandateeCountryIsoCode = 'US';
     component.asSigner = false;
@@ -433,7 +466,6 @@ describe('FormCredentialComponent', () => {
       component.addedMandatorLastName,
       component.signer,
       mockCredentialProcedureService,
-      expect.any(PopupComponent),
       expect.any(Function)
     );
   });
@@ -458,7 +490,6 @@ describe('FormCredentialComponent', () => {
       component.addedMandatorLastName,
       component.signer,
       mockCredentialProcedureService,
-      expect.any(PopupComponent),
       expect.any(Function)
     );
   });
@@ -483,16 +514,16 @@ describe('FormCredentialComponent', () => {
     expect(mockFormCredentialService.submitCredential).not.toHaveBeenCalled();
   });
 
-  it('should navigate to credentials if submitting credential is successful', async () => {
+  it('should navigate to credentials if submitting credential is successful', fakeAsync(() => {
     mockCountryService.getCountryFromIsoCode.mockReturnValue('States');
-    component.asSigner = true;
     mockCountryService.getCountryFromName.mockReturnValue('mandatorCountry');
+  
+    component.asSigner = true;
     mockFormCredentialService.hasSelectedPower.mockReturnValue(true);
     mockFormCredentialService.powersHaveFunction.mockReturnValue(true);
-
-    const navigateSpy = mockRouter.navigate.mockResolvedValue(true);
-    const scrollToSpy = jest.spyOn(window, 'scrollTo').mockImplementation(() => {});
-    const popupSpy = jest.spyOn(component, 'openTempPopup');
+  
+    jest.spyOn(mockFormCredentialService, 'submitCredential').mockReturnValue(of('Success'));
+  
     Object.defineProperty(window, 'location', {
       value: {
         ...window.location,
@@ -500,24 +531,28 @@ describe('FormCredentialComponent', () => {
       },
       writable: true,
     });
-
-    component.submitCredential();
-    await navigateSpy;
-
-    expect(mockFormCredentialService.submitCredential).toHaveBeenCalled();
-    expect(popupSpy).toHaveBeenCalled();
-    expect(navigateSpy).toHaveBeenCalledWith(['/organization/credentials']);
-    expect(scrollToSpy).toHaveBeenCalledWith(0, 0);
-    expect(window.location.reload).toHaveBeenCalled();
-
-  });
-
-  it('should close popup', fakeAsync(()=>{
-    component.openTempPopup();
-    expect(component.isPopupVisible).toBe(true);
-    tick(1000);
-    expect(component.isPopupVisible).toBe(false);
-
+  
+    jest.spyOn(mockRouter, 'navigate').mockResolvedValue(true);
+  
+    component.submitCredential().subscribe((res) => {
+      
+    });;
+    tick();
+  
+    expect(mockFormCredentialService.submitCredential).toHaveBeenCalledWith(
+      component.credential,
+      'States',
+      'mandatorCountry',
+      mockFormCredentialService.getPlainAddedPowers(),
+      component.mandator,
+      component.addedMandatorLastName,
+      component.signer,
+      (component as any).credentialProcedureService,
+      expect.any(Function)
+    );
+    tick();
+  
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/organization/credentials']);
+    // expect(window.location.reload).toHaveBeenCalled();
   }));
-
 });

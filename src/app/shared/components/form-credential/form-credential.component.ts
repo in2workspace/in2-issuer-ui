@@ -4,12 +4,11 @@ import { CredentialProcedureService } from 'src/app/core/services/credential-pro
 import { Country, CountryService } from './services/country.service';
 import { FormCredentialService } from './services/form-credential.service';
 import { AuthService } from 'src/app/core/services/auth.service';
-import { PopupComponent } from '../popup/popup.component';
 import { Router, RouterLink } from '@angular/router';
 import { ErrorStateMatcher, MatOption } from '@angular/material/core';
 import { TempPower } from "../../../core/models/temporal/temp-power.interface";
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
+import { from, Observable, of, switchMap, tap } from 'rxjs';
 import { Mandatee, OrganizationDetails, Power } from 'src/app/core/models/entity/lear-credential-employee.entity';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButton } from '@angular/material/button';
@@ -18,13 +17,17 @@ import { OrganizationIdentifierValidatorDirective } from '../../directives/valid
 import { OrganizationNameValidatorDirective } from '../../directives/validators/organization-name.validator.directive';
 import { MatSelect, MatSelectTrigger } from '@angular/material/select';
 import { CustomEmailValidatorDirective } from '../../directives/validators/custom-email-validator.directive';
-import { NgIf, NgStyle, NgFor, NgTemplateOutlet } from '@angular/common';
+import { NgIf, NgStyle, NgFor, NgTemplateOutlet, AsyncPipe } from '@angular/common';
 import { MaxLengthDirective } from '../../directives/validators/max-length-directive.directive';
 import { UnicodeValidatorDirective } from '../../directives/validators/unicode-validator.directive';
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatError, MatPrefix } from '@angular/material/form-field';
 import { MatCard, MatCardContent } from '@angular/material/card';
 import { NavbarComponent } from '../navbar/navbar.component';
+import { DialogWrapperService } from '../dialog/dialog-wrapper/dialog-wrapper.service';
+import { DialogData } from '../dialog/dialog.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { LoaderService } from 'src/app/core/services/loader.service';
 
 @Component({
     selector: 'app-form-credential',
@@ -32,40 +35,39 @@ import { NavbarComponent } from '../navbar/navbar.component';
     styleUrls: ['./form-credential.component.scss'],
     standalone: true,
     imports: [
-        NavbarComponent,
-        MatCard,
-        MatCardContent,
-        FormsModule,
-        MatFormField,
-        MatLabel,
-        MatInput,
-        UnicodeValidatorDirective,
-        MaxLengthDirective,
-        NgIf,
-        MatError,
-        CustomEmailValidatorDirective,
-        NgStyle,
-        MatSelect,
-        MatSelectTrigger,
-        MatOption,
-        NgFor,
-        MatPrefix,
-        OrganizationNameValidatorDirective,
-        OrganizationIdentifierValidatorDirective,
-        PowerComponent,
-        MatButton,
-        RouterLink,
-        NgTemplateOutlet,
-        PopupComponent,
-        TranslatePipe,
-    ],
+      AsyncPipe,
+      CustomEmailValidatorDirective,
+      FormsModule,
+      MatButton,
+      MatCard,
+      MatCardContent,
+      MatError,
+      MatFormField,
+      MatInput,
+      MatLabel,
+      MatOption,
+      MatPrefix,
+      MatProgressSpinnerModule,
+      MatSelect,
+      MatSelectTrigger,
+      MaxLengthDirective,
+      NavbarComponent,
+      NgFor,
+      NgIf,
+      NgStyle,
+      NgTemplateOutlet,
+      OrganizationIdentifierValidatorDirective,
+      OrganizationNameValidatorDirective,
+      PowerComponent,
+      RouterLink,
+      TranslatePipe,
+      UnicodeValidatorDirective,
+  ],  
 })
 export class FormCredentialComponent implements OnInit, OnDestroy {
-
-  @ViewChild(PopupComponent) public popupComponent!: PopupComponent;
   @ViewChild('formDirective') public formDirective!: FormGroupDirective;
   @Output() public sendReminder = new EventEmitter<void>();
-  @Input() public viewMode: 'create' | 'detail' = 'create';
+  @Input({required:true}) public viewMode: 'create' | 'detail' = 'create';
   @Input() public asSigner: boolean = false;
   @Input() public isDisabled: boolean = false;
   @Input() public title: string = '';
@@ -74,6 +76,7 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
   @Input() public credential: Mandatee = this.initializeCredential();
   @Input() public mandator: OrganizationDetails = this.initializeOrganizationDetails();
   public signer: OrganizationDetails = this.initializeOrganizationDetails();
+  public isLoading$: Observable<boolean>;
 
   public addedPowers$: Observable<TempPower[]>;
 
@@ -82,9 +85,6 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
   public selectedMandateeCountryIsoCode: string = '';
   public hasIn2OrganizationId = false;
   public addedMandatorLastName: string = '';
-
-  public popupMessage: string = '';
-  public isPopupVisible: boolean = false;
 
   //if mobile has been introduced and unfocused and there is not country, show error
   public countryErrorMatcher: ErrorStateMatcher = {
@@ -105,15 +105,17 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
   private readonly router = inject(Router);
   private readonly countryService = inject(CountryService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly dialog = inject(DialogWrapperService);
+  private readonly loader = inject(LoaderService);
 
   public constructor(){
     this.countries = this.countryService.getSortedCountries();
     this.addedPowers$ = this.formService.getAddedPowers();
     this.hasIn2OrganizationId = this.authService.hasIn2OrganizationIdentifier();
+    this.isLoading$ = this.loader.isLoading$;
   }
 
   public ngOnInit(): void {
-
     this.authService.getMandator()
     .pipe(takeUntilDestroyed(this.destroyRef))
     .subscribe(mandator2 => {
@@ -158,7 +160,25 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
     }
   }
 
-  public submitCredential(): void {
+  public openSubmitDialog(){
+    const dialogData: DialogData = {
+      title: this.translate.instant("credentialIssuance.create-confirm-dialog.title"),
+      message: this.translate.instant("credentialIssuance.create-confirm-dialog.message"),
+      confirmationType: 'async',
+      status: 'default',
+      loadingData: {
+        title: this.translate.instant("credentialIssuance.creating-credential"),
+        message: ''
+      }
+    };
+
+    const submitAfterDialogClose = (): Observable<any> => {
+          return this.submitCredential();
+      };
+    this.dialog.openDialogWithCallback(dialogData, submitAfterDialogClose);
+  }
+
+  public submitCredential(): Observable<any> {
     //optional
     const selectedMandateeCountry: Country|undefined = this.countryService.getCountryFromIsoCode(this.selectedMandateeCountryIsoCode);
     //mandatory if asSigner
@@ -167,10 +187,8 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
       selectedMandatorCountry = this.countryService.getCountryFromName(this.mandator.country);
     }
 
-    //this condition is already applied in the template, so maybe it should be removed
     if (this.hasSelectedPower() && this.selectedPowersHaveFunction()) {
-      this.formService
-        .submitCredential(
+      return this.formService.submitCredential(
           this.credential,
           selectedMandateeCountry,
           selectedMandatorCountry,
@@ -179,34 +197,18 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
           this.addedMandatorLastName,
           this.signer,
           this.credentialProcedureService,
-          this.popupComponent,
           this.resetForm.bind(this)
         )
-        .subscribe({
-          //service opens popup too
-          next: () => {
-            this.popupMessage = this.translate.instant("credentialIssuance.success");
-            //navigates before popup is shown
-            this.openTempPopup();
-            this.router.navigate(['/organization/credentials']).then(() => {
-              window.scrollTo(0, 0);
-              location.reload();
-            });
-          },
-          error: (err:Error) => {
-            //server-error-interceptor acts here
-            console.error(err);
-          }
-        });
+        .pipe(
+          switchMap(()  => 
+            from(this.router.navigate(['/organization/credentials'])).pipe(
+              tap(() => location.reload())
+            )
+          ));
     } else {
       console.error('Data to submit is not valid');
-      return;
+      return of(undefined);
     }
-  }
-
-  public openTempPopup(){
-    this.isPopupVisible = true;
-    setTimeout(()=>{this.isPopupVisible=false}, 1000);
   }
 
   public triggerSendReminder(): void {
@@ -219,20 +221,20 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
     this.formDirective.resetForm();
     this.formService.setAddedPowers([]);
     this.authService.getMandator()
-    .pipe(takeUntilDestroyed(this.destroyRef))
-    .subscribe(mandator2 => {
-      if (mandator2) {
-        this.mandator = mandator2;
-        this.signer = {
-          'organizationIdentifier': mandator2.organizationIdentifier,
-          'organization': mandator2.organization,
-          'commonName':mandator2.commonName,
-          'emailAddress':mandator2.emailAddress,
-          'serialNumber':mandator2.serialNumber,
-          'country':mandator2.country
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(mandator2 => {
+        if (mandator2) {
+          this.mandator = mandator2;
+          this.signer = { 
+            'organizationIdentifier': mandator2.organizationIdentifier,
+            'organization': mandator2.organization,
+            'commonName':mandator2.commonName,
+            'emailAddress':mandator2.emailAddress,
+            'serialNumber':mandator2.serialNumber,
+            'country':mandator2.country
+          }
         }
-      }
-    });
+      });
   }
 
    //functions that are used in template; it may be better to avoid executing them in template
@@ -279,5 +281,4 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
       country: ''
     };
   }
-
 }
