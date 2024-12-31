@@ -6,9 +6,14 @@
 }
 
 .dialog-custom{
-    mat-dialog-container{
-        border-radius: 8px;
-    }
+    .mat-mdc-dialog-container .mdc-dialog__surface {
+        border-radius: 8px !important;
+      }
+
+      div[mat-dialog-content]{
+        display:flex;
+        gap: 12px;
+      }
 
     div[mat-dialog-actions]{
         padding: 24px 24px 24px 18px;
@@ -17,72 +22,52 @@
     
         button{
             width: 80px;
+
+            .mdc-button__label{
+                text-transform: uppercase;
+            }
         }
     }
 }
 
 .dialog-default{
-    mat-dialog-container{
-        background-color: $light-background;
-        color: white !important;
+    div[mat-dialog-container]{
+        background-color: $Light-Blue-Secondary;
     }
 
-    div[mat-dialog-content]{
-        color: $error-medium !important;
+    div[mat-dialog-container], [mat-dialog-title], div[mat-dialog-content], div[mat-dialog-actions], div[mat-dialog-actions] button{
+        color: $Blue !important;
     }
-
-    div[mat-dialog-actions] {
-        button{
-            color: $error-medium !important;
-        }
-    }  
 }
 
 .dialog-error{
+    
+    div[mat-dialog-container]{
+        background-color: $red-light;
+    }
 
-    div[mat-dialog-content]{
+    div[mat-dialog-container], [mat-dialog-title], div[mat-dialog-content], div[mat-dialog-actions], div[mat-dialog-actions] button{
         color: $error-medium !important;
     }
 
-    div[mat-dialog-actions] {
-        button{
-            color: $error-medium !important;
-        }
-    }
 }
 
 .dialog-success{
-    mat-dialog-container{
-        background-color: $success-light !important;
-        color: white !important;
+    div[mat-dialog-container]{
+        background-color: $success-light;
     }
 
-    div[mat-dialog-content]{
+    div[mat-dialog-container], [mat-dialog-title], div[mat-dialog-content], div[mat-dialog-actions], div[mat-dialog-actions] button{
         color: $success !important;
     }
-
-    div[mat-dialog-actions] {
-
-        button{
-            color: $success !important;
-        }
-    }    
 }
 
 .dialog-warn{
-    mat-dialog-container{
-        background-color: $warn !important;
-        color: white !important;
+    div[mat-dialog-container]{
+        background-color: $warn-light;
     }
 
-    div[mat-dialog-content]{
+    div[mat-dialog-container], [mat-dialog-title], div[mat-dialog-content], div[mat-dialog-actions], div[mat-dialog-actions] button{
         color: $warn !important;
     }
-
-    div[mat-dialog-actions] {
-
-        button{
-            color: $warn !important;
-        }
-    }    
 }

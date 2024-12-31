@@ -7,6 +7,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Observable, Subject } from 'rxjs';
 import { LoaderService } from 'src/app/core/services/loader.service';
 import { ComponentPortal, DomPortal, PortalModule, TemplatePortal } from '@angular/cdk/portal';
+import { MatIconModule } from '@angular/material/icon';
 
 export type DialogStatus = 'default' | 'warn' | 'error' | 'success';
 export type DialogConfirmationType = 'none' | 'sync' | 'async';
@@ -32,6 +33,7 @@ export interface DialogDefaultContent {
         MatDialogContent,
         MatDialogActions,
         MatButton,
+        MatIconModule,
         NgClass,
         PortalModule,
         MatProgressSpinnerModule,

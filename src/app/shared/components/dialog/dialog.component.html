@@ -13,6 +13,9 @@
 }@else{
   <h2 mat-dialog-title>{{ data.title }}</h2>
   <div mat-dialog-content>
+    @if(data.status === 'error'){
+      <mat-icon fontSet="material-icons-outlined">error_outlined</mat-icon>
+    }
     <p>
       {{ data.message || ''}}
     </p>
@@ -24,7 +27,7 @@
         (click)="onConfirm()">{{ "dialog.accept" | translate }}</button>
       }
       @else{
-        <button mat-raised-button (click)="onConfirm()">{{ "dialog.ok" | translate }}</button>
+        <button mat-button (click)="onConfirm()">{{ "dialog.close" | translate }}</button>
       }
   </div>
 }

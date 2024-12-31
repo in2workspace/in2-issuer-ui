@@ -133,6 +133,7 @@
     },
     "dialog": {
       "ok": "De acuerdo",
+      "close": "Cerrar",
       "cancel": "Cancelar",
       "accept": "Aceptar"
     }

@@ -132,6 +132,7 @@
     },
     "dialog": {
       "ok": "D'acord",
+      "close": "Tancar",
       "cancel": "Cancel·lar",
       "accept": "Acceptar"
     }
