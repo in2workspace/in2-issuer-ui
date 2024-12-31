@@ -3,12 +3,10 @@ import { HttpErrorResponse, HttpResponse, HttpStatusCode, HttpRequest, HttpEvent
 import { of, throwError } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { ServeErrorInterceptor } from './server-error-interceptor';
-import { MatDialog } from '@angular/material/dialog';
 import { DialogWrapperService } from 'src/app/shared/components/dialog/dialog-wrapper/dialog-wrapper.service';
 
 describe('ServeErrorInterceptor', () => {
   let interceptor: ServeErrorInterceptor;
-
   let dialogServiceSpy: { openErrorInfoDialog: jest.Mock };
   let translateServiceSpy: { instant: jest.Mock };
   let httpRequest: Partial<HttpRequest<any>>;
@@ -24,7 +22,6 @@ describe('ServeErrorInterceptor', () => {
       providers: [
         { provide: DialogWrapperService, useValue: dialogServiceSpy },
         ServeErrorInterceptor,
-        { provide: MatDialog, useValue: dialogServiceSpy },
         { provide: TranslateService, useValue: translateServiceSpy }
       ]
     });
@@ -52,7 +49,6 @@ describe('ServeErrorInterceptor', () => {
       interceptor.intercept(httpRequest as HttpRequest<any>, httpHandler).subscribe({
         next: () => fail('expected an error, not a response'),
         error: (err: HttpErrorResponse) => {
-          console.log(err);
           expect(err.status).toBe(404);
           expect(translateServiceSpy.instant).toHaveBeenCalledWith('error.not_found');
           expect(dialogServiceSpy.openErrorInfoDialog).toHaveBeenCalledWith('error.not_found');

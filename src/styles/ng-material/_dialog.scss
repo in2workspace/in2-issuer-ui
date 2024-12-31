@@ -1,7 +1,88 @@
-div[mat-dialog-actions]{
-    padding: 24px 24px 24px 18px;
+@import './../variables';
 
-    button{
-        width: 80px;
+.mat-mdc-dialog-content{
+    min-width: 500px;
+    max-width: 500px;
+}
+
+.dialog-custom{
+    mat-dialog-container{
+        border-radius: 8px;
     }
+
+    div[mat-dialog-actions]{
+        padding: 24px 24px 24px 18px;
+        justify-content: center !important;
+        gap: 8px;
+    
+        button{
+            width: 80px;
+        }
+    }
+}
+
+.dialog-default{
+    mat-dialog-container{
+        background-color: $light-background;
+        color: white !important;
+    }
+
+    div[mat-dialog-content]{
+        color: $error-medium !important;
+    }
+
+    div[mat-dialog-actions] {
+        button{
+            color: $error-medium !important;
+        }
+    }  
+}
+
+.dialog-error{
+
+    div[mat-dialog-content]{
+        color: $error-medium !important;
+    }
+
+    div[mat-dialog-actions] {
+        button{
+            color: $error-medium !important;
+        }
+    }
+}
+
+.dialog-success{
+    mat-dialog-container{
+        background-color: $success-light !important;
+        color: white !important;
+    }
+
+    div[mat-dialog-content]{
+        color: $success !important;
+    }
+
+    div[mat-dialog-actions] {
+
+        button{
+            color: $success !important;
+        }
+    }    
+}
+
+.dialog-warn{
+    mat-dialog-container{
+        background-color: $warn !important;
+        color: white !important;
+    }
+
+    div[mat-dialog-content]{
+        color: $warn !important;
+    }
+
+    div[mat-dialog-actions] {
+
+        button{
+            color: $warn !important;
+        }
+    }    
 }

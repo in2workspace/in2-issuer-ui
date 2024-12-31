@@ -1,107 +1,128 @@
 import { TestBed } from '@angular/core/testing';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { of, throwError, Subject } from 'rxjs';
 import { DialogWrapperService } from './dialog-wrapper.service';
-import { MatDialog } from '@angular/material/dialog';
-import { of } from 'rxjs';
 import { DialogComponent, DialogData } from '../dialog.component';
+import { LoaderService } from 'src/app/core/services/loader.service';
+
+jest.mock('@angular/material/dialog');
 
 describe('DialogWrapperService', () => {
   let service: DialogWrapperService;
-  let mockMatDialog: jest.Mocked<MatDialog>;
+  let matDialogMock: jest.Mocked<MatDialog>;
+  let loaderServiceMock: jest.Mocked<LoaderService>;
 
   beforeEach(() => {
-    mockMatDialog = {
+    matDialogMock = {
       open: jest.fn(),
-    } as any;
+      openDialogs: []
+    } as unknown as jest.Mocked<MatDialog>;
+
+    loaderServiceMock = {
+      updateIsLoading: jest.fn(),
+    } as unknown as jest.Mocked<LoaderService>;
 
     TestBed.configureTestingModule({
       providers: [
         DialogWrapperService,
-        { provide: MatDialog, useValue: mockMatDialog },
+        { provide: MatDialog, useValue: matDialogMock },
+        { provide: LoaderService, useValue: loaderServiceMock },
       ],
     });
 
     service = TestBed.inject(DialogWrapperService);
   });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
+  it('should open a dialog and execute the callback with sync confirmation type', () => {
+    const dialogData: DialogData = {
+      title: 'Sync Title',
+      message: 'Sync Message',
+      confirmationType: 'sync',
+      status: 'default',
+      loadingData: undefined,
+    };
+    const callback = jest.fn(() => of('success'));
+    const afterClosedSubject = new Subject<void>();
+    const dialogRefMock = {
+      afterClosed: jest.fn(() => afterClosedSubject.asObservable()),
+      close: jest.fn(),
+    } as unknown as MatDialogRef<DialogComponent, any>;
+
+    matDialogMock.open.mockReturnValue(dialogRefMock);
+
+    service.openDialogWithCallback(dialogData, callback);
+
+    afterClosedSubject.next();
+    afterClosedSubject.complete();
+
+    expect(matDialogMock.open).toHaveBeenCalledWith(DialogComponent, {
+      data: { ...dialogData },
+    });
+    expect(callback).toHaveBeenCalled();
+    expect(dialogRefMock.close).toHaveBeenCalled();
   });
 
-  describe('openDialog', () => {
-    it('should call MatDialog.open with DialogComponent and correct data', () => {
-      const dialogData: DialogData = {
-        title: 'Test Title',
-        message: 'Test Message',
-        confirmationType: 'close',
-        status: 'default',
-      };
-      service.openDialog(dialogData);
+  it('should open a dialog and execute the callback with async confirmation type', () => {
+    const dialogData: DialogData = {
+      title: 'Async Title',
+      message: 'Async Message',
+      confirmationType: 'async',
+      status: 'default',
+      loadingData: { title: 'Loading', message: 'Loading Message' },
+    };
+    const callback = jest.fn(() => of('success'));
+    const afterConfirmSubject = new Subject<void>();
+    const dialogRefMock = {
+      componentInstance: {
+        afterConfirmSubj: jest.fn(() => afterConfirmSubject.asObservable()),
+        updateData: jest.fn(),
+      },
+      close: jest.fn(),
+    } as unknown as MatDialogRef<DialogComponent, any>;
 
-      expect(mockMatDialog.open).toHaveBeenCalledWith(DialogComponent, {
-        data: dialogData,
-      });
+    matDialogMock.open.mockReturnValue(dialogRefMock);
+
+    service.openDialogWithCallback(dialogData, callback);
+
+    afterConfirmSubject.next();
+    afterConfirmSubject.complete();
+
+    expect(matDialogMock.open).toHaveBeenCalledWith(DialogComponent, {
+      data: { ...dialogData },
     });
+    expect(dialogRefMock.componentInstance.updateData).toHaveBeenCalledWith(dialogData.loadingData);
+    expect(loaderServiceMock.updateIsLoading).toHaveBeenCalledWith(true);
+    expect(callback).toHaveBeenCalled();
+    expect(dialogRefMock.close).toHaveBeenCalled();
   });
 
-  describe('openDialogWithCallback', () => {
-    it('should open a dialog and subscribe to afterClosed with a callback', () => {
-      const dialogData: DialogData = {
-        title: 'Test Title',
-        message: 'Test Message',
-        confirmationType: 'close',
-        status: 'default',
-      };
+  it('should handle errors in the callback and keep dialog open', () => {
+    const dialogData: DialogData = {
+      title: 'Error Title',
+      message: 'Error Message',
+      confirmationType: 'sync',
+      status: 'default',
+      loadingData: undefined,
+    };
+    const callback = jest.fn(() => throwError(() => new Error('Callback Error')));
+    const afterClosedSubject = new Subject<void>();
+    const dialogRefMock = {
+      afterClosed: jest.fn(() => afterClosedSubject.asObservable()),
+      close: jest.fn(),
+    } as unknown as MatDialogRef<DialogComponent, any>;
 
-      const afterClosed$ = of('Dialog Closed');
-      const mockDialogRef = { afterClosed: jest.fn().mockReturnValue(afterClosed$) } as any;
-      mockMatDialog.open.mockReturnValue(mockDialogRef);
+    matDialogMock.open.mockReturnValue(dialogRefMock);
 
-      const callback = {
-        next: jest.fn(),
-        error: jest.fn(),
-        complete: jest.fn(),
-      };
+    service.openDialogWithCallback(dialogData, callback);
 
-      service.openDialogWithCallback(dialogData, callback);
+    afterClosedSubject.next();
+    afterClosedSubject.complete();
 
-      expect(mockMatDialog.open).toHaveBeenCalledWith(DialogComponent, {
-        data: dialogData,
-      });
-      expect(mockDialogRef.afterClosed).toHaveBeenCalled();
-      expect(callback.next).toHaveBeenCalledWith('Dialog Closed');
+    expect(matDialogMock.open).toHaveBeenCalledWith(DialogComponent, {
+      data: { ...dialogData },
     });
-  });
-
-  describe('openErrorInfoDialog', () => {
-    it('should call MatDialog.open with DialogComponent and default error data', () => {
-      const message = 'Error Message';
-      const title = 'Error Title';
-
-      service.openErrorInfoDialog(message, title);
-
-      expect(mockMatDialog.open).toHaveBeenCalledWith(DialogComponent, {
-        data: {
-          title: title,
-          message: message,
-          isConfirmDialog: false,
-          status: 'error',
-        },
-      });
-    });
-
-    it('should use "Error" as the default title if none is provided', () => {
-      const message = 'Error Message';
-
-      service.openErrorInfoDialog(message);
-
-      expect(mockMatDialog.open).toHaveBeenCalledWith(DialogComponent, {
-        data: {
-          title: 'Error',
-          message: message,
-          isConfirmDialog: false,
-          status: 'error',
-        },
-      });
-    });
+    expect(callback).toHaveBeenCalled();
+    expect(dialogRefMock.close).not.toHaveBeenCalled();
+    expect(loaderServiceMock.updateIsLoading).toHaveBeenCalledWith(false);
   });
 });

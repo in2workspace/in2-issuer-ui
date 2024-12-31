@@ -1,18 +1,30 @@
-<h2 mat-dialog-title>{{ data.title }}</h2>
-<div mat-dialog-content>
-  <p>{{ data.message }}</p>
-</div>
-<div mat-dialog-actions>
-  @if(isLoading$|async){
-    <mat-spinner></mat-spinner>
-  }
-  @else if(data.confirmationType !== 'none'){
-    <button mat-button (click)="onCancel()">{{ "dialog.cancel" | translate }}</button>
-    <button mat-raised-button 
-    [color]="statusColor"
-    (click)="onConfirm()">{{ "dialog.accept" | translate }}</button>
-  }
-  @else{
-    <button [color]="statusColor" mat-raised-button (click)="onConfirm()">{{ "dialog.ok" | translate }}</button>
-  }
-</div>
+@if((isLoading$|async) && data.confirmationType === 'async'){
+  <h2 mat-dialog-title>{{ data.loadingData?.title || 'Please wait while the process is completed...'}}</h2>
+  <div mat-dialog-content>
+    <p>
+      {{ data.loadingData?.message || ''}}
+    </p>
+    @if(data.loadingData?.template; as loadingTemplate){
+      <ng-template [cdkPortalOutlet]="loadingTemplate"></ng-template>
+    }@else{
+      <mat-spinner></mat-spinner>
+    }
+  </div>
+}@else{
+  <h2 mat-dialog-title>{{ data.title }}</h2>
+  <div mat-dialog-content>
+    <p>
+      {{ data.message || ''}}
+    </p>
+  </div>
+  <div mat-dialog-actions>
+      @if(data.confirmationType !== 'none'){
+        <button mat-button (click)="onCancel()">{{ "dialog.cancel" | translate }}</button>
+        <button mat-raised-button 
+        (click)="onConfirm()">{{ "dialog.accept" | translate }}</button>
+      }
+      @else{
+        <button mat-raised-button (click)="onConfirm()">{{ "dialog.ok" | translate }}</button>
+      }
+  </div>
+}

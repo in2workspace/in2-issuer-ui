@@ -3,7 +3,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { of, throwError } from 'rxjs';
 import { CredentialDetailComponent } from './credential-detail.component';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { LEARCredentialEmployeeJwtPayload } from "../../core/models/entity/lear-credential-employee.entity";
 import { LearCredentialEmployeeDataDetail } from "../../core/models/dto/lear-credential-employee-data-detail.dto";
@@ -12,6 +12,7 @@ import { DialogWrapperService } from 'src/app/shared/components/dialog/dialog-wr
 import { DialogData } from 'src/app/shared/components/dialog/dialog.component';
 
 describe('CredentialDetailComponent', () => {
+  let router: { navigate:jest.Mock };
   let component: CredentialDetailComponent;
   let fixture: ComponentFixture<CredentialDetailComponent>;
   let mockCredentialProcedureService: {
@@ -19,7 +20,7 @@ describe('CredentialDetailComponent', () => {
     sendReminder: jest.Mock;
   };
   let dialogService: {
-    openDialog: jest.Mock
+    openDialogWithCallback: jest.Mock
   }
   let translateService:TranslateService;
 
@@ -29,15 +30,17 @@ describe('CredentialDetailComponent', () => {
       sendReminder: jest.fn()
     };
     dialogService = {
-      openDialog: jest.fn().mockReturnValue({
-        afterClosed: jest.fn().mockReturnValue(of(true))
-      })
+      openDialogWithCallback: jest.fn()
+    }
+    router = {
+      navigate: jest.fn().mockResolvedValue(() => Promise.resolve(undefined))
     }
 
     await TestBed.configureTestingModule({
     imports: [BrowserAnimationsModule, RouterModule.forRoot([]), HttpClientModule, TranslateModule.forRoot({}), CredentialDetailComponent,],
     providers: [
         TranslateService,
+        { provide: Router, useValue: router },
         { provide: DialogWrapperService, useValue: dialogService},
         { provide: CredentialProcedureService, useValue: mockCredentialProcedureService },
         {
@@ -147,30 +150,32 @@ describe('CredentialDetailComponent', () => {
   });
 
   it('should send reminder', fakeAsync(() => {
-    component.credentialId = '1';
+    const credentialId = '1';
+    component.credentialId = credentialId;
     mockCredentialProcedureService.sendReminder.mockReturnValue(of('Reminder sent'));
     const dialogData: DialogData = { 
-      title: translateService.instant("credentialDetail.sendReminderSuccess.title"),
-      message: translateService.instant("credentialDetail.sendReminderSuccess.message"),
-      confirmationType: 'none',
-      status: 'default'
+      title: translateService.instant("credentialDetail.sendReminderConfirm.title"),
+      message: translateService.instant("credentialDetail.sendReminderConfirm.message"),
+      confirmationType: 'async',
+      status: 'default',
+      loadingData: undefined
     };
-
+  
     component.sendReminder();
     tick();
-
-    expect(mockCredentialProcedureService.sendReminder).toHaveBeenCalledWith('1');
-    expect(dialogService.openDialog).toHaveBeenCalledWith(expect.objectContaining(dialogData));
+  
+    expect(dialogService.openDialogWithCallback).toHaveBeenCalledWith(
+      expect.objectContaining(dialogData),
+      expect.any(Function)
+    );
+  
+    const [, callbackFn] = dialogService.openDialogWithCallback.mock.calls[0];
+    callbackFn().subscribe();
+    tick();
+  
+    expect(mockCredentialProcedureService.sendReminder).toHaveBeenCalledWith(credentialId);
   }));
-
-  it('should handle error while sending reminder', () => {
-    component.credentialId = '1';
-    mockCredentialProcedureService.sendReminder.mockReturnValue(throwError(()=>'Error'));
-
-    component.sendReminder();
-
-    expect(component.isSendingReminder).toBe(false);
-  });
+  
 
   it('should set the title observable with the translated value', fakeAsync(() => {
     const mockTranslatedValue = 'Translated Credential Details';

@@ -8,7 +8,7 @@ import { Router, RouterLink } from '@angular/router';
 import { ErrorStateMatcher, MatOption } from '@angular/material/core';
 import { TempPower } from "../../../core/models/temporal/temp-power.interface";
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
-import { Observable, Observer } from 'rxjs';
+import { from, Observable, of, switchMap, tap } from 'rxjs';
 import { Mandatee, OrganizationDetails, Power } from 'src/app/core/models/entity/lear-credential-employee.entity';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButton } from '@angular/material/button';
@@ -116,7 +116,6 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
-
     this.authService.getMandator()
     .pipe(takeUntilDestroyed(this.destroyRef))
     .subscribe(mandator2 => {
@@ -165,22 +164,21 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
     const dialogData: DialogData = {
       title: this.translate.instant("credentialIssuance.create-confirm-dialog.title"),
       message: this.translate.instant("credentialIssuance.create-confirm-dialog.message"),
-      confirmationType: 'close',
-      status: 'default'
-    };
-    const submitAfterDialogClose:Partial<Observer<any>> = {
-      next: (result: boolean) => {
-        if (result) {
-          this.submitCredential();
-        }
+      confirmationType: 'async',
+      status: 'default',
+      loadingData: {
+        title:'Creating credential',//todo translate
+        message: ''
       }
     };
-    // const dialogRef = this.dialog.openDialog(dialogData);
-    // dialogRef.componentInstance.hasConfirmedSubj$.subscribe(submitAfterDialogClose);
+
+    const submitAfterDialogClose = (): Observable<any> => {
+          return this.submitCredential();
+      };
     this.dialog.openDialogWithCallback(dialogData, submitAfterDialogClose);
   }
 
-  public submitCredential(): void {
+  public submitCredential(): Observable<any> {
     //optional
     const selectedMandateeCountry: Country|undefined = this.countryService.getCountryFromIsoCode(this.selectedMandateeCountryIsoCode);
     //mandatory if asSigner
@@ -189,12 +187,8 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
       selectedMandatorCountry = this.countryService.getCountryFromName(this.mandator.country);
     }
 
-    //this condition is already applied in the template, so maybe it should be removed
     if (this.hasSelectedPower() && this.selectedPowersHaveFunction()) {
-      this.loader.updateIsLoading(true);
-
-      this.formService
-        .submitCredential(
+      return this.formService.submitCredential(
           this.credential,
           selectedMandateeCountry,
           selectedMandatorCountry,
@@ -205,32 +199,15 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
           this.credentialProcedureService,
           this.resetForm.bind(this)
         )
-        .subscribe({
-          next: () => {
-            this.loader.updateIsLoading(false);
-            const dialogData: DialogData = {
-                title: this.translate.instant("credentialIssuance.create-success-dialog.title"),
-                message: this.translate.instant("credentialIssuance.create-success-dialog.message"),
-                confirmationType: 'load',
-                status: `default`
-            }
-            const callbackAfterDialogClose = {
-              next: ()=>{
-                this.router.navigate(['/organization/credentials']).then(() => {
-                  location.reload();
-                });
-              }
-            }
-            this.dialog.openDialogWithCallback(dialogData, callbackAfterDialogClose);
-          },
-          error: (err:Error) => {
-            this.loader.updateIsLoading(false);
-            console.error(err);
-          }
-        });
+        .pipe(
+          switchMap(()  => 
+            from(this.router.navigate(['/organization/credentials'])).pipe(
+              tap(() => location.reload())
+            )
+          ));
     } else {
       console.error('Data to submit is not valid');
-      return;
+      return of(undefined);
     }
   }
 

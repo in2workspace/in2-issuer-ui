@@ -1,9 +1,18 @@
+//DOME colors
 $Blue: #2d58a7;
 $Light-Blue-Primary: #00add3;
 $Dark-Blue: #14274a;
 $Light-Blue-Secondary: #dde6f6;
 $White: #ffffff;
 
+//IN2 colors
+$light-background: #fdf0f0;
+$error-medium: #7b2531;
+$success-light: #e7f8e4;
+$success: #215112;
+$warn: yellow;
+
+//Palette with DOME blue, used as primary palette in Angular Material components
 $custom-palette: (
   50: #e5edf9,
   100: #cad9f3,

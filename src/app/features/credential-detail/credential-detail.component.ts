@@ -1,16 +1,14 @@
 import { Component, inject, OnInit, DestroyRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, Observer, switchMap, timer } from 'rxjs';
+import { from, Observable, switchMap, tap, timer } from 'rxjs';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { LEARCredentialEmployeeJwtPayload } from "../../core/models/entity/lear-credential-employee.entity";
 import { LearCredentialEmployeeDataDetail } from "../../core/models/dto/lear-credential-employee-data-detail.dto";
 import { FormCredentialComponent } from '../../shared/components/form-credential/form-credential.component';
 import { NgIf, AsyncPipe } from '@angular/common';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DialogWrapperService } from 'src/app/shared/components/dialog/dialog-wrapper/dialog-wrapper.service';
 import { DialogData } from 'src/app/shared/components/dialog/dialog.component';
-import { credentialMock } from 'src/app/core/mocks/credential.mock';
 import { LoaderService } from 'src/app/core/services/loader.service';
 
 @Component({
@@ -74,32 +72,22 @@ export class CredentialDetailComponent implements OnInit {
     const dialogData: DialogData = {
       title: this.translate.instant("credentialDetail.sendReminderConfirm.title"),
       message: this.translate.instant("credentialDetail.sendReminderConfirm.message"),
-      confirmationType: 'load',
-      status: 'default'
+      confirmationType: 'async',
+      status: 'default',
+      loadingData: undefined
     };
 
-    const sendReminderAfterConfirm: Partial<Observer<any>> = {
-      next: (result: boolean) => {
-        if (result) {
-          this.loader.updateIsLoading(true);
-          this.credentialProcedureService.sendReminder(credentialId)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-              next: () => {
-                this.loader.updateIsLoading(false);
-                this.router.navigate(['/organization/credentials']).then(() => {
-                  location.reload();
-                });
-              },
-              error: () => {
-                this.loader.updateIsLoading(false);
-              }
-            });
-        }
-      }
+    const sendReminderAfterConfirm = (): Observable<any> => {
+      return this.credentialProcedureService.sendReminder(credentialId)
+        .pipe(
+          switchMap(()  => 
+            from(this.router.navigate(['/organization/credentials'])).pipe(
+              tap(() => location.reload())
+            )
+          ));
     }
+    
     this.dialog.openDialogWithCallback(dialogData, sendReminderAfterConfirm);
-
 
   }
 

@@ -417,25 +417,34 @@ describe('FormCredentialComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should open submit credential dialog', () => {
+  it('should open submit dialog and call submitCredential', () => {
     const dialogData: DialogData = {
       title: translateService.instant("credentialIssuance.create-confirm-dialog.title"),
       message: translateService.instant("credentialIssuance.create-confirm-dialog.message"),
-      confirmationType: 'close',
+      confirmationType: 'async',
       status: 'default',
+      loadingData: {
+        title: 'Creating credential',
+        message: ''
+      }
     };
   
-    const submitAfterDialogClose: Partial<Observer<any>> = {
-      next: expect.any(Function),
-    };
+    jest.spyOn(component, 'submitCredential').mockReturnValue(of('Submitted'));
   
     component.openSubmitDialog();
   
     expect(dialogService.openDialogWithCallback).toHaveBeenCalledWith(
       expect.objectContaining(dialogData),
-      expect.objectContaining(submitAfterDialogClose)
+      expect.any(Function)
     );
+  
+    const [, callbackFn] = dialogService.openDialogWithCallback.mock.calls[0];
+  
+    callbackFn().subscribe(() => {
+      expect(component.submitCredential).toHaveBeenCalled();
+    });
   });
+  
 
   it('it should submit credential when submitCredential is called with selected power', () => {
     component.selectedMandateeCountryIsoCode = 'US';
@@ -507,11 +516,14 @@ describe('FormCredentialComponent', () => {
 
   it('should navigate to credentials if submitting credential is successful', fakeAsync(() => {
     mockCountryService.getCountryFromIsoCode.mockReturnValue('States');
-    component.asSigner = true;
     mockCountryService.getCountryFromName.mockReturnValue('mandatorCountry');
+  
+    component.asSigner = true;
     mockFormCredentialService.hasSelectedPower.mockReturnValue(true);
     mockFormCredentialService.powersHaveFunction.mockReturnValue(true);
-
+  
+    jest.spyOn(mockFormCredentialService, 'submitCredential').mockReturnValue(of('Success'));
+  
     Object.defineProperty(window, 'location', {
       value: {
         ...window.location,
@@ -519,25 +531,28 @@ describe('FormCredentialComponent', () => {
       },
       writable: true,
     });
-    
-    const dialogData: DialogData = {
-      title: translateService.instant("credentialIssuance.create-success-dialog.title"),
-      message: translateService.instant("credentialIssuance.create-success-dialog.message"),
-      confirmationType: 'none',
-      status: `default`
-  }
-    const submitAfterDialogClose: Partial<Observer<any>> = {
-      next: expect.any(Function),
-    };
-
-    component.submitCredential();
+  
+    jest.spyOn(mockRouter, 'navigate').mockResolvedValue(true);
+  
+    component.submitCredential().subscribe((res) => {
+      
+    });;
     tick();
-
-    expect(dialogService.openDialogWithCallback).toHaveBeenCalledWith(
-      expect.objectContaining(dialogData),
-      expect.objectContaining(submitAfterDialogClose)
+  
+    expect(mockFormCredentialService.submitCredential).toHaveBeenCalledWith(
+      component.credential,
+      'States',
+      'mandatorCountry',
+      mockFormCredentialService.getPlainAddedPowers(),
+      component.mandator,
+      component.addedMandatorLastName,
+      component.signer,
+      (component as any).credentialProcedureService,
+      expect.any(Function)
     );
-
+    tick();
+  
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/organization/credentials']);
+    // expect(window.location.reload).toHaveBeenCalled();
   }));
-
 });

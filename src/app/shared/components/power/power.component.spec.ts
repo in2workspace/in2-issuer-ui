@@ -7,8 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { FormCredentialService } from '../form-credential/services/form-credential.service';
-import { DialogComponent, DialogData } from '../dialog/dialog.component';
-import { MatDialog } from '@angular/material/dialog';
+import { DialogData } from '../dialog/dialog.component';
 import { of } from 'rxjs';
 import { DialogWrapperService } from '../dialog/dialog-wrapper/dialog-wrapper.service';
 
@@ -21,8 +20,8 @@ describe('PowerComponent', () => {
   let debugElement: DebugElement;
 
   let translateService: TranslateService;
-  let mockDialog : {openDialogWithCallback:jest.Mock<any>};
-  let mockAuthService: {hasIn2OrganizationIdentifier: jest.Mock};
+  let mockDialog : { openDialogWithCallback:jest.Mock<any> };
+  let mockAuthService: { hasIn2OrganizationIdentifier: jest.Mock };
   let mockFormService: {
     getAddedPowers: jest.Mock,
     getPlainAddedPowers: jest.Mock,
@@ -210,54 +209,29 @@ describe('PowerComponent', () => {
     expect(mockFormService.addPower).not.toHaveBeenCalled();
   });
 
-  it('should open dialog before removing power', () => {
-    const powerName = 'testPowerName';
-  
-    // Mock del retorn de la funció després que el diàleg es tanqui
-    mockDialogRef.afterClosed.mockReturnValue(of(true));
-  
-    // Executem el mètode
-    component.removePower(powerName);
-  
-    // Definim les dades esperades per obrir el diàleg
-    const expectedDialogData: DialogData = {
+  it('should remove power', () => {
+    const powerToRemove = 'update';
+    const dialogData: DialogData = {
       title: translateService.instant("power.remove-dialog.title"),
-      message: translateService.instant("power.remove-dialog.message") + powerName,
-      confirmationType: 'close',
-      status: `default`
+      message: translateService.instant("power.remove-dialog.message") + powerToRemove,
+      confirmationType: 'sync',
+      status: 'default',
+      loadingData: undefined
     };
   
-    // Verifiquem que `openDialogWithCallback` s'ha cridat amb les dades correctes
+    jest.spyOn(mockFormService, 'removePower').mockImplementation();
+  
+    component.removePower(powerToRemove);
+  
     expect(mockDialog.openDialogWithCallback).toHaveBeenCalledWith(
-      expect.objectContaining(expectedDialogData),
-      expect.objectContaining({
-        next: expect.any(Function),
-      })
+      expect.objectContaining(dialogData),
+      expect.any(Function)
     );
   
-    // Simulem l'execució del callback amb un resultat positiu
-    const removeAfterClose = mockDialog.openDialogWithCallback.mock.calls[0][1];
-    removeAfterClose.next(true);
+    const [, callbackFn] = mockDialog.openDialogWithCallback.mock.calls[0];
   
-    // Verifiquem que `removePower` del servei s'ha cridat amb el nom correcte
-    expect(mockFormService.removePower).toHaveBeenCalledWith(powerName);
-  });
-  
-  it('should not remove power if dialog is cancelled', () => {
-    const powerName = 'testPowerName';
-  
-    // Mock del retorn de la funció després que el diàleg es tanqui
-    mockDialogRef.afterClosed.mockReturnValue(of(false));
-  
-    // Executem el mètode
-    component.removePower(powerName);
-  
-    // Simulem l'execució del callback amb un resultat negatiu
-    const removeAfterClose = mockDialog.openDialogWithCallback.mock.calls[0][1];
-    removeAfterClose.next(false);
-  
-    // Verifiquem que `removePower` del servei no s'ha cridat
-    expect(mockFormService.removePower).not.toHaveBeenCalled();
+    callbackFn();
+    expect(mockFormService.removePower).toHaveBeenCalledWith(powerToRemove);
   });
 
 
