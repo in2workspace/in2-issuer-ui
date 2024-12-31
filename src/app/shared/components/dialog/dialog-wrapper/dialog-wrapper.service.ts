@@ -1,8 +1,7 @@
 import { DestroyRef, inject, Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DialogComponent, DialogData } from '../dialog.component';
-import { Observable, Observer, switchMap, take, tap } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Observable, switchMap, take, tap } from 'rxjs';
 import { LoaderService } from 'src/app/core/services/loader.service';
 
 @Injectable({
@@ -11,7 +10,7 @@ import { LoaderService } from 'src/app/core/services/loader.service';
 export class DialogWrapperService {
   private readonly destroyRef = inject(DestroyRef);
   private readonly dialog = inject(MatDialog);
-  private loader = inject(LoaderService);
+  private readonly loader = inject(LoaderService);
 
   public openDialog(dialogData:DialogData): MatDialogRef<DialogComponent, any>{
     return this.dialog.open(DialogComponent, {

@@ -3,7 +3,7 @@ import { Component, Input, OnInit, inject, DestroyRef } from '@angular/core';
 import { AuthService } from "../../../core/services/auth.service";
 import { MatSelectChange, MatSelect, MatSelectTrigger } from '@angular/material/select';
 import { DialogData } from '../dialog/dialog.component';
-import { EMPTY, Observable, of } from 'rxjs';
+import { EMPTY, Observable } from 'rxjs';
 import { TempPower } from 'src/app/core/models/temporal/temp-power.interface';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MatIcon } from '@angular/material/icon';
