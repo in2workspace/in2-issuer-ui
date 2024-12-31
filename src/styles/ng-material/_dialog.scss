@@ -32,11 +32,11 @@
 
 .dialog-default{
     div[mat-dialog-container]{
-        background-color: $Light-Blue-Secondary;
+        background-color: white;
     }
 
     div[mat-dialog-container], [mat-dialog-title], div[mat-dialog-content], div[mat-dialog-actions], div[mat-dialog-actions] button{
-        color: $Blue !important;
+        color: black !important;
     }
 }
 
