@@ -7,7 +7,7 @@
     @if(data.loadingData?.template; as loadingTemplate){
       <ng-template [cdkPortalOutlet]="loadingTemplate"></ng-template>
     }@else{
-      <mat-spinner></mat-spinner>
+      <mat-spinner [diameter]="50"></mat-spinner>
     }
   </div>
 }@else{
