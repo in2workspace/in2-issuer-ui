@@ -13,7 +13,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { AuthModule } from 'angular-auth-oidc-client';
 import { DialogWrapperService } from 'src/app/shared/components/dialog/dialog-wrapper/dialog-wrapper.service';
 
-describe('CredencialOfferComponent', () => {
+describe('CredentialOfferComponent', () => {
   let component: CredentialOfferComponent;
   let fixture: ComponentFixture<CredentialOfferComponent>;
   let translate: TranslateService;

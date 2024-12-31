@@ -8,7 +8,7 @@ import { NavbarComponent } from '../../shared/components/navbar/navbar.component
 import { DialogWrapperService } from 'src/app/shared/components/dialog/dialog-wrapper/dialog-wrapper.service';
 
 @Component({
-    selector: 'app-credencial-offer',
+    selector: 'app-credential-offer',
     templateUrl: './credential-offer.component.html',
     styleUrls: ['./credential-offer.component.scss'],
     standalone: true,
