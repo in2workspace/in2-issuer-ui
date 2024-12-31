@@ -167,7 +167,7 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
       confirmationType: 'async',
       status: 'default',
       loadingData: {
-        title:'Creating credential',//todo translate
+        title: this.translate.instant("credentialIssuance.creating-credential"),
         message: ''
       }
     };

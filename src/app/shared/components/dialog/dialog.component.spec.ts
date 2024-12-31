@@ -60,19 +60,19 @@ describe('DialogComponent', () => {
     expect(mockDialogRef.removePanelClass).toHaveBeenCalledWith('dialog-default');
     expect(mockDialogRef.addPanelClass).toHaveBeenCalledWith('dialog-default');
 
-    component.updateData({ status: 'warn' });
+    component.updateData({ status: 'error' });
 
     expect(mockDialogRef.removePanelClass).toHaveBeenCalledWith('dialog-default');
-    expect(mockDialogRef.addPanelClass).toHaveBeenCalledWith('dialog-warn');
-    expect(component.currentStatus).toEqual('warn');
+    expect(mockDialogRef.addPanelClass).toHaveBeenCalledWith('dialog-error');
+    expect(component.currentStatus).toEqual('error');
   });
 
   it('should update the dialog data', () => {
-    component.updateData({ status: 'warn' });
+    component.updateData({ status: 'error' });
 
     expect(mockDialogRef.removePanelClass).toHaveBeenCalledWith('dialog-default');
-    expect(mockDialogRef.addPanelClass).toHaveBeenCalledWith('dialog-warn');
-    expect(component.currentStatus).toEqual('warn');
+    expect(mockDialogRef.addPanelClass).toHaveBeenCalledWith('dialog-error');
+    expect(component.currentStatus).toEqual('error');
   });
 
   it('should close the dialog with true on confirm for sync type', () => {

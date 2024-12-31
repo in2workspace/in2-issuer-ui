@@ -87,7 +87,8 @@
       "create-success-dialog": {
         "title": "Credencial creada",
         "message": "La LEARCredentialEmployee ha sido creada con éxito"
-      }
+      },
+      "creating-credential": "Creando credencial"
     },
     "error": {
       "not_found": "El recurso solicitado no fue encontrado.",

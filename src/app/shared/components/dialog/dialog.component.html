@@ -13,21 +13,22 @@
 }@else{
   <h2 mat-dialog-title>{{ data.title }}</h2>
   <div mat-dialog-content>
-    @if(data.status === 'error'){
-      <mat-icon fontSet="material-icons-outlined">error_outlined</mat-icon>
-    }
     <p>
       {{ data.message || ''}}
     </p>
   </div>
   <div mat-dialog-actions>
       @if(data.confirmationType !== 'none'){
-        <button mat-button (click)="onCancel()">{{ "dialog.cancel" | translate }}</button>
-        <button mat-raised-button 
+        <button mat-flat-button color="cancel" (click)="onCancel()">{{ "dialog.cancel" | translate }}</button>
+        <button mat-raised-button color="primary"
         (click)="onConfirm()">{{ "dialog.accept" | translate }}</button>
       }
       @else{
-        <button mat-button (click)="onConfirm()">{{ "dialog.close" | translate }}</button>
+        @if(data.status!=='error'){
+          <button mat-flat-button (click)="onConfirm()">{{ "dialog.close" | translate }}</button>
+        }@else{
+          <button mat-flat-button color="warn" (click)="onConfirm()">{{ "dialog.close" | translate }}</button>
+        }
       }
   </div>
 }

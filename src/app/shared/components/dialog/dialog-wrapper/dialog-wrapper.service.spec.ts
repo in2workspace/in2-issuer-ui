@@ -57,6 +57,7 @@ describe('DialogWrapperService', () => {
 
     expect(matDialogMock.open).toHaveBeenCalledWith(DialogComponent, {
       data: { ...dialogData },
+      autoFocus:false
     });
     expect(callback).toHaveBeenCalled();
     expect(dialogRefMock.close).toHaveBeenCalled();
@@ -89,6 +90,7 @@ describe('DialogWrapperService', () => {
 
     expect(matDialogMock.open).toHaveBeenCalledWith(DialogComponent, {
       data: { ...dialogData },
+      autoFocus:false
     });
     expect(dialogRefMock.componentInstance.updateData).toHaveBeenCalledWith(dialogData.loadingData);
     expect(loaderServiceMock.updateIsLoading).toHaveBeenCalledWith(true);
@@ -120,6 +122,7 @@ describe('DialogWrapperService', () => {
 
     expect(matDialogMock.open).toHaveBeenCalledWith(DialogComponent, {
       data: { ...dialogData },
+      autoFocus:false
     });
     expect(callback).toHaveBeenCalled();
     expect(dialogRefMock.close).not.toHaveBeenCalled();

@@ -87,7 +87,8 @@
       "create-success-dialog": {
         "title": "Credencial creada",
         "message": "La LEARCredentialEmployee ha estat creada amb èxit."
-      }
+      },
+      "creating-credential": "Creant credencial"
     },
     "error": {
       "not_found": "El recurs sol·licitat no s'ha trobat.",

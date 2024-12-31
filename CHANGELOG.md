@@ -6,15 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### [1.2.7](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.2.7)
 ### Added
-- Dialog is shown after sending reminder and creating credential
-- In form, a spinner appears in button while loading
+- User is now redirected after send reminder
+- A dialog with spinner appears while waiting for server response
 
 ### Changed
-- Now there is only one type of "popup" element (dialog)
+- Floating elements are unified, there is only dialogs with confirm and error styles.
 - Unified styles (Blinker font, primary color)
 
 ### Fixed
-- Sort arrow and header in credentials table looks deactivated when corresponding column isn't sorting
+- Sort arrow and header style corresponds to relative columne state (sorting or not sorting)
 
 
 ## [1.2.6](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.2.6)

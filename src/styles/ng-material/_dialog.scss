@@ -10,6 +10,10 @@
         border-radius: 8px !important;
       }
 
+      div[mat-dialog-container]{
+        background-color: white;
+    }
+
       div[mat-dialog-content]{
         display:flex;
         gap: 12px;
@@ -23,51 +27,15 @@
         button{
             width: 80px;
 
+            //cancel button
+            &.mat-cancel{
+                background-color: $cancel;
+            }
+                
+
             .mdc-button__label{
                 text-transform: uppercase;
             }
         }
-    }
-}
-
-.dialog-default{
-    div[mat-dialog-container]{
-        background-color: white;
-    }
-
-    div[mat-dialog-container], [mat-dialog-title], div[mat-dialog-content], div[mat-dialog-actions], div[mat-dialog-actions] button{
-        color: black !important;
-    }
-}
-
-.dialog-error{
-    
-    div[mat-dialog-container]{
-        background-color: $red-light;
-    }
-
-    div[mat-dialog-container], [mat-dialog-title], div[mat-dialog-content], div[mat-dialog-actions], div[mat-dialog-actions] button{
-        color: $error-medium !important;
-    }
-
-}
-
-.dialog-success{
-    div[mat-dialog-container]{
-        background-color: $success-light;
-    }
-
-    div[mat-dialog-container], [mat-dialog-title], div[mat-dialog-content], div[mat-dialog-actions], div[mat-dialog-actions] button{
-        color: $success !important;
-    }
-}
-
-.dialog-warn{
-    div[mat-dialog-container]{
-        background-color: $warn-light;
-    }
-
-    div[mat-dialog-container], [mat-dialog-title], div[mat-dialog-content], div[mat-dialog-actions], div[mat-dialog-actions] button{
-        color: $warn !important;
     }
 }

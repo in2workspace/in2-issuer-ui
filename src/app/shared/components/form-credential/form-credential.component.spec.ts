@@ -424,7 +424,7 @@ describe('FormCredentialComponent', () => {
       confirmationType: 'async',
       status: 'default',
       loadingData: {
-        title: 'Creating credential',
+        title: translateService.instant("credentialIssuance.creating-credential"),
         message: ''
       }
     };

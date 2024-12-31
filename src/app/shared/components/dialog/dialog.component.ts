@@ -9,7 +9,7 @@ import { LoaderService } from 'src/app/core/services/loader.service';
 import { ComponentPortal, DomPortal, PortalModule, TemplatePortal } from '@angular/cdk/portal';
 import { MatIconModule } from '@angular/material/icon';
 
-export type DialogStatus = 'default' | 'warn' | 'error' | 'success';
+export type DialogStatus = 'default' | 'error';
 export type DialogConfirmationType = 'none' | 'sync' | 'async';
 export interface LoadingData { title:string, message:string; template?:ComponentPortal<any>|TemplatePortal|DomPortal }
 export interface DialogData { 

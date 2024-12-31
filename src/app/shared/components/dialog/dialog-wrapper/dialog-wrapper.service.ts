@@ -17,6 +17,7 @@ export class DialogWrapperService {
       data: {
         ...dialogData
       },
+      autoFocus:false
     });
   }
 
@@ -25,7 +26,10 @@ export class DialogWrapperService {
   public openDialogWithCallback(dialogData:DialogData, callback:() => Observable<any>): void{
     const dialogRef = this.dialog.open(
       DialogComponent, 
-      { data: { ...dialogData } }
+      { 
+        data: { ...dialogData },
+        autoFocus:false 
+      },
     );
 
     let confirmObservable;
