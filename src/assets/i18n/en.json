@@ -106,7 +106,8 @@
     "credentialOffer": {
       "default": "The credential offer is expired or already downloaded. Try to refresh QR or try later.",
       "no_transaction_code": "No transaction code found in URL.",
-      "no_qr": "No QR code available. Refresh QR or try later."
+      "no_qr": "No QR code available. Refresh QR or try later.",
+      "refresh-qr": "Refresh QR"
     },
     "form":{
       "required": "This field is required.",

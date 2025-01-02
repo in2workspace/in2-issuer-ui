@@ -107,7 +107,8 @@
       "credentialOffer": {
         "default": "La credencial ha expirado o ya ha sido descargada.",
         "no_transaction_code": "Código de transacción no encontrado en la URL.",
-        "no_qr": "Código QR no disponible."
+        "no_qr": "Código QR no disponible.",
+        "refresh-qr": "Refrescar QR"
       },
       "form":{
         "required": "Campo obligatorio.",

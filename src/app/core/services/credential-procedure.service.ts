@@ -52,7 +52,7 @@ export class CredentialProcedureService {
 
   public getCredentialOfferByTransactionCode(transactionCode: string): Observable<refreshCredentialOfferResponse> {
     //todo remove
-    console.info('getCredentialOffer: '+transactionCode);
+    console.info('Getting credential offer by transaction code: ' + transactionCode);
     return this.http.get<refreshCredentialOfferResponse>(`${this.credentialOfferUrl}/transaction-code/${transactionCode}`).pipe(
       catchError(this.handleError)
     );
@@ -60,7 +60,7 @@ export class CredentialProcedureService {
 
   public getCredentialOfferByCTransactionCode(cTransactionCode: string): Observable<refreshCredentialOfferResponse> {
     //todo remove
-    console.info('refresh CredentialOffer: ' + cTransactionCode);
+    console.info('Refreshing QR code: getting credential offer by c-transaction code: ' + cTransactionCode);
     return this.http.get<refreshCredentialOfferResponse>(`${this.credentialOfferUrl}/c-transaction-code/${cTransactionCode}`).pipe(
       catchError(this.handleError)
     );
@@ -73,8 +73,8 @@ export class CredentialProcedureService {
     } else {
       errorMessage = `Server-side error: ${error.status} ${error.message}`;
     }
-    console.error('Error response body:', error.error);
-    return throwError(()=>errorMessage);
+    console.error('Error response body:', errorMessage);
+    return throwError(()=>error);
   }
 
   /**

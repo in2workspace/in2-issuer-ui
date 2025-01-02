@@ -83,13 +83,11 @@ export class CredentialOfferComponent implements OnInit {
           } else if (errorStatus === 409) {
             errorMessage = 'This credential offer has already been activated.';
           }
-          this.dialog.openErrorInfoDialog(errorMessage, 'error');
+          this.dialog.openErrorInfoDialog(errorMessage);
           return EMPTY;
         })
       )
       .subscribe(this.credentialOfferObserver);
   }
-
-
 
 }
