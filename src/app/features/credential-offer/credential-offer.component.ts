@@ -51,6 +51,7 @@ export class CredentialOfferComponent implements OnInit {
     if(!transactionCode){
       const message = this.translate.instant('error.credentialOffer.no_transaction_code');
       this.dialog.openErrorInfoDialog(message);
+      return;
     }
 
     this.credentialProcedureService.getCredentialOfferByTransactionCode(transactionCode!)
