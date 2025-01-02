@@ -7,7 +7,7 @@ import { NgIf } from '@angular/common';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
 import { MatButton } from '@angular/material/button';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { catchError, EMPTY } from 'rxjs';
+import { catchError, EMPTY, take } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DialogWrapperService } from 'src/app/shared/components/dialog/dialog-wrapper/dialog-wrapper.service';
 
@@ -47,7 +47,7 @@ export class CredentialOfferComponent implements OnInit {
 
   public ngOnInit(): void {
     this.route.queryParams
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(take(1))
       .subscribe(params => {
         this.transactionCode = params['transaction_code'];
         this.cTransactionCode = params['c_code'];
