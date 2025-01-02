@@ -39,12 +39,10 @@
     "third-step": "3. Escanea el código QR con el ",
     "fourth-step": "4. Introduce el PIN que recibirás en tu correo electrónico.",
     "button-text": "Obtén el QR",
-    "refresh-qr": "Refrescar QR"
+    "refresh-qr": "Refrescar QR",
+    "title": "Obtener credencial",
+    "text": "Escanee el código QR con su wallet para obtener la credencial"
   },
-  "scaner": {
-    "textinformation": "Escanee el código QR con su Wallet para descargar la credencial"
-  },
-
   "credentialManagement": {
     "title": "Lista de credenciales emitidas",
     "button": "Nueva credencial",

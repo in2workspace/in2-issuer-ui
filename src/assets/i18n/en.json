@@ -39,10 +39,9 @@
     "third-step": "3. Scan the QR code with the ",
     "fourth-step": "4. Enter the pin that you'll receive in your email.",
     "button-text": "Get QR code",
-    "refresh-qr": "Refresh QR code"
-  },
-  "scaner": {
-    "textinformation": "Scan the QR code with your wallet to download the credential"
+    "refresh-qr": "Refresh QR code",
+    "title": "Get your credential",
+    "text": "Scan the QR code with your Wallet to obtain the credential"
   },
   "credentialManagement": {
     "title": "List of issued credentials",
