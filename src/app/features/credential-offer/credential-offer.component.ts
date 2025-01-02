@@ -3,6 +3,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { QRCodeModule } from 'angularx-qrcode';
 import { NgIf } from '@angular/common';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
     selector: 'app-credential-offer',
@@ -12,9 +13,12 @@ import { NavbarComponent } from '../../shared/components/navbar/navbar.component
     imports: [NavbarComponent, NgIf, QRCodeModule, TranslatePipe]
 })
 export class CredentialOfferComponent {
-  public qrCodeData = input.required<string>();
-  public walletParams = input.required<string>();
-  public walletUrl = computed<string>(()=>'urlWallet' + this.walletParams);
+  public readonly walletSameDeviceUrl = environment.wallet_url + '/tabs/home?same-device?';
+  public walletUsersGuideUrl = "https://knowledgebase.dome-marketplace-prd.org/books/dome-digital-wallet-user-guide";
+  public qrColor = "#2d58a7";
+
+  public credentialOfferUri$ = input.required<string>();
+  public walletSameDeviceUrl$ = computed<string>(()=>this.walletSameDeviceUrl + 'credential_offer_uri=' + this.credentialOfferUri$());
 
  
 }
