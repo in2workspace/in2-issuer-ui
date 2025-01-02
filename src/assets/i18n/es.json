@@ -38,7 +38,8 @@
     "second-step": "2. Haz clic en el botón de abajo para obtener el código QR.",
     "third-step": "3. Escanea el código QR con el ",
     "fourth-step": "4. Introduce el PIN que recibirás en tu correo electrónico.",
-    "button-text": "Obtén el QR"
+    "button-text": "Obtén el QR",
+    "refresh-qr": "Refrescar QR"
   },
   "scaner": {
     "textinformation": "Escanee el código QR con su Wallet para descargar la credencial"
@@ -108,7 +109,6 @@
         "default": "La credencial ha expirado o ya ha sido descargada.",
         "no_transaction_code": "Código de transacción no encontrado en la URL.",
         "no_qr": "Código QR no disponible.",
-        "refresh-qr": "Refrescar QR"
       },
       "form":{
         "required": "Campo obligatorio.",

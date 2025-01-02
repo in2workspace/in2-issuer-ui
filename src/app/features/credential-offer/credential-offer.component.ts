@@ -1,7 +1,7 @@
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CredentialProcedureService, refreshCredentialOfferResponse } from 'src/app/core/services/credential-procedure.service';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { QRCodeModule } from 'angularx-qrcode';
 import { NgIf } from '@angular/common';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
@@ -26,30 +26,43 @@ export class CredentialOfferComponent implements OnInit {
   private readonly credentialOfferObserver = {
     next: (data: refreshCredentialOfferResponse) => {
         this.qrCodeData = data?.credential_offer_uri;
-        this.cTransactionCode = data?.c_transaction_code;
+        const cCode = data?.c_transaction_code;
+        this.cTransactionCode = cCode;
+        if(cCode){
+          this.router.navigate([], {
+            queryParams: { c_code: data?.c_transaction_code },
+            queryParamsHandling: 'merge',
+            skipLocationChange: false,
+          });
+        }
         console.info('QR Code Data:', this.qrCodeData);
     }
   };
 
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly credentialProcedureService = inject(CredentialProcedureService);
   private readonly dialog = inject(DialogWrapperService);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly translate = inject(TranslateService);
 
   public ngOnInit(): void {
     this.route.queryParams
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(params => {
         this.transactionCode = params['transaction_code'];
-        this.getCredentialOfferByTransactionCode();
+        this.cTransactionCode = params['c_code'];
+        if(this.cTransactionCode){
+          this.getCredentialOfferByCTransactionCode();
+        }else{
+          this.getCredentialOfferByTransactionCode();
+        }
     });
   }
 
   public getCredentialOfferByTransactionCode(): void {
     const transactionCode = this.transactionCode;
     if(!transactionCode){
-      const message = this.translate.instant('error.credentialOffer.no_transaction_code');
+      const message = "No transaction code was found in the URL, can't refresh QR.";
       this.dialog.openErrorInfoDialog(message);
       return;
     }
@@ -62,13 +75,13 @@ export class CredentialOfferComponent implements OnInit {
         return EMPTY;
       })
     )
-      .subscribe(this.credentialOfferObserver);
+    .subscribe(this.credentialOfferObserver);
   }
 
   public getCredentialOfferByCTransactionCode(): void {
     const cTransactionCode = this.cTransactionCode;
     if (!cTransactionCode) {
-      const message = this.translate.instant('error.credentialOffer.no_transaction_code');
+      const message = "No c-transaction code was found, can't refresh QR.";
       this.dialog.openErrorInfoDialog(message);
       return;
     }
