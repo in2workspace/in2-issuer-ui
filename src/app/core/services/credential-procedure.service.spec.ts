@@ -223,7 +223,7 @@ describe('CredentialProcedureService', () => {
     const transactionCode = 'abc123';
     const mockResponse = JSON.stringify({ qrCode: 'mockQRCode' });
 
-    service.getCredentialOffer(transactionCode).subscribe(data => {
+    service.getCredentialOfferByTransactionCode(transactionCode).subscribe(data => {
       expect(data).toBe('mockQRCode');
     });
 
@@ -236,7 +236,7 @@ describe('CredentialProcedureService', () => {
     const transactionCode = 'abc123';
     const mockResponse = JSON.stringify({});
 
-    service.getCredentialOffer(transactionCode).subscribe(data => {
+    service.getCredentialOfferByTransactionCode(transactionCode).subscribe(data => {
       expect(data).toBe(mockResponse);
     });
 
@@ -249,7 +249,7 @@ describe('CredentialProcedureService', () => {
     const transactionCode = 'abc123';
     const invalidJSONResponse = 'Invalid JSON string';
 
-    service.getCredentialOffer(transactionCode).subscribe(data => {
+    service.getCredentialOfferByTransactionCode(transactionCode).subscribe(data => {
       expect(data).toBe(invalidJSONResponse);
     });
 
@@ -262,14 +262,14 @@ describe('CredentialProcedureService', () => {
     const transactionCode = 'abc123';
     const errorResponse = serverErrorResp;
 
-    service.getCredentialOffer(transactionCode).subscribe(
+    service.getCredentialOfferByCTransactionCode(transactionCode).subscribe(
       data => fail('should have failed with 500 error'),
       (error: string) => {
         expect(error).toContain('Server-side error: 500');
       }
     );
 
-    const req = httpMock.expectOne(`${credentialOfferUrl}/transaction-code/${transactionCode}`);
+    const req = httpMock.expectOne(`${credentialOfferUrl}/c-transaction-code/${transactionCode}`);
     req.flush('500 error', errorResponse);
   });
 
@@ -277,11 +277,11 @@ describe('CredentialProcedureService', () => {
     const transactionCode = 'abc123';
     const mockResponse = 'raw response';
 
-    service.getCredentialOffer(transactionCode).subscribe(data => {
+    service.getCredentialOfferByCTransactionCode(transactionCode).subscribe(data => {
       expect(data).toBe(mockResponse);
     });
 
-    const req = httpMock.expectOne(`${credentialOfferUrl}/transaction-code/${transactionCode}`);
+    const req = httpMock.expectOne(`${credentialOfferUrl}/c-transaction-code/${transactionCode}`);
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });

@@ -38,10 +38,10 @@
     "second-step": "2. Click the button below to get the QR code.",
     "third-step": "3. Scan the QR code with the ",
     "fourth-step": "4. Enter the pin that you'll receive in your email.",
-    "button-text": "Get QR code"
-  },
-  "scaner": {
-    "textinformation": "OrganizationScan with your wallet to download the credential"
+    "button-text": "Get QR code",
+    "refresh-qr": "Refresh QR code",
+    "title": "Get your credential",
+    "text": "Scan the QR code with your Wallet to obtain the credential"
   },
   "credentialManagement": {
     "title": "List of issued credentials",
