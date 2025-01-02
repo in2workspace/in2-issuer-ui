@@ -71,7 +71,7 @@ export class CredentialOfferComponent implements OnInit {
     .pipe(
       takeUntilDestroyed(this.destroyRef),
       catchError(() => {
-        this.dialog.openErrorInfoDialog('The credential offer is expired or incorrect.');
+        this.dialog.openErrorInfoDialog('The credential offer has expired or already been used.');
         return EMPTY;
       })
     )
@@ -93,9 +93,9 @@ export class CredentialOfferComponent implements OnInit {
           const errorStatus = error?.status || error?.error?.status || 0;
           let errorMessage = 'An unexpected error occurred. Please try again later.';
           if (errorStatus === 404) {
-            errorMessage = 'This credential offer has expired.';
+            errorMessage = 'This credential offer has expired or already been used.';
           } else if (errorStatus === 409) {
-            errorMessage = 'This credential offer has already been activated.';
+            errorMessage = 'The credential has already been obtained.';
           }
           this.dialog.openErrorInfoDialog(errorMessage);
           return EMPTY;
