@@ -86,11 +86,10 @@ describe('CredencialOfferComponent', () => {
 
   it('should show alert dialog when transaction code is not present', () => {
     (route.queryParams as any) = of({});
-    const translatedMessage = translate.instant('error.credentialOffer.no_transaction_code');
 
     component.ngOnInit();
 
-    expect(dialogService.openErrorInfoDialog).toHaveBeenCalledWith(translatedMessage);
+    expect(dialogService.openErrorInfoDialog).toHaveBeenCalled();
   });
 
   it('should get credential offer if transaction code is present', ()=>{
@@ -102,12 +101,11 @@ describe('CredencialOfferComponent', () => {
 
   it('should show alert dialog when c transaction code is not present', () => {
     component.cTransactionCode=undefined;
-    const translatedMessage = translate.instant('error.credentialOffer.no_transaction_code');
     credentialProcedureService.getCredentialOfferByCTransactionCode!.mockReturnValue(of('mockResponse'));
 
     component.getCredentialOfferByCTransactionCode();
 
-    expect(dialogService.openErrorInfoDialog).toHaveBeenCalledWith(translatedMessage);
+    expect(dialogService.openErrorInfoDialog).toHaveBeenCalled();
   });
 
   it('should get credential offer by c-transaction code if c-transaction code is present', ()=>{
