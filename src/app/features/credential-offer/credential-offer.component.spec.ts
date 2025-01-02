@@ -18,7 +18,8 @@ describe('CredencialOfferComponent', () => {
   let fixture: ComponentFixture<CredentialOfferComponent>;
   let translate: TranslateService;
   let credentialProcedureService: {
-    getCredentialOffer: jest.Mock
+    getCredentialOfferByTransactionCode: jest.Mock,
+    getCredentialOfferByCTransactionCode: jest.Mock
   };
   let dialogService: {
     openErrorInfoDialog: jest.Mock,
@@ -31,7 +32,8 @@ describe('CredencialOfferComponent', () => {
       openErrorInfoDialog:jest.fn()
     };
     credentialProcedureService = {
-      getCredentialOffer: jest.fn()
+      getCredentialOfferByTransactionCode: jest.fn(),
+      getCredentialOfferByCTransactionCode: jest.fn()
     }
     await TestBed.configureTestingModule({
     imports: [
@@ -75,22 +77,14 @@ describe('CredencialOfferComponent', () => {
   });
 
   it('should fetch credential offer and set qrCodeData when transaction code is present and response is valid', () => {
-    const spyRouterNavigate = jest.spyOn(router, 'navigate');
-    const mockResponse = 'mockQRCodeData';
-    credentialProcedureService.getCredentialOffer!.mockReturnValue(of(mockResponse));
-
+    const getCredOfferSpy = jest.spyOn(component, 'getCredentialOfferByTransactionCode');
     component.ngOnInit();
 
-    expect(credentialProcedureService.getCredentialOffer).toHaveBeenCalledWith('testTransactionCode');
-    expect(component.qrCodeData).toBe(mockResponse);
-    expect(spyRouterNavigate).toHaveBeenCalledWith([], {
-      relativeTo: route,
-      queryParams: { transaction_code: 'testTransactionCode' },
-      queryParamsHandling: 'merge'
-    });
+    expect(component.transactionCode).toBe('testTransactionCode');
+    expect(getCredOfferSpy).toHaveBeenCalled();
   });
 
-  it('should show alert when transaction code is not present', () => {
+  it('should show alert dialog when transaction code is not present', () => {
     (route.queryParams as any) = of({});
     const translatedMessage = translate.instant('error.credentialOffer.no_transaction_code');
 
@@ -99,41 +93,27 @@ describe('CredencialOfferComponent', () => {
     expect(dialogService.openErrorInfoDialog).toHaveBeenCalledWith(translatedMessage);
   });
 
-  it('should show alert when there is an error fetching credential offer', () => {
-    const errorResponse = new HttpErrorResponse({ status: 500, statusText: 'Server Error' });
-    credentialProcedureService.getCredentialOffer.mockReturnValue(throwError(() => errorResponse));
-    const translatedMessage = translate.instant("error.credentialOffer.default");
+  it('should get credential offer if transaction code is present', ()=>{
+    component.transactionCode='transCode';
+    credentialProcedureService.getCredentialOfferByTransactionCode!.mockReturnValue(of('mockResponse'));
+    component.getCredentialOfferByTransactionCode();
+    expect(credentialProcedureService.getCredentialOfferByTransactionCode).toHaveBeenCalledWith('transCode');
+  });
 
-    component.ngOnInit();
+  it('should show alert dialog when c transaction code is not present', () => {
+    component.cTransactionCode=undefined;
+    const translatedMessage = translate.instant('error.credentialOffer.no_transaction_code');
+    credentialProcedureService.getCredentialOfferByCTransactionCode!.mockReturnValue(of('mockResponse'));
 
-    expect(credentialProcedureService.getCredentialOffer).toHaveBeenCalledWith('testTransactionCode');
+    component.getCredentialOfferByCTransactionCode();
+
     expect(dialogService.openErrorInfoDialog).toHaveBeenCalledWith(translatedMessage);
   });
 
-  it('should fetch credential offer and set qrCodeData when transaction code is present and response is valid', () => {
-    const spyRouterNavigate = jest.spyOn(router, 'navigate');
-    const mockResponse = 'mockQRCodeData';
-
-    credentialProcedureService.getCredentialOffer!.mockReturnValue(of(mockResponse));
-
-    component.ngOnInit();
-
-    expect(credentialProcedureService.getCredentialOffer).toHaveBeenCalledWith('testTransactionCode');
-    expect(component.qrCodeData).toBe(mockResponse);
-    expect(spyRouterNavigate).toHaveBeenCalledWith([], {
-      relativeTo: route,
-      queryParams: { transaction_code: 'testTransactionCode' },
-      queryParamsHandling: 'merge'
-    });
-  });
-
-  it('should show alert when no data is returned from getCredentialOffer', () => {
-    credentialProcedureService.getCredentialOffer!.mockReturnValue(of(null));
-    const translatedMessage = translate.instant("error.credentialOffer.no_qr");
-
-    component.ngOnInit();
-
-    expect(credentialProcedureService.getCredentialOffer).toHaveBeenCalledWith('testTransactionCode');
-    expect(dialogService.openErrorInfoDialog).toHaveBeenCalledWith(translatedMessage);
+  it('should get credential offer by c-transaction code if c-transaction code is present', ()=>{
+    component.cTransactionCode='cTransCode';
+    credentialProcedureService.getCredentialOfferByCTransactionCode!.mockReturnValue(of('mockResponse'));
+    component.getCredentialOfferByCTransactionCode();
+    expect(credentialProcedureService.getCredentialOfferByCTransactionCode).toHaveBeenCalledWith('cTransCode');
   });
 });
