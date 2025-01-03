@@ -2,7 +2,7 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { CredentialOfferComponent } from '../../credential-offer-steps/credential-offer/credential-offer.component';
 import { CredentialOfferOnboardingComponent } from '../../credential-offer-steps/credential-offer-onboarding/credential-offer-onboarding.component';
 import { Component, computed, DestroyRef, inject, OnInit, Signal } from '@angular/core';
-import { MatStepperModule } from '@angular/material/stepper';
+import { MatStepperModule, StepperOrientation } from '@angular/material/stepper';
 import { MatButtonModule } from '@angular/material/button';
 import { NavbarComponent } from 'src/app/shared/components/navbar/navbar.component';
 import { QRCodeModule } from 'angularx-qrcode';
@@ -12,6 +12,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DialogWrapperService } from 'src/app/shared/components/dialog/dialog-wrapper/dialog-wrapper.service';
 import { CredentialProcedureService, GetCredentialOfferResponse } from 'src/app/core/services/credential-procedure.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import {BreakpointObserver} from '@angular/cdk/layout';
+import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 
 export type StepperIndex = 0 | 1;
 export type CredentialOfferStep = 'onboarding' | 'qr';
@@ -26,6 +28,9 @@ export type CredentialOfferParams = {
   selector: 'app-credential-offer-stepper',
   standalone: true,
   imports: [CredentialOfferComponent, CredentialOfferOnboardingComponent, MatIcon, MatStepperModule, MatButtonModule, NavbarComponent, QRCodeModule],
+  providers: [{
+    provide: STEPPER_GLOBAL_OPTIONS, useValue: {displayDefaultIndicatorType: false}
+}],
   templateUrl: './credential-offer-stepper.component.html',
   styleUrl: './credential-offer-stepper.component.scss'
 })
@@ -79,23 +84,39 @@ export class CredentialOfferStepperComponent implements OnInit{
       c_transaction_code: undefined,
       loading: false
     })));
+  
+  public stepperOrientation$: Signal<StepperOrientation>;
 
+  private readonly breakpointObserver = inject(BreakpointObserver);
   private readonly credentialProcedureService = inject(CredentialProcedureService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly dialog = inject(DialogWrapperService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
+  public constructor(){
+    this.stepperOrientation$ = toSignal(this.breakpointObserver
+      .observe('(min-width: 800px)')
+      .pipe(map(({matches}) => (matches ? 'horizontal' : 'vertical'))),
+    {
+      initialValue: 'horizontal'
+    });
+  }
+
   public ngOnInit(){
     //make urls params update react to offer params changes only after first
     this.getUrlParams$$.next();
   }
 
-  public onSelectedStepChange(index:number){
-    if (index === 0 || index === 1) {
-      this.updateIndex$$.next(index)
-    }else{
-      console.error('Unrecognized index.');
+  public onButtonSelectedStepChange(){
+    const index = this.currentIndex$() === 0 ? 1 :0;
+    this.updateIndex$$.next(index);
+  }
+
+  public onLabelSelectedStepChange(index:number){
+    console.log('lable change');
+    if (index !== this.currentIndex$() && (index === 0 || index === 1)) {
+      this.updateIndex$$.next(index);
     }
   }
 
@@ -104,7 +125,7 @@ export class CredentialOfferStepperComponent implements OnInit{
     const cCodeParam = this.route.snapshot.queryParamMap.get('c') ?? undefined;
 
     if(!transactionCodeParam){
-      this.dialog.openErrorInfoDialog('Transaction code not found');
+      console.error("Transaction code not found. Can't get credential offer");
       return EMPTY;
     }
     const updatedParams: CredentialOfferParams = {
@@ -119,6 +140,7 @@ export class CredentialOfferStepperComponent implements OnInit{
   public getCredentialOffer(): Observable<CredentialOfferParams>{
     const offer = this.offerParams$();
     let params: Observable<never|CredentialOfferParams> = throwError(()=>new Error('No transaction nor c code to fetch credential offer.'));
+    
     //todo reducer
     const mapParams = (obs:Observable<any>) => obs.pipe(map(codes=>{
       return {...this.offerParams$(), ...codes }
@@ -128,6 +150,8 @@ export class CredentialOfferStepperComponent implements OnInit{
       params = mapParams(this.getCredentialOfferByCTransactionCode(offer.c_transaction_code))
     }else if(offer?.transaction_code){
       params = mapParams(this.getCredentialOfferByTransactionCode(offer.transaction_code));
+    }else{
+      this.dialog.openErrorInfoDialog("Transaction code not found. Can't get credential offer");
     }
     return params;
   }
