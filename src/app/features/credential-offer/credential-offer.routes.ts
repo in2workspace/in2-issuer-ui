@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { CredentialOfferComponent } from './credential-offer.component';
+import { CredentialOfferComponent } from './credential-offer-steps/credential-offer/credential-offer.component';
 
 export default [
   {

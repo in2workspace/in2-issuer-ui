@@ -1,6 +1,6 @@
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { CredentialOfferComponent } from './../../credential-offer.component';
-import { CredentialOfferOnboardingComponent } from './../../../credential-offer-onboarding/credential-offer-onboarding.component';
+import { CredentialOfferComponent } from '../../credential-offer-steps/credential-offer/credential-offer.component';
+import { CredentialOfferOnboardingComponent } from '../../credential-offer-steps/credential-offer-onboarding/credential-offer-onboarding.component';
 import { Component, computed, DestroyRef, inject, OnInit, Signal } from '@angular/core';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatButtonModule } from '@angular/material/button';

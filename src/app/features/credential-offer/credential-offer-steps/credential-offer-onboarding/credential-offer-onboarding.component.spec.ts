@@ -6,7 +6,7 @@ import { importProvidersFrom, NO_ERRORS_SCHEMA } from '@angular/core';
 import { HttpClient, HttpHandler } from '@angular/common/http';
 import { AuthModule } from 'angular-auth-oidc-client';
 import { of } from 'rxjs';
-import { HttpLoaderFactory } from "../../core/services/translate-http-loader.factory";
+import { HttpLoaderFactory } from "../../../../core/services/translate-http-loader.factory";
 
 describe('CredentialOfferOnboardingComponent', () => {
   let component: CredentialOfferOnboardingComponent;

@@ -2,7 +2,7 @@ import { Component, computed, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { QRCodeModule } from 'angularx-qrcode';
 import { NgIf } from '@angular/common';
-import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
+import { NavbarComponent } from 'src/app/shared/components/navbar/navbar.component';
 import { environment } from 'src/environments/environment';
 
 @Component({
