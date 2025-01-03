@@ -23,7 +23,7 @@ describe('CredentialOfferComponent', () => {
   });
 
   it('should initialize walletSameDeviceUrl with the correct value from the environment', () => {
-    const expectedUrl = environment.wallet_url + '/tabs/home/openid-credential-offer?';
+    const expectedUrl = environment.wallet_url + 'tabs/home/';
     expect(component.walletSameDeviceUrl).toBe(expectedUrl);
   });
 
@@ -39,13 +39,19 @@ describe('CredentialOfferComponent', () => {
   it('should compute walletSameDeviceUrl$ correctly when credentialOfferUri$ is provided', () => {
     const credentialOfferUriMock = 'mockCredentialOfferUri';
     (component as any).credentialOfferUri$ = () => credentialOfferUriMock;
-
+  
     const expectedComputedUrl =
-      environment.wallet_url +
-      '/tabs/home/openid-credential-offer?' +
-      'credential_offer_uri=' +
-      credentialOfferUriMock;
-
+      environment.wallet_url + 'tabs/home/' + credentialOfferUriMock;
+  
     expect(component.walletSameDeviceUrl$()).toBe(expectedComputedUrl);
+  });
+
+  it('should remove the protocol from the given URL string', () => {
+    const inputUrl = 'https://example.com';
+    const expectedOutput = 'example.com';
+    
+    const result = component.removeProtocol(inputUrl);
+    
+    expect(result).toBe(expectedOutput);
   });
 });

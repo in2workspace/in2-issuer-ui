@@ -13,11 +13,19 @@ import { environment } from 'src/environments/environment';
     imports: [NavbarComponent, NgIf, QRCodeModule, TranslatePipe]
 })
 export class CredentialOfferComponent {
-  public readonly walletSameDeviceUrl = environment.wallet_url + '/tabs/home/openid-credential-offer?';
+  public readonly walletSameDeviceUrl = environment.wallet_url + 'tabs/home/';
   public walletUsersGuideUrl = environment.knowledgebase_url + "books/dome-digital-wallet-user-guide";
   public qrColor = "#2d58a7";
 
   public credentialOfferUri$ = input.required<string>();
-  public walletSameDeviceUrl$ = computed<string>(()=>this.walletSameDeviceUrl + 'credential_offer_uri=' + this.credentialOfferUri$());
+  public walletSameDeviceUrl$ = computed<string>(()=>{
+    const cutOfferUri = this.removeProtocol(this.credentialOfferUri$());
+    return this.walletSameDeviceUrl + cutOfferUri
+  });
 
+
+  //currently needed because of backend response
+  public removeProtocol(input: string): string {
+    return input.replace(/:\/\//g, '');
+}
 }
