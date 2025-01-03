@@ -73,8 +73,8 @@ export class CredentialProcedureService {
     } else {
       errorMessage = `Server-side error: ${error.status} ${error.message}`;
     }
-    console.error('Error response body:', error.error);
-    return throwError(()=>errorMessage);
+    console.error('Error response body:', errorMessage);
+    return throwError(()=>error);
   }
 
   /**

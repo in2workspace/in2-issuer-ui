@@ -13,6 +13,7 @@ import { environment } from 'src/environments/environment';
     imports: [NavbarComponent, NgIf, QRCodeModule, TranslatePipe]
 })
 export class CredentialOfferComponent {
+  //todo as env variables
   public readonly walletSameDeviceUrl = environment.wallet_url + '/tabs/home?same-device?';
   public walletUsersGuideUrl = "https://knowledgebase.dome-marketplace-prd.org/books/dome-digital-wallet-user-guide";
   public qrColor = "#2d58a7";
@@ -20,5 +21,4 @@ export class CredentialOfferComponent {
   public credentialOfferUri$ = input.required<string>();
   public walletSameDeviceUrl$ = computed<string>(()=>this.walletSameDeviceUrl + 'credential_offer_uri=' + this.credentialOfferUri$());
 
- 
 }
