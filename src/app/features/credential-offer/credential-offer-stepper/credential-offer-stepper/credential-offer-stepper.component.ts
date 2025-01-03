@@ -78,7 +78,12 @@ export class CredentialOfferStepperComponent implements OnInit{
 
   public offerParams$: Signal<CredentialOfferParams|undefined> = toSignal(
     merge(this.urlParams$, this.fetchedCredentialOffer$)
-    .pipe(startWith({ 
+    .pipe(
+      //todo remove
+      tap(params=>{ console.log('offer params updated: ');
+        console.log(params)
+       }),
+      startWith({ 
       credential_offer_uri: undefined,
       transaction_code: undefined,
       c_transaction_code: undefined,
@@ -143,7 +148,7 @@ export class CredentialOfferStepperComponent implements OnInit{
     
     //todo reducer
     const mapParams = (obs:Observable<any>) => obs.pipe(map(codes=>{
-      return {...this.offerParams$(), ...codes }
+      return { ...offer, ...codes }
     }));
 
     if(offer?.c_transaction_code){
@@ -151,6 +156,9 @@ export class CredentialOfferStepperComponent implements OnInit{
     }else if(offer?.transaction_code){
       params = mapParams(this.getCredentialOfferByTransactionCode(offer.transaction_code));
     }else{
+      console.log("Transaction code not found. Can't get credential offer");
+      console.log('params: ');
+      console.log(this.offerParams$());
       this.dialog.openErrorInfoDialog("Transaction code not found. Can't get credential offer");
     }
     return params;

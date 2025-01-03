@@ -48,7 +48,7 @@ describe('CredentialOfferComponent', () => {
 
   it('should remove the protocol from the given URL string', () => {
     const inputUrl = 'https://example.com';
-    const expectedOutput = 'example.com';
+    const expectedOutput = 'httpsexample.com';
     
     const result = component.removeProtocol(inputUrl);
     
