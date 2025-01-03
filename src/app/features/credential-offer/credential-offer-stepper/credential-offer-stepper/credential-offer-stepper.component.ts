@@ -51,7 +51,6 @@ export class CredentialOfferStepperComponent implements OnInit{
   public fetchedCredentialOffer$: Observable<CredentialOfferParams> = this.updateIndex$$.pipe(
     filter(() => this.currentIndex$() === 1),
     switchMap(()=>this.getCredentialOffer().pipe(
-      map(params=>{ return { ...params, loading: false } }),
       //todo errors
       catchError(error=>{ 
         console.error(error);
@@ -64,6 +63,12 @@ export class CredentialOfferStepperComponent implements OnInit{
           ...params,
           loading: false
         })
+      }),
+      startWith({ 
+        credential_offer_uri: undefined,
+        transaction_code: undefined,
+        c_transaction_code: undefined,
+        loading: true
       })
     )),
     //Effect
@@ -137,7 +142,7 @@ export class CredentialOfferStepperComponent implements OnInit{
   }
 
   public getCredentialOffer(): Observable<CredentialOfferParams>{
-    const offer = this.offerParams$();
+    const offer = this.offerParams$()!;
     let params: Observable<never|CredentialOfferParams> = throwError(()=>new Error('No transaction nor c code to fetch credential offer.'));
     
     //todo reducer
@@ -155,7 +160,7 @@ export class CredentialOfferStepperComponent implements OnInit{
       console.log(this.offerParams$());
       this.dialog.openErrorInfoDialog("Transaction code not found. Can't get credential offer");
     }
-    return params;
+    return params.pipe(startWith({...offer, loading: true}));
   }
 
   public getCredentialOfferByTransactionCode(transactionCode:string): Observable<GetCredentialOfferResponse> {
