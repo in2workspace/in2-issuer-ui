@@ -64,12 +64,6 @@ export class CredentialOfferStepperComponent implements OnInit{
           ...params,
           loading: false
         })
-      }),
-      startWith({ 
-        credential_offer_uri: undefined,
-        transaction_code: undefined,
-        c_transaction_code: undefined,
-        loading: true
       })
     )),
     //Effect
