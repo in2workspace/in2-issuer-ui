@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { AutoLoginPartialRoutesGuard } from 'angular-auth-oidc-client';
-import { CredentialOfferOnboardingComponent } from './features/credential-offer-onboarding/credential-offer-onboarding.component';
 import { OnboardingPolicy } from "./core/policies/onboarding-policy";
 
 export const routes: Routes = [
@@ -35,7 +34,10 @@ export const routes: Routes = [
   },
   {
     path: 'credential-offer',
-    component:CredentialOfferOnboardingComponent,
+    loadChildren: () =>
+      import('./features/credential-offer/credential-offer.routes').then(
+        (m) => m.default
+      ),
   },
   {
     path: 'credential-offer-detail',
