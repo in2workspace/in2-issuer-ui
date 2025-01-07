@@ -22,7 +22,6 @@ export class CredentialOfferComponent {
     const cutOfferUri = this.removeProtocol(this.credentialOfferUri$());
     return this.walletSameDeviceUrl + cutOfferUri
   });
-  // todo public walletCrossedDeviceUrl$
 
 
   //currently needed because of backend response
