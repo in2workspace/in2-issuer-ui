@@ -28,7 +28,7 @@ export interface CredentialOfferParamsState extends CredentialOfferParams {
   loading: boolean
 }
 
-const undefinedCredentialOfferParamsState: CredentialOfferParamsState = { 
+export const undefinedCredentialOfferParamsState: CredentialOfferParamsState = { 
     credential_offer_uri: undefined,
     transaction_code: undefined,
     c_transaction_code: undefined,
@@ -133,7 +133,7 @@ export class CredentialOfferStepperComponent{
   }
 
   public getCredentialOffer(): Observable<Partial<CredentialOfferParams>>{
-    const offer = this.offerParams$()!;
+    const offer = this.offerParams$();
     let params: Observable<never|Partial<CredentialOfferParams>> = throwError(()=>new Error('No transaction nor c code to fetch credential offer.'));
     
     if(offer?.c_transaction_code){
