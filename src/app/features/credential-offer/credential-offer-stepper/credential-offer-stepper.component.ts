@@ -8,7 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { NavbarComponent } from 'src/app/shared/components/navbar/navbar.component';
 import { QRCodeModule } from 'angularx-qrcode';
 import { MatIcon } from '@angular/material/icon';
-import { catchError, filter, map, merge, Observable, of, scan, startWith, Subject, switchMap, take, tap, throwError } from 'rxjs';
+import { catchError, filter, map, merge, Observable, of, scan, startWith, Subject, switchMap, take, throwError } from 'rxjs';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { DialogWrapperService } from 'src/app/shared/components/dialog/dialog-wrapper/dialog-wrapper.service';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
@@ -134,7 +134,7 @@ export class CredentialOfferStepperComponent{
 
   public getCredentialOffer(): Observable<Partial<CredentialOfferParams>>{
     const offer = this.offerParams$();
-    let params: Observable<never|Partial<CredentialOfferParams>> = throwError(()=>new Error('No transaction nor c code to fetch credential offer.'));
+    let params: Observable<Partial<CredentialOfferParams>> = throwError(()=>new Error('No transaction nor c code to fetch credential offer.'));
     
     if(offer?.c_transaction_code){
       params = this.getCredentialOfferByCTransactionCode(offer.c_transaction_code);
@@ -175,7 +175,6 @@ export class CredentialOfferStepperComponent{
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError((error: HttpErrorResponse) => {
-          //todo move to service?
           const errorStatus = error?.status || error?.error?.status || 0;
           let errorMessage = 'An unexpected error occurred. Please try again later.';
           

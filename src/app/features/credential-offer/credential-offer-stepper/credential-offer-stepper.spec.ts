@@ -373,5 +373,58 @@ describe('getCredentialOfferByTransactionCode', () => {
   });
 
 });
+describe('getCredentialOfferByCTransactionCode', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should open error dialog and throw an error when cTransactionCode is missing', (done) => {
+    const dialogSpy = jest.spyOn(component['dialog'], 'openErrorInfoDialog');
+    const result$ = component.getCredentialOfferByCTransactionCode('');
+
+    result$.subscribe({
+      error: (error) => {
+        expect(dialogSpy).toHaveBeenCalledWith("No c-transaction code was found, can't refresh QR.");
+        expect(error).toEqual(new Error());
+        done();
+      }
+    });
+  });
+
+  // it('should call the service and return the credential offer when cTransactionCode is valid', (done) => {
+  //   const mockTransactionCode = 'validCTransactionCode';
+  //   const mockResponse = { credential_offer_uri: 'offer uri', c_transaction_code: 'Test c' };
+
+  //   procedureService.getCredentialOfferByCTransactionCode.mockReturnValue(of(mockResponse));
+
+  //   const result$ = component.getCredentialOfferByTransactionCode(mockTransactionCode);
+
+  //   result$.subscribe((response) => {
+  //     expect(procedureService.getCredentialOfferByCTransactionCode)
+  //       .toHaveBeenCalledWith(mockTransactionCode);
+  //     expect(response).toEqual(mockResponse);
+  //     done();
+  //   });
+  // });
+
+  // it('should open error dialog and rethrow error when the service call fails', (done) => {
+  //   const mockTransactionCode = 'validTransactionCode';
+  //   const mockError = new Error('Service error');
+
+  //   procedureService.getCredentialOfferByCTransactionCode.mockReturnValue(throwError(() => mockError));
+  //   const dialogSpy = jest.spyOn(component['dialog'], 'openErrorInfoDialog');
+
+  //   const result$ = component.getCredentialOfferByCTransactionCode(mockTransactionCode);
+
+  //   result$.subscribe({
+  //     error: (error) => {
+  //       expect(dialogSpy).toHaveBeenCalledWith('The credential offer has expired or already been used.');
+  //       expect(error).toEqual(mockError);
+  //       done();
+  //     }
+  //   });
+  // });
+
+});
 
 });
