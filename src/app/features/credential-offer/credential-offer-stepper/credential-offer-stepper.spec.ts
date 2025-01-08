@@ -363,7 +363,7 @@ describe('getCredentialOfferByTransactionCode', () => {
 
     result$.subscribe({
       error: (error) => {
-        expect(dialogSpy).toHaveBeenCalledWith("An unexpected error occurred. Please try again later or contact your company's LEAR to get a new one.");
+        expect(dialogSpy).toHaveBeenCalledWith("An unexpected error occurred. Please try again later or contact your company's LEAR to get a new credential.");
         expect(error).toEqual(mockError);
         done();
       }

@@ -4,7 +4,6 @@ import { QRCodeModule } from 'angularx-qrcode';
 import { NgIf } from '@angular/common';
 import { NavbarComponent } from 'src/app/shared/components/navbar/navbar.component';
 import { environment } from 'src/environments/environment';
-import { tap } from 'rxjs';
 
 @Component({
     selector: 'app-credential-offer',

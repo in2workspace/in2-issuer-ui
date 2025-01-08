@@ -179,13 +179,12 @@ export class CredentialOfferStepperComponent{
       takeUntilDestroyed(this.destroyRef),
       catchError(error => {
           const errorStatus = error?.status || error?.error?.status || 0;
-          let errorMessage = "An unexpected error occurred. Please try again later or contact your company's LEAR to get a new one.";
+          let errorMessage = "An unexpected error occurred. Please try again later or contact your company's LEAR to get a new credential.";
           
-          switch (errorStatus) {
-            case 404: //when credential is downloaded or expired
-              errorMessage = "This credential offer has expired. Please contact your company's LEAR to get a new one.";
-              this.redirectToHome();
-              break;
+          if (errorStatus === 404) {
+            //when credential is downloaded or expired
+            errorMessage = "This credential offer has expired. Please contact your company's LEAR to get a new one.";
+            this.redirectToHome();
           }
           this.dialog.openErrorInfoDialog(errorMessage);
           
