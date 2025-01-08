@@ -7,7 +7,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { OidcSecurityService, StsConfigLoader } from "angular-auth-oidc-client";
 import { AuthService } from 'src/app/core/services/auth.service';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { CredentialOfferParamsState, CredentialOfferStepperComponent, undefinedCredentialOfferParamsState } from './credential-offer-stepper.component';
+import { CredentialOfferStepperComponent, undefinedCredentialOfferParamsState } from './credential-offer-stepper.component';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 
@@ -16,7 +16,6 @@ global.structuredClone = (obj: any) => JSON.parse(JSON.stringify(obj));
 describe('Credential Offer Stepper', () => {
   let component: CredentialOfferStepperComponent;
   let fixture: ComponentFixture<CredentialOfferStepperComponent>;
-  let translateService:TranslateService;
   let procedureService: {
     getCredentialOfferByTransactionCode: jest.Mock,
     getCredentialOfferByCTransactionCode: jest.Mock
@@ -53,18 +52,17 @@ describe('Credential Offer Stepper', () => {
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     imports: [BrowserAnimationsModule, RouterModule.forRoot([]), HttpClientModule, TranslateModule.forRoot({}), CredentialOfferStepperComponent],
     providers: [
-        TranslateService,
-        AuthService,
-        BreakpointObserver,
-        { provide: OidcSecurityService, useValue: oidcSecurityService },
-        { provide: StsConfigLoader, useValue: configService },
-        { provide: CredentialProcedureService, useValue: procedureService }
+      AuthService,
+      BreakpointObserver,
+      TranslateService,
+      { provide: OidcSecurityService, useValue: oidcSecurityService },
+      { provide: StsConfigLoader, useValue: configService },
+      { provide: CredentialProcedureService, useValue: procedureService }
     ],
 }).compileComponents();
 
     fixture = TestBed.createComponent(CredentialOfferStepperComponent);
     component = fixture.componentInstance;
-    translateService = TestBed.inject(TranslateService);
 
     fixture.detectChanges();
   });
@@ -210,7 +208,7 @@ describe('onSelectedStepChange', () => {
   
       const result = component.getUrlParams(params);
   
-      expect(consoleErrorSpy).toHaveBeenCalledWith("Transaction code not found. Can't get credential offer");
+      expect(consoleErrorSpy).toHaveBeenCalledWith("Client error: Missing transaction code in the URL. Can't get credential offer.");
       expect(result).toEqual({
         credential_offer_uri: undefined,
         transaction_code: undefined,
@@ -269,7 +267,7 @@ describe('getCredentialOffer', () => {
       error: (error) => {
         expect(error.message).toBe('No transaction nor c code to fetch credential offer.');
         expect(consoleLogSpy).toHaveBeenCalledWith("Client error: Transaction code not found. Can't get credential offer");
-        expect(dialogSpy).toHaveBeenCalledWith("Transaction code not found. Can't get credential offer");
+        expect(dialogSpy).toHaveBeenCalledWith("Invalid URL. Can't get credential offer");
         done();
       }
     });
@@ -331,7 +329,7 @@ describe('getCredentialOfferByTransactionCode', () => {
 
     result$.subscribe({
       error: (error) => {
-        expect(dialogSpy).toHaveBeenCalledWith("No transaction code was found in the URL, can't refresh QR.");
+        expect(dialogSpy).toHaveBeenCalledWith("Invalid URL. Can't refresh QR.");
         expect(error).toEqual(new Error());
         done();
       }
@@ -365,7 +363,7 @@ describe('getCredentialOfferByTransactionCode', () => {
 
     result$.subscribe({
       error: (error) => {
-        expect(dialogSpy).toHaveBeenCalledWith('The credential offer has expired or already been used.');
+        expect(dialogSpy).toHaveBeenCalledWith("An unexpected error occurred. Please try again later or contact your company's LEAR to get a new one.");
         expect(error).toEqual(mockError);
         done();
       }
@@ -384,7 +382,7 @@ describe('getCredentialOfferByCTransactionCode', () => {
 
     result$.subscribe({
       error: (error) => {
-        expect(dialogSpy).toHaveBeenCalledWith("No c-transaction code was found, can't refresh QR.");
+        expect(dialogSpy).toHaveBeenCalledWith("Invalid URL, can't refresh QR.");
         expect(error).toEqual(new Error());
         done();
       }
@@ -424,6 +422,24 @@ describe('getCredentialOfferByCTransactionCode', () => {
   //     }
   //   });
   // });
+
+  it('should call next on loadCredentialOfferOnRefreshClick$$ when onRefreshCredentialClick is called', () => {
+    const nextSpy = jest.spyOn(component.loadCredentialOfferOnRefreshClick$$, 'next');
+
+    component.onRefreshCredentialClick();
+  
+    expect(nextSpy).toHaveBeenCalled();
+  });
+  
+  it('should navigate to "/home" when redirectToHome is called', () => {
+    const routerSpy = jest.spyOn(component['router'],'navigate');
+    component.redirectToHome();
+  
+    setTimeout(()=>{
+      expect(routerSpy).toHaveBeenCalledWith(['/home']);
+    }, 1000);
+  });
+  
 
 });
 

@@ -5,6 +5,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { QRCodeModule } from 'angularx-qrcode';
 import { NgIf } from '@angular/common';
 import { environment } from 'src/environments/environment';
+import { EventEmitter } from '@angular/core';
 
 describe('CredentialOfferComponent', () => {
   let component: CredentialOfferComponent;
@@ -53,5 +54,16 @@ describe('CredentialOfferComponent', () => {
     const result = component.removeProtocol(inputUrl);
     
     expect(result).toBe(expectedOutput);
+  });
+
+  it('should emit refreshCredential when onRefreshCredentialClick is called', () => {
+    const eventMock = { preventDefault: jest.fn() } as unknown as Event;
+
+    const emitSpy = jest.spyOn(component.refreshCredential, 'emit');
+
+    component.onRefreshCredentialClick(eventMock);
+
+    expect(eventMock.preventDefault).toHaveBeenCalled();
+    expect(emitSpy).toHaveBeenCalled();
   });
 });
