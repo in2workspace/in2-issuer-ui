@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatButtonModule } from '@angular/material/button';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { of } from 'rxjs';
@@ -11,39 +12,6 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { AuthModule } from 'angular-auth-oidc-client';
 import { By } from '@angular/platform-browser';
-
-const mockCredential = {
-  mandatee: {
-    first_name: 'John',
-    last_name: 'Doe',
-    email: 'john.doe@example.com',
-    mobile_phone: '123-456-7890',
-  },
-  mandator: {
-    organizationIdentifier: 'org-123',
-    organization: 'Test Organization',
-    commonName: 'Test Common Name',
-    emailAddress: 'test@example.com',
-    serialNumber: 'SN123456',
-    country: 'CountryA',
-  },
-  signer: {
-    organizationIdentifier: 'org-123',
-    organization: 'Test Organization',
-    commonName: 'Test Common Name',
-    emailAddress: 'test@example.com',
-    serialNumber: 'SN123456',
-    country: 'CountryA',
-  },
-  power: [
-    {
-      tmf_action: ['action1', 'action2'],
-      tmf_domain: 'domain1',
-      tmf_function: 'function1',
-      tmf_type: 'type1',
-    },
-  ],
-};
 
 describe('CredentialManagementComponent', () => {
   let component: CredentialManagementComponent;
@@ -76,6 +44,7 @@ describe('CredentialManagementComponent', () => {
     await TestBed.configureTestingModule({
     imports: [
         NoopAnimationsModule,
+        MatButtonModule,
         MatTableModule,
         MatPaginatorModule,
         HttpClientTestingModule,
@@ -326,20 +295,23 @@ describe('CredentialManagementComponent', () => {
     const item = {
       credential_procedure: {
         procedure_id: 'Id',
-      full_name: 'Name',
-      status: 'Status',
-      updated: 'Updated',
-      credential: 'credential'
+        subject: 'Name',
+        status: 'Status',
+        updated: 'Updated',
+        credential_type: 'Type'
       }
     } as any;
     const resStatus = component.dataSource.sortingDataAccessor(item, 'status');
     expect(resStatus).toBe(item.credential_procedure.status.toLowerCase());
 
-    const resName = component.dataSource.sortingDataAccessor(item, 'full_name');
-    expect(resName).toBe(item.credential_procedure.full_name.toLowerCase());
+    const resName = component.dataSource.sortingDataAccessor(item, 'subject');
+    expect(resName).toBe(item.credential_procedure.subject.toLowerCase());
 
     const resUpdated = component.dataSource.sortingDataAccessor(item, 'updated');
     expect(resUpdated).toBe(item.credential_procedure.updated.toLowerCase());
+
+    const resType = component.dataSource.sortingDataAccessor(item, 'credential_type');
+    expect(resType).toBe(item.credential_procedure.credential_type.toLowerCase());
 
     const resDefault = component.dataSource.sortingDataAccessor(item, 'random');
     expect(resDefault).toBe('');
