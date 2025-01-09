@@ -108,4 +108,13 @@ export class CredentialManagementComponent implements OnInit, AfterViewInit {
     this.router.navigate(['/organization/credentials/details', credential_procedures.credential_procedure?.procedure_id]);
   }
 
+  public onRowClick(row: CredentialProcedure): void {
+    if (row.credential_procedure.credential_type !== 'LEAR_CREDENTIAL_EMPLOYEE') {
+      console.warn(`Click prevented: Unsupported credential type "${row.credential_procedure.credential_type}".`);
+      return;
+    }
+    this.goToCredentialDetails(row);
+  }
+
+
 }
