@@ -116,5 +116,4 @@ export class CredentialManagementComponent implements OnInit, AfterViewInit {
     this.goToCredentialDetails(row);
   }
 
-
 }
