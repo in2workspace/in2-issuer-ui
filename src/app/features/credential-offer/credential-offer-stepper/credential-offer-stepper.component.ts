@@ -2,7 +2,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { CredentialOfferComponent } from '../credential-offer-steps/credential-offer/credential-offer.component';
 import { CredentialOfferOnboardingComponent } from '../credential-offer-steps/credential-offer-onboarding/credential-offer-onboarding.component';
-import { Component, computed, DestroyRef, effect, inject, Signal } from '@angular/core';
+import { Component, computed, DestroyRef, effect, inject, OnInit, Signal } from '@angular/core';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatButtonModule } from '@angular/material/button';
 import { NavbarComponent } from 'src/app/shared/components/navbar/navbar.component';
@@ -45,7 +45,7 @@ export const undefinedCredentialOfferParamsState: CredentialOfferParamsState = {
   templateUrl: './credential-offer-stepper.component.html',
   styleUrl: './credential-offer-stepper.component.scss',
 })
-export class CredentialOfferStepperComponent{
+export class CredentialOfferStepperComponent implements OnInit{
   private readonly breakpointObserver = inject(BreakpointObserver);
   private readonly credentialProcedureService = inject(CredentialProcedureService);
   private readonly destroyRef = inject(DestroyRef);
@@ -54,8 +54,8 @@ export class CredentialOfferStepperComponent{
   private readonly router = inject(Router);
 
   //Source actions
+  public getInitUrlParams$$ = new Subject<void>();
   public updateIndex$$ = new Subject<StepperIndex>();
-  public loadCredentialOfferOnInit$$ = new Subject<void>();
   public loadCredentialOfferOnRefreshClick$$ = new Subject<void>();
   
   //Effects
@@ -69,15 +69,13 @@ export class CredentialOfferStepperComponent{
   public currentStep$ = computed<CredentialOfferStep>(() => {
     return this.currentIndex$() === 0 ? 'onboarding' : 'offer';
   });
-  public initUrlParams$: Observable<CredentialOfferParams> = this.route.queryParams.pipe(
-    take(1),
-    map(params=>this.getUrlParams(params)
-  )
-  );
+  public initUrlParams$: Observable<CredentialOfferParams> = this.getInitUrlParams$$.pipe(
+    map(()=>this.getUrlParams()
+  ));
 
   public fetchedCredentialOffer$: Observable<Partial<CredentialOfferParamsState>> = 
   merge(
-    this.loadCredentialOfferOnInit$$, 
+    this.initUrlParams$, 
     this.loadCredentialOfferOnRefreshClick$$, 
     this.updateIndex$$.pipe(filter(() => this.currentIndex$() === 1)))
   .pipe(
@@ -107,10 +105,6 @@ export class CredentialOfferStepperComponent{
       )
   ), 
   { initialValue: undefinedCredentialOfferParamsState }); //this is needed because the seed value in scan is not emitted
-  
-  public offerIsInitWithTransactionCode$: Observable<boolean> = toObservable(this.offerParams$).pipe(
-    first(offer=>!!offer.transaction_code), 
-    map(()=>true));
 
   public stepperOrientation$ = toSignal(this.breakpointObserver
     .observe('(min-width: 800px)')
@@ -119,11 +113,9 @@ export class CredentialOfferStepperComponent{
     initialValue: 'horizontal'
   });
 
-  public constructor() {
-    this.offerIsInitWithTransactionCode$.pipe(takeUntilDestroyed()).subscribe(()=>{
-      this.loadCredentialOfferOnInit$$.next();
-    });
-  }
+public ngOnInit(): void {
+  this.getInitUrlParams$$.next();
+}
 
   public onSelectedStepChange(index:number){
     if(((index !== 0) && (index !== 1))){
@@ -133,7 +125,8 @@ export class CredentialOfferStepperComponent{
     }
   }
 
-  public getUrlParams(params:Params): CredentialOfferParamsState{
+  public getUrlParams(): CredentialOfferParamsState{
+    const params = this.route.snapshot.queryParams;
     const transactionCodeParam = params['transaction_code'];
     const cCodeParam = params['c'];
 
@@ -184,9 +177,9 @@ export class CredentialOfferStepperComponent{
           if (errorStatus === 404) {
             //when credential is downloaded or expired
             errorMessage = "This credential offer has expired. Please contact your company's LEAR to get a new one.";
-            this.redirectToHome();
           }
           this.dialog.openErrorInfoDialog(errorMessage);
+          this.redirectToHome();
           
           return throwError(()=>error);
       })
@@ -212,14 +205,13 @@ export class CredentialOfferStepperComponent{
           switch (errorStatus) {
             case 404://when credential is downloaded or expired
               errorMessage = "This credential offer has expired. Please contact your company's LEAR to get a new one.";
-              this.redirectToHome();
               break;
             case 409: //when credential is completed and user clicks 'back' and 'next'
               errorMessage = 'The credential has already been obtained.';
-              this.redirectToHome();
               break;
           }
           this.dialog.openErrorInfoDialog(errorMessage);
+          this.redirectToHome();
           
           return throwError(()=>error);
         })
