@@ -75,7 +75,6 @@ export class CredentialOfferStepperComponent implements OnInit{
 
   public fetchedCredentialOffer$: Observable<Partial<CredentialOfferParamsState>> = 
   merge(
-    this.initUrlParams$, 
     this.loadCredentialOfferOnRefreshClick$$, 
     this.updateIndex$$.pipe(filter(() => this.currentIndex$() === 1)))
   .pipe(
