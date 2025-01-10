@@ -1,5 +1,5 @@
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { CredentialOfferComponent } from '../credential-offer-steps/credential-offer/credential-offer.component';
 import { CredentialOfferOnboardingComponent } from '../credential-offer-steps/credential-offer-onboarding/credential-offer-onboarding.component';
 import { Component, computed, DestroyRef, effect, inject, OnInit, Signal } from '@angular/core';
@@ -8,8 +8,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { NavbarComponent } from 'src/app/shared/components/navbar/navbar.component';
 import { QRCodeModule } from 'angularx-qrcode';
 import { MatIcon } from '@angular/material/icon';
-import { catchError, filter, first, map, merge, Observable, of, scan, startWith, Subject, switchMap, take, throwError } from 'rxjs';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { catchError, filter, map, merge, Observable, of, scan, startWith, Subject, switchMap, throwError } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DialogWrapperService } from 'src/app/shared/components/dialog/dialog-wrapper/dialog-wrapper.service';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { HttpErrorResponse } from '@angular/common/http';
