@@ -7,7 +7,7 @@ import { AuthService } from 'src/app/core/services/auth.service';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { CredentialProcedure, ProcedureResponse } from "../../core/models/dto/procedure-response.dto";
 import { TranslatePipe } from '@ngx-translate/core';
-import { NgIf, NgClass, DatePipe } from '@angular/common';
+import { NgClass, DatePipe } from '@angular/common';
 import { MatButton } from '@angular/material/button';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
 
@@ -19,7 +19,6 @@ import { NavbarComponent } from '../../shared/components/navbar/navbar.component
     imports: [
         NavbarComponent,
         MatButton,
-        NgIf,
         MatTable,
         MatSort,
         MatColumnDef,
@@ -41,7 +40,7 @@ import { NavbarComponent } from '../../shared/components/navbar/navbar.component
 export class CredentialManagementComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) public paginator!: MatPaginator;
   @ViewChild(MatSort) public sort!: MatSort;
-  public displayedColumns: string[] = ['status', 'full_name', 'updated'];
+  public displayedColumns: string[] = ['status', 'subject', 'credential_type', 'updated'];
   public dataSource = new MatTableDataSource<CredentialProcedure>();
   public isValidOrganizationIdentifier = false;
 
@@ -65,11 +64,14 @@ export class CredentialManagementComponent implements OnInit, AfterViewInit {
           const status = item.credential_procedure.status.toLowerCase();
           return status === 'withdrawn' ? 'draft' : status;
         }
-        case 'full_name': {
-          return item.credential_procedure.full_name.toLowerCase();
+        case 'subject': {
+          return item.credential_procedure.subject.toLowerCase();
         }
         case 'updated': {
           return item.credential_procedure.updated.toLowerCase();
+        }
+        case 'credential_type': {
+          return item.credential_procedure.credential_type.toLowerCase();
         }
         default:
           return '';
@@ -97,7 +99,21 @@ export class CredentialManagementComponent implements OnInit, AfterViewInit {
     this.router.navigate(['/organization/credentials/create2', this.isValidOrganizationIdentifier ? "admin" : ""]);
   }
 
-  public goToCredentialDetails(credential_procedures: CredentialProcedure): void {
-    this.router.navigate(['/organization/credentials/details', credential_procedures.credential_procedure?.procedure_id]);
+  public onRowClick(row: CredentialProcedure): void {
+    this.goToCredentialDetails(row);
   }
+
+  public goToCredentialDetails(credential_procedures: CredentialProcedure): void {
+    if (credential_procedures.credential_procedure.credential_type !== 'LEAR_CREDENTIAL_EMPLOYEE') {
+      console.warn(
+        `Navigation prevented: Unsupported credential type "${credential_procedures.credential_procedure.credential_type}".`
+      );
+      return;
+    }
+    this.router.navigate([
+      '/organization/credentials/details',
+      credential_procedures.credential_procedure?.procedure_id
+    ]);
+  }
+
 }
