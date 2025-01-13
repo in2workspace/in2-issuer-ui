@@ -108,7 +108,10 @@
       "credentialOffer": {
         "default": "La credencial està expirada o ja ha estat descarregada.",
         "no_transaction_code": "No s'ha trobat un codi de transacció a la URL.",
-        "no_qr": "No hi ha codi QR disponible."
+        "no_qr": "No hi ha codi QR disponible.",
+        "invalid-url": "URL no vàlida. No es pot obtenir l'oferta de credencial.",
+        "unexpected": "S'ha produït un error inesperat. Torna-ho a intentar més tard o posa't en contacte amb el LEAR de la teva empresa per obtenir una nova credencial.",
+        "expired": "Aquesta oferta de credencial ha expirat. Posa't en contacte amb el LEAR de la teva empresa per obtenir-ne una de nova."
       },
       "form":{
         "required": "Camp obligatori.",

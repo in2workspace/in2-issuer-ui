@@ -1,9 +1,9 @@
 import { Routes } from '@angular/router';
-import { CredentialOfferComponent } from './credential-offer.component';
+import { CredentialOfferStepperComponent } from './credential-offer-stepper/credential-offer-stepper.component';
 
 export default [
   {
     path: '',
-    component: CredentialOfferComponent
+    component: CredentialOfferStepperComponent
   }
 ] as Routes;

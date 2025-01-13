@@ -1,5 +1,4 @@
 import { AutoLoginPartialRoutesGuard } from 'angular-auth-oidc-client';
-import { CredentialOfferOnboardingComponent } from './features/credential-offer-onboarding/credential-offer-onboarding.component';
 import { OnboardingPolicy } from './core/policies/onboarding-policy';
 import { routes } from "./app-routing";
 
@@ -32,10 +31,10 @@ describe('App Routes', () => {
     expect(createCredRoute?.canActivate).toContain(OnboardingPolicy);
   });
 
-  it('should define a component route for credential-offer', () => {
-    const credentialOfferRoute = routes.find((route) => route.path === 'credential-offer');
-    expect(credentialOfferRoute).toBeTruthy();
-    expect(credentialOfferRoute?.component).toBe(CredentialOfferOnboardingComponent);
+  it('should define a lazy loading route for credential-offer', () => {
+    const createCredRoute = routes.find((route) => route.path === 'credential-offer');
+    expect(createCredRoute).toBeTruthy();
+    expect(createCredRoute?.loadChildren).toBeDefined();
   });
 
   it('should redirect wildcard (**) to home', () => {

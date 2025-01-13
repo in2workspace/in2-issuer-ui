@@ -15,7 +15,7 @@ import { map } from "rxjs/operators";
 export class CredentialIssuanceComponent {
   public translate = inject(TranslateService);
   public title = timer(0).pipe(switchMap(() => this.translate.get("credentialIssuance.learCredentialEmployee")));
-  public asSigner$ : Observable<boolean|null> = this.route.paramMap.pipe(map(params => !!params.get('id')))
+  public asSigner$ : Observable<boolean> = this.route.paramMap.pipe(map(params => !!params.get('id')))
   public constructor(
     private readonly route: ActivatedRoute,
   ) {}

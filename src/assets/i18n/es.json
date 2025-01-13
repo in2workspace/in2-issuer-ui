@@ -108,7 +108,10 @@
       "credentialOffer": {
         "default": "La credencial ha expirado o ya ha sido descargada.",
         "no_transaction_code": "Código de transacción no encontrado en la URL.",
-        "no_qr": "Código QR no disponible."
+        "no_qr": "Código QR no disponible.",
+        "invalid-url": "URL no válida. No se puede obtener la oferta de credencial.",
+        "unexpected": "Se produjo un error inesperado. Inténtalo de nuevo más tarde o contacta con el LEAR de tu empresa para obtener una nueva credencial.",
+        "expired": "Esta oferta de credencial ha expirado. Contacta con el LEAR de tu empresa para obtener una nueva."
       },
       "form":{
         "required": "Campo obligatorio.",
