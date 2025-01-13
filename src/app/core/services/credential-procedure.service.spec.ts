@@ -6,6 +6,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ProcedureRequest } from '../models/dto/procedure-request.dto';
 import { ProcedureResponse } from "../models/dto/procedure-response.dto";
 import { LearCredentialEmployeeDataDetail } from "../models/dto/lear-credential-employee-data-detail.dto";
+import { throwError } from 'rxjs';
 
 const notFoundErrorResp = new HttpErrorResponse({
   error: '404 error',
@@ -219,6 +220,7 @@ describe('CredentialProcedureService', () => {
     req.flush('500 error', errorResponse);
   });
 
+  describe('Get credential offer by transaction code', () => {
   it('should get credential offer successfully', () => {
     const transactionCode = 'abc123';
     const mockResponse = JSON.stringify({ qrCode: 'mockQRCode' });
@@ -258,12 +260,32 @@ describe('CredentialProcedureService', () => {
     req.flush(invalidJSONResponse);
   });
 
-  it('should handle error when getting credential offer', () => {
+  it('should handle error when getCredentialOfferByTransactionCode fails', (done) => {
+    const transactionCode = 'invalid-code';
+    const errorResponse = { status: 404, message: 'Not Found' };
+  
+    jest.spyOn(service['http'], 'get').mockReturnValue(throwError(() => errorResponse));
+  
+    service.getCredentialOfferByTransactionCode(transactionCode).subscribe({
+      next: () => {
+        // No hauria d'arribar aquí
+        fail('Expected an error, but got a success response');
+      },
+      error: (error) => {
+        expect(error).toEqual(errorResponse);
+        done(); 
+      }
+    });
+  });
+});
+  
+describe('get credential offer by c-code', () => {
+  it('should handle error when getting credential offer by c code', () => {
     const transactionCode = 'abc123';
     const errorResponse = serverErrorResp;
 
     service.getCredentialOfferByCTransactionCode(transactionCode).subscribe(
-      data => fail('should have failed with 500 error'),
+      () => fail('should have failed with 500 error'),
       (error: string) => {
         expect(error).toContain('Server-side error: 500');
       }
@@ -285,6 +307,25 @@ describe('CredentialProcedureService', () => {
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });
+
+  it('should handle error when getCredentialOfferByCTransactionCode fails', (done) => {
+    const transactionCode = 'invalid-code';
+    const errorResponse = { status: 404, message: 'Not Found' };
+  
+    jest.spyOn(service['http'], 'get').mockReturnValue(throwError(() => errorResponse));
+  
+    service.getCredentialOfferByCTransactionCode(transactionCode).subscribe({
+      next: () => {
+        // No hauria d'arribar aquí
+        fail('Expected an error, but got a success response');
+      },
+      error: (error) => {
+        expect(error).toEqual(errorResponse);
+        done(); 
+      }
+    });
+  });
+});
 
   it('should return client-side error message if error is an ErrorEvent', () => {
     const mockErrorEvent = new ErrorEvent('Network error', {

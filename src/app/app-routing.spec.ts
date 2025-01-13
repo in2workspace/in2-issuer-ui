@@ -1,5 +1,4 @@
 import { AutoLoginPartialRoutesGuard } from 'angular-auth-oidc-client';
-import { CredentialOfferOnboardingComponent } from './features/credential-offer/credential-offer-steps/credential-offer-onboarding/credential-offer-onboarding.component';
 import { OnboardingPolicy } from './core/policies/onboarding-policy';
 import { routes } from "./app-routing";
 

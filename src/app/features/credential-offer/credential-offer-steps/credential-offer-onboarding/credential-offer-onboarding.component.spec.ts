@@ -20,9 +20,21 @@ describe('CredentialOfferOnboardingComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize walletUrl with the value from the environment or a default URL', () => {
-    const expectedUrl = environment.wallet_url || 'https://wallet.dome-marketplace-prd.org/';
+  it('should initialize walletUrl with the value from the environment', () => {
+    const expectedUrl = environment.wallet_url;
     expect(component.walletUrl).toBe(expectedUrl);
+  });
+
+  it('should initialize walletUrl with default URL if environment.wallet_url is undefined', () => {
+    const originalWalletUrl = environment.wallet_url;
+    environment.wallet_url = undefined as any;
+
+    const fixture = TestBed.createComponent(CredentialOfferOnboardingComponent);
+    const testComponent = fixture.componentInstance;
+    
+    expect(testComponent.walletUrl).toBe('https://wallet.dome-marketplace-prd.org/');
+
+    environment.wallet_url = originalWalletUrl;
   });
 
   it('should initialize walletUsersGuideUrl with the correct value from the environment', () => {

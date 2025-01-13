@@ -73,7 +73,20 @@ describe('Credential Offer Stepper', () => {
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(component).toBeTruthy(); 
+  });
+
+  it('should create actions', () => {
+    expect(component.getInitUrlParams$$).toBeDefined();
+    expect(component.updateIndex$$).toBeDefined();
+    expect(component.loadCredentialOfferOnRefreshClick$$).toBeDefined();
+  });
+
+  it('effect should update url params when offer params change', () => {
+    const updateSpy = jest.spyOn(component, 'updateUrlParams');
+    component.getInitUrlParams$$.next();
+    TestBed.flushEffects();
+    expect(updateSpy).toHaveBeenCalled();
   });
 
   it('should initialize stepper orientation to horizontal by default', fakeAsync(() => {
@@ -111,57 +124,78 @@ it('should update index and step', ()=>{
 });
 
 //todo
-// it('should initialize initUrlParams$ correctly', fakeAsync(() => {
-//   component['getInitUrlParams$$'].next();
-
-//   let result: any;
-//   component.initUrlParams$.subscribe((value) => (result = value));
-
-//   tick();
-//   fixture.detectChanges();
-
-//   expect(getInitUrlParams$$Mock).toHaveBeenCalled();
-//   expect(component.getUrlParams).toHaveBeenCalled();
-//   expect(result).toEqual({ param1: 'value1', param2: 'value2' });
-// }));
-
-// // it('should fetch credential offer and emit correct values', fakeAsync(() => {
-// //   // Mock the response of getCredentialOffer
-// //   const mockCredentialOffer = { credential_offer_uri: '123', transaction_code: 'trans-code' };
-// //   const mockError = new Error('Failed to fetch credential offer');
+it('should initialize initUrlParams$ correctly', fakeAsync(() => {
+  const offerParams = {
+    credential_offer_uri: 'cred-offer-uri',
+    transaction_code: 'transaction-code-param',
+    c_transaction_code: 'c-code-param',
+    loading: false
+  };
+  jest.spyOn(component, 'getUrlParams').mockReturnValue(offerParams);
   
-// //   // Mock getCredentialOffer to return a success response
-// //   jest.spyOn(component, 'getCredentialOffer').mockReturnValue(of(mockCredentialOffer));
+  component.initUrlParams$.subscribe(params => {
+    expect(params).toEqual(offerParams);
+  });
+  component['getInitUrlParams$$'].next();
+  tick();
+}));
 
-// //   const emittedValues: Partial<CredentialOfferParamsState>[] = [];
-  
-// //   // Subscribe to fetchedCredentialOffer$ to capture emitted values
-// //   const subscription = component.fetchedCredentialOffer$.subscribe(value => emittedValues.push(value));
+it('should fetch credential offer and emit correct values', fakeAsync(() => {
+  const mockParams = { credential_offer_uri: 'cred-uri', c_transaction_code: 'c-code' };
+ jest.spyOn(component, 'getCredentialOffer').mockReturnValue(of(mockParams));
 
-// //   // Simulate index change to 1 to trigger the observable
-// //   component.updateIndex$$.next(1);
-// //   tick(); // Simulate passage of time
+ component.fetchedCredentialOffer$.subscribe(paramsState => {
+  expect(paramsState).toEqual({
+    ...mockParams, loading: false
+  });
+ });
+}));
 
-// //   // Verify the emitted values
-// //   expect(emittedValues).toEqual([
-// //       { loading: true }, // Initial loading state
-// //       { ...mockCredentialOffer, loading: false } // Loaded state with offer data
-// //   ]);
+it('should gracefully handle error when fetching credentials', fakeAsync(() => {
+ jest.spyOn(component, 'getCredentialOffer').mockReturnValue(throwError (()=>new Error()));
 
-// //   // Mock getCredentialOffer to return an error
-// //   jest.spyOn(component, 'getCredentialOffer').mockReturnValue(throwError(() => mockError));
+ component.fetchedCredentialOffer$.subscribe(paramsState => {
+  expect(paramsState).toEqual({ 
+    loading: false
+  });
+ });
+}));
 
-// //   // Clear emitted values and re-trigger the observable
-// //   emittedValues.length = 0;
-// //   component.updateIndex$$.next(1);
-// //   tick();
+it('should emit the correct offerParams$ state when initUrlParams$ and fetchedCredentialOffer$ emit values', () => {
+  const firstInitUrlParamsMock = {
+    credential_offer_uri: 'cred-one',
+    transaction_code: 'trans-one',
+    c_transaction_code: 'c-one',
+    loading: false
+  }; 
+  const secondInitOfferMock = {
+    credential_offer_uri: 'cred-two',
+    transaction_code: 'trans-two',
+    c_transaction_code: 'c-two',
+    loading: false
+  };
 
-// //   // Verify the error handling in emitted values
-// //   expect(emittedValues).toEqual([{ loading: false }]);
+  jest.spyOn(component, 'getUrlParams').mockReturnValue(firstInitUrlParamsMock);
+  component.getInitUrlParams$$.next();
+  jest.spyOn(component, 'getUrlParams').mockReturnValue(secondInitOfferMock);
+  component.getInitUrlParams$$.next();
+  const result = component.offerParams$();
 
-// //   subscription.unsubscribe(); // Cleanup
-// // }));
+  expect(result).toEqual({
+    ...undefinedCredentialOfferParamsState,
+    ...firstInitUrlParamsMock,
+    ...secondInitOfferMock,
+  });
+});
 
+it('should get url params on init', () => {
+  const mockSubscriber = jest.fn();
+  component.getInitUrlParams$$.subscribe(mockSubscriber);
+
+  component.ngOnInit();
+
+  expect(mockSubscriber).toHaveBeenCalled();
+});
 
 describe('onSelectedStepChange', () => {
   let consoleErrorSpy: jest.SpyInstance;
@@ -331,12 +365,15 @@ describe('getCredentialOfferByTransactionCode', () => {
 
   it('should open error dialog and throw an error when transactionCode is missing', (done) => {
     const dialogSpy = jest.spyOn(component['dialog'], 'openErrorInfoDialog');
+    const redirectSpy = jest.spyOn(component, 'redirectToHome');
+
     const result$ = component.getCredentialOfferByTransactionCode('');
 
     result$.subscribe({
       error: (error) => {
         expect(dialogSpy).toHaveBeenCalledWith("Invalid URL. Can't refresh QR.");
         expect(error).toEqual(new Error());
+        expect(redirectSpy).toHaveBeenCalled();
         done();
       }
     });
@@ -376,6 +413,25 @@ describe('getCredentialOfferByTransactionCode', () => {
     });
   });
 
+  it('should open error dialog with a specific message for 404 error and rethrow error', (done) => {
+    const mockTransactionCode = 'validTransactionCode';
+    const mockError = { status: 404, message: 'Not Found' };
+  
+    procedureService.getCredentialOfferByTransactionCode.mockReturnValue(throwError(() => mockError));
+    const dialogSpy = jest.spyOn(component['dialog'], 'openErrorInfoDialog');
+  
+    const result$ = component.getCredentialOfferByTransactionCode(mockTransactionCode);
+  
+    result$.subscribe({
+      error: (error) => {
+        expect(dialogSpy).toHaveBeenCalledWith("This credential offer has expired. Please contact your company's LEAR to get a new one.");
+        expect(error).toEqual(mockError);
+        done();
+      }
+    });
+  });
+
+
 });
 describe('getCredentialOfferByCTransactionCode', () => {
   beforeEach(() => {
@@ -383,12 +439,15 @@ describe('getCredentialOfferByCTransactionCode', () => {
   });
 
   it('should open error dialog and throw an error when cTransactionCode is missing', (done) => {
+    const redirectSpy = jest.spyOn(component, 'redirectToHome');
     const dialogSpy = jest.spyOn(component['dialog'], 'openErrorInfoDialog');
+
     const result$ = component.getCredentialOfferByCTransactionCode('');
 
     result$.subscribe({
       error: (error) => {
         expect(dialogSpy).toHaveBeenCalledWith("Invalid URL, can't refresh QR.");
+        expect(redirectSpy).toHaveBeenCalled();
         expect(error).toEqual(new Error());
         done();
       }
@@ -472,6 +531,24 @@ it('should open error dialog for 409 status', (done) => {
     }
   });
 });
+});
+
+it('should not navigate when c_transaction_code is not provided', () => {
+  const mockParams = { c_transaction_code: null } as any;
+  const navigateSpy = jest.spyOn(component['router'], 'navigate');
+
+  component.updateUrlParams(mockParams);
+
+  expect(navigateSpy).not.toHaveBeenCalled();
+});
+
+it('should navigate when c_transaction_code is provided', () => {
+  const mockParams = { c_transaction_code: 'valid-code' } as any;
+  const navigateSpy = jest.spyOn(component['router'], 'navigate');
+
+  component.updateUrlParams(mockParams);
+
+  expect(navigateSpy).toHaveBeenCalled();
 });
 
   it('should call next on loadCredentialOfferOnRefreshClick$$ when onRefreshCredentialClick is called', () => {

@@ -70,7 +70,8 @@ export class CredentialOfferStepperComponent implements OnInit{
     return this.currentIndex$() === 0 ? 'onboarding' : 'offer';
   });
   public initUrlParams$: Observable<CredentialOfferParams> = this.getInitUrlParams$$.pipe(
-    map(()=>this.getUrlParams()
+    map(()=>{
+      return this.getUrlParams()}
   ));
 
   public fetchedCredentialOffer$: Observable<Partial<CredentialOfferParamsState>> = 

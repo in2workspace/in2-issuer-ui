@@ -19,7 +19,7 @@ export const routes: Routes = [
   {
     path: 'organization/credentials/create',
     loadChildren: () =>
-      import('./features/credential-issuance/credential-issuance-routes').then(
+      import('./features/credential-issuance/credential-issuance.routes').then(
         (m) => m.default
       ),
     canActivate: [AutoLoginPartialRoutesGuard, OnboardingPolicy],
@@ -27,20 +27,13 @@ export const routes: Routes = [
   {
     path: 'organization/credentials/create2/:id',
     loadChildren: () =>
-      import('./features/credential-issuance/credential-issuance-routes').then(
+      import('./features/credential-issuance/credential-issuance.routes').then(
         (m) => m.default
       ),
     canActivate: [AutoLoginPartialRoutesGuard, OnboardingPolicy],
   },
   {
     path: 'credential-offer',
-    loadChildren: () =>
-      import('./features/credential-offer/credential-offer.routes').then(
-        (m) => m.default
-      ),
-  },
-  {
-    path: 'credential-offer-detail',
     loadChildren: () =>
       import('./features/credential-offer/credential-offer.routes').then(
         (m) => m.default
