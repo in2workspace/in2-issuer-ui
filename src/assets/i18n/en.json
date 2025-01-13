@@ -107,7 +107,10 @@
     "credentialOffer": {
       "default": "The credential offer is expired or already downloaded. Try to refresh QR or try later.",
       "no_transaction_code": "No transaction code found in URL.",
-      "no_qr": "No QR code available. Refresh QR or try later."
+      "no_qr": "No QR code available. Refresh QR or try later.",
+      "invalid-url": "Invalid URL. Can't get credential offer",
+      "unexpected": "An unexpected error occurred. Please try again later or contact your company's LEAR to get a new credential.",
+      "expired": "This credential offer has expired. Please contact your company's LEAR to get a new one."
     },
     "form":{
       "required": "This field is required.",

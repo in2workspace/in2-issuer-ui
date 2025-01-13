@@ -13,6 +13,7 @@ import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 
 global.structuredClone = (obj: any) => JSON.parse(JSON.stringify(obj));
 
+
 describe('Credential Offer Stepper', () => {
   let component: CredentialOfferStepperComponent;
   let fixture: ComponentFixture<CredentialOfferStepperComponent>;
@@ -54,6 +55,7 @@ describe('Credential Offer Stepper', () => {
     providers: [
       AuthService,
       BreakpointObserver,
+      // { provide: TranslateService, useValue: translate },
       TranslateService,
       { provide: OidcSecurityService, useValue: oidcSecurityService },
       { provide: StsConfigLoader, useValue: configService },
@@ -302,12 +304,13 @@ describe('getCredentialOffer', () => {
     jest.spyOn(component, 'offerParams$').mockReturnValue(undefinedCredentialOfferParamsState);
     const dialogSpy = jest.spyOn(component['dialog'], 'openErrorInfoDialog');
     const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+    const message = component['translate'].instant("error.credentialOffer.invalid-url");
 
     component.getCredentialOffer().subscribe({
       error: (error) => {
         expect(error.message).toBe('No transaction nor c code to fetch credential offer.');
         expect(consoleLogSpy).toHaveBeenCalledWith("Client error: Transaction code not found. Can't get credential offer");
-        expect(dialogSpy).toHaveBeenCalledWith("Invalid URL. Can't get credential offer");
+        expect(dialogSpy).toHaveBeenCalledWith(message);
         done();
       }
     });
@@ -366,12 +369,13 @@ describe('getCredentialOfferByTransactionCode', () => {
   it('should open error dialog and throw an error when transactionCode is missing', (done) => {
     const dialogSpy = jest.spyOn(component['dialog'], 'openErrorInfoDialog');
     const redirectSpy = jest.spyOn(component, 'redirectToHome');
+    const message = component['translate'].instant("error.credentialOffer.invalid-url");
 
     const result$ = component.getCredentialOfferByTransactionCode('');
 
     result$.subscribe({
       error: (error) => {
-        expect(dialogSpy).toHaveBeenCalledWith("Invalid URL. Can't refresh QR.");
+        expect(dialogSpy).toHaveBeenCalledWith(message);
         expect(error).toEqual(new Error());
         expect(redirectSpy).toHaveBeenCalled();
         done();
@@ -401,12 +405,13 @@ describe('getCredentialOfferByTransactionCode', () => {
 
     procedureService.getCredentialOfferByTransactionCode.mockReturnValue(throwError(() => mockError));
     const dialogSpy = jest.spyOn(component['dialog'], 'openErrorInfoDialog');
+    const message = component['translate'].instant('error.credentialOffer.unexpected');
 
     const result$ = component.getCredentialOfferByTransactionCode(mockTransactionCode);
 
     result$.subscribe({
       error: (error) => {
-        expect(dialogSpy).toHaveBeenCalledWith("An unexpected error occurred. Please try again later or contact your company's LEAR to get a new credential.");
+        expect(dialogSpy).toHaveBeenCalledWith(message);
         expect(error).toEqual(mockError);
         done();
       }
@@ -416,6 +421,7 @@ describe('getCredentialOfferByTransactionCode', () => {
   it('should open error dialog with a specific message for 404 error and rethrow error', (done) => {
     const mockTransactionCode = 'validTransactionCode';
     const mockError = { status: 404, message: 'Not Found' };
+    const message = component['translate'].instant("error.credentialOffer.expired");
   
     procedureService.getCredentialOfferByTransactionCode.mockReturnValue(throwError(() => mockError));
     const dialogSpy = jest.spyOn(component['dialog'], 'openErrorInfoDialog');
@@ -424,7 +430,7 @@ describe('getCredentialOfferByTransactionCode', () => {
   
     result$.subscribe({
       error: (error) => {
-        expect(dialogSpy).toHaveBeenCalledWith("This credential offer has expired. Please contact your company's LEAR to get a new one.");
+        expect(dialogSpy).toHaveBeenCalledWith(message);
         expect(error).toEqual(mockError);
         done();
       }
@@ -441,12 +447,13 @@ describe('getCredentialOfferByCTransactionCode', () => {
   it('should open error dialog and throw an error when cTransactionCode is missing', (done) => {
     const redirectSpy = jest.spyOn(component, 'redirectToHome');
     const dialogSpy = jest.spyOn(component['dialog'], 'openErrorInfoDialog');
+    const message = component['translate'].instant("error.credentialOffer.invalid-url");
 
     const result$ = component.getCredentialOfferByCTransactionCode('');
 
     result$.subscribe({
       error: (error) => {
-        expect(dialogSpy).toHaveBeenCalledWith("Invalid URL, can't refresh QR.");
+        expect(dialogSpy).toHaveBeenCalledWith(message);
         expect(redirectSpy).toHaveBeenCalled();
         expect(error).toEqual(new Error());
         done();
@@ -476,12 +483,13 @@ describe('getCredentialOfferByCTransactionCode', () => {
 
     procedureService.getCredentialOfferByCTransactionCode.mockReturnValue(throwError(() => mockError));
     const dialogSpy = jest.spyOn(component['dialog'], 'openErrorInfoDialog');
+    const message = component['translate'].instant('error.credentialOffer.unexpected');
 
     const result$ = component.getCredentialOfferByCTransactionCode(mockTransactionCode);
 
     result$.subscribe({
       error: (error) => {
-        expect(dialogSpy).toHaveBeenCalledWith('An unexpected error occurred. Please try again later.');
+        expect(dialogSpy).toHaveBeenCalledWith(message);
         expect(error).toEqual(mockError);
         done();
       }
@@ -495,6 +503,7 @@ describe('getCredentialOfferByCTransactionCode', () => {
       status: 404,
       statusText: 'Not Found',
     });
+    const message = component['translate'].instant("error.credentialOffer.expired");
 
     procedureService.getCredentialOfferByCTransactionCode.mockReturnValue(throwError(() => mockError));
     const dialogSpy = jest.spyOn(component['dialog'], 'openErrorInfoDialog');
@@ -503,7 +512,7 @@ describe('getCredentialOfferByCTransactionCode', () => {
 
     result$.subscribe({
       error: (error) => {
-        expect(dialogSpy).toHaveBeenCalledWith("This credential offer has expired. Please contact your company's LEAR to get a new one.");
+        expect(dialogSpy).toHaveBeenCalledWith(message);
         expect(error).toEqual(mockError);
         done();
       }

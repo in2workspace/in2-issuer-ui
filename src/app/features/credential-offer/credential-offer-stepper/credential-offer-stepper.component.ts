@@ -16,6 +16,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { CredentialOfferResponse } from 'src/app/core/models/dto/credential-offer-response';
+import { TranslateService } from '@ngx-translate/core';
 
 export type StepperIndex = 0 | 1;
 export type CredentialOfferStep = 'onboarding' | 'offer';
@@ -52,6 +53,7 @@ export class CredentialOfferStepperComponent implements OnInit{
   private readonly dialog = inject(DialogWrapperService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly translate = inject(TranslateService);
 
   //Source actions
   public getInitUrlParams$$ = new Subject<void>();
@@ -153,7 +155,8 @@ public ngOnInit(): void {
     }else{
       this.redirectToHome();
       console.log("Client error: Transaction code not found. Can't get credential offer");
-      this.dialog.openErrorInfoDialog("Invalid URL. Can't get credential offer");
+      const message = this.translate.instant("error.credentialOffer.invalid-url");
+      this.dialog.openErrorInfoDialog(message);
     }
     return params;
   }
@@ -161,7 +164,7 @@ public ngOnInit(): void {
   public getCredentialOfferByTransactionCode(transactionCode:string): Observable<CredentialOfferResponse> {
     if(!transactionCode){
       console.log("No transaction code was found, can't refresh QR.");
-      const message = "Invalid URL. Can't refresh QR.";
+      const message = this.translate.instant("error.credentialOffer.invalid-url");
       this.dialog.openErrorInfoDialog(message);
       this.redirectToHome();
       return throwError(()=>new Error());
@@ -172,11 +175,11 @@ public ngOnInit(): void {
       takeUntilDestroyed(this.destroyRef),
       catchError(error => {
           const errorStatus = error?.status || error?.error?.status || 0;
-          let errorMessage = "An unexpected error occurred. Please try again later or contact your company's LEAR to get a new credential.";
+          let errorMessage = this.translate.instant("error.credentialOffer.unexpected");
           
           if (errorStatus === 404) {
             //when credential is downloaded or expired
-            errorMessage = "This credential offer has expired. Please contact your company's LEAR to get a new one.";
+            errorMessage = this.translate.instant("error.credentialOffer.expired");
           }
           this.dialog.openErrorInfoDialog(errorMessage);
           this.redirectToHome();
@@ -189,7 +192,7 @@ public ngOnInit(): void {
   public getCredentialOfferByCTransactionCode(cCode:string): Observable<CredentialOfferResponse> {
     if (!cCode) {
       console.log("No c-transaction code was found, can't refresh QR.");
-      const message = "Invalid URL, can't refresh QR.";
+      const message = this.translate.instant("error.credentialOffer.invalid-url");
       this.dialog.openErrorInfoDialog(message);
       this.redirectToHome();
       return throwError(()=>new Error());
@@ -200,11 +203,11 @@ public ngOnInit(): void {
         takeUntilDestroyed(this.destroyRef),
         catchError((error: HttpErrorResponse) => {
           const errorStatus = error?.status || error?.error?.status || 0;
-          let errorMessage = 'An unexpected error occurred. Please try again later.';
+          let errorMessage = this.translate.instant("error.credentialOffer.unexpected");
           
           switch (errorStatus) {
             case 404://when credential is downloaded or expired
-              errorMessage = "This credential offer has expired. Please contact your company's LEAR to get a new one.";
+              errorMessage = this.translate.instant("error.credentialOffer.expired");
               break;
             case 409: //when credential is completed and user clicks 'back' and 'next'
               errorMessage = 'The credential has already been obtained.';
