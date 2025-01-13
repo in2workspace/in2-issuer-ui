@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### [1.4.0](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.4.0)
 ### Added
-- Same-device flow
+- Same-device flow: user can get credential with a signel device, without need to scan QR
 - Stepper to get credential offer
 
 ### [1.3.0](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.3.0)
