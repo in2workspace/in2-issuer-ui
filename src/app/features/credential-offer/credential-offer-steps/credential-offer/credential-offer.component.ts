@@ -1,4 +1,4 @@
-import { Component, computed, EventEmitter, input, Output } from '@angular/core';
+import { Component, computed, EventEmitter, input, Output, OnInit } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { QRCodeModule } from 'angularx-qrcode';
 import { NgIf } from '@angular/common';
@@ -12,7 +12,7 @@ import { environment } from 'src/environments/environment';
     standalone: true,
     imports: [NavbarComponent, NgIf, QRCodeModule, TranslatePipe]
 })
-export class CredentialOfferComponent {
+export class CredentialOfferComponent implements OnInit{
   @Output() public refreshCredential = new EventEmitter<void>();
   public qrColor = "#2d58a7";
   public walletUsersGuideUrl = environment.knowledgebase_url + "books/dome-digital-wallet-user-guide";
@@ -42,6 +42,18 @@ export class CredentialOfferComponent {
 public onRefreshCredentialClick(event:Event): void{
   event.preventDefault();
   this.refreshCredential.emit();
+}
+
+public ngOnInit(){
+  console.log('profile: ');
+  console.log(this.profile);
+  console.log('wallet url test: ');
+  console.log(environment.wallet_url_test);
+  console.log('wallet same device test url');
+  console.log(this.walletSameDeviceTestUrl);
+  console.log('wallet full same device test url');
+  console.log(this.walletSameDeviceTestUrl$());
+
 }
 
 }
