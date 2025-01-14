@@ -9,6 +9,7 @@ export const environment = {
   },
   base_url: window["env"]["base_url"] || 'http://localhost:8081',
   wallet_url: window["env"]["wallet_url"] || 'http://localhost:4200',
+  wallet_url_test: window["env"]["wallet_url_test"] || 'http://localhost:4200',
   knowledgebase_url: window["env"]["knowledgebase_url"] || "https://knowledgebase.dome-marketplace-sbx.org/",
   profile: window["env"]["profile"] || "local",
   procedures: window["env"]["procedures"] || '/api/v1/procedures',

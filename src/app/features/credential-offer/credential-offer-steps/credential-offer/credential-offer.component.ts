@@ -14,14 +14,23 @@ import { environment } from 'src/environments/environment';
 })
 export class CredentialOfferComponent {
   @Output() public refreshCredential = new EventEmitter<void>();
-  public readonly walletSameDeviceUrl = environment.wallet_url + 'tabs/home/';
-  public walletUsersGuideUrl = environment.knowledgebase_url + "books/dome-digital-wallet-user-guide";
   public qrColor = "#2d58a7";
-
+  public walletUsersGuideUrl = environment.knowledgebase_url + "books/dome-digital-wallet-user-guide";
   public credentialOfferUri$ = input.required<string>();
+
+  public readonly walletSameDeviceUrl = environment.wallet_url + 'tabs/home/';
   public walletSameDeviceUrl$ = computed<string>(()=>{
     const cutOfferUri = this.removeProtocol(this.credentialOfferUri$());
     return this.walletSameDeviceUrl + cutOfferUri
+  });
+
+  //TEST URLS
+  public profile = environment.profile; 
+  public readonly walletSameDeviceTestUrl = environment.wallet_url_test + 'tabs/home/';
+  
+  public walletSameDeviceTestUrl$ = computed<string>(()=>{
+    const cutOfferUri = this.removeProtocol(this.credentialOfferUri$());
+    return this.walletSameDeviceTestUrl + cutOfferUri
   });
 
 

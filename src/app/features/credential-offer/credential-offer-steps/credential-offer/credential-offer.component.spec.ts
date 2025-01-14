@@ -23,9 +23,8 @@ describe('CredentialOfferComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize walletSameDeviceUrl with the correct value from the environment', () => {
-    const expectedUrl = environment.wallet_url + 'tabs/home/';
-    expect(component.walletSameDeviceUrl).toBe(expectedUrl);
+  it('should set the QR color to "#2d58a7"', () => {
+    expect(component.qrColor).toBe('#2d58a7');
   });
 
   it('should initialize walletUsersGuideUrl with the correct value from the environment', () => {
@@ -33,8 +32,9 @@ describe('CredentialOfferComponent', () => {
     expect(component.walletUsersGuideUrl).toBe(expectedGuideUrl);
   });
 
-  it('should set the QR color to "#2d58a7"', () => {
-    expect(component.qrColor).toBe('#2d58a7');
+  it('should initialize walletSameDeviceUrl with the correct value from the environment', () => {
+    const expectedUrl = environment.wallet_url + 'tabs/home/';
+    expect(component.walletSameDeviceUrl).toBe(expectedUrl);
   });
 
   it('should compute walletSameDeviceUrl$ correctly when credentialOfferUri$ is provided', () => {
@@ -45,6 +45,25 @@ describe('CredentialOfferComponent', () => {
       environment.wallet_url + 'tabs/home/' + credentialOfferUriMock;
   
     expect(component.walletSameDeviceUrl$()).toBe(expectedComputedUrl);
+  });
+
+  it('should get profile', () => {
+    expect(component.profile).toBe(environment.profile);
+  });
+
+  it('should initialize walletSameDeviceTestUrl with the correct value from the environment', () => {
+    const expectedTestUrl = environment.wallet_url_test + 'tabs/home/';
+    expect(component.walletSameDeviceTestUrl).toBe(expectedTestUrl);
+  });
+
+  it('should compute walletSameDeviceTestUrl$ correctly when credentialOfferUri$ is provided', () => {
+    const credentialOfferUriMock = 'mockCredentialOfferUri';
+    (component as any).credentialOfferUri$ = () => credentialOfferUriMock;
+  
+    const expectedComputedTestUrl =
+      environment.wallet_url_test + 'tabs/home/' + credentialOfferUriMock;
+  
+    expect(component.walletSameDeviceTestUrl$()).toBe(expectedComputedTestUrl);
   });
 
   it('should remove the protocol from the given URL string', () => {
