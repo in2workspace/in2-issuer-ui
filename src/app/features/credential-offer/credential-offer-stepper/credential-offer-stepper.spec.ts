@@ -125,7 +125,6 @@ it('should update index and step', ()=>{
   expect(component.currentStep$()).toBe('offer');
 });
 
-//todo
 it('should initialize initUrlParams$ correctly', fakeAsync(() => {
   const offerParams = {
     credential_offer_uri: 'cred-offer-uri',
