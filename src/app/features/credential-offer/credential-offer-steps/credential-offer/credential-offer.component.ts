@@ -1,7 +1,7 @@
 import { Component, computed, EventEmitter, input, Output, OnInit } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { QRCodeModule } from 'angularx-qrcode';
-import { NgIf } from '@angular/common';
+import { NgIf, UpperCasePipe } from '@angular/common';
 import { NavbarComponent } from 'src/app/shared/components/navbar/navbar.component';
 import { environment } from 'src/environments/environment';
 
@@ -10,7 +10,7 @@ import { environment } from 'src/environments/environment';
     templateUrl: './credential-offer.component.html',
     styleUrls: ['./credential-offer.component.scss'],
     standalone: true,
-    imports: [NavbarComponent, NgIf, QRCodeModule, TranslatePipe]
+    imports: [NavbarComponent, NgIf, QRCodeModule, TranslatePipe, UpperCasePipe]
 })
 export class CredentialOfferComponent implements OnInit{
   @Output() public refreshCredential = new EventEmitter<void>();
