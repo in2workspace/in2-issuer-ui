@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { environment } from 'src/environments/environment';
 import { QRCodeModule } from 'angularx-qrcode';

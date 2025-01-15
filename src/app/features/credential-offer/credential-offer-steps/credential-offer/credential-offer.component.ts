@@ -1,4 +1,4 @@
-import { Component, computed, EventEmitter, input, Output, OnInit } from '@angular/core';
+import { Component, computed, EventEmitter, input, Output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { QRCodeModule } from 'angularx-qrcode';
 import { NgIf, UpperCasePipe } from '@angular/common';
