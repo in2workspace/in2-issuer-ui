@@ -3,15 +3,16 @@ import { Router } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { environment } from 'src/environments/environment';
 import { QRCodeModule } from 'angularx-qrcode';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-home',
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.scss'],
     standalone: true,
-    imports: [QRCodeModule],
+    imports: [QRCodeModule, TranslatePipe],
 })
-export class HomeComponent {
+export class HomeComponent{
   public walletUrl = environment.wallet_url;
   public knowledgebase_url = environment.knowledgebase_url;
 
@@ -30,4 +31,5 @@ export class HomeComponent {
   public navigateToSection(sectionId: string): void {
     document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
   }
+
 }
