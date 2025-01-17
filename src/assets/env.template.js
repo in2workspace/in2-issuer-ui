@@ -10,7 +10,7 @@
   window["env"]["wallet_url"] = "${WALLET_URL}";
   window["env"]["wallet_url_test"] = "${WALLET_URL_TEST}";
   window["env"]["knowledgebase_url"] = "${KNOWLEDGEBASE_URL}";
-  window["env"]["profile"] = "${PROFILE}";
+  window["env"]["profile"] = "${PROFILE}"; //values: 'lcl', 'sbx', 'test', 'prd'
   window["env"]["procedures"] = "${PROCEDURES}";
   window["env"]["save_credential"] = "${SAVE_CREDENTIAL}";
   window["env"]["credential_offer_url"] = "${CREDENTIAL_OFFER_URI}";
