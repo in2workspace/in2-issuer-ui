@@ -11,12 +11,12 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class AppComponent {
 public title = 'Credential-issuer-ui';
-private translate = inject(TranslateService);
+private readonly translate = inject(TranslateService);
 
 public constructor(){
-    const lng = 'es';
+    const lang = 'en';
     
-    this.translate.setDefaultLang(lng!);
-    this.translate.use(lng!);
+    this.translate.setDefaultLang(lang);
+    this.translate.use(lang);
 }
 }
