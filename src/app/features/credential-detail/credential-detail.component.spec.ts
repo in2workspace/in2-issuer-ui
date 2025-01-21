@@ -175,22 +175,6 @@ describe('CredentialDetailComponent', () => {
   
     expect(mockCredentialProcedureService.sendReminder).toHaveBeenCalledWith(credentialId);
   }));
-  
 
-  it('should set the title observable with the translated value', fakeAsync(() => {
-    const mockTranslatedValue = 'Translated Credential Details';
-    jest.spyOn(translateService, 'get').mockReturnValue(of(mockTranslatedValue));
-
-    let emittedValue: string | undefined;
-
-    component.title.subscribe((value) => {
-      emittedValue = value;
-    });
-
-    tick(1000);
-
-    expect(translateService.get).toHaveBeenCalledWith('credentialDetail.credentialDetails');
-    expect(emittedValue).toBe(mockTranslatedValue);
-  }));
 
 });

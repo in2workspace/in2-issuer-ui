@@ -17,6 +17,4 @@ export class CredentialIssuanceComponent {
   public asSigner$ : Observable<boolean> = this.route.paramMap.pipe(
     take(1),
     map(params => !!params.get('id')))
-  
-
 }

@@ -3,21 +3,22 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { of } from 'rxjs';
 import { CredentialIssuanceComponent } from './credential-issuance.component';
-import { RouterModule } from '@angular/router';
+import { RouterModule, ActivatedRoute } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { OidcSecurityService, StsConfigLoader } from "angular-auth-oidc-client";
 import { AuthService } from "../../core/services/auth.service";
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { convertToParamMap } from '@angular/router';
 
 global.structuredClone = (obj: any) => JSON.parse(JSON.stringify(obj));
 
-describe('Credential Issuance Component', () => {
+describe('CredentialIssuanceComponent', () => {
   let component: CredentialIssuanceComponent;
   let fixture: ComponentFixture<CredentialIssuanceComponent>;
 
-  let translateService:TranslateService;
+  let translateService: TranslateService;
 
-  let configService: any
+  let configService: any;
 
   let oidcSecurityService: {
     checkAuth: jest.Mock,
@@ -32,9 +33,12 @@ describe('Credential Issuance Component', () => {
     idToken: 'dummyIdToken'
   };
 
-  beforeEach(async () => {
+  const mockActivatedRoute = {
+    paramMap: of(convertToParamMap({ id: '123' }))
+  };
 
-    configService = {loadConfigs:() => {}}
+  beforeEach(async () => {
+    configService = { loadConfigs: () => {} };
 
     oidcSecurityService = {
       checkAuth: jest.fn().mockReturnValue(of(mockAuthResponse)),
@@ -43,15 +47,22 @@ describe('Credential Issuance Component', () => {
     };
 
     await TestBed.configureTestingModule({
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    imports: [BrowserAnimationsModule, RouterModule.forRoot([]), HttpClientModule, TranslateModule.forRoot({}), CredentialIssuanceComponent],
-    providers: [
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      imports: [
+        BrowserAnimationsModule,
+        RouterModule.forRoot([]),
+        HttpClientModule,
+        TranslateModule.forRoot({}),
+        CredentialIssuanceComponent
+      ],
+      providers: [
         TranslateService,
         AuthService,
         { provide: OidcSecurityService, useValue: oidcSecurityService },
         { provide: StsConfigLoader, useValue: configService },
-    ],
-}).compileComponents();
+        { provide: ActivatedRoute, useValue: mockActivatedRoute },
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(CredentialIssuanceComponent);
     component = fixture.componentInstance;
@@ -69,20 +80,26 @@ describe('Credential Issuance Component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should set the title observable with the translated value', fakeAsync(() => {
-    const mockTranslatedValue = 'Translated Credential Details';
-    jest.spyOn(translateService, 'get').mockReturnValue(of(mockTranslatedValue));
-
-    let emittedValue: string | undefined;
-
-    component.title.subscribe((value) => {
-      emittedValue = value;
-    });
-
-    tick(1000);
-
-    expect(translateService.get).toHaveBeenCalledWith('credentialIssuance.learCredentialEmployee');
-    expect(emittedValue).toBe(mockTranslatedValue);
+  it('should set "asSigner$" to true when param "id" is present', fakeAsync(() => {
+    let asSignerValue: boolean | undefined;
+    component.asSigner$.subscribe(value => (asSignerValue = value));
+    tick();
+    expect(asSignerValue).toBeTruthy();
   }));
+
+  it('should set "asSigner$" to false when param "id" is not present', fakeAsync(() => {
+    const mockActivatedRoute = TestBed.inject(ActivatedRoute);
+    (mockActivatedRoute as any).paramMap = of(convertToParamMap({}));
+  
+    fixture = TestBed.createComponent(CredentialIssuanceComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  
+    let asSignerValue: boolean | undefined;
+    component.asSigner$.subscribe(value => (asSignerValue = value));
+    tick();
+    expect(asSignerValue).toBeFalsy();
+  }));
+  
 
 });

@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { environment } from 'src/environments/environment';
 import { QRCodeModule } from 'angularx-qrcode';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -21,8 +22,9 @@ describe('HomeComponent', () => {
     } as unknown as jest.Mocked<AuthService>;
 
     TestBed.configureTestingModule({
-      imports: [QRCodeModule],
+      imports: [QRCodeModule, TranslateModule.forRoot({})],
       providers: [
+        TranslateService,
         { provide: Router, useValue: routerMock },
         { provide: AuthService, useValue: authServiceMock },
       ],
