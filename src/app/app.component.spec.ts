@@ -35,10 +35,10 @@ describe('AppComponent', () => {
     expect(component.title).toBe('Credential-issuer-ui');
   });
 
-  it('should set default language to "es" on initialization', () => {
+  it('should set default language to "en" on initialization', () => {
     const translateService = TestBed.inject(TranslateService);
-    expect(translateService.getDefaultLang()).toBe('es');
-    expect(translateService.currentLang).toBe('es');
+    expect(translateService.getDefaultLang()).toBe('en');
+    expect(translateService.currentLang).toBe('en');
   });
 
   it('should contain a router-outlet in the template', () => {
