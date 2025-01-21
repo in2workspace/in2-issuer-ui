@@ -71,11 +71,10 @@
         {{ "home.intro-main" | translate }}
       </p>
       <ul>
-        <li>
-          {{ "home.intro-first" | translate }}
+        <li [innerHTML]="'home.intro-first' | translate">
+          
         </li>
-        <li>
-          {{ "home.intro-second" | translate }}
+        <li [innerHTML]="'home.intro-second' | translate">
         </li>
       </ul>
     </div>

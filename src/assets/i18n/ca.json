@@ -117,7 +117,7 @@
       "unknown_error": "S'ha produït un error desconegut. Si us plau, torna-ho a intentar.",
       "credential_submission": "S'ha produït un error en crear la credencial.",
       "one_power_min":"Hi ha d'haver almenys un poder seleccionat, i cada poder requereix almenys una acció.",
-      "policiy": {
+      "policy": {
         "onboarding": {
           "title": "Accés Denegat",
           "message": "No tens els poders necessaris per accedir-hi."

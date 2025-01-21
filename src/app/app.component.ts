@@ -14,20 +14,9 @@ public title = 'Credential-issuer-ui';
 private translate = inject(TranslateService);
 
 public constructor(){
-    //todo check if there is better way to handle this
-    const supportedLangs = ["en", "es", "ca"];
-    let lng = this.translate.getBrowserLang();
-    
-    if (lng && !supportedLangs.includes(lng)) {
-      lng = "en";
-    }
+    const lng = 'es';
     
     this.translate.setDefaultLang(lng!);
     this.translate.use(lng!);
-    
-    supportedLangs.forEach((language) => {
-      this.translate.reloadLang(language);
-    });
-    
 }
 }
