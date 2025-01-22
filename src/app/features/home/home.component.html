@@ -21,13 +21,13 @@
 
     <section class="cover" id="cover">
       <div class="cover-content">
-        <h1>Welcome to the DOME Issuer for LEARCredentials</h1>
+        <h1>{{ "home.title" | translate }}</h1>
         <div class="scroll-indicator">
           <a class="btn btn-primary" [href]="knowledgebase_url" target="_blank" rel="noopener noreferrer" tabindex="0">
-            Learn More
+            {{ "home.learn-more" | translate }}
             <img src="../../../assets/icon/fletxa_dreta.png" alt="arrow">
           </a>
-          <p class="scroller">Scroll to see more</p>
+          <p class="scroller">{{ "home.scroll" | translate }}</p>
           <a class="btn btn-link" (click)="navigateToSection('about-section')">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -68,28 +68,13 @@
   <section id="about-section" class="content-section">
     <div class="content-wrapper">
       <p>
-        This site is intended for Legal Representatives of companies who want to
-        issue one or more LEARCredentials to one or more employees of the
-        company. A LEARCredential is a type of Verifiable Credential which
-        enables an employee, nominated by a legal representative, to act on
-        behalf of an organisation with restricted power with respect to
-        third-parties.
+        {{ "home.intro-main" | translate }}
       </p>
       <ul>
-        <li>
-          The issuer of the LEARCredential
-          <strong>must be a legal representative</strong> of the company. The
-          legal representative will sign the LEARCredential with an eIDAS
-          digital certificate, which can be either a personal one or a
-          certificate of representation.
+        <li [innerHTML]="'home.intro-first' | translate">
+          
         </li>
-        <li>
-          The receiver of the LEARCredential (both the subject and holder of the
-          credential) <strong>can be any employee (or contractor)</strong> of
-          the company. The legal representative will delegate a restricted set
-          of power to that person. Those restricted power are included inside
-          the credential and can be verified by any Relying party to whom the
-          holder presents the LEARCredential.
+        <li [innerHTML]="'home.intro-second' | translate">
         </li>
       </ul>
     </div>
@@ -98,20 +83,15 @@
   <section class="content-section">
     <div class="legal-representative">
       <p>
-        You must be a legal representative of the company, to be able to
-        delegate the restricted power required for DOME.
+        {{ "home.legal-first" | translate }}
       </p>
       <p>
-        You need an eIDAS certificate to be able to use the system. In addition
-        you will have to register your company email.
+        {{ "home.legal-second" | translate }}
       </p>
       <p>
-        Note: if you are reading this in your mobile, most probably the button
-        will not work, unless you have installed your eIDAS certificate in the
-        mobile. You typically need to use a PC, with the certificate installed
-        in the browser.
+        {{ "home.legal-third" | translate }}
       </p>
-      <a class="btn-secondary" tabindex="0" (click)="login()">Login as Legal Representative</a>
+      <a class="btn-secondary" tabindex="0" (click)="login()">{{ "home.login-btn" | translate}}</a>
 
     </div>
   </section>
@@ -120,28 +100,35 @@
     <div class="wallet-info-container">
       <div class="wallet-info-qr">
         <img class="wallet-logo" src="../../../assets/icon/wallet.png" alt="wallet">
-        <h2>Obtain your wallet</h2>
-        <p>
-          You need a wallet to store your LEARCredentials and present them to
-          Relaying parties like DOME Marketplace.
-        </p>
-        <p>
-          DOME provides a simple wallet enough for authenticating to the DOME
-          Marketplace and performing all needed processes.
-        </p>
+        <h2>{{ "home.obtain-wallet-title" | translate }}</h2>
+        <p>{{ "home.obtain-wallet-intro" | translate }}</p>
+        <p>{{ "home.obtain-wallet-detail" | translate }}</p>
         <qrcode [qrdata]="walletUrl" [width]="256" [errorCorrectionLevel]="'M'"></qrcode>
         <p>
-          Scan this QR code or go in your mobile to
-          <a [href]="walletUrl" target="_blank" rel="noopener noreferrer" tabindex="0">{{walletUrl}}</a>
+          {{ "home.wallet-instructions" | translate }}
+          <a [href]="walletUrl" target="_blank" rel="noopener noreferrer" tabindex="0">{{ walletUrl }}</a>
         </p>
       </div>
     </div>
   </section>
-
+  
   <footer class="main-footer">
     <span>
-      <p>© 2024–2024 DOME Marketplace Authors&nbsp; | &nbsp;<a href="https://creativecommons.org/licenses/by/4.0" target="_blank" rel="noopener noreferrer" tabindex="0">CC BY 4.0</a>&nbsp; | &nbsp;<a href="https://dome-marketplace.eu/" target="_blank" rel="noopener noreferrer" tabindex="0">Privacy Policy</a></p>
+      <p>
+        © 2024–2024 DOME Marketplace Authors&nbsp; | &nbsp;
+        <a href="https://creativecommons.org/licenses/by/4.0" target="_blank" rel="noopener noreferrer" tabindex="0">
+          {{ "home.footer-license" | translate }}
+        </a>&nbsp; | &nbsp;
+        <a href="https://dome-marketplace.eu/" target="_blank" rel="noopener noreferrer" tabindex="0">
+          {{ "home.footer-privacy" | translate }}
+        </a>
+      </p>
     </span>
-    <span><a href="https://github.com/evidenceledger/domeissuer" target="_blank" rel="noopener noreferrer" tabindex="0"><img class="footer-logo" src="assets/icon/github.png" alt="GitHub"></a></span>
+    <span>
+      <a href="https://github.com/evidenceledger/domeissuer" target="_blank" rel="noopener noreferrer" tabindex="0">
+        <img class="footer-logo" src="assets/icon/github.png" alt="GitHub">
+      </a>
+    </span>
   </footer>
+  
 </div>

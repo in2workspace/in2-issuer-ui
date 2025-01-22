@@ -1,8 +1,9 @@
-import { DebugElement } from '@angular/core';
-import { AppComponent } from './app.component';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
+import { AppComponent } from './app.component';
 import { RouterOutlet } from '@angular/router';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { DebugElement } from '@angular/core';
+import { By } from '@angular/platform-browser';
 
 describe('AppComponent', () => {
   let component: AppComponent;
@@ -11,9 +12,12 @@ describe('AppComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [RouterOutlet, AppComponent],
-    schemas: []
-}).compileComponents();
+      imports: [
+        RouterOutlet,
+        TranslateModule.forRoot(),
+        AppComponent,
+      ],
+    }).compileComponents();
   });
 
   beforeEach(() => {
@@ -29,6 +33,12 @@ describe('AppComponent', () => {
 
   it('should have title "Credential-issuer-ui"', () => {
     expect(component.title).toBe('Credential-issuer-ui');
+  });
+
+  it('should set default language to "en" on initialization', () => {
+    const translateService = TestBed.inject(TranslateService);
+    expect(translateService.getDefaultLang()).toBe('en');
+    expect(translateService.currentLang).toBe('en');
   });
 
   it('should contain a router-outlet in the template', () => {

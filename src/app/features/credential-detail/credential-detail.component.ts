@@ -1,12 +1,12 @@
-import { Component, inject, OnInit, DestroyRef } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
-import { from, Observable, switchMap, tap, timer } from 'rxjs';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { from, Observable, switchMap, take, tap } from 'rxjs';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { LEARCredentialEmployeeJwtPayload } from "../../core/models/entity/lear-credential-employee.entity";
 import { LearCredentialEmployeeDataDetail } from "../../core/models/dto/lear-credential-employee-data-detail.dto";
 import { FormCredentialComponent } from '../../shared/components/form-credential/form-credential.component';
-import { NgIf, AsyncPipe } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { DialogWrapperService } from 'src/app/shared/components/dialog/dialog-wrapper/dialog-wrapper.service';
 import { DialogData } from 'src/app/shared/components/dialog/dialog.component';
 import { LoaderService } from 'src/app/core/services/loader.service';
@@ -18,11 +18,10 @@ import { LoaderService } from 'src/app/core/services/loader.service';
     imports: [
         NgIf,
         FormCredentialComponent,
-        AsyncPipe,
+        TranslatePipe
     ],
 })
 export class CredentialDetailComponent implements OnInit {
-  public title = timer(0).pipe(switchMap(()=>this.translate.get("credentialDetail.credentialDetails")));
   public credentialId: string | null = null;
   public credential: LEARCredentialEmployeeJwtPayload | null = null;
   public credentialStatus: string | null = null;
@@ -30,7 +29,6 @@ export class CredentialDetailComponent implements OnInit {
 
   private readonly route = inject(ActivatedRoute);
   private readonly credentialProcedureService = inject(CredentialProcedureService);
-  private readonly destroyRef = inject(DestroyRef);
   private readonly dialog = inject(DialogWrapperService);
   private readonly loader = inject(LoaderService);
   private readonly router = inject(Router);
@@ -41,7 +39,9 @@ export class CredentialDetailComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
+    this.route.paramMap
+    .pipe(take(1))
+    .subscribe(params => {
       this.credentialId = params.get('id');
       if (this.credentialId) {
         this.loadCredentialDetail(this.credentialId);

@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-root',
@@ -10,4 +11,12 @@ import { RouterOutlet } from '@angular/router';
 })
 export class AppComponent {
 public title = 'Credential-issuer-ui';
+private readonly translate = inject(TranslateService);
+
+public constructor(){
+    const lang = 'en';
+    
+    this.translate.setDefaultLang(lang);
+    this.translate.use(lang);
+}
 }
