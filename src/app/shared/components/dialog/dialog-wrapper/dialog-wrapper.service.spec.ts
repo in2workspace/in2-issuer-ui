@@ -75,7 +75,7 @@ describe('DialogWrapperService', () => {
     const afterConfirmSubject = new Subject<void>();
     const dialogRefMock = {
       componentInstance: {
-        afterConfirmSubj: jest.fn(() => afterConfirmSubject.asObservable()),
+        afterConfirm$: jest.fn(() => afterConfirmSubject.asObservable()),
         updateData: jest.fn(),
       },
       close: jest.fn(),

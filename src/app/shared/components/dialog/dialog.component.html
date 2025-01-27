@@ -1,3 +1,4 @@
+<!-- DATA TO BE DISPLAYED WHILE LOADING ASYNC OPERATIONS -->
 @if((isLoading$|async) && data.confirmationType === 'async'){
   <h2 mat-dialog-title>{{ data.loadingData?.title || 'Please wait while the process is completed...'}}</h2>
   <div mat-dialog-content>
@@ -10,6 +11,8 @@
       <mat-spinner [diameter]="50"></mat-spinner>
     }
   </div>
+
+  <!-- DEFAULT DIALOG DATA (NON-LOADING) -->
 }@else{
   <h2 mat-dialog-title>{{ data.title }}</h2>
   <div mat-dialog-content>
@@ -18,17 +21,15 @@
     </p>
   </div>
   <div mat-dialog-actions>
+    <!-- CONFIRMATION NEEDED: CANCEL AND CONFIRM BUTTONS -->
       @if(data.confirmationType !== 'none'){
         <button mat-flat-button color="cancel" (click)="onCancel()">{{ "dialog.cancel" | translate }}</button>
         <button mat-raised-button color="primary"
         (click)="onConfirm()">{{ "dialog.accept" | translate }}</button>
       }
       @else{
-        @if(data.status!=='error'){
-          <button mat-flat-button (click)="onConfirm()">{{ "dialog.close" | translate }}</button>
-        }@else{
-          <button mat-flat-button color="warn" (click)="onConfirm()">{{ "dialog.close" | translate }}</button>
-        }
+        <!-- NO CONFIRMATION NEEDED: ONLY CLOSE BUTTON -->
+          <button mat-flat-button [color]="statusColor" (click)="onConfirm()">{{ "dialog.close" | translate }}</button>
       }
   </div>
 }

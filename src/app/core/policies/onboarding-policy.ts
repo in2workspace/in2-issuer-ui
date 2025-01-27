@@ -13,8 +13,8 @@ export const OnboardingPolicy = () => {
   if (authService.hasOnboardingExecutePower()) {
     return true;
   } else {
-    const errorTitle = translate.instant("policy.onboarding.title");
-    const errorMessage = translate.instant("policy.onboarding.message");
+    const errorTitle = translate.instant("error.policy.onboarding.title");
+    const errorMessage = translate.instant("error.policy.onboarding.message");
 
     const dialogRef = dialog.openErrorInfoDialog(errorMessage, errorTitle);
     dialogRef.afterClosed().pipe(

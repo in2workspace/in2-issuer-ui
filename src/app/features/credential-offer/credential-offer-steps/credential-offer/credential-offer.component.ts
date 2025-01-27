@@ -2,7 +2,6 @@ import { Component, computed, EventEmitter, input, Output } from '@angular/core'
 import { TranslatePipe } from '@ngx-translate/core';
 import { QRCodeModule } from 'angularx-qrcode';
 import { NgIf, UpperCasePipe } from '@angular/common';
-import { NavbarComponent } from 'src/app/shared/components/navbar/navbar.component';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -10,7 +9,7 @@ import { environment } from 'src/environments/environment';
     templateUrl: './credential-offer.component.html',
     styleUrls: ['./credential-offer.component.scss'],
     standalone: true,
-    imports: [NavbarComponent, NgIf, QRCodeModule, TranslatePipe, UpperCasePipe]
+    imports: [NgIf, QRCodeModule, TranslatePipe, UpperCasePipe]
 })
 export class CredentialOfferComponent{
   @Output() public refreshCredential = new EventEmitter<void>();
@@ -36,7 +35,8 @@ export class CredentialOfferComponent{
 
   //currently needed because of backend response
   public removeProtocol(input: string): string {
-    return input.replace(/:\/\//g, '');
+     return input.replace(/:\/\//g, '');
+    // return ''
 }
 
 public onRefreshCredentialClick(event:Event): void{

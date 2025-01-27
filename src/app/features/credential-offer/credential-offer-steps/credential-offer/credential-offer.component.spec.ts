@@ -1,18 +1,17 @@
 import { TestBed } from '@angular/core/testing';
 import { CredentialOfferComponent } from './credential-offer.component';
 import { NavbarComponent } from 'src/app/shared/components/navbar/navbar.component';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { QRCodeModule } from 'angularx-qrcode';
 import { NgIf } from '@angular/common';
 import { environment } from 'src/environments/environment';
-import { EventEmitter } from '@angular/core';
 
 describe('CredentialOfferComponent', () => {
   let component: CredentialOfferComponent;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [NavbarComponent, NgIf, QRCodeModule, TranslatePipe, CredentialOfferComponent],
+      imports: [NavbarComponent, NgIf, QRCodeModule, TranslateModule.forRoot(), CredentialOfferComponent],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(CredentialOfferComponent);

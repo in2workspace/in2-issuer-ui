@@ -12,6 +12,7 @@ export class DialogWrapperService {
   private readonly dialog = inject(MatDialog);
   private readonly loader = inject(LoaderService);
 
+  //simple dialog method: opens dialog and returns a reference to it
   public openDialog(dialogData:DialogData): MatDialogRef<DialogComponent, any>{
     return this.dialog.open(DialogComponent, {
       data: {
@@ -21,9 +22,34 @@ export class DialogWrapperService {
     });
   }
 
-  //it is important not to cut error flow (with catchError) in callback passed as argument, since then
-  //dialog will be closed before displaying the error message from the server (it reuses the same opened dialog)
-  public openDialogWithCallback(dialogData:DialogData, callback:() => Observable<any>): void{
+  //similar to openDialog, but with a predefined error data
+  //if a dialog is already open, it will update its data instead of opening a new one
+  public openErrorInfoDialog(message: string, title?: string): MatDialogRef<DialogComponent, any>{
+    const errorDialogData: DialogData = { 
+      title: title ?? 'Error',
+      message: message,
+      confirmationType: 'none',
+      status: 'error',
+      loadingData: undefined
+    };
+    const openDialog = this.dialog.openDialogs[0];
+    if(openDialog){
+      return openDialog.componentInstance.updateData(errorDialogData);
+    }else{
+      return this.dialog.open(DialogComponent, {
+        data: {
+          ...errorDialogData
+        }
+      });
+    }
+  }
+
+  //Allow opening a dialog with a callback that can be a sync or async function
+  //in case of async function, it is possible to pass loadingData to be displayed while waiting for the callback to finish, including text and template
+  //It is important not to cut error flow (tipically with catchError) in callback passed as argument, since then the
+  //dialog will be closed in the next callback of openDialogWithCallback. The server interceptor reuses the already opened dialog to display its error message (see openErrorInfoDialog),
+  //which will be immediately closed by the next callback of openDialogWithCallback if the error flow is cut.
+  public openDialogWithCallback(dialogData: DialogData, callback:() => Observable<any>): void{
     const dialogRef = this.dialog.open(
       DialogComponent, 
       { 
@@ -33,10 +59,11 @@ export class DialogWrapperService {
     );
 
     let confirmObservable;
+
     if(dialogData.confirmationType === 'sync'){
       confirmObservable = dialogRef.afterClosed();
     }else if(dialogData.confirmationType === 'async'){
-      confirmObservable = dialogRef.componentInstance.afterConfirmSubj()
+      confirmObservable = dialogRef.componentInstance.afterConfirm$()
         .pipe(tap(() => { 
           const loadingData = dialogData.loadingData;
           if(loadingData){
@@ -66,26 +93,6 @@ export class DialogWrapperService {
           this.loader.updateIsLoading(false);
         });
 
-  }
-
-  public openErrorInfoDialog(message: string, title?: string): MatDialogRef<DialogComponent, any>{
-    const errorDialogData: DialogData = { 
-      title: title ?? 'Error',
-      message: message,
-      confirmationType: 'none',
-      status: 'error',
-      loadingData: undefined
-    };
-    const openDialog = this.dialog.openDialogs[0];
-    if(openDialog){
-      return openDialog.componentInstance.updateData(errorDialogData);
-    }else{
-      return this.dialog.open(DialogComponent, {
-        data: {
-          ...errorDialogData
-        }
-      });
-  }
   }
 
 }

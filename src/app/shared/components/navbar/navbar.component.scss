@@ -26,11 +26,15 @@
         cursor: pointer;
       }
 
-      span {
+      span, small {
         color: $White;
         font-weight: bold;
         font-size: 1.2rem;
         padding-bottom: 3.5px;
+      }
+
+      .organization{
+        display: block;
       }
     }
 
@@ -52,6 +56,15 @@
           display: flex;
           align-items: center;
           margin-left: 0.5rem;
+
+          .user{
+            display: flex;
+            flex-direction: column;
+
+            .organization{
+              font-size: 12px;
+            }
+          }
 
           mat-icon {
             color: $White;
@@ -81,15 +94,14 @@
   }
 }
 
-@media(width < 481px){
+@media(width < 600px){
   .main-header{
     .navbar{
       .navbar-nav{
         .nav-item{
           .nav-link{
             .user{
-              display:flex;
-            flex-direction: column;
+              display:none;
             }
           }
         }
