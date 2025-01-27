@@ -4,25 +4,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-### [1.4.2](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.4.2)
+## [1.4.3](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.4.3)
+### Added 
+- Searchbar in credentials dashboard
+- In credential offer step 2, informative text about offer expiration
+- Success popup after issuing credential and sending reminder
+
+### Changed
+- Credentials dashboard columns order and aspect
+- Styles in details
+- In details, send reminder button position
+
+## [1.4.2](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.4.2)
 ### Fixed
 - In non-PRD environments, in the first step of the stepper, show a link to access the same-environment Wallet
 
-### [1.4.1](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.4.1)
+## [1.4.1](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.4.1)
 ### Added
 - Test Wallet url for getting credential offer through same-device flow in the same environment
 
-### [1.4.0](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.4.0)
+## [1.4.0](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.4.0)
 ### Added
 - Same-device flow: user can get credential with a signel device, without need to scan QR
 - Stepper to get credential offer
 
-### [1.3.0](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.3.0)
+## [1.3.0](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.3.0)
 ### Changed
 - Add new attribute to the credentials view
 - Disable the credential view for unknown credentials type
 
-### [1.2.7](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.2.7)
+## [1.2.7](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.2.7)
 ### Added
 - User is now redirected after send reminder
 - A dialog with spinner appears while waiting for server response
