@@ -302,13 +302,13 @@ describe('getCredentialOffer', () => {
   it('should throw an error when no transaction_code or c_transaction_code is available', (done) => {
     jest.spyOn(component, 'offerParams$').mockReturnValue(undefinedCredentialOfferParamsState);
     const dialogSpy = jest.spyOn(component['dialog'], 'openErrorInfoDialog');
-    const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
     const message = component['translate'].instant("error.credentialOffer.invalid-url");
 
     component.getCredentialOffer().subscribe({
       error: (error) => {
         expect(error.message).toBe('No transaction nor c code to fetch credential offer.');
-        expect(consoleLogSpy).toHaveBeenCalledWith("Client error: Transaction code not found. Can't get credential offer");
+        expect(consoleErrorSpy).toHaveBeenCalledWith("Client error: Transaction code not found. Can't get credential offer");
         expect(dialogSpy).toHaveBeenCalledWith(message);
         done();
       }
