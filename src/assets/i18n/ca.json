@@ -1,4 +1,8 @@
 {
+  "next": "Següent",
+  "back": "Tornar",
+  "verifiable-credential": "Credencial Verificable",
+  "dome-wallet": "Wallet de DOME",
   "home": {
     "title": "Benvingut al DOME Issuer per a LEARCredentials",
     "learn-more": "Més informació",
@@ -50,13 +54,27 @@
     }
   },
   "credentialOffer": {
-    "credentialDetail": "Oferta de Credencial",
-    "textinformation": "Tens una nova oferta de credencial. Si us plau, segueix aquests passos:",
-    "first-step": "1. Registra't i inicia sessió al ",
-    "second-step": "2. Fes clic al botó de sota per obtenir el codi QR.",
-    "third-step": "3. Escaneja el codi QR amb el ",
-    "fourth-step": "4. Introdueix el PIN que rebràs al teu correu electrònic.",
-    "button-text": "Obtenir codi QR"
+    "first-label": "Iniciar sessió al Wallet",
+    "second-label": "Obtenir Credencial",
+    "no-data": "No hi ha dades d'oferta de credencial.",
+    "getting": "Obtenint de l'oferta de credencial...",
+    "refreshing": "Actualitzant l'oferta de credencial...",
+    "unable": "No pots escanejar el codi QR? Fes clic a l'enllaç següent per accedir al",
+    "environment-wallet": "Wallet de l'entorn",
+    "first-assistance": "Consulta la ",
+    "second-assistance": " per a més assistència.",
+    "wallet-guide": "Guia d'Usuaris del Wallet",
+    "first-step": {
+      "title": "Escaneja el codi QR per iniciar sessió i accedir al Wallet de DOME.",
+      "test-purposes": "Per fer fer proves, accedeix al"
+    },
+    "second-step": {
+      "title": "Escaneja el codi QR per obtenir la credencial.",
+      "directly": "directament",
+      "test-purposes": "Per a propòsits de prova, obtén la Credencial Verificable amb la ",
+      "refresh-text": "Tens problemes per obtenir la credencial amb la Wallet?",
+      "refresh-link": "Obtén una nova credencial"
+    }
   },
   "scaner": {
     "textinformation": "Escaneig de l'organització amb la seva cartera per descarregar la credencial"
@@ -71,7 +89,9 @@
     "updated": "Actualitzat",
     "cancel": "Cancel·lar",
     "create" : "Crear Credencial",
-    "buttonAdmin": "Nova Credencial com a Signer"
+    "buttonAdmin": "Nova Credencial com a Signer",
+    "search": "Busca per Subjecte",
+    "searchPlaceholder": "Joe Doe"
   },
     "power": {
       "power": "Powers",
@@ -124,9 +144,6 @@
         }
       },
       "credentialOffer": {
-        "default": "La credencial està expirada o ja ha estat descarregada.",
-        "no_transaction_code": "No s'ha trobat un codi de transacció a la URL.",
-        "no_qr": "No hi ha codi QR disponible.",
         "invalid-url": "URL no vàlida. No es pot obtenir l'oferta de credencial.",
         "unexpected": "S'ha produït un error inesperat. Torna-ho a intentar més tard o posa't en contacte amb el LEAR de la teva empresa per obtenir una nova credencial.",
         "expired": "Aquesta oferta de credencial ha expirat. Posa't en contacte amb el LEAR de la teva empresa per obtenir-ne una de nova."

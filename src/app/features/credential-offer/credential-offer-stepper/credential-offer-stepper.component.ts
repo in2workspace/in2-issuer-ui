@@ -8,7 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { NavbarComponent } from 'src/app/shared/components/navbar/navbar.component';
 import { QRCodeModule } from 'angularx-qrcode';
 import { MatIcon } from '@angular/material/icon';
-import { catchError, filter, map, merge, Observable, of, scan, startWith, Subject, switchMap, throwError } from 'rxjs';
+import { catchError, filter, map, merge, Observable, of, scan, startWith, Subject, switchMap, take, throwError } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogWrapperService } from 'src/app/shared/components/dialog/dialog-wrapper/dialog-wrapper.service';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
@@ -16,7 +16,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { CredentialOfferResponse } from 'src/app/core/models/dto/credential-offer-response';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 export type StepperIndex = 0 | 1;
 export type CredentialOfferStep = 'onboarding' | 'offer';
@@ -39,7 +39,17 @@ export const undefinedCredentialOfferParamsState: CredentialOfferParamsState = {
 @Component({
   selector: 'app-credential-offer-stepper',
   standalone: true,
-  imports: [CredentialOfferComponent, CredentialOfferOnboardingComponent, MatButtonModule, MatIcon, MatProgressSpinnerModule, MatStepperModule, NavbarComponent, QRCodeModule],
+  imports: [
+    CredentialOfferComponent, 
+    CredentialOfferOnboardingComponent,
+    MatButtonModule, 
+    MatIcon, 
+    MatProgressSpinnerModule, 
+    MatStepperModule, 
+    NavbarComponent, 
+    QRCodeModule,
+    TranslatePipe
+    ],
   providers: [{
     provide: STEPPER_GLOBAL_OPTIONS, useValue: {displayDefaultIndicatorType: false}
 }],
@@ -106,7 +116,7 @@ export class CredentialOfferStepperComponent implements OnInit{
         undefinedCredentialOfferParamsState
       )
   ), 
-  { initialValue: undefinedCredentialOfferParamsState }); //this is needed because the seed value in scan is not emitted
+  { initialValue: undefinedCredentialOfferParamsState }); //this is needed because the seed value in scan() is not emitted
 
   public stepperOrientation$ = toSignal(this.breakpointObserver
     .observe('(min-width: 800px)')
@@ -115,9 +125,9 @@ export class CredentialOfferStepperComponent implements OnInit{
     initialValue: 'horizontal'
   });
 
-public ngOnInit(): void {
-  this.getInitUrlParams$$.next();
-}
+  public ngOnInit(): void {
+    this.getInitUrlParams$$.next();
+  }
 
   public onSelectedStepChange(index:number){
     if(((index !== 0) && (index !== 1))){
@@ -134,6 +144,14 @@ public ngOnInit(): void {
 
     if(!transactionCodeParam){
       console.error("Client error: Missing transaction code in the URL. Can't get credential offer.");
+      
+      this.translate.get("error.credentialOffer.invalid-url")
+      .pipe(take(1))
+      .subscribe((message:string)=>{
+        this.dialog.openErrorInfoDialog(message);
+        this.redirectToHome();
+        }
+      );
     }
     const updatedParams: CredentialOfferParamsState = {
       credential_offer_uri: undefined,
@@ -154,7 +172,7 @@ public ngOnInit(): void {
       params = this.getCredentialOfferByTransactionCode(offer.transaction_code);
     }else{
       this.redirectToHome();
-      console.log("Client error: Transaction code not found. Can't get credential offer");
+      console.error("Client error: Transaction code not found. Can't get credential offer");
       const message = this.translate.instant("error.credentialOffer.invalid-url");
       this.dialog.openErrorInfoDialog(message);
     }
@@ -163,7 +181,7 @@ public ngOnInit(): void {
 
   public getCredentialOfferByTransactionCode(transactionCode:string): Observable<CredentialOfferResponse> {
     if(!transactionCode){
-      console.log("No transaction code was found, can't refresh QR.");
+      console.error("No transaction code was found, can't refresh QR.");
       const message = this.translate.instant("error.credentialOffer.invalid-url");
       this.dialog.openErrorInfoDialog(message);
       this.redirectToHome();
@@ -191,7 +209,7 @@ public ngOnInit(): void {
 
   public getCredentialOfferByCTransactionCode(cCode:string): Observable<CredentialOfferResponse> {
     if (!cCode) {
-      console.log("No c-transaction code was found, can't refresh QR.");
+      console.error("No c-transaction code was found, can't refresh QR.");
       const message = this.translate.instant("error.credentialOffer.invalid-url");
       this.dialog.openErrorInfoDialog(message);
       this.redirectToHome();

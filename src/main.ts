@@ -14,6 +14,16 @@ import { overrideDefaultValueAccessor } from './app/core/overrides/value-accesso
 
 overrideDefaultValueAccessor();
 
+// todo consider to use this as APP_INITIALIZER to make sure translation files load before they are required
+// export function initializeTranslate(translate: TranslateService): () => Promise<void> {
+//     return () => {
+//       const lang = 'en';
+//       translate.setDefaultLang(lang);
+//       return lastValueFrom(translate.use(lang)).then(() => {
+//       });
+//     };
+//   }
+
 bootstrapApplication(AppComponent, {
     providers: [
         importProvidersFrom(BrowserModule, RouterModule.forRoot(routes), TranslateModule.forRoot({

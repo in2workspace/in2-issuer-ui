@@ -1,4 +1,8 @@
 {
+  "next": "Next",
+  "back": "Back",
+  "verifiable-credential": "Verifiable Credential",
+  "dome-wallet": "DOME Wallet",
   "home": {
     "title": "Welcome to the DOME Issuer for LEARCredentials",
     "learn-more": "Learn more",
@@ -50,13 +54,27 @@
     }
   },
   "credentialOffer": {
-    "credentialDetail": "Credential Offer",
-    "textinformation": "You have a new credential offer. Please follow the next steps:",
-    "first-step": "1. Register and log into the ",
-    "second-step": "2. Click the button below to get the QR code.",
-    "third-step": "3. Scan the QR code with the ",
-    "fourth-step": "4. Enter the pin that you'll receive in your email.",
-    "button-text": "Get QR code"
+    "first-label": "Log in to Wallet",
+    "second-label": "Get Credential",
+    "no-data": "No credential offer data.",
+    "getting": "Getting credential offer...",
+    "refreshing": "Refreshing credential offer...",
+    "unable": "Unable to scan the QR code? Click the link below to access the",
+    "environment-wallet": "environment Wallet",
+    "first-assistance": "Check the ",
+    "second-assistance": " for assistance.",
+    "wallet-guide": "Wallet Users Guide",
+    "first-step":{
+      "title": "Scan the QR code to log in and access the DOME Wallet.",
+      "test-purposes": "For tests purposes, access the"
+    },
+    "second-step": {
+      "title": "Scan the QR code to obtain the credential.",
+      "directly": "directly",
+      "test-purposes": "For tests purposes, get the Verifiable Credential with the ",
+      "refresh-text": "Do you have problems when getting the credential with the Wallet?",
+      "refresh-link": "Get a new credential"
+    }
   },
   "scaner": {
     "textinformation": "OrganizationScan with your wallet to download the credential"
@@ -70,7 +88,9 @@
     "updated": "Updated",
     "cancel": "Cancel",
     "create" : "Create Credential",
-    "buttonAdmin": "New credential as Signer"
+    "buttonAdmin": "New credential as Signer",
+    "search": "Search by Subject",
+    "searchPlaceholder": "Joe Doe"
   },
   "power": {
     "power": "Powers",
@@ -90,7 +110,7 @@
     "attest": "Attest",
     "select": "Select a power",
     "invalid_power_title": "Access Denied",
-    "invalid_power_message": "You do not have the required power to access",
+    "invalid_power_message": "You do not have the required power to access.",
     "remove-dialog": {
       "title":"Remove power",
       "message": "Are you sure you want to remove this power? "
@@ -104,7 +124,7 @@
     },
     "create-success-dialog": {
       "title": "Credential created",
-      "message": "LEARCredentialEmployee was created successfully"
+      "message": "LEARCredentialEmployee was created successfully."
     },
     "creating-credential": "Creating credential"
   },
@@ -119,14 +139,11 @@
     "policy": {
       "onboarding": {
         "title": "Access Denied",
-        "message": "You do not have the required power to access"
+        "message": "You do not have the required power to access."
       }
     },
     "credentialOffer": {
-      "default": "The credential offer is expired or already downloaded. Try to refresh QR or try later.",
-      "no_transaction_code": "No transaction code found in URL.",
-      "no_qr": "No QR code available. Refresh QR or try later.",
-      "invalid-url": "Invalid URL. Can't get credential offer",
+      "invalid-url": "Unexpected error: invalid URL, can't get credential offer.",
       "unexpected": "An unexpected error occurred. Please try again later or contact your company's LEAR to get a new credential.",
       "expired": "This credential offer has expired. Please contact your company's LEAR to get a new one."
     },

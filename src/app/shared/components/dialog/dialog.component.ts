@@ -17,12 +17,14 @@ export interface DialogData {
   message: string; 
   confirmationType: DialogConfirmationType;
   status: DialogStatus;
-  loadingData: LoadingData | undefined;
+  loadingData: LoadingData | undefined; //only for async confirmation type
 }
 export interface DialogDefaultContent {
   data: DialogData;
 }
 
+//Confirmation type:none - no confirmation needed, so only one button is displayed, which closes the dialog
+//
 @Component({
     selector: 'app-dialog',
     templateUrl: './dialog.component.html',
@@ -55,14 +57,23 @@ export class DialogComponent {
     this.dialogRef.addPanelClass('dialog-custom');
     this.updateStatus();
   }
-
-  public updateStatus(){
+  public updateStatus(): void{
     const previousStatus = this.currentStatus;
-    if(previousStatus){
-      this.dialogRef.removePanelClass(`dialog-${previousStatus}`);
-    }
     this.currentStatus = this.data.status;
-    this.dialogRef.addPanelClass(`dialog-${this.currentStatus}`);
+    this.updateStatusPanelClass(previousStatus);
+    this.updateStatusColor();
+  }
+  
+  //ideally this should be done with reactive state management
+  public updateStatusColor(): void{
+    this.statusColor = this.currentStatus === 'error' ? 'warn' : 'primary';
+  }
+
+  public updateStatusPanelClass(previousStatus: DialogStatus | undefined): void{
+    if(previousStatus !== this.currentStatus){
+      this.dialogRef.removePanelClass(`dialog-${previousStatus}`);
+      this.dialogRef.addPanelClass(`dialog-${this.currentStatus}`);
+    }
   }
 
   public updateData(data: Partial<DialogData>){
@@ -71,7 +82,8 @@ export class DialogComponent {
 
   }
 
-  public afterConfirmSubj(): Observable<boolean>{
+  // this is used by the dialog wrapper service, which subscribes to this subject to call the callback after the this emits 
+  public afterConfirm$(): Observable<boolean>{
     return this.confirmSubj$.asObservable();
   }
 

@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { AutoLoginPartialRoutesGuard } from 'angular-auth-oidc-client';
 import { OnboardingPolicy } from "./core/policies/onboarding-policy";
-
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'home' },
   {

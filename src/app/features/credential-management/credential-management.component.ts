@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, inject, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, inject, ViewChild, DestroyRef } from '@angular/core';
 import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { Router } from '@angular/router';
@@ -8,8 +8,14 @@ import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { CredentialProcedure, ProcedureResponse } from "../../core/models/dto/procedure-response.dto";
 import { TranslatePipe } from '@ngx-translate/core';
 import { NgClass, DatePipe } from '@angular/common';
-import { MatButton } from '@angular/material/button';
+import { MatButton, MatButtonModule } from '@angular/material/button';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { debounceTime, Subject } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { animate, state, style, transition, trigger } from '@angular/animations';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'app-credential-management',
@@ -19,11 +25,16 @@ import { NavbarComponent } from '../../shared/components/navbar/navbar.component
     imports: [
         NavbarComponent,
         MatButton,
+        MatButtonModule,
         MatTable,
         MatSort,
         MatColumnDef,
+        MatFormField,
         MatHeaderCellDef,
         MatHeaderCell,
+        MatIcon,
+        MatInputModule,
+        MatLabel,
         MatSortHeader,
         MatCellDef,
         MatCell,
@@ -36,31 +47,66 @@ import { NavbarComponent } from '../../shared/components/navbar/navbar.component
         DatePipe,
         TranslatePipe,
     ],
+    animations: [
+      trigger('openClose', [
+        state(
+          'open',
+          style({
+            width: '200px',
+            opacity: 1,
+          })
+        ),
+        state(
+          'closed',
+          style({
+            width: '0px',
+            opacity: 0,
+          })
+        ),
+        transition('open => closed', [animate('0.2s')]),
+        transition('closed => open', [animate('0.2s')]),
+      ]),
+    ],
 })
 export class CredentialManagementComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) public paginator!: MatPaginator;
   @ViewChild(MatSort) public sort!: MatSort;
-  public displayedColumns: string[] = ['status', 'subject', 'credential_type', 'updated'];
+  public displayedColumns: string[] = ['subject', 'credential_type', 'updated','status'];
   public dataSource = new MatTableDataSource<CredentialProcedure>();
   public isValidOrganizationIdentifier = false;
 
-  private readonly credentialProcedureService = inject(CredentialProcedureService);
+  public hideSearchBar: boolean = true;
+
+
   private readonly authService = inject(AuthService);
+  private readonly credentialProcedureService = inject(CredentialProcedureService);
+  private readonly destroyRef = inject(DestroyRef);
   private readonly router = inject(Router);
 
-  public ngOnInit(){
+  private searchSubject = new Subject<string>();
+
+  public ngOnInit() {
     this.isValidOrganizationIdentifier = this.authService.hasIn2OrganizationIdentifier();
+    this.loadCredentialData();
+
+    this.searchSubject.pipe(debounceTime(500))
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((searchValue) => {
+        this.dataSource.filter = searchValue.trim().toLowerCase();
+
+        if (this.dataSource.paginator) {
+          this.dataSource.paginator.firstPage();
+        }
+      });
   }
 
   public ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    this.loadCredentialData();
 
     this.dataSource.sortingDataAccessor = (item: CredentialProcedure, property: string) => {
       switch (property) {
         case 'status': {
-          // todo this is temporary, only while there are VCs with status WITHDRAWN
           const status = item.credential_procedure.status.toLowerCase();
           return status === 'withdrawn' ? 'draft' : status;
         }
@@ -78,6 +124,16 @@ export class CredentialManagementComponent implements OnInit, AfterViewInit {
       }
     };
 
+    this.dataSource.filterPredicate = (data: CredentialProcedure, filter: string) => {
+      const searchString = filter.trim().toLowerCase();
+      return data.credential_procedure.subject.toLowerCase().includes(searchString);
+    };
+  }
+
+  public applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value;
+
+    this.searchSubject.next(filterValue);
   }
 
   public loadCredentialData(): void {
@@ -91,19 +147,19 @@ export class CredentialManagementComponent implements OnInit, AfterViewInit {
     });
   }
 
-  public createNewCredential(): void {
+  public navigateToCreateCredential(): void {
     this.router.navigate(['/organization/credentials/create']);
   }
 
-  public createCredentialAsSigner(): void {
+  public navigateToCreateCredentialAsSigner(): void {
     this.router.navigate(['/organization/credentials/create2', this.isValidOrganizationIdentifier ? "admin" : ""]);
   }
 
   public onRowClick(row: CredentialProcedure): void {
-    this.goToCredentialDetails(row);
+    this.navigateToCredentialDetails(row);
   }
 
-  public goToCredentialDetails(credential_procedures: CredentialProcedure): void {
+  public navigateToCredentialDetails(credential_procedures: CredentialProcedure): void {
     if (credential_procedures.credential_procedure.credential_type !== 'LEAR_CREDENTIAL_EMPLOYEE') {
       console.warn(
         `Navigation prevented: Unsupported credential type "${credential_procedures.credential_procedure.credential_type}".`
@@ -114,6 +170,10 @@ export class CredentialManagementComponent implements OnInit, AfterViewInit {
       '/organization/credentials/details',
       credential_procedures.credential_procedure?.procedure_id
     ]);
+  }
+
+  public toggleSearchBar(){
+    this.hideSearchBar = !this.hideSearchBar;
   }
 
 }
