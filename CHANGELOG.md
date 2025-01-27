@@ -4,29 +4,41 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-### [1.4.3](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.4.3)
+## [1.4.4](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.4.4)
+### Added
+- Searchbar in credentials dashboard
+- Success popup after creating credential and sending reminder
+- In credential offer step 2, informative message about offer expiration time
+- In details and credential issuance pages, "Back" button
+
+### Changed
+- In credentials dashboard, order of columns and status aspect (colors added)
+- Send Reminder button is not at the bottom of the details page
+- In navbar, organization name appears below username
+
+## [1.4.3](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.4.3)
 ### Fixed
 - Translations are applied to all components
 
-### [1.4.2](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.4.2)
+## [1.4.2](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.4.2)
 ### Fixed
 - In non-PRD environments, in the first step of the stepper, show a link to access the same-environment Wallet
 
-### [1.4.1](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.4.1)
+## [1.4.1](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.4.1)
 ### Added
 - Test Wallet url for getting credential offer through same-device flow in the same environment
 
-### [1.4.0](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.4.0)
+## [1.4.0](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.4.0)
 ### Added
 - Same-device flow: user can get credential with a signel device, without need to scan QR
 - Stepper to get credential offer
 
-### [1.3.0](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.3.0)
+## [1.3.0](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.3.0)
 ### Changed
 - Add new attribute to the credentials view
 - Disable the credential view for unknown credentials type
 
-### [1.2.7](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.2.7)
+## [1.2.7](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.2.7)
 ### Added
 - User is now redirected after send reminder
 - A dialog with spinner appears while waiting for server response
