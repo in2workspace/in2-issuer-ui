@@ -20,11 +20,13 @@ module.exports = {
       "src/app/**/*.ts",
       "!<rootDir>/node_modules/",
       "!<rootDir>/test/",
-      "!src/app/**/*.module.ts"
+      "!src/app/**/*.module.ts",
+      "!src/app/core/mocks/**"
     ],
     testPathIgnorePatterns: [
       '/node_modules/',
       '/dist/',
+      '/src/app/core/mocks/'
       // '/src/app/app',
       // '/src/app/core/',
       // '/src/app/features/',
