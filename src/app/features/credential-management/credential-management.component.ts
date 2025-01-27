@@ -12,7 +12,7 @@ import { MatButton, MatButtonModule } from '@angular/material/button';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { debounceTime, Subject } from 'rxjs';
+import { debounceTime, Subject, take } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { MatIcon } from '@angular/material/icon';
@@ -83,7 +83,7 @@ export class CredentialManagementComponent implements OnInit, AfterViewInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly router = inject(Router);
 
-  private searchSubject = new Subject<string>();
+  private readonly searchSubject = new Subject<string>();
 
   public ngOnInit() {
     this.isValidOrganizationIdentifier = this.authService.hasIn2OrganizationIdentifier();
@@ -137,7 +137,9 @@ export class CredentialManagementComponent implements OnInit, AfterViewInit {
   }
 
   public loadCredentialData(): void {
-    this.credentialProcedureService.getCredentialProcedures().subscribe({
+    this.credentialProcedureService.getCredentialProcedures()
+    .pipe(take(1))
+    .subscribe({
       next: (data: ProcedureResponse) => {
         this.dataSource.data = data.credential_procedures;
       },

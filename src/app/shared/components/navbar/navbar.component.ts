@@ -22,7 +22,6 @@ export class NavbarComponent implements OnInit {
   private readonly router = inject(Router);
 
   public ngOnInit() {
-    //todo reactive
     this.authService.getMandator()
       .pipe(take(1))
       .subscribe(mandator => {
@@ -40,9 +39,11 @@ export class NavbarComponent implements OnInit {
   }
 
   public logout() {
-    this.authService.logout().subscribe(() => {
-      this.router.navigate(['/home'], {});
-    });
+    this.authService.logout()
+      .pipe(take(1))
+      .subscribe(() => {
+        this.router.navigate(['/home'], {});
+      });
   }
 
   //currently not used

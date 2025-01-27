@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';import { TranslateService } from '@ngx-translate/core';
-import { switchMap } from 'rxjs';
+import { switchMap, take } from 'rxjs';
 import { DialogWrapperService } from 'src/app/shared/components/dialog/dialog-wrapper/dialog-wrapper.service';
 
 export const OnboardingPolicy = () => {
@@ -18,6 +18,7 @@ export const OnboardingPolicy = () => {
 
     const dialogRef = dialog.openErrorInfoDialog(errorMessage, errorTitle);
     dialogRef.afterClosed().pipe(
+      take(1),
       switchMap(() => authService.logout())
     ).subscribe(() => {
       router.navigate(['/home']).then(() => false);
