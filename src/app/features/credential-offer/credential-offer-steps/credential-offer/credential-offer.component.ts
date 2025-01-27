@@ -36,7 +36,6 @@ export class CredentialOfferComponent{
   //currently needed because of backend response
   public removeProtocol(input: string): string {
      return input.replace(/:\/\//g, '');
-    // return ''
 }
 
 public onRefreshCredentialClick(event:Event): void{
