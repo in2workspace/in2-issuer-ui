@@ -4,6 +4,7 @@ export interface TempPower {
   tmf_function: string;
   tmf_type: string;
   execute: boolean;
+  delegate: boolean;
   create: boolean;
   update: boolean;
   delete: boolean;

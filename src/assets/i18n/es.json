@@ -71,7 +71,7 @@
     "updated": "Actualizado",
     "cancel": "Cancelar",
     "create" : "Crear Credencial",
-    "buttonAdmin":"Nueva Credencial como Signer"
+    "buttonAdmin":"Nueva Credencial como SysAdmin"
   },
     "power": {
       "power": "Powers",
@@ -84,6 +84,7 @@
       "certification": "Certification",
       "add": "Add",
       "execute": "Execute",
+      "delegate": "Delegate",
       "create": "Create",
       "update": "Update",
       "delete": "Delete",

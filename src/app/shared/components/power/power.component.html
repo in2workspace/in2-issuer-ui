@@ -24,19 +24,15 @@
             <mat-option [value]="''">
               {{ "power.select" | translate }}
             </mat-option>
-            @if (organizationIdentifierIsIn2) {
-              <mat-option value="Onboarding" [disabled]="isOptionDisabled('Onboarding')">
-                {{ "power.onboarding" | translate }}
-              </mat-option>
-            }
+            <mat-option value="Onboarding" [disabled]="isOptionDisabled('Onboarding')">
+              {{ "power.onboarding" | translate }}
+            </mat-option>
             <mat-option value="ProductOffering" [disabled]="isOptionDisabled('ProductOffering')">
               {{ "power.productOffering" | translate }}
             </mat-option>
-            @if (organizationIdentifierIsIn2) {
-              <mat-option value="Certification" [disabled]="isOptionDisabled('Certification')">
-                {{ "power.certification" | translate }}
-              </mat-option>
-            }
+            <mat-option value="Certification" [disabled]="isOptionDisabled('Certification')">
+              {{ "power.certification" | translate }}
+            </mat-option>
           </mat-select>
         </mat-form-field>
         <button
@@ -65,14 +61,18 @@
 <!-- Define a template for the toggle section -->
 <ng-template #toggleTemplate let-option="option" let-i="i">
   <div class="functions-container">
-    @if (option.tmf_function === 'Certification' && organizationIdentifierIsIn2) {
+    @if (option.tmf_function === 'Onboarding') {
       <div class="toggles-container">
-        <mat-slide-toggle [(ngModel)]="option.upload" name="upload-{{ i }}" [disabled]="isDisabled" color="primary">
-          {{ "power.upload" | translate }}
+        @if (isSysAdmin){
+        <mat-slide-toggle [(ngModel)]="option.execute" name="execute-{{ i }}" [disabled]="isDisabled" color="primary">
+          {{ "power.execute" | translate }}
         </mat-slide-toggle>
-        <mat-slide-toggle [(ngModel)]="option.attest" name="attest-{{ i }}" [disabled]="isDisabled" color="primary">
-          {{ "power.attest" | translate }}
+        }
+        @if (isSuperAdmin){
+        <mat-slide-toggle [(ngModel)]="option.delegate" name="delegate-{{ i }}" [disabled]="isDisabled" color="primary">
+          {{ "power.delegate" | translate }}
         </mat-slide-toggle>
+        }
       </div>
     }
     @if (option.tmf_function === 'ProductOffering') {
@@ -88,10 +88,13 @@
         </mat-slide-toggle>
       </div>
     }
-    @if (option.tmf_function === 'Onboarding' && organizationIdentifierIsIn2) {
+    @if (option.tmf_function === 'Certification') {
       <div class="toggles-container">
-        <mat-slide-toggle [(ngModel)]="option.execute" name="execute-{{ i }}" [disabled]="isDisabled" color="primary">
-          {{ "power.execute" | translate }}
+        <mat-slide-toggle [(ngModel)]="option.upload" name="upload-{{ i }}" [disabled]="isDisabled" color="primary">
+          {{ "power.upload" | translate }}
+        </mat-slide-toggle>
+        <mat-slide-toggle [(ngModel)]="option.attest" name="attest-{{ i }}" [disabled]="isDisabled" color="primary">
+          {{ "power.attest" | translate }}
         </mat-slide-toggle>
       </div>
     }

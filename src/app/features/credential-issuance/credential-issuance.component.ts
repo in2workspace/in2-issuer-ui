@@ -14,7 +14,7 @@ import { map, take } from "rxjs/operators";
 })
 export class CredentialIssuanceComponent {
   public readonly route = inject(ActivatedRoute);
-  public asSigner$ : Observable<boolean> = this.route.paramMap.pipe(
+  public asSysAdmin$ : Observable<boolean> = this.route.paramMap.pipe(
     take(1),
     map(params => !!params.get('id')))
 }

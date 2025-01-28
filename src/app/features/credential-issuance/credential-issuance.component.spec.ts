@@ -80,26 +80,26 @@ describe('CredentialIssuanceComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should set "asSigner$" to true when param "id" is present', fakeAsync(() => {
-    let asSignerValue: boolean | undefined;
-    component.asSigner$.subscribe(value => (asSignerValue = value));
+  it('should set "asSysAdmin$" to true when param "id" is present', fakeAsync(() => {
+    let asSysAdminValue: boolean | undefined;
+    component.asSysAdmin$.subscribe(value => (asSysAdminValue = value));
     tick();
-    expect(asSignerValue).toBeTruthy();
+    expect(asSysAdminValue).toBeTruthy();
   }));
 
-  it('should set "asSigner$" to false when param "id" is not present', fakeAsync(() => {
+  it('should set "asSysAdmin$" to false when param "id" is not present', fakeAsync(() => {
     const mockActivatedRoute = TestBed.inject(ActivatedRoute);
     (mockActivatedRoute as any).paramMap = of(convertToParamMap({}));
-  
+
     fixture = TestBed.createComponent(CredentialIssuanceComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  
-    let asSignerValue: boolean | undefined;
-    component.asSigner$.subscribe(value => (asSignerValue = value));
+
+    let asSysAdminValue: boolean | undefined;
+    component.asSysAdmin$.subscribe(value => (asSysAdminValue = value));
     tick();
-    expect(asSignerValue).toBeFalsy();
+    expect(asSysAdminValue).toBeFalsy();
   }));
-  
+
 
 });

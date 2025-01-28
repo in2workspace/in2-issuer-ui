@@ -62,13 +62,13 @@ import { LoaderService } from 'src/app/core/services/loader.service';
       RouterLink,
       TranslatePipe,
       UnicodeValidatorDirective,
-  ],  
+  ],
 })
 export class FormCredentialComponent implements OnInit, OnDestroy {
   @ViewChild('formDirective') public formDirective!: FormGroupDirective;
   @Output() public sendReminder = new EventEmitter<void>();
   @Input({required:true}) public viewMode: 'create' | 'detail' = 'create';
-  @Input() public asSigner: boolean = false;
+  @Input() public asSysAdmin: boolean = false;
   @Input() public isDisabled: boolean = false;
   @Input() public title: string = '';
   @Input() public power: Power[] = [];
@@ -120,7 +120,7 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
     .pipe(takeUntilDestroyed(this.destroyRef))
     .subscribe(mandator2 => {
       if (mandator2) {
-        if(this.viewMode === "create" && !this.asSigner){
+        if(this.viewMode === "create" && !this.asSysAdmin){
           this.mandator = {
             'organizationIdentifier': mandator2.organizationIdentifier,
             'organization': mandator2.organization,
@@ -181,9 +181,9 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
   public submitCredential(): Observable<any> {
     //optional
     const selectedMandateeCountry: Country|undefined = this.countryService.getCountryFromIsoCode(this.selectedMandateeCountryIsoCode);
-    //mandatory if asSigner
+    //mandatory if asSysAdmin
     let selectedMandatorCountry: Country|undefined = undefined;
-    if(this.asSigner){
+    if(this.asSysAdmin){
       selectedMandatorCountry = this.countryService.getCountryFromName(this.mandator.country);
     }
 
@@ -200,7 +200,7 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
           this.resetForm.bind(this)
         )
         .pipe(
-          switchMap(()  => 
+          switchMap(()  =>
             from(this.router.navigate(['/organization/credentials'])).pipe(
               tap(() => location.reload())
             )
@@ -225,7 +225,7 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
       .subscribe(mandator2 => {
         if (mandator2) {
           this.mandator = mandator2;
-          this.signer = { 
+          this.signer = {
             'organizationIdentifier': mandator2.organizationIdentifier,
             'organization': mandator2.organization,
             'commonName':mandator2.commonName,

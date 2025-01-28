@@ -22,7 +22,6 @@ export const OnboardingPolicy = () => {
     ).subscribe(() => {
       router.navigate(['/home']).then(() => false);
     });
-    
     return false;
   }
 };

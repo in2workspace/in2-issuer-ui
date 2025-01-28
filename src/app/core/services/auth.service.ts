@@ -98,13 +98,23 @@ export class AuthService {
       }
     }
 
-
-  // POLICY: login_restriction_policy
+  // POLICY: onboarding_execute_policy
   public hasOnboardingExecutePower(): boolean {
     return this.userPowers.some((power: Power) => {
       if (power.tmf_function === "Onboarding") {
         const action = power.tmf_action;
         return action === "Execute" || (Array.isArray(action) && action.includes("Execute"));
+      }
+      return false;
+    });
+  }
+
+  // POLICY: onboarding_delegate_policy
+  public hasOnboardingDelegatePower(): boolean {
+    return this.userPowers.some((power: Power) => {
+      if (power.tmf_function === "Onboarding") {
+        const action = power.tmf_action;
+        return action === "Delegate" || (Array.isArray(action) && action.includes("Delegate"));
       }
       return false;
     });
@@ -117,6 +127,11 @@ export class AuthService {
       return "VATES-B60645900" === userData.organizationIdentifier;
     }
     return false
+  }
+
+  // POLICY: is_super_admin_policy
+  public isSuperAdmin(): boolean {
+    return this.hasOnboardingDelegatePower() && this.hasIn2OrganizationIdentifier();
   }
 
   public getMandator(): Observable<Mandator | null> {

@@ -11,7 +11,7 @@ import { DialogData } from '../dialog/dialog.component';
 import { of } from 'rxjs';
 import { DialogWrapperService } from '../dialog/dialog-wrapper/dialog-wrapper.service';
 
-const mockDialogRef = { 
+const mockDialogRef = {
   afterClosed:jest.fn().mockReturnValue(of(true)) };
 
 describe('PowerComponent', () => {
@@ -21,7 +21,7 @@ describe('PowerComponent', () => {
 
   let translateService: TranslateService;
   let mockDialog : { openDialogWithCallback:jest.Mock<any> };
-  let mockAuthService: { hasIn2OrganizationIdentifier: jest.Mock };
+  let mockAuthService: { isSuperAdmin: jest.Mock, hasIn2OrganizationIdentifier: jest.Mock, hasOnboardingDelegatePower: jest.Mock, hasOnboardingExecutePower: jest.Mock };
   let mockFormService: {
     getAddedPowers: jest.Mock,
     getPlainAddedPowers: jest.Mock,
@@ -39,6 +39,9 @@ describe('PowerComponent', () => {
     }
     mockAuthService = {
       hasIn2OrganizationIdentifier: jest.fn().mockReturnValue(true),
+      hasOnboardingDelegatePower: jest.fn().mockReturnValue(true),
+      hasOnboardingExecutePower: jest.fn().mockReturnValue(true),
+      isSuperAdmin: jest.fn().mockReturnValue(of(true)),
     };
     mockFormService = {
       getAddedPowers: jest.fn(),
@@ -92,22 +95,37 @@ describe('PowerComponent', () => {
     expect(component.organizationIdentifierIsIn2).toBe(true);
   });
 
+  it('should call hasOnboardingExecutePower on ngOnInit', () => {
+    const spy = jest.spyOn(mockAuthService, 'hasOnboardingExecutePower');
+    component.ngOnInit();
+    expect(spy).toHaveBeenCalled();
+    expect(component.hasOnboardingExecutePower).toBe(true);
+  });
+
+  it('should call isSysAdmin on ngOnInit', () => {
+    const spy = jest.spyOn(mockAuthService, 'hasOnboardingDelegatePower');
+    component.ngOnInit();
+    expect(spy).toHaveBeenCalled();
+    expect(component.isSysAdmin).toBe(true);
+  });
+
+
   it('should not add power if is disabled', ()=>{
     component.isDisabled = true;
     component.addPower();
     expect(mockFormService.addPower).not.toHaveBeenCalled();
   });
 
-  it('should not add "Onboarding" option if organizationIdentifierIsIn2 is false', () => {
-    component.isDisabled = false;
-    mockAuthService.hasIn2OrganizationIdentifier.mockReturnValue(false);
-    mockFormService.getPlainSelectedPower.mockReturnValue('Onboarding');
-
-    component.ngOnInit();
-    component.addPower();
-
-    expect(mockFormService.addPower).not.toHaveBeenCalled();
-  });
+  // it('should not add "Onboarding" option if organizationIdentifierIsIn2 is false', () => {
+  //   component.isDisabled = false;
+  //   mockAuthService.hasIn2OrganizationIdentifier.mockReturnValue(false);
+  //   mockFormService.getPlainSelectedPower.mockReturnValue('Onboarding');
+  //
+  //   component.ngOnInit();
+  //   component.addPower();
+  //
+  //   expect(mockFormService.addPower).not.toHaveBeenCalled();
+  // });
 
   it('should add "Onboarding" option if organizationIdentifierIsIn2 is true', () => {
     mockAuthService.hasIn2OrganizationIdentifier.mockReturnValue(true);
@@ -124,6 +142,7 @@ describe('PowerComponent', () => {
         tmf_function: 'Onboarding',
         tmf_type: 'Domain',
         execute: false,
+        delegate: false,
         create: false,
         update: false,
         delete: false,
@@ -150,6 +169,7 @@ describe('PowerComponent', () => {
         tmf_function: 'Certification',
         tmf_type: 'Domain',
         execute: false,
+        delegate: false,
         create: false,
         update: false,
         delete: false,
@@ -187,6 +207,7 @@ describe('PowerComponent', () => {
         tmf_function: 'Certification',
         tmf_type: 'Domain',
         execute: false,
+        delegate: false,
         create: false,
         update: false,
         delete: false,
@@ -218,18 +239,18 @@ describe('PowerComponent', () => {
       status: 'default',
       loadingData: undefined
     };
-  
+
     jest.spyOn(mockFormService, 'removePower').mockImplementation();
-  
+
     component.removePower(powerToRemove);
-  
+
     expect(mockDialog.openDialogWithCallback).toHaveBeenCalledWith(
       expect.objectContaining(dialogData),
       expect.any(Function)
     );
-  
+
     const [, callbackFn] = mockDialog.openDialogWithCallback.mock.calls[0];
-  
+
     callbackFn();
     expect(mockFormService.removePower).toHaveBeenCalledWith(powerToRemove);
   });
