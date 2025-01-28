@@ -113,6 +113,7 @@ export class AuthService {
         console.log("AuthService --> hasOnboardingExecutePower() --> Action? " + action)
         return action === "Execute" || (Array.isArray(action) && action.includes("Execute"));
       }
+      console.log("AuthService --> hasOnboardingExecutePower() --> Power.tmf_function NOT! has Onboarding")
       return false;
     });
   }
