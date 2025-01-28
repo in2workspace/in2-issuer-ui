@@ -34,10 +34,15 @@ export class AuthService {
       this.isAuthenticatedSubject.next(isAuthenticated);
 
       if (isAuthenticated) {
+        console.log("AuthService --> checkAuth() --> isAuthenticated? TRUE");
         this.userPowers = this.extractUserPowers(userData);
         this.userDataSubject.next(userData);
 
+        console.log("AuthService --> checkAuth() --> UserData: " + userData);
+
         const learCredential = this.extractVCFromUserData(userData)
+
+        console.log("AuthService --> checkAuth() --> LearCredential: " + learCredential);
 
         const mandator = {
           organizationIdentifier: learCredential.credentialSubject.mandate.mandator.organizationIdentifier,
@@ -102,7 +107,9 @@ export class AuthService {
   public hasOnboardingExecutePower(): boolean {
     return this.userPowers.some((power: Power) => {
       if (power.tmf_function === "Onboarding") {
+        console.log("AuthService --> hasOnboardingExecutePower() --> Power.tmf_function has Onboarding")
         const action = power.tmf_action;
+        console.log("AuthService --> hasOnboardingExecutePower() --> Action? " + action)
         return action === "Execute" || (Array.isArray(action) && action.includes("Execute"));
       }
       return false;

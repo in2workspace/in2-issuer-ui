@@ -11,8 +11,10 @@ export const OnboardingPolicy = () => {
   const translate = inject(TranslateService);
 
   if (authService.hasOnboardingExecutePower()) {
+    console.log("OnboardingPolicy --> TRUE")
     return true;
   } else {
+    console.log("OnboardingPolicy --> FALSE")
     const errorTitle = translate.instant("error.policy.onboarding.title");
     const errorMessage = translate.instant("error.policy.onboarding.message");
 
