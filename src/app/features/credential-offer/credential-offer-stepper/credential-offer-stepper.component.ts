@@ -8,7 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { NavbarComponent } from 'src/app/shared/components/navbar/navbar.component';
 import { QRCodeModule } from 'angularx-qrcode';
 import { MatIcon } from '@angular/material/icon';
-import { catchError, filter, map, merge, Observable, of, scan, startWith, Subject, switchMap, take, throwError } from 'rxjs';
+import { catchError, EMPTY, filter, interval, map, merge, Observable, of, scan, shareReplay, startWith, Subject, switchMap, take, tap, throwError, timer } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogWrapperService } from 'src/app/shared/components/dialog/dialog-wrapper/dialog-wrapper.service';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
@@ -17,6 +17,7 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { CredentialOfferResponse } from 'src/app/core/models/dto/credential-offer-response';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { AsyncPipe } from '@angular/common';
 
 export type StepperIndex = 0 | 1;
 export type CredentialOfferStep = 'onboarding' | 'offer';
@@ -40,6 +41,7 @@ export const undefinedCredentialOfferParamsState: CredentialOfferParamsState = {
   selector: 'app-credential-offer-stepper',
   standalone: true,
   imports: [
+    AsyncPipe,
     CredentialOfferComponent, 
     CredentialOfferOnboardingComponent,
     MatButtonModule, 
@@ -101,8 +103,12 @@ export class CredentialOfferStepperComponent implements OnInit{
       }),
       startWith({
         loading: true
-      })
+      }),
+      tap(val => {console.log('fethCred: ')
+      console.log(val)
+})
     )),
+    shareReplay()
   );
 
   public offerParams$: Signal<CredentialOfferParamsState> = toSignal(
@@ -125,8 +131,56 @@ export class CredentialOfferStepperComponent implements OnInit{
     initialValue: 'horizontal'
   });
 
+  private firstCountdown$ = this.fetchedCredentialOffer$
+    .pipe(
+      filter(val => val.loading === false),
+      switchMap(
+        () => timer(6000).pipe( //9 * 1000 * 60
+          map(()=>'END'),
+          startWith('START'))
+    ),
+    tap(val=>console.log('first count val: ' + val)));
+
+  public showPopup$ = this.firstCountdown$.pipe(
+    //close popup when first countdown restarts
+    map(val => {
+      if(val === 'START'){
+      return false
+    }else{
+      return true 
+    }}),
+    tap(val=>console.log('popup show? ' + val)), shareReplay()
+  );
+
+  endSessionTime = 3;
+  public endSessionCountdown$ = this.showPopup$.pipe(
+    // quan s'obre popup, comença compte enrere; quan es tanca, completa
+    filter(isOpenPopup => isOpenPopup === true),
+    switchMap(isPopupOpen => {
+      if(isPopupOpen){
+        return interval(1000).pipe(
+          take(this.endSessionTime + 1),
+          tap(val=>console.log('time: ' + val)),
+          map(time=>this.endSessionTime - time),
+          tap(val => console.log( this.endSessionTime + ' - ' + time + ' = ' + val))
+        ) //1 minut (* 60)
+      }else{
+        return EMPTY;
+      }
+    }), shareReplay()
+  )
+
+  // en completar compte enrere, es navega a home
+  private navigateHomeAfterEndSessionEffect = this.endSessionCountdown$.pipe(
+    tap(val=>console.log('navigate after? time = ' + val)),
+    filter(time => time === 0),
+    tap(()=> console.log('home')),
+    tap(()=>this.router.navigate(['/home']))
+  );
+
   public ngOnInit(): void {
     this.getInitUrlParams$$.next();
+    this.navigateHomeAfterEndSessionEffect.subscribe(()=>console.log('effect!'));
   }
 
   public onSelectedStepChange(index:number){
@@ -166,16 +220,22 @@ export class CredentialOfferStepperComponent implements OnInit{
     const offer = this.offerParams$();
     let params: Observable<Partial<CredentialOfferParams>> = throwError(()=>new Error('No transaction nor c code to fetch credential offer.'));
     
-    if(offer?.c_transaction_code){
-      params = this.getCredentialOfferByCTransactionCode(offer.c_transaction_code);
-    }else if(offer?.transaction_code){
-      params = this.getCredentialOfferByTransactionCode(offer.transaction_code);
-    }else{
-      this.redirectToHome();
-      console.error("Client error: Transaction code not found. Can't get credential offer");
-      const message = this.translate.instant("error.credentialOffer.invalid-url");
-      this.dialog.openErrorInfoDialog(message);
-    }
+    params = of({
+      credential_offer_uri: 'uri',
+      transaction_code: 'trans',
+      c_transaction_code: 'ccccc',
+    });
+    console.log('getting mock cred')
+    //todo if(offer?.c_transaction_code){
+    //   params = this.getCredentialOfferByCTransactionCode(offer.c_transaction_code);
+    // }else if(offer?.transaction_code){
+    //   params = this.getCredentialOfferByTransactionCode(offer.transaction_code);
+    // }else{
+    //   this.redirectToHome();
+    //   console.error("Client error: Transaction code not found. Can't get credential offer");
+    //   const message = this.translate.instant("error.credentialOffer.invalid-url");
+    //   this.dialog.openErrorInfoDialog(message);
+    // }
     return params;
   }
 
