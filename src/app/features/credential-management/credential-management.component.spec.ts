@@ -38,6 +38,15 @@ describe('CredentialManagementComponent', () => {
       },
       hasIn2OrganizationIdentifier(){
         return true
+      },
+      hasOnboardingExecutePower(){
+        return true
+      },
+      hasOnboardingDelegatePower(){
+        return true
+      },
+      isSuperAdmin(){
+        return true
       }
     } as jest.Mocked<any>
 

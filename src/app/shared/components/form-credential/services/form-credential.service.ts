@@ -146,6 +146,7 @@ export class FormCredentialService {
       tmf_function: power.tmf_function,
       tmf_type: power.tmf_type,
       execute: tmf_action.includes('Execute'),
+      delegate: tmf_action.includes('Delegate'),
       create: tmf_action.includes('Create'),
       update: tmf_action.includes('Update'),
       delete: tmf_action.includes('Delete'),
@@ -155,16 +156,11 @@ export class FormCredentialService {
   }
 
   public checkTmfFunction(option: TempPower): Power {
-    if (option.tmf_function === 'Onboarding') {
-      return {
-        tmf_action: option.execute ? 'Execute' : '',
-        tmf_domain: option.tmf_domain,
-        tmf_function: option.tmf_function,
-        tmf_type: option.tmf_type
-      };
-    }
     let tmf_action: string[] = [];
     switch (option.tmf_function) {
+      case 'Onboarding':
+        tmf_action=isOnboarding(option,tmf_action)
+        break;
       case 'Certification':
         tmf_action=isCertification(option,tmf_action)
         break;
@@ -191,7 +187,7 @@ export class FormCredentialService {
 
   public powersHaveFunction(): boolean{
     return this.getPlainAddedPowers().every((option:TempPower) =>
-      option.execute || option.create || option.update || option.delete || option.upload || option.attest
+      option.execute || option.delegate || option.create || option.update || option.delete || option.upload || option.attest
     );
   }
 
@@ -199,6 +195,13 @@ export class FormCredentialService {
     return this.getPlainAddedPowers().length > 0;
   }
 
+}
+
+export function isOnboarding(option: TempPower,tmf_action: string[]) {
+  const tmf_action2=tmf_action;
+  if (option.execute) tmf_action2.push('Execute');
+  if (option.delegate) tmf_action2.push('Delegate');
+  return tmf_action2;
 }
 
 export function isCertification(option: TempPower,tmf_action: string[]) {

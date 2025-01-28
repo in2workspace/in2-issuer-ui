@@ -82,6 +82,7 @@ describe('FormCredentialService', () => {
       tmf_function: 'ProductOffering',
       tmf_type: 'type',
       execute: false,
+      delegate: false,
       create: false,
       update: false,
       delete: false,
@@ -563,13 +564,14 @@ it('should not append country prefix to mobile_phone if already present', (done)
       tmf_domain: 'domain1',
       tmf_function: 'Onboarding',
       tmf_type: 'type1',
-      execute: true
+      execute: true,
+      delegate: true
     };
 
     const result = service.checkTmfFunction(tempPower);
 
     expect(result).toEqual({
-      tmf_action: 'Execute',
+      tmf_action: ['Execute','Delegate'],
       tmf_domain: 'domain1',
       tmf_function: 'Onboarding',
       tmf_type: 'type1'

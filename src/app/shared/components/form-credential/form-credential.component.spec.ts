@@ -26,6 +26,7 @@ const mockTempPower: TempPower = {
   tmf_function: 'function1',
   tmf_type: 'type1',
   execute: true,
+  delegate: true,
   create: false,
   update: false,
   delete: true,
@@ -149,6 +150,15 @@ describe('FormCredentialComponent', () => {
         return of(void 0);
       },
       hasIn2OrganizationIdentifier(){
+        return true
+      },
+      hasOnboardingExecutePower(){
+        return true
+      },
+      hasOnboardingDelegatePower(){
+        return true
+      },
+      isSuperAdmin(){
         return true
       },
       getSigner(){
@@ -308,7 +318,7 @@ describe('FormCredentialComponent', () => {
     jest.spyOn(mockAuthService, 'hasIn2OrganizationIdentifier').mockReturnValue(false);
     jest.spyOn(mockAuthService, 'getMandator').mockReturnValue(of(mockMandator));
     component.viewMode='create';
-    component.asSigner=false;
+    component.asSysAdmin=false;
 
     component.ngOnInit();
     fixture.detectChanges();
@@ -323,7 +333,7 @@ describe('FormCredentialComponent', () => {
       country: mockMandator.country,
     });
     expect(component.signer).toEqual(mockSigner);
-    expect(component.asSigner).toBe(false);
+    expect(component.asSysAdmin).toBe(false);
   }));
 
 
@@ -428,27 +438,27 @@ describe('FormCredentialComponent', () => {
         message: ''
       }
     };
-  
+
     jest.spyOn(component, 'submitCredential').mockReturnValue(of('Submitted'));
-  
+
     component.openSubmitDialog();
-  
+
     expect(dialogService.openDialogWithCallback).toHaveBeenCalledWith(
       expect.objectContaining(dialogData),
       expect.any(Function)
     );
-  
+
     const [, callbackFn] = dialogService.openDialogWithCallback.mock.calls[0];
-  
+
     callbackFn().subscribe(() => {
       expect(component.submitCredential).toHaveBeenCalled();
     });
   });
-  
+
 
   it('it should submit credential when submitCredential is called with selected power', () => {
     component.selectedMandateeCountryIsoCode = 'US';
-    component.asSigner = false;
+    component.asSysAdmin = false;
     mockCountryService.getCountryFromIsoCode.mockReturnValue('States');
     mockFormCredentialService.hasSelectedPower.mockReturnValue(true);
     mockFormCredentialService.powersHaveFunction.mockReturnValue(true);
@@ -472,7 +482,7 @@ describe('FormCredentialComponent', () => {
 
   it('it should submit credential with selected mandator country if is Signer', () => {
     mockCountryService.getCountryFromIsoCode.mockReturnValue('States');
-    component.asSigner = true;
+    component.asSysAdmin = true;
     mockCountryService.getCountryFromName.mockReturnValue('mandatorCountry');
     mockFormCredentialService.hasSelectedPower.mockReturnValue(true);
     mockFormCredentialService.powersHaveFunction.mockReturnValue(true);
@@ -517,13 +527,13 @@ describe('FormCredentialComponent', () => {
   it('should navigate to credentials if submitting credential is successful', fakeAsync(() => {
     mockCountryService.getCountryFromIsoCode.mockReturnValue('States');
     mockCountryService.getCountryFromName.mockReturnValue('mandatorCountry');
-  
-    component.asSigner = true;
+
+    component.asSysAdmin = true;
     mockFormCredentialService.hasSelectedPower.mockReturnValue(true);
     mockFormCredentialService.powersHaveFunction.mockReturnValue(true);
-  
+
     jest.spyOn(mockFormCredentialService, 'submitCredential').mockReturnValue(of('Success'));
-  
+
     Object.defineProperty(window, 'location', {
       value: {
         ...window.location,
@@ -531,14 +541,14 @@ describe('FormCredentialComponent', () => {
       },
       writable: true,
     });
-  
+
     jest.spyOn(mockRouter, 'navigate').mockResolvedValue(true);
-  
+
     component.submitCredential().subscribe((res) => {
-      
+
     });;
     tick();
-  
+
     expect(mockFormCredentialService.submitCredential).toHaveBeenCalledWith(
       component.credential,
       'States',
@@ -551,7 +561,7 @@ describe('FormCredentialComponent', () => {
       expect.any(Function)
     );
     tick();
-  
+
     expect(mockRouter.navigate).toHaveBeenCalledWith(['/organization/credentials']);
     // expect(window.location.reload).toHaveBeenCalled();
   }));

@@ -71,7 +71,7 @@
     "updated": "Actualitzat",
     "cancel": "Cancel·lar",
     "create" : "Crear Credencial",
-    "buttonAdmin": "Nova Credencial com a Signer"
+    "buttonAdmin": "Nova Credencial com a SysAdmin"
   },
     "power": {
       "power": "Powers",
@@ -84,6 +84,7 @@
       "certification": "Certification",
       "add": "Add",
       "execute": "Execute",
+      "delegate": "Delegate",
       "create": "Create",
       "update": "Update",
       "delete": "Delete",

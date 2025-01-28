@@ -28,6 +28,10 @@ export class PowerComponent implements OnInit{
   @Input() public viewMode: 'create' | 'detail' = 'create'; //currently isDisabled and viewMode are interchangeable
   @Input() public power: TempPower[] = [];
   public organizationIdentifierIsIn2: boolean = false;
+  public hasOnboardingExecutePower: boolean = false;
+  public isSysAdmin: boolean = false;
+  public isSuperAdmin: boolean = false;
+
 
   //streams (form states)
   public addedPowers$: Observable<TempPower[]>;
@@ -47,6 +51,9 @@ export class PowerComponent implements OnInit{
 
   public ngOnInit(){
     this.organizationIdentifierIsIn2 = this.authService.hasIn2OrganizationIdentifier();
+    this.hasOnboardingExecutePower = this.authService.hasOnboardingExecutePower();
+    this.isSysAdmin = this.authService.hasOnboardingDelegatePower();
+    this.isSuperAdmin = this.authService.isSuperAdmin();
   }
 
   public addPower(): void {
@@ -55,11 +62,11 @@ export class PowerComponent implements OnInit{
 
     if(this.isOptionDisabled(selectedPower)) return;
 
-    if (selectedPower === 'Onboarding' && !this.organizationIdentifierIsIn2) {
+    if (selectedPower === 'Onboarding' && !this.hasOnboardingExecutePower) {
       return;
     }
 
-    if (selectedPower === 'Certification' && !this.organizationIdentifierIsIn2) {
+    if (selectedPower === 'Certification' && !this.hasOnboardingExecutePower) {
       return;
     }
 
@@ -69,6 +76,7 @@ export class PowerComponent implements OnInit{
       tmf_function: selectedPower,
       tmf_type: 'Domain',
       execute: false,
+      delegate: false,
       create: false,
       update: false,
       delete: false,
@@ -88,6 +96,7 @@ export class PowerComponent implements OnInit{
         break;
       case 'Onboarding':
         newPower.execute = false;
+        newPower.delegate = false;
         break;
       default:
         break;

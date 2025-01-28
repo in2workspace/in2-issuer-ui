@@ -34,10 +34,15 @@ export class AuthService {
       this.isAuthenticatedSubject.next(isAuthenticated);
 
       if (isAuthenticated) {
+        console.log("AuthService --> checkAuth() --> isAuthenticated? TRUE");
         this.userPowers = this.extractUserPowers(userData);
         this.userDataSubject.next(userData);
 
+        console.log("AuthService --> checkAuth() --> UserData: " + userData);
+
         const learCredential = this.extractVCFromUserData(userData)
+
+        console.log("AuthService --> checkAuth() --> LearCredential: " + learCredential);
 
         const mandator = {
           organizationIdentifier: learCredential.credentialSubject.mandate.mandator.organizationIdentifier,
@@ -98,13 +103,27 @@ export class AuthService {
       }
     }
 
-
-  // POLICY: login_restriction_policy
+  // POLICY: onboarding_execute_policy
   public hasOnboardingExecutePower(): boolean {
+    return this.userPowers.some((power: Power) => {
+      console.log("AuthService --> hasOnboardingExecutePower() --> Pre If Check")
+      if (power.tmf_function === "Onboarding") {
+        console.log("AuthService --> hasOnboardingExecutePower() --> Power.tmf_function has Onboarding")
+        const action = power.tmf_action;
+        console.log("AuthService --> hasOnboardingExecutePower() --> Action? " + action)
+        return action === "Execute" || (Array.isArray(action) && action.includes("Execute"));
+      }
+      console.log("AuthService --> hasOnboardingExecutePower() --> Power.tmf_function NOT! has Onboarding")
+      return false;
+    });
+  }
+
+  // POLICY: onboarding_delegate_policy
+  public hasOnboardingDelegatePower(): boolean {
     return this.userPowers.some((power: Power) => {
       if (power.tmf_function === "Onboarding") {
         const action = power.tmf_action;
-        return action === "Execute" || (Array.isArray(action) && action.includes("Execute"));
+        return action === "Delegate" || (Array.isArray(action) && action.includes("Delegate"));
       }
       return false;
     });
@@ -117,6 +136,11 @@ export class AuthService {
       return "VATES-B60645900" === userData.organizationIdentifier;
     }
     return false
+  }
+
+  // POLICY: is_super_admin_policy
+  public isSuperAdmin(): boolean {
+    return this.hasOnboardingDelegatePower() && this.hasIn2OrganizationIdentifier();
   }
 
   public getMandator(): Observable<Mandator | null> {

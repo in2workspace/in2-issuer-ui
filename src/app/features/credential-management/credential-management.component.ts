@@ -42,14 +42,14 @@ export class CredentialManagementComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) public sort!: MatSort;
   public displayedColumns: string[] = ['status', 'subject', 'credential_type', 'updated'];
   public dataSource = new MatTableDataSource<CredentialProcedure>();
-  public isValidOrganizationIdentifier = false;
+  public isSysAdmin = false;
 
   private readonly credentialProcedureService = inject(CredentialProcedureService);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
   public ngOnInit(){
-    this.isValidOrganizationIdentifier = this.authService.hasIn2OrganizationIdentifier();
+    this.isSysAdmin = this.authService.hasOnboardingDelegatePower();
   }
 
   public ngAfterViewInit(): void {
@@ -95,8 +95,8 @@ export class CredentialManagementComponent implements OnInit, AfterViewInit {
     this.router.navigate(['/organization/credentials/create']);
   }
 
-  public createCredentialAsSigner(): void {
-    this.router.navigate(['/organization/credentials/create2', this.isValidOrganizationIdentifier ? "admin" : ""]);
+  public createCredentialAsSysAdmin(): void {
+    this.router.navigate(['/organization/credentials/create2', this.isSysAdmin ? "admin" : ""]);
   }
 
   public onRowClick(row: CredentialProcedure): void {

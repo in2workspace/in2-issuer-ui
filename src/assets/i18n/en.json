@@ -70,7 +70,7 @@
     "updated": "Updated",
     "cancel": "Cancel",
     "create" : "Create Credential",
-    "buttonAdmin": "New credential as Signer"
+    "buttonAdmin": "New credential as SysAdmin"
   },
   "power": {
     "power": "Powers",
@@ -83,6 +83,7 @@
     "certification": "Certification",
     "add": "Add",
     "execute": "Execute",
+    "delegate": "Delegate",
     "create": "Create",
     "update": "Update",
     "delete": "Delete",
