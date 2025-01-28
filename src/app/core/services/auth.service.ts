@@ -106,6 +106,7 @@ export class AuthService {
   // POLICY: onboarding_execute_policy
   public hasOnboardingExecutePower(): boolean {
     return this.userPowers.some((power: Power) => {
+      console.log("AuthService --> hasOnboardingExecutePower() --> Pre If Check")
       if (power.tmf_function === "Onboarding") {
         console.log("AuthService --> hasOnboardingExecutePower() --> Power.tmf_function has Onboarding")
         const action = power.tmf_action;
