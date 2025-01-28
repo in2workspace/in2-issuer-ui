@@ -64,7 +64,6 @@
     "first-assistance": "Consulta la ",
     "second-assistance": " per a més assistència.",
     "wallet-guide": "Guia d'Usuaris del Wallet",
-    "expire-warn": "El codi QR i l'enllaç són vàlids durant 10 minuts des del moment en què s'accedeix a aquesta pàgina. Per mantenir l'oferta activa, heu de refrescar el codi QR o l'enllaç dins d'aquest període de 10 minuts clicant a l'enllaç 'Obtenir una nova credencial' que trobareu a continuació.",
     "first-step": {
       "title": "Escaneja el codi QR per iniciar sessió i accedir al Wallet de DOME.",
       "test-purposes": "Per fer fer proves, accedeix al"

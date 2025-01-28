@@ -64,7 +64,6 @@
     "first-assistance": "Check the ",
     "second-assistance": " for assistance.",
     "wallet-guide": "Wallet Users Guide",
-    "expire-warn": "The QR code and link are valid for 10 minutes from the moment this page is accessed. To keep the offer active, you must refresh the QR code or link within this 10-minute window clicking the 'Get a new credential' link below.",
     "first-step":{
       "title": "Scan the QR code to log in and access the DOME Wallet.",
       "test-purposes": "For tests purposes, access the"
