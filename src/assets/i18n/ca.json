@@ -65,6 +65,7 @@
     "second-assistance": " per a més assistència.",
     "wallet-guide": "Guia d'Usuaris del Wallet",
     "ask-refresh": "L'oferta està a punt d'expirar. Vols refrescar-la o sortir?",
+    "remaining-time": "Temps restant:",
     "first-step": {
       "title": "Escaneja el codi QR per iniciar sessió i accedir al Wallet de DOME.",
       "test-purposes": "Per fer fer proves, accedeix al"
