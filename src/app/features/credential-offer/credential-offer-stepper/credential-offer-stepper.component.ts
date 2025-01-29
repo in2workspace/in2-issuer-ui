@@ -26,6 +26,7 @@ export interface CredentialOfferParams {
   credential_offer_uri: string|undefined,
   transaction_code: string|undefined,
   c_transaction_code: string|undefined,
+  c_transaction_code_expires_in: number|undefined
 }
 export interface CredentialOfferParamsState extends CredentialOfferParams {
   loading: boolean
@@ -35,18 +36,18 @@ export const undefinedCredentialOfferParamsState: CredentialOfferParamsState = {
     credential_offer_uri: undefined,
     transaction_code: undefined,
     c_transaction_code: undefined,
+    c_transaction_code_expires_in: undefined,
     loading: false
   };
 
   //REFRESH-SESSION RELATED CONSTANTS
   type StartOrEnd = 'START' | 'END';
-  //todo env variables?
   //todo change times 
   //time before refresh offer popup is shown
   //it should be less than in the backend, for the time lost in fetching
-  const mainSessionTime = 6 * 1000; //in miliseconds
+  const defaultMainOfferLifespan = 6 * 1000; //in miliseconds
   //countdown for the refresh offer popup; when it comes to 0, redirects to home
-  const endSessionTime = 10; //in seconds
+  const endSessionTime = 10; //in seconds; should always be 60s
 
 @Component({
   selector: 'app-credential-offer-stepper',
@@ -150,12 +151,15 @@ export class CredentialOfferStepperComponent implements OnInit{
   private readonly startOrEndFirstCountdown$: Observable<StartOrEnd> = this.fetchedCredentialOffer$
   .pipe(
     filter(val => val.loading === false),
-    switchMap((): Observable<'START' | 'END'> => 
-      timer(mainSessionTime).pipe(
-        map(() => 'END' as StartOrEnd),
-        startWith('START' as StartOrEnd)
-      )
-    ),
+    switchMap(offerParams => {
+      const expireTime = offerParams.c_transaction_code_expires_in;
+      if(!expireTime) console.error('Offer expiration time not received from API; using default.');
+      const mainSessionTime = expireTime ?? defaultMainOfferLifespan;
+        return timer(mainSessionTime).pipe(
+          map(() => 'END' as StartOrEnd),
+          startWith('START' as StartOrEnd)
+        )
+    }),
     shareReplay()
   );
 
@@ -214,10 +218,12 @@ export class CredentialOfferStepperComponent implements OnInit{
       console.info('Offer lifespan expired. Redirect to home.');
       this.dialog['dialog'].closeAll();
       const errorMessage = this.translate.instant("error.credentialOffer.expired");
-      this.dialog.openErrorInfoDialog(errorMessage);
       this.redirectToHome();
+      this.dialog.openErrorInfoDialog(errorMessage);
     })
   );
+
+  //END EXPIRATION TIME STREAMS
 
   public ngOnInit(): void {
     this.getInitUrlParams$$.next();
@@ -259,6 +265,7 @@ export class CredentialOfferStepperComponent implements OnInit{
       credential_offer_uri: undefined,
       transaction_code: transactionCodeParam,
       c_transaction_code: cCodeParam,
+      c_transaction_code_expires_in: undefined,
       loading: false
     };
     return updatedParams;
@@ -359,7 +366,10 @@ export class CredentialOfferStepperComponent implements OnInit{
   }
 
   public redirectToHome(){
+    //todo remove both logs
+    console.info('redirect home before timeout')
     setTimeout(()=>{
+      console.info('redirect home after timeout')
       this.router.navigate(['/home']);
     }, 0);
   }

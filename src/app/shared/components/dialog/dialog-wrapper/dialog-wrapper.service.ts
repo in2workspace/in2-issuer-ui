@@ -25,6 +25,8 @@ export class DialogWrapperService {
   //similar to openDialog, but with a predefined error data
   //if a dialog is already open, it will update its data instead of opening a new one
   public openErrorInfoDialog(message: string, title?: string): MatDialogRef<DialogComponent, any>{
+    //todo remove
+    console.info('Open error info dialog')
     const errorDialogData: DialogData = { 
       title: title ?? 'Error',
       message: message,
