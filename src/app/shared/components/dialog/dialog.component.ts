@@ -31,6 +31,7 @@ export interface DialogDefaultContent {
 @Component({
     selector: 'app-dialog',
     templateUrl: './dialog.component.html',
+    //for styles, look _dialogscss in global styles
     standalone: true,
     imports: [
         AsyncPipe,

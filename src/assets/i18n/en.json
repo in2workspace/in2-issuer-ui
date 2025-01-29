@@ -64,6 +64,7 @@
     "first-assistance": "Check the ",
     "second-assistance": " for assistance.",
     "wallet-guide": "Wallet Users Guide",
+    "ask-refresh": "Offer is about to expire. Would you like to refresh it or leave?",
     "first-step":{
       "title": "Scan the QR code to log in and access the DOME Wallet.",
       "test-purposes": "For tests purposes, access the"

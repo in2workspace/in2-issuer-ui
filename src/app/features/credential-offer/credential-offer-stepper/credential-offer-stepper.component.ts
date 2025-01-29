@@ -8,7 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { NavbarComponent } from 'src/app/shared/components/navbar/navbar.component';
 import { QRCodeModule } from 'angularx-qrcode';
 import { MatIcon } from '@angular/material/icon';
-import { catchError, EMPTY, filter, interval, map, merge, Observable, of, scan, shareReplay, startWith, Subject, switchMap, take, tap, throwError, timer } from 'rxjs';
+import { catchError, EMPTY, filter, interval, map, merge, Observable, of, scan, shareReplay, startWith, Subject, switchMap, take, takeUntil, tap, throwError, timer } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogWrapperService } from 'src/app/shared/components/dialog/dialog-wrapper/dialog-wrapper.service';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
@@ -37,6 +37,16 @@ export const undefinedCredentialOfferParamsState: CredentialOfferParamsState = {
     c_transaction_code: undefined,
     loading: false
   };
+
+  //REFRESH-SESSION RELATED CONSTANTS
+  const START = 'START' as const;
+  const END = 'END' as const;
+  //todo env variables?
+  //time before refresh offer popup is shown
+  //it should be less than in the backend, for the time lost in fetching
+  const mainSessionTime = 6 * 1000; //in miliseconds
+  //countdown for the refresh offer popup; when it comes to 0, redirects to home
+  const endSessionTime = 10; //in seconds
 
 @Component({
   selector: 'app-credential-offer-stepper',
@@ -75,7 +85,7 @@ export class CredentialOfferStepperComponent implements OnInit{
   public loadCredentialOfferOnRefreshClick$$ = new Subject<void>();
   
   //Effects
-  public updateUrlParamsOnOfferChange = effect(()=> {
+  public updateUrlParamsOnOfferChangeEffect = effect(()=> {
     const offer = this.offerParams$();
     this.updateUrlParams(offer);
   });
@@ -133,41 +143,35 @@ export class CredentialOfferStepperComponent implements OnInit{
     initialValue: 'horizontal'
   });
 
-  private firstCountdown$ = this.fetchedCredentialOffer$
-    .pipe(
-      filter(val => val.loading === false),
-      switchMap(
-        () => timer(6000).pipe( //9 * 1000 * 60
-          map(()=>'END'),
-          startWith('START'))
-    ),
-    tap(val=>console.log('first count val: ' + val)));
+  //EXPIRATION OFFER STREAMS
 
-  public showPopup$ = this.firstCountdown$.pipe(
-    //close popup when first countdown restarts
-    map(val => {
-      if(val === 'START'){
-      return false
-    }else{
-      return true 
-    }}),
-    tap(val=>console.log('popup show? ' + val)), shareReplay()
+  //when this startOrEndFirstCountdown$ emits 'START', refresh popup is closed and the endsession countdown starts
+  //when it emits 'END', the popup is closed and the countdown is interrupted
+  //if user clicks to refresh session, new offer params are fetched, which makes restart the previous flow
+  //if there is an error when refreshing session, user is redirected to home
+  //if user clicks to leave session, user is redirected to home
+  private startOrEndFirstCountdown$: Observable<'START' | 'END'> = this.fetchedCredentialOffer$
+  .pipe(
+    filter(val => val.loading === false),
+    switchMap((): Observable<'START' | 'END'> => 
+      timer(mainSessionTime).pipe(
+        map(() => END),
+        startWith(START)
+      )
+    ),
+    shareReplay()
   );
 
-  // problema: si fetch dona error, es mostra popup d'error, s'emet load=false i es reinicia el primer countdown
-  //potser simplement afegir error a state i fer que si surt error, es pari countdown...?
-  //ptoser fer q si hi ha qualsevol error, es tanquen popups i es redirigeix a home
-
-  openRefreshPopup$ = this.showPopup$.pipe(
-    filter( val => val === true),
+  private openRefreshPopupEffect = this.startOrEndFirstCountdown$.pipe(
+    filter( val => val === 'END'),
     tap(() => {
       const template = new TemplatePortal(this.popupCountdown, {} as ViewContainerRef);
       this.dialog.openDialogWithCallback({
         title: 'Session timeout',
-        message: 'Your session is about to expire. Do you want to continue?',
+        message: '',
         template: template,
         confirmationType: 'async',
-        status: 'error',
+        status: 'default', //error?
         confirmationLabel: 'Refresh',
         cancelLabel: 'Leave',
         loadingData: undefined,
@@ -179,46 +183,55 @@ export class CredentialOfferStepperComponent implements OnInit{
         }, 
         //after cancel callback
       () => {
-        console.log('go home after cancel refresh popup')
-        // this.redirectToHome();
+        this.redirectToHome();
         return EMPTY;
       }
   )})
-  ).subscribe();
-  //si clica refresh, simplement es refà el fetch i per tant es tanca el popup
-  //falta fer que el botó mostri refresh
-  closePopup$ = this.showPopup$.pipe(
-    filter( val => val === false),
-    tap(() => this.dialog['dialog'].closeAll())
-  ).subscribe();
+  );
 
-  endSessionTime = 3;
-  public endSessionCountdown$ = this.showPopup$.pipe(
-    // quan s'obre popup, comença compte enrere; quan es tanca, completa
-    switchMap(isPopupOpen => {
-      if(isPopupOpen){
+  private closeRefreshPopupEffect = this.startOrEndFirstCountdown$.pipe(
+    filter( val => val === START),
+    tap(() => {
+      this.dialog['dialog'].closeAll();
+    })
+  );
+
+  public endSessionCountdown$ = this.startOrEndFirstCountdown$.pipe(
+    switchMap(startOrEnd => {
+      if(startOrEnd === END){
         return interval(1000).pipe(
-          take(this.endSessionTime + 1),
-          map(time=>this.endSessionTime - time),
-          tap(val => console.log(val))
-        ) //1 minut (* 60)
+          take(endSessionTime + 1),
+          map(time=>endSessionTime - time)
+        )
       }else{
-        return EMPTY;
+        return of(endSessionTime);
       }
-    }), shareReplay()
+    }), 
+    shareReplay()
   )
 
   // en completar compte enrere, es navega a home
   private navigateHomeAfterEndSessionEffect = this.endSessionCountdown$.pipe(
-    tap(val=>console.log('navigate after? time = ' + val)),
     filter(time => time === 0),
-    tap(()=> console.log('home')),
-    tap(()=>this.router.navigate(['/home']))
+    tap(()=>{
+      console.info('Offer lifespan expired. Redirect to home.');
+      this.dialog['dialog'].closeAll();
+      const errorMessage = this.translate.instant("error.credentialOffer.expired");
+      this.dialog.openErrorInfoDialog(errorMessage);
+      this.redirectToHome();
+    })
   );
 
   public ngOnInit(): void {
     this.getInitUrlParams$$.next();
-    this.navigateHomeAfterEndSessionEffect.subscribe(()=>console.log('effect!'));
+    
+    merge(
+      this.openRefreshPopupEffect,
+      this.closeRefreshPopupEffect,
+      this.navigateHomeAfterEndSessionEffect
+    )
+    .pipe(takeUntilDestroyed(this.destroyRef))
+    .subscribe();
   }
 
   public onSelectedStepChange(index:number){
@@ -258,22 +271,16 @@ export class CredentialOfferStepperComponent implements OnInit{
     const offer = this.offerParams$();
     let params: Observable<Partial<CredentialOfferParams>> = throwError(()=>new Error('No transaction nor c code to fetch credential offer.'));
     
-    params = of({
-      credential_offer_uri: 'uri',
-      transaction_code: 'trans',
-      c_transaction_code: 'ccccc',
-    });
-    console.log('getting mock cred')
-    //todo if(offer?.c_transaction_code){
-    //   params = this.getCredentialOfferByCTransactionCode(offer.c_transaction_code);
-    // }else if(offer?.transaction_code){
-    //   params = this.getCredentialOfferByTransactionCode(offer.transaction_code);
-    // }else{
-    //   this.redirectToHome();
-    //   console.error("Client error: Transaction code not found. Can't get credential offer");
-    //   const message = this.translate.instant("error.credentialOffer.invalid-url");
-    //   this.dialog.openErrorInfoDialog(message);
-    // }
+    if(offer?.c_transaction_code){
+      params = this.getCredentialOfferByCTransactionCode(offer.c_transaction_code);
+    }else if(offer?.transaction_code){
+      params = this.getCredentialOfferByTransactionCode(offer.transaction_code);
+    }else{
+      this.redirectToHome();
+      console.error("Client error: Transaction code not found. Can't get credential offer");
+      const message = this.translate.instant("error.credentialOffer.invalid-url");
+      this.dialog.openErrorInfoDialog(message);
+    }
     return params;
   }
 

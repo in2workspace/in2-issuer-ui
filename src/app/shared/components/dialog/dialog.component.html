@@ -28,7 +28,7 @@
     <!-- CONFIRMATION NEEDED: CANCEL AND CONFIRM BUTTONS -->
       @if(data.confirmationType !== 'none'){
         <button mat-flat-button color="cancel" (click)="onCancel()">{{ data.cancelLabel ?? ("dialog.cancel" | translate) }}</button>
-        <button mat-raised-button color="primary"
+        <button mat-raised-button [color]="statusColor"
         (click)="onConfirm()">{{ data.confirmationLabel ?? ("dialog.accept" | translate) }}</button>
       }
       @else{

@@ -1,7 +1,7 @@
 import { DestroyRef, inject, Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DialogComponent, DialogData } from '../dialog.component';
-import { Observable, switchMap, take, tap } from 'rxjs';
+import { filter, Observable, switchMap, take, tap } from 'rxjs';
 import { LoaderService } from 'src/app/core/services/loader.service';
 
 @Injectable({
@@ -93,7 +93,10 @@ export class DialogWrapperService {
           this.loader.updateIsLoading(false);
         });
         if(cancelCallback){
-          dialogRef.afterClosed().pipe(take(1), switchMap(cancelCallback)).subscribe({
+          dialogRef.afterClosed().pipe(
+            take(1), 
+            filter(val => val === false),
+            switchMap(cancelCallback)).subscribe({
             next: () => { 
               console.log('cancel callback completed');
             },
