@@ -216,7 +216,6 @@ export class CredentialOfferStepperComponent implements OnInit{
     filter(time => time === 0),
     tap(()=>{
       console.info('Offer lifespan expired. Redirect to home.');
-      this.dialog['dialog'].closeAll();
       const errorMessage = this.translate.instant("error.credentialOffer.expired");
       this.redirectToHome();
       this.dialog.openErrorInfoDialog(errorMessage);
