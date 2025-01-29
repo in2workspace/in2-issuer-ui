@@ -2,7 +2,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { CredentialOfferComponent } from '../credential-offer-steps/credential-offer/credential-offer.component';
 import { CredentialOfferOnboardingComponent } from '../credential-offer-steps/credential-offer-onboarding/credential-offer-onboarding.component';
-import { Component, computed, DestroyRef, effect, inject, OnInit, Signal } from '@angular/core';
+import { Component, computed, DestroyRef, effect, inject, OnInit, Signal, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatButtonModule } from '@angular/material/button';
 import { NavbarComponent } from 'src/app/shared/components/navbar/navbar.component';
@@ -18,6 +18,7 @@ import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { CredentialOfferResponse } from 'src/app/core/models/dto/credential-offer-response';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AsyncPipe } from '@angular/common';
+import { TemplatePortal } from '@angular/cdk/portal';
 
 export type StepperIndex = 0 | 1;
 export type CredentialOfferStep = 'onboarding' | 'offer';
@@ -59,6 +60,7 @@ export const undefinedCredentialOfferParamsState: CredentialOfferParamsState = {
   styleUrl: './credential-offer-stepper.component.scss',
 })
 export class CredentialOfferStepperComponent implements OnInit{
+  @ViewChild('popupCountdown') popupCountdown!: TemplateRef<any>;
   private readonly breakpointObserver = inject(BreakpointObserver);
   private readonly credentialProcedureService = inject(CredentialProcedureService);
   private readonly destroyRef = inject(DestroyRef);
@@ -104,7 +106,7 @@ export class CredentialOfferStepperComponent implements OnInit{
       startWith({
         loading: true
       }),
-      tap(val => {console.log('fethCred: ')
+      tap(val => {console.log('fethCred: ') //todo remove
       console.log(val)
 })
     )),
@@ -152,17 +154,53 @@ export class CredentialOfferStepperComponent implements OnInit{
     tap(val=>console.log('popup show? ' + val)), shareReplay()
   );
 
+  // problema: si fetch dona error, es mostra popup d'error, s'emet load=false i es reinicia el primer countdown
+  //potser simplement afegir error a state i fer que si surt error, es pari countdown...?
+  //ptoser fer q si hi ha qualsevol error, es tanquen popups i es redirigeix a home
+
+  openRefreshPopup$ = this.showPopup$.pipe(
+    filter( val => val === true),
+    tap(() => {
+      const template = new TemplatePortal(this.popupCountdown, {} as ViewContainerRef);
+      this.dialog.openDialogWithCallback({
+        title: 'Session timeout',
+        message: 'Your session is about to expire. Do you want to continue?',
+        template: template,
+        confirmationType: 'async',
+        status: 'error',
+        confirmationLabel: 'Refresh',
+        cancelLabel: 'Leave',
+        loadingData: undefined,
+      }, 
+      //after confirmation callback
+      () => {
+        this.onRefreshCredentialClick(); 
+        return EMPTY;
+        }, 
+        //after cancel callback
+      () => {
+        console.log('go home after cancel refresh popup')
+        // this.redirectToHome();
+        return EMPTY;
+      }
+  )})
+  ).subscribe();
+  //si clica refresh, simplement es refà el fetch i per tant es tanca el popup
+  //falta fer que el botó mostri refresh
+  closePopup$ = this.showPopup$.pipe(
+    filter( val => val === false),
+    tap(() => this.dialog['dialog'].closeAll())
+  ).subscribe();
+
   endSessionTime = 3;
   public endSessionCountdown$ = this.showPopup$.pipe(
     // quan s'obre popup, comença compte enrere; quan es tanca, completa
-    filter(isOpenPopup => isOpenPopup === true),
     switchMap(isPopupOpen => {
       if(isPopupOpen){
         return interval(1000).pipe(
           take(this.endSessionTime + 1),
-          tap(val=>console.log('time: ' + val)),
           map(time=>this.endSessionTime - time),
-          tap(val => console.log( this.endSessionTime + ' - ' + time + ' = ' + val))
+          tap(val => console.log(val))
         ) //1 minut (* 60)
       }else{
         return EMPTY;

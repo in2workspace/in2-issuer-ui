@@ -29,6 +29,7 @@ export class ServeErrorInterceptor implements HttpInterceptor {
     );
   }
 
+  // todo: improve messages
   private getServerErrorMessage(error: HttpErrorResponse): string {
     switch (error.status) {
       case 404:

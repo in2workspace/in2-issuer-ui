@@ -16,16 +16,20 @@
 }@else{
   <h2 mat-dialog-title>{{ data.title }}</h2>
   <div mat-dialog-content>
-    <p>
-      {{ data.message || ''}}
-    </p>
+    @if(data.template){
+      <ng-template [cdkPortalOutlet]="data.template"></ng-template>
+    }@else {
+      <p>
+        {{ data.message || ''}}
+      </p>
+    }
   </div>
   <div mat-dialog-actions>
     <!-- CONFIRMATION NEEDED: CANCEL AND CONFIRM BUTTONS -->
       @if(data.confirmationType !== 'none'){
-        <button mat-flat-button color="cancel" (click)="onCancel()">{{ "dialog.cancel" | translate }}</button>
+        <button mat-flat-button color="cancel" (click)="onCancel()">{{ data.cancelLabel ?? ("dialog.cancel" | translate) }}</button>
         <button mat-raised-button color="primary"
-        (click)="onConfirm()">{{ "dialog.accept" | translate }}</button>
+        (click)="onConfirm()">{{ data.confirmationLabel ?? ("dialog.accept" | translate) }}</button>
       }
       @else{
         <!-- NO CONFIRMATION NEEDED: ONLY CLOSE BUTTON -->

@@ -49,7 +49,7 @@ export class DialogWrapperService {
   //It is important not to cut error flow (tipically with catchError) in callback passed as argument, since then the
   //dialog will be closed in the next callback of openDialogWithCallback. The server interceptor reuses the already opened dialog to display its error message (see openErrorInfoDialog),
   //which will be immediately closed by the next callback of openDialogWithCallback if the error flow is cut.
-  public openDialogWithCallback(dialogData: DialogData, callback:() => Observable<any>): void{
+  public openDialogWithCallback(dialogData: DialogData, callback:() => Observable<any>, cancelCallback?: () => Observable<any>): void{
     const dialogRef = this.dialog.open(
       DialogComponent, 
       { 
@@ -92,6 +92,16 @@ export class DialogWrapperService {
           dialogRef.disableClose=false;
           this.loader.updateIsLoading(false);
         });
+        if(cancelCallback){
+          dialogRef.afterClosed().pipe(take(1), switchMap(cancelCallback)).subscribe({
+            next: () => { 
+              console.log('cancel callback completed');
+            },
+            error: err => {
+              console.error(err);
+            }
+          });
+        }
 
   }
 

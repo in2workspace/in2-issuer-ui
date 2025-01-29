@@ -15,7 +15,10 @@ export interface LoadingData { title:string, message:string; template?:Component
 export interface DialogData { 
   title: string; 
   message: string; 
+  template?: ComponentPortal<any>|TemplatePortal|DomPortal;
   confirmationType: DialogConfirmationType;
+  confirmationLabel?: string;
+  cancelLabel?: string;
   status: DialogStatus;
   loadingData: LoadingData | undefined; //only for async confirmation type
 }
