@@ -42,6 +42,7 @@ export const undefinedCredentialOfferParamsState: CredentialOfferParamsState = {
   const START = 'START' as const;
   const END = 'END' as const;
   //todo env variables?
+  //todo change times 
   //time before refresh offer popup is shown
   //it should be less than in the backend, for the time lost in fetching
   const mainSessionTime = 6 * 1000; //in miliseconds

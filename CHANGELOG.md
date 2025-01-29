@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Searchbar in credentials dashboard
 - Success popup after creating credential and sending reminder
-- In credential offer step 2, informative message about offer expiration time
+- In credential offer step 2, popup to refresh offer when there is little time left. Redirect to home page if doesn't refresh
 - In details and credential issuance pages, "Back" button
 
 ### Changed
