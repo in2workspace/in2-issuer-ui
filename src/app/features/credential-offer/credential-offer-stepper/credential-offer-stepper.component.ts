@@ -8,7 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { NavbarComponent } from 'src/app/shared/components/navbar/navbar.component';
 import { QRCodeModule } from 'angularx-qrcode';
 import { MatIcon } from '@angular/material/icon';
-import { catchError, EMPTY, filter, interval, map, merge, Observable, of, scan, shareReplay, startWith, Subject, switchMap, take, takeUntil, tap, throwError, timer } from 'rxjs';
+import { catchError, EMPTY, filter, interval, map, merge, Observable, of, scan, shareReplay, startWith, Subject, switchMap, take, tap, throwError, timer } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogWrapperService } from 'src/app/shared/components/dialog/dialog-wrapper/dialog-wrapper.service';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
@@ -39,8 +39,7 @@ export const undefinedCredentialOfferParamsState: CredentialOfferParamsState = {
   };
 
   //REFRESH-SESSION RELATED CONSTANTS
-  const START = 'START' as const;
-  const END = 'END' as const;
+  type StartOrEnd = 'START' | 'END';
   //todo env variables?
   //todo change times 
   //time before refresh offer popup is shown
@@ -151,19 +150,19 @@ export class CredentialOfferStepperComponent implements OnInit{
   //if user clicks to refresh session, new offer params are fetched, which makes restart the previous flow
   //if there is an error when refreshing session, user is redirected to home
   //if user clicks to leave session, user is redirected to home
-  private startOrEndFirstCountdown$: Observable<'START' | 'END'> = this.fetchedCredentialOffer$
+  private readonly startOrEndFirstCountdown$: Observable<StartOrEnd> = this.fetchedCredentialOffer$
   .pipe(
     filter(val => val.loading === false),
     switchMap((): Observable<'START' | 'END'> => 
       timer(mainSessionTime).pipe(
-        map(() => END),
-        startWith(START)
+        map(() => 'END' as StartOrEnd),
+        startWith('START' as StartOrEnd)
       )
     ),
     shareReplay()
   );
 
-  private openRefreshPopupEffect = this.startOrEndFirstCountdown$.pipe(
+  private readonly openRefreshPopupEffect = this.startOrEndFirstCountdown$.pipe(
     filter( val => val === 'END'),
     tap(() => {
       const template = new TemplatePortal(this.popupCountdown, {} as ViewContainerRef);
@@ -190,16 +189,16 @@ export class CredentialOfferStepperComponent implements OnInit{
   )})
   );
 
-  private closeRefreshPopupEffect = this.startOrEndFirstCountdown$.pipe(
-    filter( val => val === START),
+  private readonly closeRefreshPopupEffect = this.startOrEndFirstCountdown$.pipe(
+    filter( val => val === 'START'),
     tap(() => {
       this.dialog['dialog'].closeAll();
     })
   );
 
-  public endSessionCountdown$ = this.startOrEndFirstCountdown$.pipe(
+  public readonly endSessionCountdown$ = this.startOrEndFirstCountdown$.pipe(
     switchMap(startOrEnd => {
-      if(startOrEnd === END){
+      if(startOrEnd === 'END'){
         return interval(1000).pipe(
           take(endSessionTime + 1),
           map(time=>endSessionTime - time)
