@@ -129,6 +129,7 @@ export class FormCredentialService {
 
     return credentialProcedureService.createProcedure(credentialProcedure).pipe(
       tap(() => {
+        //currently there's no need to reset form, since user is redirected to home and page reloads after creating
         resetForm();
       }),
       catchError(error => {
