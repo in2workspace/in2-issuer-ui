@@ -81,9 +81,17 @@ export class DialogComponent {
   }
 
   public updateData(data: Partial<DialogData>){
-    this.data = { ...this.data, ...data };
+    const resetDefaultOptionalData:Partial<DialogData> = {
+      template: undefined,
+      confirmationLabel: undefined,
+      cancelLabel: undefined
+    }
+    
+    this.data = { 
+      ...this.data, 
+      ...resetDefaultOptionalData,
+      ...data };
     this.updateStatus();
-
   }
 
   // this is used by the dialog wrapper service, which subscribes to this subject to call the callback after the this emits 
