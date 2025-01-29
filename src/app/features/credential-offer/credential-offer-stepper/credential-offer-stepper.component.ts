@@ -115,10 +115,7 @@ export class CredentialOfferStepperComponent implements OnInit{
       }),
       startWith({
         loading: true
-      }),
-      tap(val => {console.log('fethCred: ') //todo remove
-      console.log(val)
-})
+      })
     )),
     shareReplay()
   );
@@ -211,7 +208,7 @@ export class CredentialOfferStepperComponent implements OnInit{
   )
 
   // en completar compte enrere, es navega a home
-  private navigateHomeAfterEndSessionEffect = this.endSessionCountdown$.pipe(
+  private readonly navigateHomeAfterEndSessionEffect = this.endSessionCountdown$.pipe(
     filter(time => time === 0),
     tap(()=>{
       console.info('Offer lifespan expired. Redirect to home.');
