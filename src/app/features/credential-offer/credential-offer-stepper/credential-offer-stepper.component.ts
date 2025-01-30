@@ -26,7 +26,7 @@ export interface CredentialOfferParams {
   credential_offer_uri: string|undefined,
   transaction_code: string|undefined,
   c_transaction_code: string|undefined,
-  c_transaction_code_expires_in: number|undefined
+  c_transaction_code_expires_in: number|undefined //expected in seconds
 }
 export interface CredentialOfferParamsState extends CredentialOfferParams {
   loading: boolean,
@@ -47,9 +47,10 @@ export const undefinedCredentialOfferParamsState: CredentialOfferParamsState = {
   //todo change times 
   //time before refresh offer popup is shown
   //it should be less than in the backend, for the time lost in fetching
-  const defaultMainOfferLifespan = 6 * 1000; //in miliseconds
+  const defaultMainOfferLifespanInMs = 6 * 1000; //in miliseconds
   //countdown for the refresh offer popup; when it comes to 0, redirects to home
-  const endSessionTime = 10; //in seconds; should always be 60s
+  const endSessionTimeInSeconds = 10; //in seconds; should always be 60s
+  const marginTimeInMs = 8 * 1000; //margin for loading time
 
 @Component({
   selector: 'app-credential-offer-stepper',
@@ -156,14 +157,19 @@ export class CredentialOfferStepperComponent implements OnInit{
   .pipe(
     filter(offerState => (offerState.loading === false) && (offerState.error === false)),
     switchMap(offerParams => {
-      const expireTime = offerParams.c_transaction_code_expires_in;
-      if(!expireTime) console.error('Offer expiration time not received from API; using default.');
-      const mainSessionTime = expireTime ?? defaultMainOfferLifespan;
-      console.info('Starting timer with' + mainSessionTime + 'ms')
-        return timer(mainSessionTime).pipe(
-          map(() => 'END' as StartOrEnd),
-          startWith('START' as StartOrEnd)
-        )
+      const expireTimeInSeconds = offerParams.c_transaction_code_expires_in;
+      let mainSessionTimeInMs: number;
+      if(!expireTimeInSeconds){
+        console.error('Offer expiration time not received from API; using default.');
+        mainSessionTimeInMs = defaultMainOfferLifespanInMs;
+      }else{
+        mainSessionTimeInMs = (expireTimeInSeconds * 1000) - marginTimeInMs;
+      }
+      console.info('Starting timer with ' + mainSessionTimeInMs + ' ms')
+      return timer(mainSessionTimeInMs).pipe(
+        map(() => 'END' as StartOrEnd),
+        startWith('START' as StartOrEnd)
+      )
     }),
     shareReplay()
   );
@@ -206,11 +212,11 @@ export class CredentialOfferStepperComponent implements OnInit{
     switchMap(startOrEnd => {
       if(startOrEnd === 'END'){
         return interval(1000).pipe(
-          take(endSessionTime + 1),
-          map(time=>endSessionTime - time)
+          take(endSessionTimeInSeconds + 1),
+          map(time=>endSessionTimeInSeconds - time)
         )
       }else{
-        return of(endSessionTime);
+        return of(endSessionTimeInSeconds);
       }
     }), 
     shareReplay()
