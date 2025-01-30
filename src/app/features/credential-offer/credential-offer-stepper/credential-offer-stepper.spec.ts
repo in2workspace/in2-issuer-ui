@@ -204,6 +204,85 @@ it('should get url params on init', () => {
   expect(mockSubscriber).toHaveBeenCalled();
 });
 
+describe('closeRefreshPopupEffect', () => {
+  it('should close all dialogs when countdown emits "START"', () => {
+    const closeSpy = jest.spyOn(component['dialog']['dialog'], 'closeAll');
+    const originalProperty = Object.getOwnPropertyDescriptor(component, 'startOrEndFirstCountdown$');
+
+    Object.defineProperty(component, 'startOrEndFirstCountdown$', {
+      get: jest.fn(() => of('START')),
+    });
+
+    component['closeRefreshPopupEffect'].subscribe(() => {
+      expect(closeSpy).toHaveBeenCalled();
+    });
+
+    if (originalProperty) {
+      Object.defineProperty(component, 'startOrEndFirstCountdown$', originalProperty);
+    }
+  });
+
+  it('should NOT close dialogs when countdown does NOT emit "START"', () => {
+    const closeSpy = jest.spyOn(component['dialog']['dialog'], 'closeAll');
+    const originalProperty = Object.getOwnPropertyDescriptor(component, 'startOrEndFirstCountdown$');
+
+    Object.defineProperty(component, 'startOrEndFirstCountdown$', {
+      get: jest.fn(() => of('END')),
+    });
+
+    component['closeRefreshPopupEffect'].subscribe(() => {
+      expect(closeSpy).not.toHaveBeenCalled();
+    });
+
+    if (originalProperty) {
+      Object.defineProperty(component, 'startOrEndFirstCountdown$', originalProperty);
+    }
+  });
+});
+
+describe('navigateHomeAfterEndSessionEffect', () => {
+  it('should redirect to home and show error dialog when countdown reaches 0', () => {
+    const errorMessage = 'Offer expired';
+    const translatedMsg = component['translate'].instant(errorMessage);
+    const dialogSpy = jest.spyOn(component['dialog'], 'openErrorInfoDialog');
+    const redirectSpy = jest.spyOn(component, 'redirectToHome');
+    const originalProperty = Object.getOwnPropertyDescriptor(component, 'endSessionCountdown$');
+
+    Object.defineProperty(component, 'endSessionCountdown$', {
+      get: jest.fn(() => of(0)),
+    });
+
+    component['navigateHomeAfterEndSessionEffect'].subscribe(() => {
+      expect(redirectSpy).toHaveBeenCalled();
+      expect(dialogSpy).toHaveBeenCalledWith(translatedMsg);
+    });
+
+    if (originalProperty) {
+      Object.defineProperty(component, 'endSessionCountdown$', originalProperty);
+    }
+  });
+
+  it('should NOT redirect to home and NOT show error dialog when countdown does NOT reach 0', () => {
+    const dialogSpy = jest.spyOn(component['dialog'], 'openErrorInfoDialog');
+    const redirectSpy = jest.spyOn(component, 'redirectToHome');
+    const originalProperty = Object.getOwnPropertyDescriptor(component, 'endSessionCountdown$');
+
+    Object.defineProperty(component, 'endSessionCountdown$', {
+      get: jest.fn(() => of(10)),
+    });
+
+    component['navigateHomeAfterEndSessionEffect'].subscribe();
+
+    expect(redirectSpy).not.toHaveBeenCalled();
+    expect(dialogSpy).not.toHaveBeenCalled();
+
+    if (originalProperty) {
+      Object.defineProperty(component, 'endSessionCountdown$', originalProperty);
+    }
+  });
+});
+
+
 describe('onSelectedStepChange', () => {
   let consoleErrorSpy: jest.SpyInstance;
 
