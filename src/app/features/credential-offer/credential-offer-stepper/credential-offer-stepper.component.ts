@@ -47,10 +47,10 @@ export const undefinedCredentialOfferParamsState: CredentialOfferParamsState = {
   //todo change times 
   //time before refresh offer popup is shown
   //it should be less than in the backend, for the time lost in fetching
-  export const defaultMainOfferLifespanInMs = 6 * 1000; //in miliseconds
+  export const defaultMainOfferLifespanInMs = 30 * 1000; //in miliseconds
   //countdown for the refresh offer popup; when it comes to 0, redirects to home
-  export const endSessionTimeInSeconds = 10; //in seconds; should always be 60s
-  export const marginTimeInMs = 8 * 1000; //margin for loading time
+  export const endSessionTimeInSeconds = 60; //in seconds; should always be 60s
+  export const marginTimeInMs = 8 * 1000; //margin to compensate for loading time 
 
 @Component({
   selector: 'app-credential-offer-stepper',
