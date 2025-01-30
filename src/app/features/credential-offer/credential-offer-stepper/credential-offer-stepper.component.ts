@@ -29,7 +29,8 @@ export interface CredentialOfferParams {
   c_transaction_code_expires_in: number|undefined
 }
 export interface CredentialOfferParamsState extends CredentialOfferParams {
-  loading: boolean
+  loading: boolean,
+  error: boolean
 }
 
 export const undefinedCredentialOfferParamsState: CredentialOfferParamsState = { 
@@ -37,7 +38,8 @@ export const undefinedCredentialOfferParamsState: CredentialOfferParamsState = {
     transaction_code: undefined,
     c_transaction_code: undefined,
     c_transaction_code_expires_in: undefined,
-    loading: false
+    loading: false,
+    error: false
   };
 
   //REFRESH-SESSION RELATED CONSTANTS
@@ -107,15 +109,17 @@ export class CredentialOfferStepperComponent implements OnInit{
     this.updateIndex$$.pipe(filter(() => this.currentIndex$() === 1)))
   .pipe(
     switchMap(()=>this.getCredentialOffer().pipe(
-      map(params => ({...params, loading: false })),
+      map(params => ({...params, loading: false, error: false })),
       catchError(error => { 
         console.error(error);
         return of({ 
-          loading: false
+          loading: false,
+          error: true
         })
       }),
       startWith({
-        loading: true
+        loading: true,
+        error: false
       })
     )),
     shareReplay()
@@ -150,11 +154,12 @@ export class CredentialOfferStepperComponent implements OnInit{
   //if user clicks to leave session, user is redirected to home
   private readonly startOrEndFirstCountdown$: Observable<StartOrEnd> = this.fetchedCredentialOffer$
   .pipe(
-    filter(val => val.loading === false),
+    filter(offerState => (offerState.loading === false) && (offerState.error === false)),
     switchMap(offerParams => {
       const expireTime = offerParams.c_transaction_code_expires_in;
       if(!expireTime) console.error('Offer expiration time not received from API; using default.');
       const mainSessionTime = expireTime ?? defaultMainOfferLifespan;
+      console.info('Starting timer with' + mainSessionTime + 'ms')
         return timer(mainSessionTime).pipe(
           map(() => 'END' as StartOrEnd),
           startWith('START' as StartOrEnd)
@@ -265,7 +270,8 @@ export class CredentialOfferStepperComponent implements OnInit{
       transaction_code: transactionCodeParam,
       c_transaction_code: cCodeParam,
       c_transaction_code_expires_in: undefined,
-      loading: false
+      loading: false,
+      error: false
     };
     return updatedParams;
   }
@@ -365,10 +371,7 @@ export class CredentialOfferStepperComponent implements OnInit{
   }
 
   public redirectToHome(){
-    //todo remove both logs
-    console.info('redirect home before timeout')
     setTimeout(()=>{
-      console.info('redirect home after timeout')
       this.router.navigate(['/home']);
     }, 0);
   }

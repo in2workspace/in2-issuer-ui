@@ -131,7 +131,8 @@ it('should initialize initUrlParams$ correctly', fakeAsync(() => {
     transaction_code: 'transaction-code-param',
     c_transaction_code: 'c-code-param',
     c_transaction_code_expires_in: 10,
-    loading: false
+    loading: false,
+    error: false
   };
   jest.spyOn(component, 'getUrlParams').mockReturnValue(offerParams);
   
@@ -169,14 +170,16 @@ it('should emit the correct offerParams$ state when initUrlParams$ and fetchedCr
     transaction_code: 'trans-one',
     c_transaction_code: 'c-one',
     c_transaction_code_expires_in: 10,
-    loading: false
+    loading: false,
+    error: false
   }; 
   const secondInitOfferMock = {
     credential_offer_uri: 'cred-two',
     transaction_code: 'trans-two',
     c_transaction_code: 'c-two',
     c_transaction_code_expires_in: 20,
-    loading: false
+    loading: false,
+    error: false
   };
 
   jest.spyOn(component, 'getUrlParams').mockReturnValue(firstInitUrlParamsMock);
@@ -325,7 +328,8 @@ describe('getCredentialOffer', () => {
       transaction_code: 'mock-trans-code',
       c_transaction_code: mockCTransactionCode,
       c_transaction_code_expires_in: 10,
-      loading: false
+      loading: false,
+      error: false
     };
     const mockResponse = {
       credential_offer_uri: 'some uri',
@@ -348,7 +352,8 @@ describe('getCredentialOffer', () => {
       transaction_code: mockTransactionCode,
       c_transaction_code: undefined,
       c_transaction_code_expires_in: 10,
-      loading: false
+      loading: false,
+      error: false
     };
     const mockResponse = {
       credential_offer_uri: 'some uri',
