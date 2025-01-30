@@ -64,6 +64,7 @@
     "first-assistance": "Check the ",
     "second-assistance": " for assistance.",
     "wallet-guide": "Wallet Users Guide",
+    "expired-title": "Credential expiring",
     "ask-refresh": "Offer is about to expire. Would you like to refresh it or leave?",
     "remaining-time": "Time remaining:",
     "first-step":{

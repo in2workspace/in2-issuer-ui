@@ -47,10 +47,10 @@ export const undefinedCredentialOfferParamsState: CredentialOfferParamsState = {
   //todo change times 
   //time before refresh offer popup is shown
   //it should be less than in the backend, for the time lost in fetching
-  const defaultMainOfferLifespanInMs = 6 * 1000; //in miliseconds
+  export const defaultMainOfferLifespanInMs = 6 * 1000; //in miliseconds
   //countdown for the refresh offer popup; when it comes to 0, redirects to home
-  const endSessionTimeInSeconds = 10; //in seconds; should always be 60s
-  const marginTimeInMs = 8 * 1000; //margin for loading time
+  export const endSessionTimeInSeconds = 10; //in seconds; should always be 60s
+  export const marginTimeInMs = 8 * 1000; //margin for loading time
 
 @Component({
   selector: 'app-credential-offer-stepper',
@@ -165,7 +165,6 @@ export class CredentialOfferStepperComponent implements OnInit{
       }else{
         mainSessionTimeInMs = (expireTimeInSeconds * 1000) - marginTimeInMs;
       }
-      console.info('Starting timer with ' + mainSessionTimeInMs + ' ms')
       return timer(mainSessionTimeInMs).pipe(
         map(() => 'END' as StartOrEnd),
         startWith('START' as StartOrEnd)
@@ -177,11 +176,10 @@ export class CredentialOfferStepperComponent implements OnInit{
   private readonly openRefreshPopupEffect = this.startOrEndFirstCountdown$.pipe(
     filter( val => val === 'END'),
     tap(() => {
-      const template = new TemplatePortal(this.popupCountdown, {} as ViewContainerRef);
       this.dialog.openDialogWithCallback({
-        title: 'Session timeout',
+        title: this.translate.instant('credentialOffer.expired-title'), 
         message: '',
-        template: template,
+        template: new TemplatePortal(this.popupCountdown, {} as ViewContainerRef),
         confirmationType: 'async',
         status: 'default', //error?
         confirmationLabel: 'Refresh',
@@ -226,10 +224,8 @@ export class CredentialOfferStepperComponent implements OnInit{
   private readonly navigateHomeAfterEndSessionEffect = this.endSessionCountdown$.pipe(
     filter(time => time === 0),
     tap(()=>{
-      console.info('Offer lifespan expired. Redirect to home.');
-      const errorMessage = this.translate.instant("error.credentialOffer.expired");
       this.redirectToHome();
-      this.dialog.openErrorInfoDialog(errorMessage);
+      this.dialog.openErrorInfoDialog(this.translate.instant("error.credentialOffer.expired"));
     })
   );
 
