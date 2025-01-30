@@ -263,7 +263,8 @@ describe('onSelectedStepChange', () => {
         credential_offer_uri: undefined,
         transaction_code: undefined,
         c_transaction_code: 'someCCode',
-        loading: false
+        loading: false,
+        error: false
       });
     });
   
@@ -279,7 +280,8 @@ describe('onSelectedStepChange', () => {
         credential_offer_uri: undefined,
         transaction_code: 'transaction123',
         c_transaction_code: 'someCCode',
-        loading: false
+        loading: false,
+        error: false
       });
     });
   
@@ -294,7 +296,8 @@ describe('onSelectedStepChange', () => {
         credential_offer_uri: undefined,
         transaction_code: 'transaction123',
         c_transaction_code: undefined,
-        loading: false
+        loading: false,
+        error: false
       });
     });
   });
