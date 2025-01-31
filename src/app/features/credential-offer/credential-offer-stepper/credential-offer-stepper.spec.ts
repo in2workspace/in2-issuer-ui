@@ -7,7 +7,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { OidcSecurityService, StsConfigLoader } from "angular-auth-oidc-client";
 import { AuthService } from 'src/app/core/services/auth.service';
 import { CUSTOM_ELEMENTS_SCHEMA, ViewContainerRef } from '@angular/core';
-import { CredentialOfferStepperComponent, marginTimeInMs, undefinedCredentialOfferParamsState } from './credential-offer-stepper.component';
+import { CredentialOfferStepperComponent, loadingBufferTimeInMs, undefinedCredentialOfferParamsState } from './credential-offer-stepper.component';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { HomeComponent } from '../../home/home.component';
@@ -208,54 +208,6 @@ it('should get url params on init', () => {
 });
 
 describe('startOrEndFirstDountdown', ()=>{
- 
-  // it('should emit START immediately and END after calculated time when offer has expiration time', (done) => {
-  //   const expireTimeInSeconds = 10; // 10 segons
-  //   const expectedEndTime = (expireTimeInSeconds * 1000) - marginTimeInMs;
-  //   const mockOffer = {
-  //     credential_offer_uri: undefined,
-  //     transaction_code: 'mock-trans-code',
-  //     c_transaction_code: 'mock-c-code',
-  //     c_transaction_code_expires_in: 10,
-  //   };
-  //   const values: string[] = [];
-  //   jest.spyOn(global, 'setTimeout');
-
-  //   Object.defineProperty(component, 'fetchedCredentialOffer$', {
-  //     get: jest.fn(() => of(mockOffer)),
-  //   });
-
-  //   component['startOrEndFirstCountdown$'].pipe(take(2)).subscribe(value => {
-  //     values.push(value);
-  //     if (values.length === 2) {
-  //       expect(values).toEqual(['START', 'END']);
-  //       expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), expectedEndTime);
-  //       done();
-  //     }
-  //   });
-
-  //   fetchedCredentialOffer$.next({ loading: false, error: false, c_transaction_code_expires_in: expireTimeInSeconds });
-  // });
-
-  // it('should use default expiration time when c_transaction_code_expires_in is missing', (done) => {
-  //   const values: string[] = [];
-  //   jest.spyOn(global, 'setTimeout');
-
-  //   Object.defineProperty(component, 'fetchedCredentialOffer$', {
-  //     get: jest.fn(() => fetchedCredentialOffer$),
-  //   });
-
-  //   component['startOrEndFirstCountdown$'].pipe(take(2)).subscribe(value => {
-  //     values.push(value);
-  //     if (values.length === 2) {
-  //       expect(values).toEqual(['START', 'END']);
-  //       expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), defaultMainOfferLifespanInMs);
-  //       done();
-  //     }
-  //   });
-
-  //   fetchedCredentialOffer$.next({ loading: false, error: false, c_transaction_code_expires_in: null });
-  // });
 
   it('should NOT emit any value if loading is true', (done) => {
     jest.spyOn(component, 'redirectToHome').mockImplementation(() => {});
@@ -279,7 +231,7 @@ describe('startOrEndFirstDountdown', ()=>{
     setTimeout(() => {
       expect(spy).not.toHaveBeenCalled();
       done();
-    }, 10 * 1000 - marginTimeInMs);
+    }, 10 * 1000 - loadingBufferTimeInMs);
   });
 
   it('should NOT emit any value if error is true', (done) => {
@@ -304,7 +256,7 @@ describe('startOrEndFirstDountdown', ()=>{
   setTimeout(() => {
     expect(spy).not.toHaveBeenCalled();
     done();
-  }, 10 * 1000 - marginTimeInMs);
+  }, 10 * 1000 - loadingBufferTimeInMs);
   });
 });
 

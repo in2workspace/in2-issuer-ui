@@ -45,10 +45,10 @@ export const undefinedCredentialOfferParamsState: CredentialOfferParamsState = {
   //REFRESH-SESSION RELATED CONSTANTS
   type StartOrEnd = 'START' | 'END';
   //time before refresh offer popup is shown
-  export const defaultMainOfferLifespanInMs = 60 * 1000 * 9; // 9min in miliseconds
+  export const defaultTotalAvailableTimeInMs = 60 * 1000 * 9; // 9min in miliseconds
   //countdown for the refresh offer popup; when it comes to 0, redirects to home
-  export const endSessionTimeInSeconds = 60; //in seconds; should always be 60s
-  export const marginTimeInMs = 8 * 1000; //margin to compensate for loading time 
+  export const popupTimeInSeconds = 60; //in seconds; should always be 60s
+  export const loadingBufferTimeInMs = 8 * 1000; //margin to compensate for loading time 
 
 @Component({
   selector: 'app-credential-offer-stepper',
@@ -81,18 +81,19 @@ export class CredentialOfferStepperComponent implements OnInit{
   private readonly router = inject(Router);
   private readonly translate = inject(TranslateService);
 
-  //Source actions
+
+  //Subjects
   public getInitUrlParams$$ = new Subject<void>();
   public updateIndex$$ = new Subject<StepperIndex>();
   public loadCredentialOfferOnRefreshClick$$ = new Subject<void>();
   
-  //Effects
+  //Offer effects
   public updateUrlParamsOnOfferChangeEffect = effect(()=> {
     const offer = this.offerParams$();
     this.updateUrlParams(offer);
   });
 
-  //States
+  //Derived streams
   public currentIndex$ = toSignal<StepperIndex>(this.updateIndex$$.pipe(startWith(0 as StepperIndex)));
   public currentStep$ = computed<CredentialOfferStep>(() => {
     return this.currentIndex$() === 0 ? 'onboarding' : 'offer';
@@ -144,8 +145,7 @@ export class CredentialOfferStepperComponent implements OnInit{
     initialValue: 'horizontal'
   });
 
-  //EXPIRATION OFFER STREAMS
-
+  //EXPIRATION-RELATED STREAMS
   //when this startOrEndFirstCountdown$ emits 'START', refresh popup is closed and the endsession countdown starts
   //when it emits 'END', the popup is closed and the countdown is interrupted
   //if user clicks to refresh session, new offer params are fetched, which makes restart the previous flow
@@ -155,15 +155,15 @@ export class CredentialOfferStepperComponent implements OnInit{
   .pipe(
     filter(offerState => (offerState.loading === false) && (offerState.error === false)),
     switchMap(offerParams => {
-      const expireTimeInSecondsFromBackend = offerParams.c_transaction_code_expires_in;
-      let mainSessionTimeInMs: number;
-      if(!expireTimeInSecondsFromBackend){
-        console.error('Offer expiration time not received from API; using default: ' + defaultMainOfferLifespanInMs + ' - ' + marginTimeInMs);
-        mainSessionTimeInMs = defaultMainOfferLifespanInMs;
+      const totalAvailableTimeFromBackendInSeconds = offerParams.c_transaction_code_expires_in;
+      let totalAvailableTimeInMs: number;
+      if(!totalAvailableTimeFromBackendInSeconds){
+        console.error('Offer expiration time not received from API; using default: ' + defaultTotalAvailableTimeInMs + ' - ' + loadingBufferTimeInMs);
+        totalAvailableTimeInMs = defaultTotalAvailableTimeInMs;
       }else{
-        mainSessionTimeInMs = (expireTimeInSecondsFromBackend * 1000);
+        totalAvailableTimeInMs = (totalAvailableTimeFromBackendInSeconds * 1000);
       }
-      return timer(mainSessionTimeInMs - (endSessionTimeInSeconds * 1000) - marginTimeInMs).pipe(
+      return timer(totalAvailableTimeInMs - (popupTimeInSeconds * 1000) - loadingBufferTimeInMs).pipe(
         map(() => 'END' as StartOrEnd),
         startWith('START' as StartOrEnd)
       )
@@ -208,17 +208,16 @@ export class CredentialOfferStepperComponent implements OnInit{
     switchMap(startOrEnd => {
       if(startOrEnd === 'END'){
         return interval(1000).pipe(
-          take(endSessionTimeInSeconds + 1),
-          map(time=>endSessionTimeInSeconds - time)
+          take(popupTimeInSeconds + 1),
+          map(consumedSeconds => popupTimeInSeconds - consumedSeconds)
         )
       }else{
-        return of(endSessionTimeInSeconds);
+        return of(popupTimeInSeconds); //reset time
       }
     }), 
     shareReplay()
   )
 
-  // en completar compte enrere, es navega a home
   private readonly navigateHomeAfterEndSessionEffect = this.endSessionCountdown$.pipe(
     filter(time => time === 0),
     tap(()=>{
