@@ -44,7 +44,7 @@ describe('DialogWrapperService', () => {
       confirmationType: 'sync',
       status: 'default',
       loadingData: undefined,
-    };;
+    };
     const mockDialogRef = {} as MatDialogRef<DialogComponent, any>;
 
     matDialogMock.open.mockReturnValue(mockDialogRef);
@@ -85,7 +85,8 @@ describe('DialogWrapperService', () => {
 
     expect(matDialogMock.open).toHaveBeenCalledWith(DialogComponent, {
       data: { ...dialogData },
-      autoFocus:false
+      autoFocus:false,
+      disableClose: false
     });
     expect(callback).toHaveBeenCalled();
     expect(dialogRefMock.close).toHaveBeenCalled();
@@ -118,7 +119,8 @@ describe('DialogWrapperService', () => {
 
     expect(matDialogMock.open).toHaveBeenCalledWith(DialogComponent, {
       data: { ...dialogData },
-      autoFocus:false
+      autoFocus:false,
+      disableClose: false
     });
     expect(dialogRefMock.componentInstance.updateData).toHaveBeenCalledWith(dialogData.loadingData);
     expect(loaderServiceMock.updateIsLoading).toHaveBeenCalledWith(true);
@@ -150,7 +152,8 @@ describe('DialogWrapperService', () => {
 
     expect(matDialogMock.open).toHaveBeenCalledWith(DialogComponent, {
       data: { ...dialogData },
-      autoFocus:false
+      autoFocus:false,
+      disableClose: false
     });
     expect(callback).toHaveBeenCalled();
     expect(dialogRefMock.close).not.toHaveBeenCalled();
@@ -184,7 +187,8 @@ describe('DialogWrapperService', () => {
 
     expect(matDialogMock.open).toHaveBeenCalledWith(DialogComponent, {
       data: { ...dialogData },
-      autoFocus: false
+      autoFocus: false,
+      disableClose: false
     });
 
     expect(cancelCallback).toHaveBeenCalled();
@@ -217,7 +221,8 @@ describe('DialogWrapperService', () => {
 
     expect(matDialogMock.open).toHaveBeenCalledWith(DialogComponent, {
       data: { ...dialogData },
-      autoFocus: false
+      autoFocus: false,
+      disableClose: false
     });
 
     expect(cancelCallback).toHaveBeenCalled();
