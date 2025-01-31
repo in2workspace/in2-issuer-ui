@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ProcedureRequest } from 'src/app/core/models/dto/procedure-request.dto';
-import { tap, catchError } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { Mandatee, Mandator, Power, Signer } from "../../../../core/models/entity/lear-credential-employee.entity";
 import { Observable, BehaviorSubject } from 'rxjs';
 import { TempPower } from 'src/app/core/models/temporal/temp-power.interface';

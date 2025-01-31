@@ -44,10 +44,8 @@ export const undefinedCredentialOfferParamsState: CredentialOfferParamsState = {
 
   //REFRESH-SESSION RELATED CONSTANTS
   type StartOrEnd = 'START' | 'END';
-  //todo change times 
   //time before refresh offer popup is shown
-  //it should be less than in the backend, for the time lost in fetching
-  export const defaultMainOfferLifespanInMs = 30 * 1000; //in miliseconds
+  export const defaultMainOfferLifespanInMs = 60 * 1000 * 9; // 9min in miliseconds
   //countdown for the refresh offer popup; when it comes to 0, redirects to home
   export const endSessionTimeInSeconds = 60; //in seconds; should always be 60s
   export const marginTimeInMs = 8 * 1000; //margin to compensate for loading time 
@@ -157,15 +155,15 @@ export class CredentialOfferStepperComponent implements OnInit{
   .pipe(
     filter(offerState => (offerState.loading === false) && (offerState.error === false)),
     switchMap(offerParams => {
-      const expireTimeInSeconds = offerParams.c_transaction_code_expires_in;
+      const expireTimeInSecondsFromBackend = offerParams.c_transaction_code_expires_in;
       let mainSessionTimeInMs: number;
-      if(!expireTimeInSeconds){
-        console.error('Offer expiration time not received from API; using default.');
+      if(!expireTimeInSecondsFromBackend){
+        console.error('Offer expiration time not received from API; using default: ' + defaultMainOfferLifespanInMs + ' - ' + marginTimeInMs);
         mainSessionTimeInMs = defaultMainOfferLifespanInMs;
       }else{
-        mainSessionTimeInMs = (expireTimeInSeconds * 1000) - marginTimeInMs;
+        mainSessionTimeInMs = (expireTimeInSecondsFromBackend * 1000);
       }
-      return timer(mainSessionTimeInMs).pipe(
+      return timer(mainSessionTimeInMs - (endSessionTimeInSeconds * 1000) - marginTimeInMs).pipe(
         map(() => 'END' as StartOrEnd),
         startWith('START' as StartOrEnd)
       )
