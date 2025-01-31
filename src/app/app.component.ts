@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-
+import { environment } from 'src/environments/environment';
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
@@ -18,5 +18,17 @@ public constructor(){
     
     this.translate.setDefaultLang(lang);
     this.translate.use(lang);
+    const root = document.documentElement;
+
+    const cssVarMap = {
+      '--primary-custom-color': environment.customizations.colors.primary,
+      '--primary-contrast-custom-color': environment.customizations.colors.primary_contrast,
+      '--secondary-custom-color': environment.customizations.colors.secondary,
+      '--secondary-contrast-custom-color': environment.customizations.colors.secondary_contrast,
+    };
+  
+    Object.entries(cssVarMap).forEach(([cssVariable, colorValue]) => {
+      root.style.setProperty(cssVariable, colorValue);
+    });
 }
 }
