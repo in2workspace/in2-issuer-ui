@@ -48,7 +48,7 @@ export const undefinedCredentialOfferParamsState: CredentialOfferParamsState = {
   export const defaultTotalAvailableTimeInMs = 60 * 1000 * 9; // 9min in miliseconds
   //countdown for the refresh offer popup; when it comes to 0, redirects to home
   export const popupTimeInSeconds = 60; //in seconds; should always be 60s
-  export const loadingBufferTimeInMs = 8 * 1000; //margin to compensate for loading time 
+  export const loadingBufferTimeInMs = 25 * 1000; //margin to compensate for loading time 
 
 @Component({
   selector: 'app-credential-offer-stepper',
