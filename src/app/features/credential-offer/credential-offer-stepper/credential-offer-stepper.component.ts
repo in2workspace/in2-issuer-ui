@@ -188,12 +188,14 @@ export class CredentialOfferStepperComponent implements OnInit{
       () => {
         this.onRefreshCredentialClick(); 
         return EMPTY;
-        }, 
-        //after cancel callback
+      }, 
+      //after cancel callback
       () => {
         this.redirectToHome();
         return EMPTY;
-      }
+      },
+      //avoid closing popup clicking on overlay (force to click leave or refresh button)
+      'DISABLE_CLOSE'
   )})
   );
 

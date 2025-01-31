@@ -293,7 +293,8 @@ describe('openRefreshPopup', ()=>{
           loadingData: undefined,
         },
         expect.any(Function),
-        expect.any(Function) 
+        expect.any(Function),
+        'DISABLE_CLOSE' 
       );
     });
 
