@@ -8,7 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { NavbarComponent } from 'src/app/shared/components/navbar/navbar.component';
 import { QRCodeModule } from 'angularx-qrcode';
 import { MatIcon } from '@angular/material/icon';
-import { catchError, delayWhen, EMPTY, filter, interval, map, merge, Observable, of, scan, shareReplay, startWith, Subject, switchMap, take, tap, throwError, timer } from 'rxjs';
+import { catchError, EMPTY, filter, interval, map, merge, Observable, of, scan, shareReplay, startWith, Subject, switchMap, take, tap, throwError, timer } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogWrapperService } from 'src/app/shared/components/dialog/dialog-wrapper/dialog-wrapper.service';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
@@ -211,15 +211,12 @@ export class CredentialOfferStepperComponent implements OnInit{
       if(startOrEnd === 'END'){
         return interval(1000).pipe(
           take(popupTimeInSeconds + 1),
-          map(consumedSeconds => popupTimeInSeconds - consumedSeconds),
-          delayWhen(remainingSeconds => {//give 1.5 seconds to fetch in case user clicks at the last moment
-            return remainingSeconds === 0 ? timer(1500) : timer(0);
-          })
-      );
+          map(consumedSeconds => popupTimeInSeconds - consumedSeconds)
+        )
       }else{
         return of(popupTimeInSeconds); //reset time
       }
-    }),
+    }), 
     shareReplay()
   )
 
