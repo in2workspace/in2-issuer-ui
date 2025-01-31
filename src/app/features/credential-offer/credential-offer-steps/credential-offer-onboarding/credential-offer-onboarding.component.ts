@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { environment } from 'src/environments/environment';
 import { QRCodeModule } from 'angularx-qrcode';
 import { UpperCasePipe } from '@angular/common';
@@ -7,7 +7,7 @@ import { UpperCasePipe } from '@angular/common';
 @Component({
   selector: 'app-credential-offer-onboarding',
   standalone: true,
-  imports: [QRCodeModule, TranslateModule, UpperCasePipe],
+  imports: [QRCodeModule, TranslatePipe, UpperCasePipe],
   templateUrl: './credential-offer-onboarding.component.html',
   styleUrl: './credential-offer-onboarding.component.scss'
 })

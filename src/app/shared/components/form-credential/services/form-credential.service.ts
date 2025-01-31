@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ProcedureRequest } from 'src/app/core/models/dto/procedure-request.dto';
-import { tap, catchError } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { Mandatee, Mandator, Power, Signer } from "../../../../core/models/entity/lear-credential-employee.entity";
 import { Observable, BehaviorSubject } from 'rxjs';
 import { TempPower } from 'src/app/core/models/temporal/temp-power.interface';
@@ -128,9 +128,7 @@ export class FormCredentialService {
     };
 
     return credentialProcedureService.createProcedure(credentialProcedure).pipe(
-      tap(() => {
-        resetForm();
-      }),
+      //currently there's no need to reset form, since user is redirected to home and page reloads after creating
       catchError(error => {
         //server-error-interceptor acts here
         throw error;

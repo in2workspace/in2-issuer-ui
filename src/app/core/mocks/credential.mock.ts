@@ -14,7 +14,12 @@ export const credentialMock: LEARCredentialEmployeeJwtPayload = {
         mandate: {
           id: 'idm',
           life_span: 'lifespan' as any,
-          mandatee: {} as any,
+          mandatee: {
+            first_name: 'Joe',
+            last_name: 'Doe',
+            email: 'fdsad@email.com',
+            mobile_phone: '605444888'
+          },
           mandator: {
             organizationIdentifier: 'ORG123',
             organization: 'Test Organization',
@@ -32,8 +37,7 @@ export const credentialMock: LEARCredentialEmployeeJwtPayload = {
             country: "ES"
           },
           power: [
-            { tmf_action: 'action1', tmf_domain: 'domain1', tmf_function: 'function1', tmf_type: 'type1' },
-            { tmf_action: 'action2', tmf_domain: 'domain2', tmf_function: 'function2', tmf_type: 'type2' }
+            { tmf_action: ['Update, Create'], tmf_domain: 'domain1', tmf_function: 'ProductOffering', tmf_type: 'type1' },
           ]
         }
       },
