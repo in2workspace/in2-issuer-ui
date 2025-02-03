@@ -15,6 +15,7 @@ import { By } from '@angular/platform-browser';
 import { CredentialProcedure, ProcedureResponse } from 'src/app/core/models/dto/procedure-response.dto';
 import { credentialProcedureListMock } from 'src/app/core/mocks/credential-procedure-list';
 import { MatSort } from '@angular/material/sort';
+import { ElementRef } from '@angular/core';
 
 describe('CredentialManagementComponent', () => {
   let component: CredentialManagementComponent;
@@ -372,13 +373,25 @@ it('should not navigate and log a warning if credential type is not LEAR_CREDENT
   consoleWarnSpy.mockRestore();
 });
 
-it('should toggle searchBar', ()=>{
+it('should toggle searchBar and reset filters when closed', () => {
+  component.dataSource.paginator = { firstPage: jest.fn() } as unknown as MatPaginator;
+  
+  component.searchInput = { nativeElement: { value: 'test' } } as ElementRef<HTMLInputElement>;
+
+  const searchSubjectSpy = jest.spyOn(component['searchSubject'], 'next');
+
   component.hideSearchBar = true;
   component.toggleSearchBar();
   expect(component.hideSearchBar).toBe(false);
 
   component.toggleSearchBar();
   expect(component.hideSearchBar).toBe(true);
+
+  expect(component.searchInput.nativeElement.value).toBe('');
+
+  expect(searchSubjectSpy).toHaveBeenCalledWith('');
+
+  expect(component.dataSource.paginator.firstPage).toHaveBeenCalled();
 });
 
 

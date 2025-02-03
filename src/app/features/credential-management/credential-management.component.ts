@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, inject, ViewChild, DestroyRef } from '@angular/core';
+import { AfterViewInit, Component, OnInit, inject, ViewChild, DestroyRef, ElementRef } from '@angular/core';
 import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { Router } from '@angular/router';
@@ -71,6 +71,7 @@ import { MatIcon } from '@angular/material/icon';
 export class CredentialManagementComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) public paginator!: MatPaginator;
   @ViewChild(MatSort) public sort!: MatSort;
+  @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
   public displayedColumns: string[] = ['subject', 'credential_type', 'updated','status'];
   public dataSource = new MatTableDataSource<CredentialProcedure>();
   public isValidOrganizationIdentifier = false;
@@ -176,6 +177,19 @@ export class CredentialManagementComponent implements OnInit, AfterViewInit {
 
   public toggleSearchBar(){
     this.hideSearchBar = !this.hideSearchBar;
+
+    if (this.hideSearchBar) {
+
+      this.searchSubject.next('');
+      
+      if (this.searchInput) {
+        this.searchInput.nativeElement.value = '';
+      }
+  
+      if (this.dataSource.paginator) {
+        this.dataSource.paginator.firstPage();
+      }
+    }
   }
 
 }
