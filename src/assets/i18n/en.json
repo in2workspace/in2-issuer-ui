@@ -50,7 +50,7 @@
     },
     "sendReminderSuccess": {
       "title": "Reminder sent sucessfully",
-      "message": "The credential offer reminder was sent successfully. The mandatee has 72 hours to download the credential."
+      "message": "The credential offer reminder was sent successfully."
     }
   },
   "credentialOffer": {
@@ -65,7 +65,7 @@
     "second-assistance": " for assistance.",
     "wallet-guide": "Wallet Users Guide",
     "expired-title": "Credential expiring",
-    "ask-refresh": "Offer is about to expire. Would you like to refresh it or leave?",
+    "ask-refresh": "Credential offer is about to expire. Would you like to refresh it or leave?",
     "remaining-time": "Time remaining:",
     "first-step":{
       "title": "Scan the QR code to log in and access the DOME Wallet.",
@@ -76,7 +76,7 @@
       "directly": "directly",
       "test-purposes": "For tests purposes, get the Verifiable Credential with the ",
       "refresh-text": "Do you have problems when getting the credential with the Wallet?",
-      "refresh-link": "Get a new credential"
+      "refresh-link": "Get a new credential offer"
     }
   },
   "scaner": {
@@ -147,8 +147,8 @@
     },
     "credentialOffer": {
       "invalid-url": "Unexpected error: invalid URL, can't get credential offer.",
-      "unexpected": "An unexpected error occurred. Please try again later or contact your company's LEAR to get a new credential.",
-      "expired": "This credential offer has expired. Please contact your company's LEAR to get a new one."
+      "unexpected": "An unexpected error occurred. Please try again later or contact your company's Legal Representative to get a new credential.",
+      "expired": "This credential offer has expired. Please contact your company's Legal Representative to get a new one."
     },
     "form":{
       "required": "This field is required.",

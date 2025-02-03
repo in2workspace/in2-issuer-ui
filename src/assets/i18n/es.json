@@ -50,7 +50,7 @@
     },
     "sendReminderSuccess": {
       "title": "Recordatorio enviado con éxito",
-      "message": "El recordatorio ha sido enviado con éxito. El 'mandatee' dispone de 72 horas para descargar la credencial."
+      "message": "El recordatorio ha sido enviado con éxito."
     }
   },
   "credentialOffer": {
@@ -65,7 +65,7 @@
     "second-assistance": " para obtener asistencia.",
     "wallet-guide": "Guía de Usuarios del Wallet",
     "expired-title": "Expiración de credencial",
-    "ask-refresh": "La oferta está a punto de expirar. ¿Quieres refrescarla o salir?",
+    "ask-refresh": "La oferta de credencial está a punto de expirar. ¿Quieres refrescarla o salir?",
     "remaining-time": "Remaining time:",
     "first-step": {
       "title": "Escanea el código QR para iniciar sesión y acceder al Wallet de DOME.",
@@ -76,7 +76,7 @@
       "directly": "directamente",
       "test-purposes": "Para pruebas, obtén la Credencial Verificable con el ",
       "refresh-text": "¿Tienes problemas para obtener la credencial con el Wallet?",
-      "refresh-link": "Obtén una nueva credencial"
+      "refresh-link": "Obtén una nueva oferta de credencial"
     }
   }
   ,
@@ -149,8 +149,8 @@
       },
       "credentialOffer": {
         "invalid-url": "URL no válida. No se puede obtener la oferta de credencial.",
-        "unexpected": "Se produjo un error inesperado. Inténtalo de nuevo más tarde o contacta con el LEAR de tu empresa para obtener una nueva credencial.",
-        "expired": "Esta oferta de credencial ha expirado. Contacta con el LEAR de tu empresa para obtener una nueva."
+        "unexpected": "Se produjo un error inesperado. Inténtalo de nuevo más tarde o contacta con el Representante Legal de tu empresa para obtener una nueva credencial.",
+        "expired": "Esta oferta de credencial ha expirado. Contacta con el Representante Legal de tu empresa para obtener una nueva."
       },
       "form":{
         "required": "Campo obligatorio.",
