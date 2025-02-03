@@ -6,15 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.4.4](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.4.4)
 ### Added
-- Searchbar in credentials dashboard
-- Success popup after creating credential and sending reminder
-- In credential offer step 2, popup to refresh offer when there is little time left. Redirect to home page if doesn't refresh
+- Search bar in credentials dashboard
+- Success popup after creating credential and after sending reminder
+- In credential offer step 2, added popup to refresh offer when it is about to expire. If not refreshed, redirects to the home page.
 - In details and credential issuance pages, "Back" button
 
 ### Changed
-- In credentials dashboard, order of columns and status aspect (colors added)
-- Send Reminder button is not at the bottom of the details page
-- In navbar, organization name appears below username
+- In credentials dashboard, changed order of columns and added color to status indicators
+- Send Reminder button is positioned at the bottom of the details page
+- In navbar, organization name appears below the username
+- Updated button styles in dashboard, form and stepper
 
 ## [1.4.3](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.4.3)
 ### Fixed
