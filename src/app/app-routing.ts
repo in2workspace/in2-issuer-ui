@@ -14,7 +14,7 @@ export const routes: Routes = [
       import(
         './features/credential-management/credential-management.routes'
         ).then((m) => m.default),
-    canActivate: [AutoLoginPartialRoutesGuard, OnboardingPolicy],
+    // canActivate: [AutoLoginPartialRoutesGuard, OnboardingPolicy],
   },
   {
     path: 'organization/credentials/create',
