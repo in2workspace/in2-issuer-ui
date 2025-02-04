@@ -13,8 +13,7 @@ describe('DialogComponent', () => {
     title: 'Test Title',
     message: 'Test Message',
     confirmationType: 'sync',
-    status: 'default',
-    loadingData: undefined,
+    status: 'default'
   };
 
   beforeEach(() => {
@@ -41,6 +40,10 @@ describe('DialogComponent', () => {
     jest.spyOn(component, 'updateStatus');
   });
 
+  afterEach(() => {
+    jest.resetAllMocks(); 
+  });
+
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
@@ -53,18 +56,40 @@ describe('DialogComponent', () => {
   });
 
   it('should update status correctly in updateStatus', () => {
-    component.currentStatus = 'default';
+    jest.spyOn(component, 'updateStatusPanelClass');
+    jest.spyOn(component, 'updateStatusColor');
+
+    component.currentStatus = 'error';
 
     component.updateStatus();
 
-    expect(mockDialogRef.removePanelClass).toHaveBeenCalledWith('dialog-default');
+    // Verify the calls to updateStatusPanelClass and updateStatusColor
+    expect(component.updateStatusPanelClass).toHaveBeenCalledWith('error');
+    expect(component.updateStatusColor).toHaveBeenCalled();
+    expect(component.currentStatus).toEqual(mockData.status);
+
+  });
+
+  it('should set the correct status color in updateStatusColor', () => {
+    component.currentStatus = 'default';
+    component.updateStatusColor();
+    expect(component.statusColor).toEqual('primary');
+
+    component.currentStatus = 'error';
+    component.updateStatusColor();
+    expect(component.statusColor).toEqual('warn');
+  });
+
+  it('should update panel class correctly in updateStatusPanelClass', () => {
+    component.currentStatus = 'default';
+    component.updateStatusPanelClass('error');
+    expect(mockDialogRef.removePanelClass).toHaveBeenCalledWith('dialog-error');
     expect(mockDialogRef.addPanelClass).toHaveBeenCalledWith('dialog-default');
 
-    component.updateData({ status: 'error' });
-
-    expect(mockDialogRef.removePanelClass).toHaveBeenCalledWith('dialog-default');
-    expect(mockDialogRef.addPanelClass).toHaveBeenCalledWith('dialog-error');
-    expect(component.currentStatus).toEqual('error');
+    component.currentStatus = 'error';
+    component.updateStatusPanelClass('default');
+    expect(mockDialogRef.removePanelClass).toHaveBeenCalledWith('dialog-error');
+    expect(mockDialogRef.addPanelClass).toHaveBeenCalledWith('dialog-default');
   });
 
   it('should update the dialog data', () => {
@@ -96,8 +121,8 @@ describe('DialogComponent', () => {
     expect(mockDialogRef.close).toHaveBeenCalledWith(false);
   });
 
-  it('should return an observable from afterConfirmSubj', (done) => {
-    component.afterConfirmSubj().subscribe((result) => {
+  it('should return an observable from afterConfirm$', (done) => {
+    component.afterConfirm$().subscribe((result) => {
       expect(result).toBe(true);
       done();
     });

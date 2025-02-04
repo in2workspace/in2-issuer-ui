@@ -102,8 +102,7 @@ export class PowerComponent implements OnInit{
         title: this.translate.instant("power.remove-dialog.title"),
         message: this.translate.instant("power.remove-dialog.message") + powerToRemove,
         confirmationType: 'sync',
-        status: `default`,
-        loadingData: undefined
+        status: `default`
     }
     const removeAfterClose =  (): Observable<any> => {
       this.formService.removePower(powerToRemove);

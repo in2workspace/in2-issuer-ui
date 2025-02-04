@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { UserDataAuthenticationResponse } from "../models/dto/user-data-authentication-response.dto";
 import { Mandator, Power, Signer } from "../models/entity/lear-credential-employee.entity";
 import {environment} from "../../../environments/environment";
@@ -25,12 +25,16 @@ export class AuthService {
 
   private readonly oidcSecurityService = inject(OidcSecurityService);
 
-  constructor() {
-    this.checkAuth().subscribe();
+  public constructor() {
+    this.checkAuth()
+    .pipe(take(1))
+    .subscribe();
   }
 
   public checkAuth(): Observable<boolean> {
-    return this.oidcSecurityService.checkAuth().pipe(map(({ isAuthenticated, userData}) => {
+    return this.oidcSecurityService.checkAuth().pipe(
+      take(1),
+      map(({ isAuthenticated, userData}) => {
       this.isAuthenticatedSubject.next(isAuthenticated);
 
       if (isAuthenticated) {
@@ -132,7 +136,9 @@ export class AuthService {
   }
 
   public handleLoginCallback(): void {
-    this.oidcSecurityService.checkAuth().subscribe(({ isAuthenticated, userData, accessToken }) => {
+    this.oidcSecurityService.checkAuth()
+    .pipe(take(1))
+    .subscribe(({ isAuthenticated, userData, accessToken }) => {
       if (isAuthenticated) {
 
         this.userPowers = this.extractUserPowers(userData);

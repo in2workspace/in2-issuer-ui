@@ -7,7 +7,7 @@ import { CountryService } from './services/country.service';
 import { FormCredentialService } from './services/form-credential.service';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { Observer, of } from 'rxjs';
 import { MaxLengthDirective } from '../../directives/validators/max-length-directive.directive';
@@ -19,6 +19,7 @@ import { Power, Signer } from 'src/app/core/models/entity/lear-credential-employ
 import { BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import { DialogWrapperService } from '../dialog/dialog-wrapper/dialog-wrapper.service';
 import { DialogData } from '../dialog/dialog.component';
+import { RouterTestingModule } from '@angular/router/testing';
 
 const mockTempPower: TempPower = {
   tmf_action: 'action1',
@@ -63,6 +64,7 @@ describe('FormCredentialComponent', () => {
 
   let mockCredentialProcedureService: jest.Mocked<CredentialProcedureService>;
   let dialogService: {
+    openDialog: jest.Mock;
     openDialogWithCallback: jest.Mock;
   };
   let mockCountryService: any;
@@ -105,6 +107,7 @@ describe('FormCredentialComponent', () => {
     } as jest.Mocked<CredentialProcedureService>;
 
     dialogService = {
+      openDialog: jest.fn(),
       openDialogWithCallback: jest.fn()
     };
 
@@ -165,6 +168,7 @@ describe('FormCredentialComponent', () => {
         FormsModule,
         TranslateModule.forRoot({}),
         HttpClientModule,
+        RouterModule.forRoot([]),
         FormCredentialComponent,
         MaxLengthDirective, CustomEmailValidatorDirective, UnicodeValidatorDirective, OrganizationNameValidatorDirective,
         BrowserAnimationsModule
@@ -514,15 +518,18 @@ describe('FormCredentialComponent', () => {
     expect(mockFormCredentialService.submitCredential).not.toHaveBeenCalled();
   });
 
-  it('should navigate to credentials if submitting credential is successful', fakeAsync(() => {
+  it('should navigate to credentials if submitting credential is successful and dialog data is correct', fakeAsync(() => {
     mockCountryService.getCountryFromIsoCode.mockReturnValue('States');
     mockCountryService.getCountryFromName.mockReturnValue('mandatorCountry');
+    const consoleErrorSpy = jest.spyOn(console, 'error');
   
     component.asSigner = true;
     mockFormCredentialService.hasSelectedPower.mockReturnValue(true);
     mockFormCredentialService.powersHaveFunction.mockReturnValue(true);
   
     jest.spyOn(mockFormCredentialService, 'submitCredential').mockReturnValue(of('Success'));
+    const dialogAfterClosedMock = jest.fn().mockReturnValue(of(true));
+    jest.spyOn(dialogService, 'openDialog').mockReturnValue({ afterClosed: dialogAfterClosedMock } as any);
   
     Object.defineProperty(window, 'location', {
       value: {
@@ -534,25 +541,35 @@ describe('FormCredentialComponent', () => {
   
     jest.spyOn(mockRouter, 'navigate').mockResolvedValue(true);
   
-    component.submitCredential().subscribe((res) => {
-      
-    });;
+    const result = component.submitCredential();
     tick();
   
-    expect(mockFormCredentialService.submitCredential).toHaveBeenCalledWith(
-      component.credential,
-      'States',
-      'mandatorCountry',
-      mockFormCredentialService.getPlainAddedPowers(),
-      component.mandator,
-      component.addedMandatorLastName,
-      component.signer,
-      (component as any).credentialProcedureService,
-      expect.any(Function)
-    );
-    tick();
-  
-    expect(mockRouter.navigate).toHaveBeenCalledWith(['/organization/credentials']);
-    // expect(window.location.reload).toHaveBeenCalled();
+    result.subscribe(() => {
+      expect(mockFormCredentialService.submitCredential).toHaveBeenCalledWith(
+        component.credential,
+        'States',
+        'mandatorCountry',
+        mockFormCredentialService.getPlainAddedPowers(),
+        component.mandator,
+        component.addedMandatorLastName,
+        component.signer,
+        (component as any).credentialProcedureService,
+        expect.any(Function)
+      );
+
+      const expectedDialogData: DialogData = {
+        title: 'credentialIssuance.create-success-dialog.title',
+        message: 'credentialIssuance.create-success-dialog.message',
+        confirmationType: 'none',
+        status: 'default'
+      };
+      expect(dialogService.openDialog).toHaveBeenCalledWith(expectedDialogData);
+
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/organization/credentials']);
+      expect(window.location.reload).toHaveBeenCalled();
+    });
+
+    expect(consoleErrorSpy).not.toHaveBeenCalled();
   }));
+
 });

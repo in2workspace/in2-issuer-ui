@@ -6,10 +6,12 @@ import { RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { OidcSecurityService, StsConfigLoader } from "angular-auth-oidc-client";
 import { AuthService } from 'src/app/core/services/auth.service';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { CredentialOfferStepperComponent, undefinedCredentialOfferParamsState } from './credential-offer-stepper.component';
+import { CUSTOM_ELEMENTS_SCHEMA, ViewContainerRef } from '@angular/core';
+import { CredentialOfferStepperComponent, loadingBufferTimeInMs, undefinedCredentialOfferParamsState } from './credential-offer-stepper.component';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
+import { HomeComponent } from '../../home/home.component';
+import { TemplatePortal } from '@angular/cdk/portal';
 
 global.structuredClone = (obj: any) => JSON.parse(JSON.stringify(obj));
 
@@ -51,7 +53,7 @@ describe('Credential Offer Stepper', () => {
 
     await TestBed.configureTestingModule({
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    imports: [BrowserAnimationsModule, RouterModule.forRoot([]), HttpClientModule, TranslateModule.forRoot({}), CredentialOfferStepperComponent],
+    imports: [BrowserAnimationsModule, RouterModule.forRoot([{ path: 'home', component: HomeComponent }]), HttpClientModule, TranslateModule.forRoot({}), CredentialOfferStepperComponent, HomeComponent],
     providers: [
       AuthService,
       BreakpointObserver,
@@ -130,7 +132,9 @@ it('should initialize initUrlParams$ correctly', fakeAsync(() => {
     credential_offer_uri: 'cred-offer-uri',
     transaction_code: 'transaction-code-param',
     c_transaction_code: 'c-code-param',
-    loading: false
+    c_transaction_code_expires_in: 10,
+    loading: false,
+    error: false
   };
   jest.spyOn(component, 'getUrlParams').mockReturnValue(offerParams);
   
@@ -147,7 +151,7 @@ it('should fetch credential offer and emit correct values', fakeAsync(() => {
 
  component.fetchedCredentialOffer$.subscribe(paramsState => {
   expect(paramsState).toEqual({
-    ...mockParams, loading: false
+    ...mockParams, loading: false, error: false
   });
  });
 }));
@@ -157,7 +161,8 @@ it('should gracefully handle error when fetching credentials', fakeAsync(() => {
 
  component.fetchedCredentialOffer$.subscribe(paramsState => {
   expect(paramsState).toEqual({ 
-    loading: false
+    loading: false,
+    error: true
   });
  });
 }));
@@ -167,13 +172,17 @@ it('should emit the correct offerParams$ state when initUrlParams$ and fetchedCr
     credential_offer_uri: 'cred-one',
     transaction_code: 'trans-one',
     c_transaction_code: 'c-one',
-    loading: false
+    c_transaction_code_expires_in: 10,
+    loading: false,
+    error: false
   }; 
   const secondInitOfferMock = {
     credential_offer_uri: 'cred-two',
     transaction_code: 'trans-two',
     c_transaction_code: 'c-two',
-    loading: false
+    c_transaction_code_expires_in: 20,
+    loading: false,
+    error: false
   };
 
   jest.spyOn(component, 'getUrlParams').mockReturnValue(firstInitUrlParamsMock);
@@ -197,6 +206,178 @@ it('should get url params on init', () => {
 
   expect(mockSubscriber).toHaveBeenCalled();
 });
+
+describe('startOrEndFirstDountdown', ()=>{
+
+  it('should NOT emit any value if loading is true', (done) => {
+    jest.spyOn(component, 'redirectToHome').mockImplementation(() => {});
+      const mockOffer = {
+        credential_offer_uri: undefined,
+        transaction_code: 'mock-trans-code',
+        c_transaction_code: 'mock-c-code',
+        c_transaction_code_expires_in: 10,
+        loading: true,
+        error: false
+       };
+    const spy = jest.fn();
+    component['startOrEndFirstCountdown$'].subscribe(spy);
+    spy.mockClear();
+
+    Object.defineProperty(component, 'fetchedCredentialOffer$', {
+      get: jest.fn(() => of(mockOffer)),
+    });
+    spy.mockRestore();
+
+    setTimeout(() => {
+      expect(spy).not.toHaveBeenCalled();
+      done();
+    }, 10 * 1000 - loadingBufferTimeInMs);
+  });
+
+  it('should NOT emit any value if error is true', (done) => {
+    jest.spyOn(component, 'redirectToHome').mockImplementation(() => {});
+    const mockOffer = {
+      credential_offer_uri: undefined,
+      transaction_code: 'mock-trans-code',
+      c_transaction_code: 'mock-c-code',
+      c_transaction_code_expires_in: 10,
+      loading: false,
+      error: true
+     };
+  const spy = jest.fn();
+  component['startOrEndFirstCountdown$'].subscribe(spy);
+  spy.mockClear();
+
+  Object.defineProperty(component, 'fetchedCredentialOffer$', {
+    get: jest.fn(() => of(mockOffer)),
+  });
+  spy.mockRestore();
+
+  setTimeout(() => {
+    expect(spy).not.toHaveBeenCalled();
+    done();
+  }, 10 * 1000 - loadingBufferTimeInMs);
+  });
+});
+
+describe('openRefreshPopup', ()=>{
+  it('should NOT execute openDialogWithCallback if startOrEndFirstCountdown$ does not emit "END"', () => {
+    const dialogSpy = jest.spyOn(component['dialog'], 'openErrorInfoDialog');
+    Object.defineProperty(component, 'startOrEndFirstCountdown$', {
+      get: jest.fn(() => of('START'))
+    });
+
+    component['openRefreshPopupEffect'].subscribe();
+
+    expect(dialogSpy).not.toHaveBeenCalled();
+  });
+
+  it('should execute openDialogWithCallback with correct parameters when startOrEndFirstCountdown$ emits "END"', () => {
+    const mockTemplate = new TemplatePortal(component.popupCountdown, {} as ViewContainerRef);
+    const dialogSpy = jest.spyOn(component['dialog'], 'openErrorInfoDialog');
+
+    Object.defineProperty(component, 'startOrEndFirstCountdown$', {
+      get: jest.fn(() => of('END')),
+    });
+
+    component['openRefreshPopupEffect'].subscribe(()=>{
+      expect(dialogSpy).toHaveBeenCalledWith(
+        {
+          title: 'Session timeout',
+          message: '',
+          template: expect.any(TemplatePortal),
+          confirmationType: 'async',
+          status: 'default',
+          confirmationLabel: 'Refresh',
+          cancelLabel: 'Leave'
+        },
+        expect.any(Function),
+        expect.any(Function),
+        'DISABLE_CLOSE' 
+      );
+    });
+
+  });
+});
+
+describe('closeRefreshPopupEffect', () => {
+  it('should close all dialogs when countdown emits "START"', () => {
+    const closeSpy = jest.spyOn(component['dialog']['dialog'], 'closeAll');
+    const originalProperty = Object.getOwnPropertyDescriptor(component, 'startOrEndFirstCountdown$');
+
+    Object.defineProperty(component, 'startOrEndFirstCountdown$', {
+      get: jest.fn(() => of('START')),
+    });
+
+    component['closeRefreshPopupEffect'].subscribe(() => {
+      expect(closeSpy).toHaveBeenCalled();
+    });
+
+    if (originalProperty) {
+      Object.defineProperty(component, 'startOrEndFirstCountdown$', originalProperty);
+    }
+  });
+
+  it('should NOT close dialogs when countdown does NOT emit "START"', () => {
+    const closeSpy = jest.spyOn(component['dialog']['dialog'], 'closeAll');
+    const originalProperty = Object.getOwnPropertyDescriptor(component, 'startOrEndFirstCountdown$');
+
+    Object.defineProperty(component, 'startOrEndFirstCountdown$', {
+      get: jest.fn(() => of('END')),
+    });
+
+    component['closeRefreshPopupEffect'].subscribe(() => {
+      expect(closeSpy).not.toHaveBeenCalled();
+    });
+
+    if (originalProperty) {
+      Object.defineProperty(component, 'startOrEndFirstCountdown$', originalProperty);
+    }
+  });
+});
+
+describe('navigateHomeAfterEndSessionEffect', () => {
+  it('should redirect to home and show error dialog when countdown reaches 0', () => {
+    const errorMessage = 'Offer expired';
+    const translatedMsg = component['translate'].instant(errorMessage);
+    const dialogSpy = jest.spyOn(component['dialog'], 'openErrorInfoDialog');
+    const redirectSpy = jest.spyOn(component, 'redirectToHome');
+    const originalProperty = Object.getOwnPropertyDescriptor(component, 'endSessionCountdown$');
+
+    Object.defineProperty(component, 'endSessionCountdown$', {
+      get: jest.fn(() => of(0)),
+    });
+
+    component['navigateHomeAfterEndSessionEffect'].subscribe(() => {
+      expect(redirectSpy).toHaveBeenCalled();
+      expect(dialogSpy).toHaveBeenCalledWith(translatedMsg);
+    });
+
+    if (originalProperty) {
+      Object.defineProperty(component, 'endSessionCountdown$', originalProperty);
+    }
+  });
+
+  it('should NOT redirect to home and NOT show error dialog when countdown does NOT reach 0', () => {
+    const dialogSpy = jest.spyOn(component['dialog'], 'openErrorInfoDialog');
+    const redirectSpy = jest.spyOn(component, 'redirectToHome');
+    const originalProperty = Object.getOwnPropertyDescriptor(component, 'endSessionCountdown$');
+
+    Object.defineProperty(component, 'endSessionCountdown$', {
+      get: jest.fn(() => of(10)),
+    });
+
+    component['navigateHomeAfterEndSessionEffect'].subscribe();
+
+    expect(redirectSpy).not.toHaveBeenCalled();
+    expect(dialogSpy).not.toHaveBeenCalled();
+
+    if (originalProperty) {
+      Object.defineProperty(component, 'endSessionCountdown$', originalProperty);
+    }
+  });
+});
+
 
 describe('onSelectedStepChange', () => {
   let consoleErrorSpy: jest.SpyInstance;
@@ -257,7 +438,8 @@ describe('onSelectedStepChange', () => {
         credential_offer_uri: undefined,
         transaction_code: undefined,
         c_transaction_code: 'someCCode',
-        loading: false
+        loading: false,
+        error: false
       });
     });
   
@@ -273,7 +455,8 @@ describe('onSelectedStepChange', () => {
         credential_offer_uri: undefined,
         transaction_code: 'transaction123',
         c_transaction_code: 'someCCode',
-        loading: false
+        loading: false,
+        error: false
       });
     });
   
@@ -288,7 +471,8 @@ describe('onSelectedStepChange', () => {
         credential_offer_uri: undefined,
         transaction_code: 'transaction123',
         c_transaction_code: undefined,
-        loading: false
+        loading: false,
+        error: false
       });
     });
   });
@@ -302,13 +486,13 @@ describe('getCredentialOffer', () => {
   it('should throw an error when no transaction_code or c_transaction_code is available', (done) => {
     jest.spyOn(component, 'offerParams$').mockReturnValue(undefinedCredentialOfferParamsState);
     const dialogSpy = jest.spyOn(component['dialog'], 'openErrorInfoDialog');
-    const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
     const message = component['translate'].instant("error.credentialOffer.invalid-url");
 
     component.getCredentialOffer().subscribe({
       error: (error) => {
         expect(error.message).toBe('No transaction nor c code to fetch credential offer.');
-        expect(consoleLogSpy).toHaveBeenCalledWith("Client error: Transaction code not found. Can't get credential offer");
+        expect(consoleErrorSpy).toHaveBeenCalledWith("Client error: Transaction code not found. Can't get credential offer");
         expect(dialogSpy).toHaveBeenCalledWith(message);
         done();
       }
@@ -321,7 +505,9 @@ describe('getCredentialOffer', () => {
       credential_offer_uri: undefined,
       transaction_code: 'mock-trans-code',
       c_transaction_code: mockCTransactionCode,
-      loading: false
+      c_transaction_code_expires_in: 10,
+      loading: false,
+      error: false
     };
     const mockResponse = {
       credential_offer_uri: 'some uri',
@@ -343,7 +529,9 @@ describe('getCredentialOffer', () => {
       credential_offer_uri: undefined,
       transaction_code: mockTransactionCode,
       c_transaction_code: undefined,
-      loading: false
+      c_transaction_code_expires_in: 10,
+      loading: false,
+      error: false
     };
     const mockResponse = {
       credential_offer_uri: 'some uri',

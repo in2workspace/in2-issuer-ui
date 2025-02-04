@@ -33,13 +33,39 @@ describe('DialogWrapperService', () => {
     service = TestBed.inject(DialogWrapperService);
   });
 
+  it('should create', () => {
+    expect(service).toBeTruthy();
+  });
+
+  it('should open a dialog with given data', () => {
+    const dialogData: DialogData = {
+      title: 'Sync Title',
+      message: 'Sync Message',
+      confirmationType: 'sync',
+      status: 'default'
+    };
+    const mockDialogRef = {} as MatDialogRef<DialogComponent, any>;
+
+    matDialogMock.open.mockReturnValue(mockDialogRef);
+
+    const result = service.openDialog(dialogData);
+
+    expect(matDialogMock.open).toHaveBeenCalledWith(DialogComponent, {
+      data: {
+        ...dialogData
+      },
+      autoFocus: false
+    });
+
+    expect(result).toBe(mockDialogRef);
+  });
+
   it('should open a dialog and execute the callback with sync confirmation type', () => {
     const dialogData: DialogData = {
       title: 'Sync Title',
       message: 'Sync Message',
       confirmationType: 'sync',
-      status: 'default',
-      loadingData: undefined,
+      status: 'default'
     };
     const callback = jest.fn(() => of('success'));
     const afterClosedSubject = new Subject<void>();
@@ -57,7 +83,8 @@ describe('DialogWrapperService', () => {
 
     expect(matDialogMock.open).toHaveBeenCalledWith(DialogComponent, {
       data: { ...dialogData },
-      autoFocus:false
+      autoFocus:false,
+      disableClose: false
     });
     expect(callback).toHaveBeenCalled();
     expect(dialogRefMock.close).toHaveBeenCalled();
@@ -75,7 +102,7 @@ describe('DialogWrapperService', () => {
     const afterConfirmSubject = new Subject<void>();
     const dialogRefMock = {
       componentInstance: {
-        afterConfirmSubj: jest.fn(() => afterConfirmSubject.asObservable()),
+        afterConfirm$: jest.fn(() => afterConfirmSubject.asObservable()),
         updateData: jest.fn(),
       },
       close: jest.fn(),
@@ -90,7 +117,8 @@ describe('DialogWrapperService', () => {
 
     expect(matDialogMock.open).toHaveBeenCalledWith(DialogComponent, {
       data: { ...dialogData },
-      autoFocus:false
+      autoFocus:false,
+      disableClose: false
     });
     expect(dialogRefMock.componentInstance.updateData).toHaveBeenCalledWith(dialogData.loadingData);
     expect(loaderServiceMock.updateIsLoading).toHaveBeenCalledWith(true);
@@ -103,8 +131,7 @@ describe('DialogWrapperService', () => {
       title: 'Error Title',
       message: 'Error Message',
       confirmationType: 'sync',
-      status: 'default',
-      loadingData: undefined,
+      status: 'default'
     };
     const callback = jest.fn(() => throwError(() => new Error('Callback Error')));
     const afterClosedSubject = new Subject<void>();
@@ -122,10 +149,77 @@ describe('DialogWrapperService', () => {
 
     expect(matDialogMock.open).toHaveBeenCalledWith(DialogComponent, {
       data: { ...dialogData },
-      autoFocus:false
+      autoFocus:false,
+      disableClose: false
     });
     expect(callback).toHaveBeenCalled();
     expect(dialogRefMock.close).not.toHaveBeenCalled();
     expect(loaderServiceMock.updateIsLoading).toHaveBeenCalledWith(false);
+  });
+
+  it('should execute cancel callback when dialog is closed with false', () => {
+    const dialogData: DialogData = {
+      title: 'Cancel Title',
+      message: 'Cancel Message',
+      confirmationType: 'sync',
+      status: 'default'
+    };
+    
+    const callback = jest.fn(() => of('success'));
+    const cancelCallback = jest.fn(() => of('cancel success'));
+
+    const afterClosedSubject = new Subject<boolean>();
+    const dialogRefMock = {
+      afterClosed: jest.fn(() => afterClosedSubject.asObservable()),
+      close: jest.fn(),
+    } as unknown as MatDialogRef<DialogComponent, any>;
+
+    matDialogMock.open.mockReturnValue(dialogRefMock);
+
+    service.openDialogWithCallback(dialogData, callback, cancelCallback);
+
+    afterClosedSubject.next(false);
+    afterClosedSubject.complete();
+
+    expect(matDialogMock.open).toHaveBeenCalledWith(DialogComponent, {
+      data: { ...dialogData },
+      autoFocus: false,
+      disableClose: false
+    });
+
+    expect(cancelCallback).toHaveBeenCalled();
+  });
+
+  it('should handle errors in cancel callback', () => {
+    const dialogData: DialogData = {
+      title: 'Cancel Error Title',
+      message: 'Cancel Error Message',
+      confirmationType: 'sync',
+      status: 'default'
+    };
+
+    const callback = jest.fn(() => of('success'));
+    const cancelCallback = jest.fn(() => throwError(() => new Error('Cancel Callback Error')));
+
+    const afterClosedSubject = new Subject<boolean>();
+    const dialogRefMock = {
+      afterClosed: jest.fn(() => afterClosedSubject.asObservable()),
+      close: jest.fn(),
+    } as unknown as MatDialogRef<DialogComponent, any>;
+
+    matDialogMock.open.mockReturnValue(dialogRefMock);
+
+    service.openDialogWithCallback(dialogData, callback, cancelCallback);
+
+    afterClosedSubject.next(false);
+    afterClosedSubject.complete();
+
+    expect(matDialogMock.open).toHaveBeenCalledWith(DialogComponent, {
+      data: { ...dialogData },
+      autoFocus: false,
+      disableClose: false
+    });
+
+    expect(cancelCallback).toHaveBeenCalled();
   });
 });

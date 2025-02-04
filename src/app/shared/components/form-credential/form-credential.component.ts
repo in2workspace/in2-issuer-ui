@@ -28,6 +28,7 @@ import { DialogWrapperService } from '../dialog/dialog-wrapper/dialog-wrapper.se
 import { DialogData } from '../dialog/dialog.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LoaderService } from 'src/app/core/services/loader.service';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'app-form-credential',
@@ -43,6 +44,7 @@ import { LoaderService } from 'src/app/core/services/loader.service';
       MatCardContent,
       MatError,
       MatFormField,
+      MatIcon,
       MatInput,
       MatLabel,
       MatOption,
@@ -188,7 +190,7 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
     }
 
     if (this.hasSelectedPower() && this.selectedPowersHaveFunction()) {
-      return this.formService.submitCredential(
+       return this.formService.submitCredential(
           this.credential,
           selectedMandateeCountry,
           selectedMandatorCountry,
@@ -200,15 +202,29 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
           this.resetForm.bind(this)
         )
         .pipe(
-          switchMap(()  => 
-            from(this.router.navigate(['/organization/credentials'])).pipe(
-              tap(() => location.reload())
-            )
-          ));
+          //after submitting credential, show success popup and navigate to dashboard after close
+          switchMap(()  => {
+            const dialogData: DialogData = {
+              title: this.translate.instant("credentialIssuance.create-success-dialog.title"),
+              message: this.translate.instant("credentialIssuance.create-success-dialog.message"),
+              confirmationType: 'none',
+              status: 'default'
+            };
+
+            const dialogRef = this.dialog.openDialog(dialogData);
+            return dialogRef.afterClosed();
+          }),
+          switchMap(()=> from(this.navigateToCredentials())),
+          tap(() => location.reload())
+        );
     } else {
       console.error('Data to submit is not valid');
       return of(undefined);
     }
+  }
+
+  public navigateToCredentials(): Promise<boolean>{
+    return this.router.navigate(['/organization/credentials'])
   }
 
   public triggerSendReminder(): void {

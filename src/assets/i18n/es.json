@@ -1,4 +1,8 @@
 {
+  "next": "Siguiente",
+  "back": "Volver",
+  "verifiable-credential": "Credencial Verificable",
+  "dome-wallet": "Wallet de DOME",
   "home": {
     "title": "Bienvenido al DOME Issuer para LEARCredentials",
     "learn-more": "Más información",
@@ -46,18 +50,36 @@
     },
     "sendReminderSuccess": {
       "title": "Recordatorio enviado con éxito",
-      "message": "El recordatorio ha sido enviado con éxito. El 'mandatee' dispone de 72 horas para descargar la credencial."
+      "message": "El recordatorio ha sido enviado con éxito."
     }
   },
   "credentialOffer": {
-    "credentialDetail": "Oferta de credencial",
-    "textinformation": "Tienes una oferta de credencial. Por favor, sigue los siguientes pasos:",
-    "first-step": "1. Regístrate e inicia sesión en el ",
-    "second-step": "2. Haz clic en el botón de abajo para obtener el código QR.",
-    "third-step": "3. Escanea el código QR con el ",
-    "fourth-step": "4. Introduce el PIN que recibirás en tu correo electrónico.",
-    "button-text": "Obtén el QR"
-  },
+    "first-label": "Iniciar sesión en el Wallet",
+    "second-label": "Obtener Credencial",
+    "no-data": "No hay datos de oferta de credencial.",
+    "getting": "Obteniendo la oferta de credencial...",
+    "refreshing": "Actualizando la oferta de credencial...",
+    "unable": "¿No puedes escanear el código QR? Haz clic en el enlace a continuación para acceder al",
+    "environment-wallet": "Wallet del entorno",
+    "first-assistance": "Consulta la ",
+    "second-assistance": " para obtener asistencia.",
+    "wallet-guide": "Guía de Usuarios del Wallet",
+    "expired-title": "Expiración de oferta de credencial",
+    "ask-refresh": "La oferta de credencial está a punto de expirar. ¿Quieres refrescarla o salir?",
+    "remaining-time": "Remaining time:",
+    "first-step": {
+      "title": "Escanea el código QR para iniciar sesión y acceder al Wallet de DOME.",
+      "test-purposes": "Para propósitos de prueba, accede al"
+    },
+    "second-step": {
+      "title": "Escanea el código QR para obtener la credencial.",
+      "directly": "directamente",
+      "test-purposes": "Para pruebas, obtén la Credencial Verificable con el ",
+      "refresh-text": "¿Tienes problemas para obtener la credencial con el Wallet?",
+      "refresh-link": "Obtén una nueva oferta de credencial"
+    }
+  }
+  ,
   "scaner": {
     "textinformation": "Escaneo de la organización con su cartera para descargar la credencial"
   },
@@ -71,7 +93,9 @@
     "updated": "Actualizado",
     "cancel": "Cancelar",
     "create" : "Crear Credencial",
-    "buttonAdmin":"Nueva Credencial como Signer"
+    "buttonAdmin":"Nueva Credencial como Signer",
+    "search": "Busca por Sujeto",
+    "searchPlaceholder": "Joe Doe"
   },
     "power": {
       "power": "Powers",
@@ -105,7 +129,7 @@
       },
       "create-success-dialog": {
         "title": "Credencial creada",
-        "message": "La LEARCredentialEmployee ha sido creada con éxito"
+        "message": "La LEARCredentialEmployee ha sido creada con éxito."
       },
       "creating-credential": "Creando credencial"
     },
@@ -124,12 +148,9 @@
         }
       },
       "credentialOffer": {
-        "default": "La credencial ha expirado o ya ha sido descargada.",
-        "no_transaction_code": "Código de transacción no encontrado en la URL.",
-        "no_qr": "Código QR no disponible.",
         "invalid-url": "URL no válida. No se puede obtener la oferta de credencial.",
-        "unexpected": "Se produjo un error inesperado. Inténtalo de nuevo más tarde o contacta con el LEAR de tu empresa para obtener una nueva credencial.",
-        "expired": "Esta oferta de credencial ha expirado. Contacta con el LEAR de tu empresa para obtener una nueva."
+        "unexpected": "Se produjo un error inesperado. Inténtalo de nuevo más tarde o contacta con el Representante Legal de tu empresa para obtener una nueva credencial.",
+        "expired": "Esta oferta de credencial ha expirado. Contacta con el Representante Legal de tu empresa para obtener una nueva."
       },
       "form":{
         "required": "Campo obligatorio.",
