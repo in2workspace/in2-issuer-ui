@@ -3,6 +3,7 @@ import { Router, RouterLink } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { MatIcon } from '@angular/material/icon';
+import { environment } from 'src/environments/environment';
 import { take } from 'rxjs';
 
 @Component({
@@ -16,6 +17,7 @@ export class NavbarComponent implements OnInit {
   public userName: string = '';
   public organization: string = '';
   public selectedLanguage = 'en';
+  public readonly logoSrc= environment.customizations.logo_src;
 
   private readonly translate = inject(TranslateService);
   private readonly authService = inject(AuthService);
