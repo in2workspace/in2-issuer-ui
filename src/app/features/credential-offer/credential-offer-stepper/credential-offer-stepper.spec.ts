@@ -289,8 +289,7 @@ describe('openRefreshPopup', ()=>{
           confirmationType: 'async',
           status: 'default',
           confirmationLabel: 'Refresh',
-          cancelLabel: 'Leave',
-          loadingData: undefined,
+          cancelLabel: 'Leave'
         },
         expect.any(Function),
         expect.any(Function),

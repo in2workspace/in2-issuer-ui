@@ -208,8 +208,7 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
               title: this.translate.instant("credentialIssuance.create-success-dialog.title"),
               message: this.translate.instant("credentialIssuance.create-success-dialog.message"),
               confirmationType: 'none',
-              status: 'default',
-              loadingData: undefined
+              status: 'default'
             };
 
             const dialogRef = this.dialog.openDialog(dialogData);

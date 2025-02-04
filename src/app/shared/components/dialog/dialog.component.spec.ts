@@ -13,8 +13,7 @@ describe('DialogComponent', () => {
     title: 'Test Title',
     message: 'Test Message',
     confirmationType: 'sync',
-    status: 'default',
-    loadingData: undefined,
+    status: 'default'
   };
 
   beforeEach(() => {

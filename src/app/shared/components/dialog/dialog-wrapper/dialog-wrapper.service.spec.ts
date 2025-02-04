@@ -42,8 +42,7 @@ describe('DialogWrapperService', () => {
       title: 'Sync Title',
       message: 'Sync Message',
       confirmationType: 'sync',
-      status: 'default',
-      loadingData: undefined,
+      status: 'default'
     };
     const mockDialogRef = {} as MatDialogRef<DialogComponent, any>;
 
@@ -66,8 +65,7 @@ describe('DialogWrapperService', () => {
       title: 'Sync Title',
       message: 'Sync Message',
       confirmationType: 'sync',
-      status: 'default',
-      loadingData: undefined,
+      status: 'default'
     };
     const callback = jest.fn(() => of('success'));
     const afterClosedSubject = new Subject<void>();
@@ -133,8 +131,7 @@ describe('DialogWrapperService', () => {
       title: 'Error Title',
       message: 'Error Message',
       confirmationType: 'sync',
-      status: 'default',
-      loadingData: undefined,
+      status: 'default'
     };
     const callback = jest.fn(() => throwError(() => new Error('Callback Error')));
     const afterClosedSubject = new Subject<void>();
@@ -165,8 +162,7 @@ describe('DialogWrapperService', () => {
       title: 'Cancel Title',
       message: 'Cancel Message',
       confirmationType: 'sync',
-      status: 'default',
-      loadingData: undefined,
+      status: 'default'
     };
     
     const callback = jest.fn(() => of('success'));
@@ -199,8 +195,7 @@ describe('DialogWrapperService', () => {
       title: 'Cancel Error Title',
       message: 'Cancel Error Message',
       confirmationType: 'sync',
-      status: 'default',
-      loadingData: undefined,
+      status: 'default'
     };
 
     const callback = jest.fn(() => of('success'));

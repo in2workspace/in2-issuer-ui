@@ -181,8 +181,7 @@ export class CredentialOfferStepperComponent implements OnInit{
         confirmationType: 'async',
         status: 'default', //error?
         confirmationLabel: 'Refresh',
-        cancelLabel: 'Leave',
-        loadingData: undefined,
+        cancelLabel: 'Leave'
       }, 
       //after confirmation callback
       () => {

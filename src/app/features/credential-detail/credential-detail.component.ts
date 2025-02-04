@@ -69,8 +69,7 @@ export class CredentialDetailComponent implements OnInit {
       title: this.translate.instant("credentialDetail.sendReminderConfirm.title"),
       message: this.translate.instant("credentialDetail.sendReminderConfirm.message"),
       confirmationType: 'async',
-      status: 'default',
-      loadingData: undefined
+      status: 'default'
     };
 
     const sendReminderAfterConfirm = (): Observable<boolean> => {
@@ -96,8 +95,7 @@ export class CredentialDetailComponent implements OnInit {
               title: this.translate.instant("credentialDetail.sendReminderSuccess.title"),
               message: this.translate.instant("credentialDetail.sendReminderSuccess.message"),
               confirmationType: 'none',
-              status: 'default',
-              loadingData: undefined
+              status: 'default'
             };
 
             const dialogRef = this.dialog.openDialog(dialogData);

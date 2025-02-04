@@ -231,8 +231,7 @@ describe('CredentialDetailComponent', () => {
       title: 'Mock Title',
       message: 'Mock Message',
       confirmationType: 'async',
-      status: 'default',
-      loadingData: undefined,
+      status: 'default'
     };
     expect(dialogService.openDialogWithCallback).toHaveBeenCalledWith(
       expectedDialogData,
@@ -284,8 +283,7 @@ describe('CredentialDetailComponent', () => {
           title: translateService.instant("credentialDetail.sendReminderSuccess.title"),
           message: translateService.instant("credentialDetail.sendReminderSuccess.message"),
           confirmationType: 'none',
-          status: 'default',
-          loadingData: undefined,
+          status: 'default'
         };
         expect(dialogService.openDialog).toHaveBeenCalledWith(expectedDialogData);
   

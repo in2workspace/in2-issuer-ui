@@ -215,8 +215,7 @@ describe('PowerComponent', () => {
       title: translateService.instant("power.remove-dialog.title"),
       message: translateService.instant("power.remove-dialog.message") + powerToRemove,
       confirmationType: 'sync',
-      status: 'default',
-      loadingData: undefined
+      status: 'default'
     };
   
     jest.spyOn(mockFormService, 'removePower').mockImplementation();

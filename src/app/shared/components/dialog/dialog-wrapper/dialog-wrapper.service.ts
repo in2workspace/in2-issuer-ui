@@ -29,8 +29,7 @@ export class DialogWrapperService {
       title: title ?? 'Error',
       message: message,
       confirmationType: 'none',
-      status: 'error',
-      loadingData: undefined
+      status: 'error'
     };
     const openDialog = this.dialog.openDialogs[0];
     if(openDialog){

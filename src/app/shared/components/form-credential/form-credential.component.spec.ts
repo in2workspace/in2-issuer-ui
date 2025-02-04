@@ -561,8 +561,7 @@ describe('FormCredentialComponent', () => {
         title: 'credentialIssuance.create-success-dialog.title',
         message: 'credentialIssuance.create-success-dialog.message',
         confirmationType: 'none',
-        status: 'default',
-        loadingData: undefined,
+        status: 'default'
       };
       expect(dialogService.openDialog).toHaveBeenCalledWith(expectedDialogData);
 
