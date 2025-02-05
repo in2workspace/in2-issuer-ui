@@ -20,6 +20,7 @@
   window["env"]["secondary"] = "${SECONDARY}";
   window["env"]["secondary_contrast"]= "${SECONDARY_CONTRAST}"
   window["env"]["logo_src"]= "${LOGO_SRC}"
+  window["env"]["favicon_src"]= "${FAVICON_SRC}"
   //window["env"]["firma_credential"] = "${FIRMA_CREDENTIAL}"; The`firma_credential` variable has been commented out as it was initially intended for the signature functionality,which remains incomplete. This configuration is currently unnecessary for the existing flows but is expected to be reintroduced in the future when the related use case is implemented.
 
 })(this);

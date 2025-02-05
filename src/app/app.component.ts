@@ -30,5 +30,9 @@ public constructor(){
     Object.entries(cssVarMap).forEach(([cssVariable, colorValue]) => {
       root.style.setProperty(cssVariable, colorValue);
     });
-}
+    let link_favicon: HTMLLinkElement | null = document.querySelector("link[rel*='icon']");
+    if (link_favicon) {
+      link_favicon.href = environment.customizations.favicon_src;
+    }
+ }
 }
