@@ -4,7 +4,7 @@
 .main-header {
   position: relative;
   top: 0;
-  background: $Blue;
+  background: var(--primary-custom-color);
   padding: 1.5rem 0;
   margin-top: 0;
   width: 100%;
@@ -26,8 +26,8 @@
         cursor: pointer;
       }
 
-      span, small {
-        color: $White;
+      span {
+        color: var(--primary-contrast-custom-color);
         font-weight: bold;
         font-size: 1.2rem;
         padding-bottom: 3.5px;
@@ -51,7 +51,7 @@
         }
 
         .nav-link {
-          color: $White;
+          color:  var(--primary-contrast-custom-color);
           text-decoration: none;
           display: flex;
           align-items: center;
@@ -67,7 +67,7 @@
           }
 
           mat-icon {
-            color: $White;
+            color: var(--primary-contrast-custom-color);
             margin-right: 0.5rem;
             margin-left: 1rem;
           }

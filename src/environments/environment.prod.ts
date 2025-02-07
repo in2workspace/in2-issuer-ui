@@ -15,6 +15,16 @@ export const environment = {
   procedures: window["env"]["procedures"] || '/api/v1/procedures',
   save_credential: window["env"]["saveCredential"] || '/vci/v1/issuances',
   credential_offer_url: window["env"]["credential_offer_url"] || '/api/v1/credential-offer',
-  notification: window["env"]["notification"] || '/api/v1/notifications'
+  notification: window["env"]["notification"] || '/api/v1/notifications',
+  customizations:{
+    colors:{ 
+      primary: window["env"]["primary"] ?? '#2d58a7',
+      primary_contrast: window["env"]["primary_contrast"] || '#ffffff',
+      secondary: window["env"]["secondary"] || '#2cb6b2',
+      secondary_contrast: window["env"]["secondary_contrast"] || '#dde6f6',
+    },
+    logo_src: window["env"]["logo_src"] || "assets/logos/no-image.png",
+    favicon_src: window["env"]["favicon_src"] || "assets/icon/favicon.png"  
+  }
   //firma_credential: window["env"]["firma_credential"] || '/api/v1/sign-credential' The`firma_credential` variable has been commented out as it was initially intended for the signature functionality,which remains incomplete. This configuration is currently unnecessary for the existing flows but is expected to be reintroduced in the future when the related use case is implemented.
 };
