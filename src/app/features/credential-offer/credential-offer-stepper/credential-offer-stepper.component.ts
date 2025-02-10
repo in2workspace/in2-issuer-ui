@@ -209,11 +209,11 @@ export class CredentialOfferStepperComponent implements OnInit{
     switchMap(startOrEnd => {
       if(startOrEnd === 'END'){
         return interval(1000).pipe(
-          take(popupTimeInSeconds + 1),
+          take(popupTimeInSeconds + 2),
           map(consumedSeconds => popupTimeInSeconds - consumedSeconds),
           delayWhen(()=>
             this.fetchedCredentialOffer$.pipe(
-              filter(state => state.loading === false)
+              filter(state => state.loading === false),
             ))
         )
       }else{
@@ -223,7 +223,7 @@ export class CredentialOfferStepperComponent implements OnInit{
   )
 
   private readonly navigateHomeAfterEndSessionEffect = this.endSessionCountdown$.pipe(
-    filter(time => time === 0),
+    filter(time => time === -1),
     tap(()=>{
       this.redirectToHome();
       this.dialog.openErrorInfoDialog(this.translate.instant("error.credentialOffer.expired"));
