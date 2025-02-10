@@ -1,7 +1,7 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
-import { of, throwError } from 'rxjs';
+import { BehaviorSubject, of, throwError } from 'rxjs';
 import { RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { OidcSecurityService, StsConfigLoader } from "angular-auth-oidc-client";
@@ -379,6 +379,30 @@ describe('navigateHomeAfterEndSessionEffect', () => {
 });
 
 
+describe('endSessionCountdown', () => {
+  it('should count down when startOrEndFirstCountdown$ emits "END"', fakeAsync(() => {
+    const popupTimeInSeconds = 10;
+  
+    (component as any).startOrEndFirstCountdown$ = new BehaviorSubject<string>('END');
+    (component as any).fetchedCredentialOffer$ = new BehaviorSubject<{ loading: boolean }>({ loading: false });
+  
+    component.endSessionCountdown$.subscribe(value => {
+      expect(value).toBeLessThanOrEqual(popupTimeInSeconds);
+    });
+  
+    tick((popupTimeInSeconds + 2) * 1000);
+  }));
+  
+  it('should reset countdown when startOrEndFirstCountdown$ emits other than "END"', () => {
+    const popupTimeInSeconds = 10;
+  
+    (component as any).startOrEndFirstCountdown$ = new BehaviorSubject<string>('START');
+  
+    component.endSessionCountdown$.subscribe(value => {
+      expect(value).toBe(popupTimeInSeconds);
+    });
+  });
+});
 describe('onSelectedStepChange', () => {
   let consoleErrorSpy: jest.SpyInstance;
 
