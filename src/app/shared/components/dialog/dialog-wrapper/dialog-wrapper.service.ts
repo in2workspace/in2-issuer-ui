@@ -88,23 +88,29 @@ export class DialogWrapperService {
         },
         error: err => {
           console.error(err);
-        }}).add(() => {
+        },
+        complete: () => { 
+          if(dialogRef?.close){
+            dialogRef.close();
+          }
+        },
+      }).add(() => {
           dialogRef.disableClose=false;
           this.loader.updateIsLoading(false);
         });
-        if(cancelCallback){
-          dialogRef.afterClosed().pipe(
-            take(1), 
-            filter(val => val === false),
-            switchMap(cancelCallback)).subscribe({
-            next: () => { 
-              console.info('Cancel callback completed');
-            },
-            error: err => {
-              console.error(err);
-            }
-          });
-        }
+      if(cancelCallback){
+        dialogRef.afterClosed().pipe(
+          take(1), 
+          filter(val => val === false),
+          switchMap(cancelCallback)).subscribe({
+          next: () => { 
+            console.info('Cancel callback completed');
+          },
+          error: err => {
+            console.error(err);
+          }
+        });
+      }
 
   }
 

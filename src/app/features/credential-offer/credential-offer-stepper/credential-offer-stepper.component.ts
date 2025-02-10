@@ -8,7 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { NavbarComponent } from 'src/app/shared/components/navbar/navbar.component';
 import { QRCodeModule } from 'angularx-qrcode';
 import { MatIcon } from '@angular/material/icon';
-import { catchError, EMPTY, filter, interval, map, merge, Observable, of, scan, shareReplay, startWith, Subject, switchMap, take, tap, throwError, timer } from 'rxjs';
+import { catchError, delayWhen, EMPTY, filter, interval, map, merge, Observable, of, scan, shareReplay, startWith, Subject, switchMap, take, tap, throwError, timer } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogWrapperService } from 'src/app/shared/components/dialog/dialog-wrapper/dialog-wrapper.service';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
@@ -122,7 +122,7 @@ export class CredentialOfferStepperComponent implements OnInit{
         error: false
       })
     )),
-    shareReplay()
+    shareReplay(1)
   );
 
   public offerParams$: Signal<CredentialOfferParamsState> = toSignal(
@@ -168,7 +168,7 @@ export class CredentialOfferStepperComponent implements OnInit{
         startWith('START' as StartOrEnd)
       )
     }),
-    shareReplay()
+    shareReplay(1)
   );
 
   private readonly openRefreshPopupEffect = this.startOrEndFirstCountdown$.pipe(
@@ -210,13 +210,17 @@ export class CredentialOfferStepperComponent implements OnInit{
       if(startOrEnd === 'END'){
         return interval(1000).pipe(
           take(popupTimeInSeconds + 1),
-          map(consumedSeconds => popupTimeInSeconds - consumedSeconds)
+          map(consumedSeconds => popupTimeInSeconds - consumedSeconds),
+          delayWhen(()=>
+            this.fetchedCredentialOffer$.pipe(
+              tap(val=>console.log('delay when fetched is ? ' + val.loading)),
+              filter(state => state.loading === false)
+            ))
         )
       }else{
         return of(popupTimeInSeconds); //reset time
       }
-    }), 
-    shareReplay()
+    })
   )
 
   private readonly navigateHomeAfterEndSessionEffect = this.endSessionCountdown$.pipe(
@@ -329,7 +333,7 @@ export class CredentialOfferStepperComponent implements OnInit{
       this.redirectToHome();
       return throwError(()=>new Error());
     }
-  
+
     return this.credentialProcedureService.getCredentialOfferByCTransactionCode(cCode)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
