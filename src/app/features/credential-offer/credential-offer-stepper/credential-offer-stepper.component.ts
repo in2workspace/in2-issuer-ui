@@ -213,7 +213,6 @@ export class CredentialOfferStepperComponent implements OnInit{
           map(consumedSeconds => popupTimeInSeconds - consumedSeconds),
           delayWhen(()=>
             this.fetchedCredentialOffer$.pipe(
-              tap(val=>console.log('delay when fetched is ? ' + val.loading)),
               filter(state => state.loading === false)
             ))
         )
