@@ -55,7 +55,7 @@ export class DialogComponent {
   public statusColor = 'primary';
   public currentStatus: DialogStatus | undefined = undefined;
 
-  private readonly confirmSubj$ = new Subject<boolean>();
+  private readonly confirmSubj$ = new Subject<true>();
 
   public constructor(){
     this.dialogRef.addPanelClass('dialog-custom');
