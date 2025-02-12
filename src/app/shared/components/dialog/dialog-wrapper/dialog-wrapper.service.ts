@@ -1,7 +1,7 @@
 import { DestroyRef, inject, Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DialogComponent, DialogData } from '../dialog.component';
-import { filter, Observable, switchMap, take, tap } from 'rxjs';
+import { EMPTY, filter, Observable, switchMap, take, tap } from 'rxjs';
 import { LoaderService } from 'src/app/core/services/loader.service';
 
 @Injectable({
@@ -78,7 +78,14 @@ export class DialogWrapperService {
     confirmObservable
       .pipe(
         take(1),
-        switchMap(callback)
+        switchMap((confirmation:boolean)=>{
+          if(confirmation){
+            return callback()
+          }else{
+            return EMPTY;
+          }
+        
+        })
       )
       .subscribe({
         next: () => { 

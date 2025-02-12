@@ -68,7 +68,7 @@ describe('DialogWrapperService', () => {
       status: 'default'
     };
     const callback = jest.fn(() => of('success'));
-    const afterClosedSubject = new Subject<void>();
+    const afterClosedSubject = new Subject<boolean>();
     const dialogRefMock = {
       afterClosed: jest.fn(() => afterClosedSubject.asObservable()),
       close: jest.fn(),
@@ -78,7 +78,7 @@ describe('DialogWrapperService', () => {
 
     service.openDialogWithCallback(dialogData, callback);
 
-    afterClosedSubject.next();
+    afterClosedSubject.next(true);
     afterClosedSubject.complete();
 
     expect(matDialogMock.open).toHaveBeenCalledWith(DialogComponent, {
@@ -99,7 +99,7 @@ describe('DialogWrapperService', () => {
       loadingData: { title: 'Loading', message: 'Loading Message' },
     };
     const callback = jest.fn(() => of('success'));
-    const afterConfirmSubject = new Subject<void>();
+    const afterConfirmSubject = new Subject<true>();
     const dialogRefMock = {
       componentInstance: {
         afterConfirm$: jest.fn(() => afterConfirmSubject.asObservable()),
@@ -112,7 +112,7 @@ describe('DialogWrapperService', () => {
 
     service.openDialogWithCallback(dialogData, callback);
 
-    afterConfirmSubject.next();
+    afterConfirmSubject.next(true);
     afterConfirmSubject.complete();
 
     expect(matDialogMock.open).toHaveBeenCalledWith(DialogComponent, {
@@ -134,7 +134,7 @@ describe('DialogWrapperService', () => {
       status: 'default'
     };
     const callback = jest.fn(() => throwError(() => new Error('Callback Error')));
-    const afterClosedSubject = new Subject<void>();
+    const afterClosedSubject = new Subject<boolean>();
     const dialogRefMock = {
       afterClosed: jest.fn(() => afterClosedSubject.asObservable()),
       close: jest.fn(),
@@ -144,7 +144,7 @@ describe('DialogWrapperService', () => {
 
     service.openDialogWithCallback(dialogData, callback);
 
-    afterClosedSubject.next();
+    afterClosedSubject.next(true);
     afterClosedSubject.complete();
 
     expect(matDialogMock.open).toHaveBeenCalledWith(DialogComponent, {
