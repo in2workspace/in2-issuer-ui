@@ -4,6 +4,8 @@ import { DialogComponent, DialogData } from '../dialog.component';
 import { EMPTY, filter, Observable, switchMap, take, tap } from 'rxjs';
 import { LoaderService } from 'src/app/core/services/loader.service';
 
+export type observableCallback = () => Observable<any>;
+
 @Injectable({
   providedIn: 'root'
 })
@@ -48,7 +50,7 @@ export class DialogWrapperService {
   //It is important not to cut error flow (tipically with catchError) in callback passed as argument, since then the
   //dialog will be closed in the next callback of openDialogWithCallback. The server interceptor reuses the already opened dialog to display its error message (see openErrorInfoDialog),
   //which will be immediately closed by the next callback of openDialogWithCallback if the error flow is cut.
-  public openDialogWithCallback(dialogData: DialogData, callback:() => Observable<any>, cancelCallback?: () => Observable<any>, disableClose?:'DISABLE_CLOSE'): void{
+  public openDialogWithCallback(dialogData: DialogData, callback: observableCallback, cancelCallback?: () => Observable<any>, disableClose?:'DISABLE_CLOSE'): void{
     const dialogRef = this.dialog.open(
       DialogComponent, 
       { 
@@ -79,12 +81,7 @@ export class DialogWrapperService {
       .pipe(
         take(1),
         switchMap((confirmation:boolean)=>{
-          if(confirmation){
-            return callback()
-          }else{
-            return EMPTY;
-          }
-        
+          return this.executeCallbackOnCondition(callback, confirmation);
         })
       )
       .subscribe({
@@ -120,5 +117,13 @@ export class DialogWrapperService {
       }
 
   }
+
+  private executeCallbackOnCondition(callback: observableCallback, condition: boolean): Observable<any> {
+    if(condition){
+      return callback();
+    }
+     return EMPTY;
+  }
+
 
 }
