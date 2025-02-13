@@ -8,7 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { NavbarComponent } from 'src/app/shared/components/navbar/navbar.component';
 import { QRCodeModule } from 'angularx-qrcode';
 import { MatIcon } from '@angular/material/icon';
-import { catchError, delayWhen, EMPTY, filter, interval, map, merge, Observable, of, scan, shareReplay, startWith, Subject, switchMap, take, tap, throwError, timer } from 'rxjs';
+import { catchError, delayWhen, EMPTY, filter, interval, map, merge, Observable, of, scan, shareReplay, startWith, Subject, switchMap, take, takeUntil, tap, throwError, timer } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogWrapperService } from 'src/app/shared/components/dialog/dialog-wrapper/dialog-wrapper.service';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
@@ -86,6 +86,7 @@ export class CredentialOfferStepperComponent implements OnInit{
   public getInitUrlParams$$ = new Subject<void>();
   public updateIndex$$ = new Subject<StepperIndex>();
   public loadCredentialOfferOnRefreshClick$$ = new Subject<void>();
+  public destroy$$ = new Subject<void>();
   
   //Offer effects
   public updateUrlParamsOnOfferChangeEffect = effect(()=> {
@@ -174,7 +175,7 @@ export class CredentialOfferStepperComponent implements OnInit{
   private readonly openRefreshPopupEffect = this.startOrEndFirstCountdown$.pipe(
     filter( val => val === 'END'),
     tap(() => {
-      this.dialog.openDialogWithCallback({
+      const dialogRef = this.dialog.openDialogWithCallback({
         title: this.translate.instant('credentialOffer.expired-title'), 
         message: '',
         template: new TemplatePortal(this.popupCountdown, {} as ViewContainerRef),
@@ -188,15 +189,34 @@ export class CredentialOfferStepperComponent implements OnInit{
         this.onRefreshCredentialClick(); 
         return EMPTY;
       }, 
-      //after cancel callback
-      () => {
-        this.redirectToHomeAndShowErrorDialog("error.credentialOffer.expired");
-        return EMPTY;
-      },
-      //avoid closing popup clicking on overlay (force to click leave or refresh button)
+      //cancel callback will be handled here to allow the afterClosed to be unsubscribed on destroy
+      undefined,
       'DISABLE_CLOSE'
-  )})
-  );
+    );
+    
+    const cancelCallback = () => {
+      this.redirectToHomeAndShowErrorDialog("error.credentialOffer.expired");
+      return EMPTY;
+    };
+
+    dialogRef.afterClosed().pipe(
+      takeUntil(this.destroy$$),
+      take(1), 
+      filter(val => val === false),
+      switchMap(cancelCallback)).subscribe({
+      next: () => { 
+        console.info('Cancel callback completed');
+      },
+      error: err => {
+        console.error(err);
+      },
+      complete: () => {
+        console.info('Cancel callback completed');
+      }
+    });
+
+  })
+    );
 
   private readonly closeRefreshPopupEffect = this.startOrEndFirstCountdown$.pipe(
     filter( val => val === 'START'),
@@ -214,7 +234,8 @@ export class CredentialOfferStepperComponent implements OnInit{
           delayWhen(()=>
             this.fetchedCredentialOffer$.pipe(
               filter(state => state.loading === false),
-            ))
+            )),
+            tap(val=>console.log(val))
         )
       }else{
         return of(popupTimeInSeconds); //reset time
@@ -242,6 +263,10 @@ export class CredentialOfferStepperComponent implements OnInit{
     )
     .pipe(takeUntilDestroyed(this.destroyRef))
     .subscribe();
+  }
+
+  private ngOnDestroy(): void{
+    this.destroy$$.next();
   }
 
   public onSelectedStepChange(index:number){
@@ -332,13 +357,7 @@ export class CredentialOfferStepperComponent implements OnInit{
       this.redirectToHome();
       return throwError(()=>new Error());
     }
-    // return of({
-    //   credential_offer_uri: 'cred-offer-uri',
-    //   transaction_code: 'transaction-code-param',
-    //   c_transaction_code: 'c-code-param',
-    //   c_transaction_code_expires_in: 10,
-    // });
-    //todo
+
     return this.credentialProcedureService.getCredentialOfferByCTransactionCode(cCode)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
