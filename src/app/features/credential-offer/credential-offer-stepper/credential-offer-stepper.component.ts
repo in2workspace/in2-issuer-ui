@@ -202,6 +202,7 @@ export class CredentialOfferStepperComponent implements OnInit{
     filter( val => val === 'START'),
     tap(() => {
       this.dialog['dialog'].closeAll();
+      console.log('close all from close refresh popup')
     })
   );
 
@@ -332,7 +333,13 @@ export class CredentialOfferStepperComponent implements OnInit{
       this.redirectToHome();
       return throwError(()=>new Error());
     }
-
+    // return of({
+    //   credential_offer_uri: 'cred-offer-uri',
+    //   transaction_code: 'transaction-code-param',
+    //   c_transaction_code: 'c-code-param',
+    //   c_transaction_code_expires_in: 10,
+    // });
+    //todo
     return this.credentialProcedureService.getCredentialOfferByCTransactionCode(cCode)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
@@ -380,7 +387,9 @@ export class CredentialOfferStepperComponent implements OnInit{
 
   public redirectToHome(): void{
     setTimeout(()=>{
+      console.log('before redirect')
       this.router.navigate(['/home']);
+      console.log('after redirect')
     }, 0);
   }
 

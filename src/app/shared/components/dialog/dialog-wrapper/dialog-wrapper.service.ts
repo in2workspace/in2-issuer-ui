@@ -27,6 +27,7 @@ export class DialogWrapperService {
   //similar to openDialog, but with a predefined error data
   //if a dialog is already open, it will update its data instead of opening a new one
   public openErrorInfoDialog(message: string, title?: string): MatDialogRef<DialogComponent, any>{
+    console.log('open error info dialog')
     const errorDialogData: DialogData = { 
       title: title ?? 'Error',
       message: message,
@@ -63,7 +64,9 @@ export class DialogWrapperService {
     let confirmObservable;
 
     if(dialogData.confirmationType === 'sync'){
-      confirmObservable = dialogRef.afterClosed();
+      confirmObservable = dialogRef.afterClosed().pipe(
+        tap(()=>console.log('after closed'))
+      );
     }else if(dialogData.confirmationType === 'async'){
       confirmObservable = dialogRef.componentInstance.afterConfirm$()
         .pipe(tap(() => { 
@@ -88,6 +91,7 @@ export class DialogWrapperService {
         next: () => { 
           if(dialogRef?.close){
             dialogRef.close();
+            console.log('close after confirmation callback')
           }
         },
         error: err => {
@@ -96,12 +100,14 @@ export class DialogWrapperService {
         complete: () => { 
           if(dialogRef?.close){
             dialogRef.close();
+            console.log('close after confirmation callback')
           }
         },
       }).add(() => {
           dialogRef.disableClose=false;
           this.loader.updateIsLoading(false);
-        });
+      });
+
       if(cancelCallback){
         dialogRef.afterClosed().pipe(
           take(1), 
@@ -112,6 +118,9 @@ export class DialogWrapperService {
           },
           error: err => {
             console.error(err);
+          },
+          complete: () => {
+            console.info('Cancel callback completed');
           }
         });
       }
