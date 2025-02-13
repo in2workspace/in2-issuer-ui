@@ -202,7 +202,6 @@ export class CredentialOfferStepperComponent implements OnInit{
     filter( val => val === 'START'),
     tap(() => {
       this.dialog['dialog'].closeAll();
-      console.log('close all from close refresh popup')
     })
   );
 
@@ -387,9 +386,7 @@ export class CredentialOfferStepperComponent implements OnInit{
 
   public redirectToHome(): void{
     setTimeout(()=>{
-      console.log('before redirect')
       this.router.navigate(['/home']);
-      console.log('after redirect')
     }, 0);
   }
 

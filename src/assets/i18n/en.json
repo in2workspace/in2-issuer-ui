@@ -65,7 +65,7 @@
     "second-assistance": " for assistance.",
     "wallet-guide": "Wallet Users Guide",
     "expired-title": "Credential offer expiring",
-    "ask-refresh": "Credential offer is about to expire. Would you like to refresh it or leave? If it expires, you will need to request a new one from your legal representative",
+    "ask-refresh": "Credential offer is about to expire. Would you like to refresh it or leave? If it expires, you will need to request a new one from your legal representative.",
     "remaining-time": "Time remaining:",
     "first-step":{
       "title": "Scan the QR code to log in and access the DOME Wallet.",
