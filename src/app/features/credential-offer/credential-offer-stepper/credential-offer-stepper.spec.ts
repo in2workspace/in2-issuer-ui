@@ -787,6 +787,18 @@ it('should navigate when c_transaction_code is provided', () => {
       expect(routerSpy).toHaveBeenCalledWith(['/home']);
     }, 1000);
   });
+
+  it('should navigate to home and open VC-expired popup', ()=>{
+    const redirectSpy = jest.spyOn(component, 'redirectToHome');
+    const dialogOpenSpy = jest.spyOn(component['dialog'], 'openErrorInfoDialog');
+    const message = component['translate'].instant("error.credentialOffer.expired");
+
+    component.redirectToHomeAndShowErrorDialog(message);
+
+    expect(redirectSpy).toHaveBeenCalled();
+    expect(dialogOpenSpy).toHaveBeenCalled();
+    expect(dialogOpenSpy).toHaveBeenCalledWith(message);
+  });
   
 
 });

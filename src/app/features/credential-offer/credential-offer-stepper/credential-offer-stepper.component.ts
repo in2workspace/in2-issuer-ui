@@ -190,7 +190,7 @@ export class CredentialOfferStepperComponent implements OnInit{
       }, 
       //after cancel callback
       () => {
-        this.redirectToHome();
+        this.redirectToHomeAndShowErrorDialog("error.credentialOffer.expired");
         return EMPTY;
       },
       //avoid closing popup clicking on overlay (force to click leave or refresh button)
@@ -373,7 +373,12 @@ export class CredentialOfferStepperComponent implements OnInit{
     this.loadCredentialOfferOnRefreshClick$$.next();
   }
 
-  public redirectToHome(){
+  public redirectToHomeAndShowErrorDialog(errMessage: string): void{
+    this.redirectToHome();
+    this.dialog.openErrorInfoDialog(this.translate.instant(errMessage));
+  }
+
+  public redirectToHome(): void{
     setTimeout(()=>{
       this.router.navigate(['/home']);
     }, 0);
