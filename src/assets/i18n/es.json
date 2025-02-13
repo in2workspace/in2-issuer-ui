@@ -65,7 +65,7 @@
     "second-assistance": " para obtener asistencia.",
     "wallet-guide": "Guía de Usuarios del Wallet",
     "expired-title": "Expiración de oferta de credencial",
-    "ask-refresh": "La oferta de credencial está a punto de expirar. ¿Quieres refrescarla o salir?",
+    "ask-refresh": "La oferta de credencial está a punto de expirar. ¿Quieres refrescarla o salir? Si la credencial expira, tendrás que pedir otra a tu representante legal.",
     "remaining-time": "Remaining time:",
     "first-step": {
       "title": "Escanea el código QR para iniciar sesión y acceder al Wallet de DOME.",
