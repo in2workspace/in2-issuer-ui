@@ -21,7 +21,6 @@ import { MatIcon } from '@angular/material/icon';
     selector: 'app-credential-management',
     templateUrl: './credential-management.component.html',
     styleUrls: ['./credential-management.component.scss'],
-    standalone: true,
     imports: [
         NavbarComponent,
         MatButton,
@@ -48,25 +47,19 @@ import { MatIcon } from '@angular/material/icon';
         TranslatePipe,
     ],
     animations: [
-      trigger('openClose', [
-        state(
-          'open',
-          style({
-            width: '200px',
-            opacity: 1,
-          })
-        ),
-        state(
-          'closed',
-          style({
-            width: '0px',
-            opacity: 0,
-          })
-        ),
-        transition('open => closed', [animate('0.2s')]),
-        transition('closed => open', [animate('0.2s')]),
-      ]),
-    ],
+        trigger('openClose', [
+            state('open', style({
+                width: '200px',
+                opacity: 1,
+            })),
+            state('closed', style({
+                width: '0px',
+                opacity: 0,
+            })),
+            transition('open => closed', [animate('0.2s')]),
+            transition('closed => open', [animate('0.2s')]),
+        ]),
+    ]
 })
 export class CredentialManagementComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) public paginator!: MatPaginator;

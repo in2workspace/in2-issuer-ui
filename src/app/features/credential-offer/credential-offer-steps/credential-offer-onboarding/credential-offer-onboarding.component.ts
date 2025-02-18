@@ -5,11 +5,10 @@ import { QRCodeModule } from 'angularx-qrcode';
 import { UpperCasePipe } from '@angular/common';
 
 @Component({
-  selector: 'app-credential-offer-onboarding',
-  standalone: true,
-  imports: [QRCodeModule, TranslatePipe, UpperCasePipe],
-  templateUrl: './credential-offer-onboarding.component.html',
-  styleUrl: './credential-offer-onboarding.component.scss'
+    selector: 'app-credential-offer-onboarding',
+    imports: [QRCodeModule, TranslatePipe, UpperCasePipe],
+    templateUrl: './credential-offer-onboarding.component.html',
+    styleUrl: './credential-offer-onboarding.component.scss'
 })
 export class CredentialOfferOnboardingComponent{
   public qrColor = "#2d58a7";

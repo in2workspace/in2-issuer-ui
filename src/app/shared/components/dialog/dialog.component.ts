@@ -31,8 +31,6 @@ export interface DialogDefaultContent {
 @Component({
     selector: 'app-dialog',
     templateUrl: './dialog.component.html',
-    //for styles, look _dialogscss in global styles
-    standalone: true,
     imports: [
         AsyncPipe,
         MatDialogTitle,
@@ -40,11 +38,10 @@ export interface DialogDefaultContent {
         MatDialogActions,
         MatButton,
         MatIconModule,
-        NgClass,
         PortalModule,
         MatProgressSpinnerModule,
         TranslatePipe,
-    ],
+    ]
 })
 export class DialogComponent {
   public data = inject<DialogData>(MAT_DIALOG_DATA);

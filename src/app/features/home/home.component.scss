@@ -1,4 +1,6 @@
-@import "../../../styles/variables";
+@use "../../../styles/variables" as vars;
+@use "sass:color";
+
 
 .landing-page {
   display: flex;
@@ -6,7 +8,7 @@
   min-height: 100vh;
 
   .container-nav {
-    background: $Blue;
+    background: vars.$Blue;
     padding: 1rem 0;
     background-repeat: no-repeat;
     background-position: 50% 0;
@@ -15,7 +17,7 @@
     .main-header {
       position: fixed;
       top: 0;
-      background: $Blue;
+      background: vars.$Blue;
       padding: 3rem 0;
       margin-top: 0;
       width: 100%;
@@ -39,7 +41,7 @@
           }
 
           span {
-            color: $White;
+            color: vars.$White;
             font-weight: bold;
             font-size: 1.2rem;
             padding-bottom: 3.5px;
@@ -56,7 +58,7 @@
             margin-left: 1rem;
 
             .nav-link {
-              color: $White;
+              color: vars.$White;
               text-decoration: none;
               font-size: large;
               cursor: pointer;
@@ -68,7 +70,7 @@
   }
 
   .cover {
-    color: $White;
+    color: vars.$White;
     text-align: center;
     padding-top: 10rem;
     padding-bottom: 5rem;
@@ -86,7 +88,7 @@
       }
 
       .btn-primary {
-        background-color: $Light-Blue-Primary;
+        background-color: vars.$Light-Blue-Primary;
         color: #fff;
         padding: 0.5rem 1rem;
         font-size: 1rem;
@@ -103,7 +105,7 @@
         &:active {
           transform: scale(0.95);
           box-shadow: 0 5px 8px rgba(0, 0, 0, 0.2);
-          background-color: darken( $Light-Blue-Primary, 10%);
+          background-color: color.adjust(vars.$Light-Blue-Primary, $lightness: -10%);
         }
 
         img {
@@ -121,7 +123,7 @@
         margin-top: 2.5%;
 
         .btn-link {
-          color: $Light-Blue-Secondary;
+          color: vars.$Light-Blue-Secondary;
           font-size: 2rem;
           text-decoration: none;
           cursor: pointer;
@@ -136,7 +138,7 @@
     position: relative;
     z-index: 1;
     &:first-of-type {
-      background-color: $Light-Blue-Secondary;
+      background-color: vars.$Light-Blue-Secondary;
       font-size: calc(1.275rem + 0.3vw);
       margin-top: 0;
       font-weight: 500;
@@ -148,8 +150,8 @@
       }
     }
     &:nth-of-type(2n) {
-      background-color: $Blue;
-      color: $White;
+      background-color: vars.$Blue;
+      color: vars.$White;
       font-size: calc(1.275rem + 0.3vw);
       margin-top: 0;
       font-weight: 500;
@@ -191,7 +193,7 @@
           height: 0;
           border-left: 2vw solid transparent;
           border-right: 2vw solid transparent;
-          border-top: 2vw solid $Blue;
+          border-top: 2vw solid vars.$Blue;
           transform: translateX(-50%);
           z-index: 3;
         }
@@ -237,7 +239,7 @@
           display: block;
         }
         .btn-verifier {
-          background-color: $Blue;
+          background-color: vars.$Blue;
           color: #fff;
           padding: 0.5rem 1rem;
           font-size: 1rem;
@@ -257,8 +259,8 @@
   }
 
   .main-footer {
-    background-color: $Dark-Blue;
-    color: $White;
+    background-color: vars.$Dark-Blue;
+    color: vars.$White;
     padding: 3rem 0;
     margin-top: auto;
     display: flex;
@@ -274,11 +276,11 @@
     }
 
     a {
-      color: $Light-Blue-Secondary;
+      color: vars.$Light-Blue-Secondary;
       text-decoration: none;
       cursor: pointer;
       &:hover {
-        color: lighten($Light-Blue-Secondary, 10%);
+        color: color.adjust(vars.$Light-Blue-Secondary, $lightness: 10%);
       }
     }
 

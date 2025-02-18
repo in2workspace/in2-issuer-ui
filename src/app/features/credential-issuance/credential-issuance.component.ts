@@ -9,7 +9,6 @@ import { map, take } from "rxjs/operators";
 @Component({
     selector: 'app-credential-issuance-admin',
     templateUrl: './credential-issuance.component.html',
-    standalone: true,
     imports: [FormCredentialComponent, AsyncPipe, TranslatePipe]
 })
 export class CredentialIssuanceComponent {

@@ -10,8 +10,7 @@ import { take } from 'rxjs';
     selector: 'app-navbar',
     templateUrl: './navbar.component.html',
     styleUrls: ['./navbar.component.scss'],
-    standalone: true,
-    imports: [RouterLink, MatIcon],
+    imports: [RouterLink, MatIcon]
 })
 export class NavbarComponent implements OnInit {
   public userName: string = '';

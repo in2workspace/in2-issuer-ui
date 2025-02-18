@@ -9,8 +9,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'app-home',
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.scss'],
-    standalone: true,
-    imports: [QRCodeModule, TranslatePipe],
+    imports: [QRCodeModule, TranslatePipe]
 })
 export class HomeComponent{
   public walletUrl = environment.wallet_url;

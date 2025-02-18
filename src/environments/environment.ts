@@ -1,12 +1,12 @@
 export const environment = {
   production: false,
   loginParams: {
-    login_url: 'https://localhost:8443/realms/CredentialIssuer',
-    client_id: 'account-console',
+    login_url: 'https://keycloak-dev.ssihub.org/realms/in2-issuer',
+    client_id: 'vc-auth-client',
     scope: 'openid profile email offline_access',
     grant_type: 'code'
   },
-  base_url: 'http://localhost:8081',
+  base_url: 'https://issuer-dev.in2.ssihub.org/issuer-api',
   wallet_url: 'http://localhost:4200',
   wallet_url_test: 'http://localhost:4200',
   knowledgebase_url: "https://knowledgebase.dome-marketplace-sbx.org/",

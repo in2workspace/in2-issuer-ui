@@ -1,15 +1,14 @@
 import { Component, computed, EventEmitter, input, Output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { QRCodeModule } from 'angularx-qrcode';
-import { NgIf, UpperCasePipe } from '@angular/common';
+import { UpperCasePipe } from '@angular/common';
 import { environment } from 'src/environments/environment';
 
 @Component({
     selector: 'app-credential-offer',
     templateUrl: './credential-offer.component.html',
     styleUrls: ['./credential-offer.component.scss'],
-    standalone: true,
-    imports: [NgIf, QRCodeModule, TranslatePipe, UpperCasePipe]
+    imports: [ QRCodeModule, TranslatePipe, UpperCasePipe]
 })
 export class CredentialOfferComponent{
   @Output() public refreshCredential = new EventEmitter<void>();

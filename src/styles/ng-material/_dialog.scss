@@ -1,4 +1,4 @@
-@import './../variables';
+@use './../variables' as vars;
 
 .dialog-custom{
     .mat-mdc-dialog-container .mdc-dialog__surface {
@@ -26,7 +26,7 @@
 
             //cancel button
             &.mat-cancel{
-                background-color: $cancel;
+                background-color: vars.$cancel;
             }
                 
 

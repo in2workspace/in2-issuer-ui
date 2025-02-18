@@ -1,6 +1,6 @@
 @use '@angular/material' as mat;
-@import './variables';
-@import './ng-material/ng-index.scss';
+@use './variables' as vars;
+@use './ng-material/ng-index.scss';
 
 @import url("https://fonts.googleapis.com/css2?family=Blinker:wght@400;600&display=swap");
 
@@ -24,12 +24,12 @@
 
 @include mat.core();
 
-$custom-primary: mat.define-palette($custom-palette);
+$custom-primary: mat.define-palette(vars.$custom-palette);
 //todo: not clear what should be accent according to brand guidelines; not used currently
 $custom-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
 $custom-warn: mat.define-palette(mat.$red-palette);
 
-$custom-typography: mat.define-typography-config($font-family: $font-stack);
+$custom-typography: mat.define-typography-config($font-family: vars.$font-stack);
 
 $custom-theme: mat.define-light-theme((
   color: (
@@ -42,11 +42,11 @@ $custom-theme: mat.define-light-theme((
 ));
 
 :root {
-  --Blue: #{$Blue};
-  --Light-Blue-Primary: #{$Light-Blue-Primary};
-  --Dark-Blue: #{$Dark-Blue};
-  --Light-Blue-Secondary: #{$Light-Blue-Secondary};
-  --white: #{$White};
+  --Blue: #{vars.$Blue};
+  --Light-Blue-Primary: #{vars.$Light-Blue-Primary};
+  --Dark-Blue: #{vars.$Dark-Blue};
+  --Light-Blue-Secondary: #{vars.$Light-Blue-Secondary};
+  --white: #{vars.$White};
   --primary-custom-color: #2d58a7; 
   --primary-contrast-custom-color: #ffffff; 
   --secondary-custom-color: #2cb6b2; 
@@ -60,7 +60,7 @@ body {
 }
 body {
   margin: 0;
-  font-family: $font-stack; //apply font stack to non-angular-material text
+  font-family: vars.$font-stack; //apply font stack to non-angular-material text
 }
 h1{
   margin: 0 0 16px;

@@ -19,8 +19,7 @@ import { DialogWrapperService } from '../dialog/dialog-wrapper/dialog-wrapper.se
     selector: 'app-power',
     templateUrl: './power.component.html',
     styleUrls: ['./power.component.scss'],
-    standalone: true,
-    imports: [NgIf, MatFormField, MatSelect, MatSelectTrigger, MatOption, MatButton, NgFor, NgTemplateOutlet, MatSlideToggle, FormsModule, MatMiniFabButton, MatIcon, AsyncPipe, TranslatePipe]
+    imports: [NgIf, MatFormField, MatSelect, MatSelectTrigger, MatOption, MatButton, NgTemplateOutlet, MatSlideToggle, FormsModule, MatMiniFabButton, MatIcon, AsyncPipe, TranslatePipe]
 })
 export class PowerComponent implements OnInit{
   // set-once-and-don't-change properties

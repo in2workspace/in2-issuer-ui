@@ -51,25 +51,24 @@ export const undefinedCredentialOfferParamsState: CredentialOfferParamsState = {
   export const loadingBufferTimeInMs = 25 * 1000; //margin to compensate for loading time 
 
 @Component({
-  selector: 'app-credential-offer-stepper',
-  standalone: true,
-  imports: [
-    AsyncPipe,
-    CredentialOfferComponent, 
-    CredentialOfferOnboardingComponent,
-    MatButtonModule, 
-    MatIcon, 
-    MatProgressSpinnerModule, 
-    MatStepperModule, 
-    NavbarComponent, 
-    QRCodeModule,
-    TranslatePipe
+    selector: 'app-credential-offer-stepper',
+    imports: [
+        AsyncPipe,
+        CredentialOfferComponent,
+        CredentialOfferOnboardingComponent,
+        MatButtonModule,
+        MatIcon,
+        MatProgressSpinnerModule,
+        MatStepperModule,
+        NavbarComponent,
+        QRCodeModule,
+        TranslatePipe
     ],
-  providers: [{
-    provide: STEPPER_GLOBAL_OPTIONS, useValue: {displayDefaultIndicatorType: false}
-}],
-  templateUrl: './credential-offer-stepper.component.html',
-  styleUrl: './credential-offer-stepper.component.scss',
+    providers: [{
+            provide: STEPPER_GLOBAL_OPTIONS, useValue: { displayDefaultIndicatorType: false }
+        }],
+    templateUrl: './credential-offer-stepper.component.html',
+    styleUrl: './credential-offer-stepper.component.scss'
 })
 export class CredentialOfferStepperComponent implements OnInit{
   @ViewChild('popupCountdown') popupCountdown!: TemplateRef<any>;
