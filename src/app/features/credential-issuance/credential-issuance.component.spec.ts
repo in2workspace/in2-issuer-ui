@@ -1,6 +1,6 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { of } from 'rxjs';
 import { CredentialIssuanceComponent } from './credential-issuance.component';
 import { RouterModule, ActivatedRoute } from '@angular/router';
@@ -47,22 +47,20 @@ describe('CredentialIssuanceComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      imports: [
-        BrowserAnimationsModule,
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    imports: [BrowserAnimationsModule,
         RouterModule.forRoot([]),
-        HttpClientModule,
         TranslateModule.forRoot({}),
-        CredentialIssuanceComponent
-      ],
-      providers: [
+        CredentialIssuanceComponent],
+    providers: [
         TranslateService,
         AuthService,
         { provide: OidcSecurityService, useValue: oidcSecurityService },
         { provide: StsConfigLoader, useValue: configService },
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
-      ],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(CredentialIssuanceComponent);
     component = fixture.componentInstance;

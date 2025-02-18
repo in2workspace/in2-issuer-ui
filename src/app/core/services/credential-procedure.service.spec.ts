@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { CredentialProcedureService } from './credential-procedure.service';
 import { environment } from 'src/environments/environment';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { ProcedureRequest } from '../models/dto/procedure-request.dto';
 import { ProcedureResponse } from "../models/dto/procedure-response.dto";
 import { LearCredentialEmployeeDataDetail } from "../models/dto/lear-credential-employee-data-detail.dto";
@@ -29,9 +29,9 @@ describe('CredentialProcedureService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [CredentialProcedureService]
-    });
+    imports: [],
+    providers: [CredentialProcedureService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
 
     service = TestBed.inject(CredentialProcedureService);
     httpMock = TestBed.inject(HttpTestingController);

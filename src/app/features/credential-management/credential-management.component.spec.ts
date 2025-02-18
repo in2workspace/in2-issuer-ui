@@ -8,7 +8,7 @@ import { of, throwError } from 'rxjs';
 import { CredentialManagementComponent } from './credential-management.component';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { AuthModule } from 'angular-auth-oidc-client';
 import { By } from '@angular/platform-browser';
@@ -16,6 +16,7 @@ import { CredentialProcedure, ProcedureResponse } from 'src/app/core/models/dto/
 import { credentialProcedureListMock } from 'src/app/core/mocks/credential-procedure-list';
 import { MatSort } from '@angular/material/sort';
 import { ElementRef } from '@angular/core';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('CredentialManagementComponent', () => {
   let component: CredentialManagementComponent;
@@ -44,17 +45,14 @@ describe('CredentialManagementComponent', () => {
     } as jest.Mocked<any>
 
     await TestBed.configureTestingModule({
-    imports: [
-        NoopAnimationsModule,
+    imports: [NoopAnimationsModule,
         MatButtonModule,
         MatTableModule,
         MatPaginatorModule,
-        HttpClientTestingModule,
         RouterModule.forRoot([]),
         TranslateModule.forRoot({}),
         AuthModule.forRoot({ config: {} }),
-        CredentialManagementComponent
-    ],
+        CredentialManagementComponent],
     providers: [
         CredentialProcedureService,
         Router,
@@ -70,7 +68,9 @@ describe('CredentialManagementComponent', () => {
                 },
             },
         },
-    ],
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
 }).compileComponents();
 
     credentialProcedureService = TestBed.inject(
