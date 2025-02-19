@@ -10,7 +10,7 @@ import { AuthService } from "../../core/services/auth.service";
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { convertToParamMap } from '@angular/router';
 
-global.structuredClone = (obj: any) => JSON.parse(JSON.stringify(obj));
+(globalThis as any).structuredClone = (obj: any) => JSON.parse(JSON.stringify(obj));
 
 describe('CredentialIssuanceComponent', () => {
   let component: CredentialIssuanceComponent;

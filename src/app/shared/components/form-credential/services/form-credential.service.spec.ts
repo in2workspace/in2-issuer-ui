@@ -13,7 +13,7 @@ import { TempPower } from "../../../../core/models/temporal/temp-power.interface
 import { Country } from './country.service';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
-global.structuredClone = (obj: any) => JSON.parse(JSON.stringify(obj));
+(globalThis as any).structuredClone = (obj: any) => JSON.parse(JSON.stringify(obj));
 
 describe('FormCredentialService', () => {
   let service: FormCredentialService;

@@ -13,7 +13,7 @@ import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { HomeComponent } from '../../home/home.component';
 import { TemplatePortal } from '@angular/cdk/portal';
 
-global.structuredClone = (obj: any) => JSON.parse(JSON.stringify(obj));
+(globalThis as any).structuredClone = (obj: any) => JSON.parse(JSON.stringify(obj));
 
 
 describe('Credential Offer Stepper', () => {
