@@ -16,6 +16,7 @@ export const environment = {
   save_credential: window["env"]["saveCredential"] || '/vci/v1/issuances',
   credential_offer_url: window["env"]["credential_offer_url"] || '/api/v1/credential-offer',
   notification: window["env"]["notification"] || '/api/v1/notifications',
+  sign_credential_url: window["env"]["sign_credential_url"] || '/api/v1/retry-sign-credential',
   customizations:{
     colors:{ 
       primary: window["env"]["primary"] ?? '#2d58a7',

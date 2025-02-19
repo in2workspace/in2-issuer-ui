@@ -51,6 +51,14 @@
     "sendReminderSuccess": {
       "title": "Reminder sent sucessfully",
       "message": "The credential offer reminder was sent successfully."
+    }, 
+    "signCredentialConfirm": {
+      "title": "Sign Credential",
+      "message": "Are you sure you want to sign this credential?"
+    },
+    "signCredentialSuccess": {
+      "title": "Credential signed",
+      "message": "The credential was signed successfully."
     }
   },
   "credentialOffer": {

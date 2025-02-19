@@ -51,6 +51,14 @@
     "sendReminderSuccess": {
       "title": "Recordatori enviat amb èxit",
       "message": "El recordatori ha estat enviat amb èxit."
+    },
+    "signCredentialConfirm": {
+      "title": "Firmar Credencial",
+      "message": "Estàs segur que vols signar aquesta credencial?"
+    },
+    "signCredentialSuccess": {
+      "title": "Credential firmada",
+      "message": "La credencial ha estat firmada amb èxit."
     }
   },
   "credentialOffer": {

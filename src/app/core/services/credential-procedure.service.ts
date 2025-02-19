@@ -17,6 +17,7 @@ export class CredentialProcedureService {
   private readonly organizationProcedures = `${environment.base_url}${environment.procedures}`;
   private readonly credentialOfferUrl = `${environment.base_url}${environment.credential_offer_url}`;
   private readonly notificationProcedure =`${environment.base_url}${environment.notification}`;
+  private readonly signCredentialUrl = `${environment.base_url}${environment.sign_credential_url}`;
   //private sendFirma = `${environment.base_url}${environment.firma_credential}`; The`sendFirma` variable has been commented out as it was initially intended for the signature functionality,which remains incomplete. This configuration is currently unnecessary for the existing flows but is expected to be reintroduced in the future when the related use case is implemented.
 
   private readonly http = inject(HttpClient);
@@ -42,6 +43,12 @@ export class CredentialProcedureService {
 
   public sendReminder(procedureId: string): Observable<void> {
     return this.http.post<void>(`${this.notificationProcedure}/${procedureId}`,{} ).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  public signCredential(procedureId: string): Observable<void> {
+    return this.http.post<void>(`${this.signCredentialUrl}/${procedureId}`,{} ).pipe(
       catchError(this.handleError)
     );
   }

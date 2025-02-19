@@ -15,6 +15,7 @@ export const environment = {
   save_credential: '/vci/v1/issuances',
   credential_offer_url: '/api/v1/credential-offer',
   notification: '/api/v1/notifications',
+  sign_credential_url: '/api/v1/retry-sign-credential',
   customizations:{
     colors:{ 
       primary:'#2d58a7',
