@@ -21,6 +21,18 @@
     "footer-license": "CC BY 4.0",
     "footer-privacy": "Política de Privacitat"
   },
+  "navbar": {
+    "menu": {
+      "logout": "Tancar sessió",
+      "settings": "Configuració"
+    }
+  },
+  "sidenav": {
+    "settings": "Configuració",
+    "schemes": "Esquemes",
+    "signatures": "Firmes",
+    "trushFramework": "TF"
+  },
   "mandator": {
     "organizationid": "Número VAT de l'empresa",
     "organizationidHint": "Introdueix només els caràcters de després de 'VAT-'. Per exemple, si el número complet és  'VAT-123ABC', introdueix '123ABC'",

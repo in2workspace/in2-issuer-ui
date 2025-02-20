@@ -9,6 +9,11 @@ export const routes: Routes = [
     loadChildren: () => import('./features/home/home.routes').then(m => m.default)
   },
   {
+    path: 'settings',
+    loadChildren: () => import('./features/settings/settings.routes').then(m => m.default),
+    canActivate: [AutoLoginPartialRoutesGuard, OnboardingPolicy],
+  },
+  {
     path: 'organization/credentials',
     loadChildren: () =>
       import(

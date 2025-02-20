@@ -21,6 +21,18 @@
     "footer-license": "CC BY 4.0",
     "footer-privacy": "Privacy Policy"
   },
+  "navbar":{
+    "menu":{
+      "logout":"Logout",
+      "settings":"Settings"
+    }
+  },
+  "sidenav":{
+    "settings":"Settings",
+    "schemes":"Schemes",
+    "signatures":"Signatures",
+    "trushFramework":"TF"
+  },
   "mandator": {
     "organizationid": "Company VAT number",
     "organizationidHint": "Enter only the characters after 'VAT...-'. For example, if 'VATEU-123ABC', enter '123ABC'",

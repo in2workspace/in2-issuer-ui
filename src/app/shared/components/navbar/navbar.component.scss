@@ -65,19 +65,19 @@
               font-size: 12px;
             }
           }
-
           mat-icon {
             color: var(--primary-contrast-custom-color);
-            margin-right: 0.5rem;
-            margin-left: 1rem;
           }
-
+          
         }
       }
     }
   }
 }
 
+.mat-mdc-menu-item  {
+  padding-right: 2rem !important ;
+}
 @media(width < 768px){
   .main-header{
     .navbar{

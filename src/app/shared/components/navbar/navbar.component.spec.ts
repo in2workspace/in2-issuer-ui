@@ -5,6 +5,9 @@ import { NavbarComponent } from './navbar.component';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
+import { MatMenuModule } from '@angular/material/menu';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { OverlayContainer } from '@angular/cdk/overlay';
 
 class MockAuthService {
   getMandator() {
@@ -28,14 +31,18 @@ describe('NavbarComponent', () => {
   let authService: AuthService;
   let translateService: TranslateService;
   let router: Router;
+  let overlayContainer: OverlayContainer;
+  let overlayContainerElement: HTMLElement;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
     imports: [
         TranslateModule.forRoot(),
         MatIconModule,
+        MatMenuModule,
         RouterModule.forRoot([]),
         NavbarComponent,
+        NoopAnimationsModule
     ],
     providers: [
         { provide: AuthService, useClass: MockAuthService },
@@ -55,6 +62,8 @@ describe('NavbarComponent', () => {
     jest.spyOn(component, 'logout');
 
     fixture.detectChanges();
+    overlayContainer = TestBed.inject(OverlayContainer);
+    overlayContainerElement = overlayContainer.getContainerElement();
   });
 
   afterEach(() => {
@@ -103,11 +112,16 @@ describe('NavbarComponent', () => {
     expect(router.navigate).toHaveBeenCalledWith(['/home'], {});
   });
 
-  it('should call logout on click', () => {
-    const logoutLink = fixture.nativeElement.querySelector('#logout-link');
+  it('should call logout on click', async () => {
+    const menuTrigger = fixture.nativeElement.querySelector('button[mat-icon-button]');
+    menuTrigger.click();
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const logoutLink = overlayContainerElement.querySelector('#logout-link') as HTMLElement;
+    expect(logoutLink).toBeTruthy();
 
     logoutLink.click();
-
     expect(component.logout).toHaveBeenCalled();
   });
 
