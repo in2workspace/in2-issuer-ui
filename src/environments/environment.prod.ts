@@ -27,5 +27,4 @@ export const environment = {
     logo_src: window["env"]["logo_src"] || "assets/logos/no-image.png",
     favicon_src: window["env"]["favicon_src"] || "assets/icon/favicon.png"  
   }
-  //firma_credential: window["env"]["firma_credential"] || '/api/v1/sign-credential' The`firma_credential` variable has been commented out as it was initially intended for the signature functionality,which remains incomplete. This configuration is currently unnecessary for the existing flows but is expected to be reintroduced in the future when the related use case is implemented.
 };
