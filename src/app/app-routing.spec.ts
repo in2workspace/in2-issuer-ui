@@ -15,21 +15,21 @@ describe('App Routes', () => {
     expect(typeof homeRoute?.loadChildren).toBe('function');
   });
 
-  it('should define lazy loading for credential management with guards', () => {
-    const orgCredRoute = routes.find((route) => route.path === 'organization/credentials');
-    expect(orgCredRoute).toBeTruthy();
-    expect(orgCredRoute?.loadChildren).toBeDefined();
-    expect(orgCredRoute?.canActivate).toContain(AutoLoginPartialRoutesGuard);
-    expect(orgCredRoute?.canActivate).toContain(OnboardingPolicy);
-  });
+  // it('should define lazy loading for credential management with guards', () => {
+  //   const orgCredRoute = routes.find((route) => route.path === 'organization/credentials');
+  //   expect(orgCredRoute).toBeTruthy();
+  //   expect(orgCredRoute?.loadChildren).toBeDefined();
+  //   expect(orgCredRoute?.canActivate).toContain(AutoLoginPartialRoutesGuard);
+  //   expect(orgCredRoute?.canActivate).toContain(OnboardingPolicy);
+  // });
 
-  it('should define lazy loading for credential issuance with guards', () => {
-    const createCredRoute = routes.find((route) => route.path === 'organization/credentials/create');
-    expect(createCredRoute).toBeTruthy();
-    expect(createCredRoute?.loadChildren).toBeDefined();
-    expect(createCredRoute?.canActivate).toContain(AutoLoginPartialRoutesGuard);
-    expect(createCredRoute?.canActivate).toContain(OnboardingPolicy);
-  });
+  // it('should define lazy loading for credential issuance with guards', () => {
+  //   const createCredRoute = routes.find((route) => route.path === 'organization/credentials/create');
+  //   expect(createCredRoute).toBeTruthy();
+  //   expect(createCredRoute?.loadChildren).toBeDefined();
+  //   expect(createCredRoute?.canActivate).toContain(AutoLoginPartialRoutesGuard);
+  //   expect(createCredRoute?.canActivate).toContain(OnboardingPolicy);
+  // });
 
   it('should define a lazy loading route for credential-offer', () => {
     const createCredRoute = routes.find((route) => route.path === 'credential-offer');

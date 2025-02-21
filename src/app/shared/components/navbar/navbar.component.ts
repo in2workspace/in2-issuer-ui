@@ -51,6 +51,11 @@ export class NavbarComponent implements OnInit {
       });
   }
 
+  public isCredentialIssuer():boolean{
+    if(this.authService.hasPower('CredentialIssuer','Configure')) return true
+    return false;
+  }
+
   //currently not used
   public changeLanguage(languageCode: string): void {
     this.translate.use(languageCode);

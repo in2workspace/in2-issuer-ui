@@ -114,6 +114,16 @@ export class AuthService {
     });
   }
 
+  public hasPower(tmfFunction: string, tmfAction: string): boolean {
+    return this.userPowers.some((power: Power) => {
+      if (power.tmf_function === tmfFunction) {
+        const action = power.tmf_action;
+        return action === tmfAction || (Array.isArray(action) && action.includes(tmfAction));
+      }
+      return false;
+    });
+  }
+
   // POLICY: user_powers_restriction_policy
   public hasIn2OrganizationIdentifier() : boolean {
     const userData = this.userDataSubject.getValue();
@@ -142,7 +152,7 @@ export class AuthService {
       if (isAuthenticated) {
 
         this.userPowers = this.extractUserPowers(userData);
-        const hasOnboardingPower = this.hasOnboardingExecutePower();
+        const hasOnboardingPower = this.hasPower('Onboarding','Execute');
 
         if (!hasOnboardingPower) {
           this.logout();

@@ -16,10 +16,12 @@
             <mat-icon>{{ isMenuOpen ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</mat-icon>
           </button>
           <mat-menu #menu="matMenu">
-            <button mat-menu-item  [routerLink]="'/settings'">
-              <mat-icon>settings</mat-icon>
-              <span>{{ "navbar.menu.settings" | translate }}</span>
-            </button>
+            @if(isCredentialIssuer()){
+              <button mat-menu-item  [routerLink]="'/settings'">
+                <mat-icon>settings</mat-icon>
+                <span>{{ "navbar.menu.settings" | translate }}</span>
+              </button>
+            }
             <button id="logout-link" (click)="logout()" mat-menu-item >
               <mat-icon>exit_to_app</mat-icon>
               <span>{{ "navbar.menu.logout" | translate }}</span>

@@ -156,7 +156,9 @@ describe('FormCredentialComponent', () => {
       },
       getSigner(){
         return of(mockSigner);
-      }
+      },
+      hasPower: () => true
+ 
     } as jest.Mocked<any>
 
     mockRouter = {

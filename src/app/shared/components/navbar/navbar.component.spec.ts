@@ -19,6 +19,9 @@ class MockAuthService {
   logout() {
     return of(void 0);
   }
+  hasPower() {
+    return true; 
+  }
 }
 
 export class MockRouter implements Partial<Router> {

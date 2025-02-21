@@ -7,7 +7,7 @@ import { of } from 'rxjs';
 import { DialogWrapperService } from 'src/app/shared/components/dialog/dialog-wrapper/dialog-wrapper.service';
 
 describe('OnboardingPolicyGuard', () => {
-  let authService: { hasOnboardingExecutePower: jest.Mock, logout: jest.Mock };
+  let authService: { hasPower: jest.Mock, logout: jest.Mock };
   let router: { createUrlTree:jest.Mock, navigate:jest.Mock };
   let dialog: { openErrorInfoDialog:jest.Mock };
   let activatedRoute: { snapshot: any }
@@ -15,7 +15,7 @@ describe('OnboardingPolicyGuard', () => {
   let dialogRef: { afterClosed():jest.Mock };
 
   beforeEach(async () => {
-    authService = { hasOnboardingExecutePower: jest.fn(), logout: jest.fn().mockReturnValue(of(undefined)) }
+    authService = { hasPower: jest.fn(), logout: jest.fn().mockReturnValue(of(undefined)) }
     router = { createUrlTree: jest.fn(), navigate:jest.fn().mockResolvedValue(()=> Promise.resolve(undefined)) }
     dialogRef = { afterClosed:jest.fn().mockReturnValue(of(undefined)) }
     dialog = { openErrorInfoDialog:jest.fn().mockReturnValue(dialogRef) }
@@ -38,18 +38,18 @@ describe('OnboardingPolicyGuard', () => {
     jest.clearAllMocks();
   });
 
-  it('should return true when hasOnboardingExecutePower is true', () => {
-    authService.hasOnboardingExecutePower.mockReturnValue(true);
+  it('should return true when hasPower is true', () => {
+    authService.hasPower.mockReturnValue(true);
     const guardResponse = TestBed.runInInjectionContext(() => {
-      return OnboardingPolicy();
+      return OnboardingPolicy('Onboarding', 'Execute')();
   });
   expect(guardResponse).toBe(true);
   });
 
-  it('should return false when hasOnboardingExecutePower is false', fakeAsync(() => {
-    authService.hasOnboardingExecutePower.mockReturnValue(false);
+  it('should return false when hasPower is false', fakeAsync(() => {
+    authService.hasPower.mockReturnValue(false);
     const guardResponse = TestBed.runInInjectionContext(() => {
-      return OnboardingPolicy();
+      return OnboardingPolicy('Onboarding', 'Execute')();
   });
   tick();
   expect(translate.instant).toHaveBeenCalledTimes(2);

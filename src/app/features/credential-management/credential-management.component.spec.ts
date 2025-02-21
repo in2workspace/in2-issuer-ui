@@ -41,6 +41,7 @@ describe('CredentialManagementComponent', () => {
       logout() {
         return of(void 0);
       },
+      hasPower: () => true,
       hasIn2OrganizationIdentifier: jest.fn().mockReturnValue(true)
     } as jest.Mocked<any>
 
