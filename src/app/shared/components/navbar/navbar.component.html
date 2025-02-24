@@ -16,7 +16,7 @@
             <mat-icon>{{ isMenuOpen ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</mat-icon>
           </button>
           <mat-menu #menu="matMenu">
-            @if(isCredentialIssuer()){
+            @if(isCredentialIssuerAndConfigure()){
               <button mat-menu-item  [routerLink]="'/settings'">
                 <mat-icon>settings</mat-icon>
                 <span>{{ "navbar.menu.settings" | translate }}</span>

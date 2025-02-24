@@ -1,9 +1,9 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { of, throwError } from 'rxjs';
 import { CredentialDetailComponent } from './credential-detail.component';
-import { ActivatedRoute, provideRouter, Router, RouterLink, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { LEARCredentialEmployeeJwtPayload } from "../../core/models/entity/lear-credential-employee.entity";
 import { LearCredentialEmployeeDataDetail } from "../../core/models/dto/lear-credential-employee-data-detail.dto";
@@ -161,7 +161,7 @@ describe('CredentialDetailComponent', () => {
                 }),
             },
         },
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(),
     ]
 })
 .overrideComponent(CredentialDetailComponent, {

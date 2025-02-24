@@ -12,11 +12,11 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { AuthModule } from 'angular-auth-oidc-client';
 import { By } from '@angular/platform-browser';
-import { CredentialProcedure, ProcedureResponse } from 'src/app/core/models/dto/procedure-response.dto';
+import { CredentialProcedure} from 'src/app/core/models/dto/procedure-response.dto';
 import { credentialProcedureListMock } from 'src/app/core/mocks/credential-procedure-list';
 import { MatSort } from '@angular/material/sort';
 import { ElementRef } from '@angular/core';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('CredentialManagementComponent', () => {
   let component: CredentialManagementComponent;
@@ -69,7 +69,7 @@ describe('CredentialManagementComponent', () => {
                 },
             },
         },
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(),
         provideHttpClientTesting(),
     ]
 }).compileComponents();

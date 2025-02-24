@@ -1,6 +1,6 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpErrorResponse, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HttpErrorResponse, provideHttpClient } from '@angular/common/http';
 import { BehaviorSubject, of, throwError } from 'rxjs';
 import { RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -62,7 +62,7 @@ describe('Credential Offer Stepper', () => {
         { provide: OidcSecurityService, useValue: oidcSecurityService },
         { provide: StsConfigLoader, useValue: configService },
         { provide: CredentialProcedureService, useValue: procedureService },
-        provideHttpClient(withInterceptorsFromDi())
+        provideHttpClient()
     ]
 }).compileComponents();
 

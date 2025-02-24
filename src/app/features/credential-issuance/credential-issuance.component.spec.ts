@@ -1,14 +1,13 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { of } from 'rxjs';
 import { CredentialIssuanceComponent } from './credential-issuance.component';
-import { RouterModule, ActivatedRoute } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { RouterModule, ActivatedRoute, convertToParamMap } from '@angular/router';
+import { TranslateModule, TranslateService} from '@ngx-translate/core';
 import { OidcSecurityService, StsConfigLoader } from "angular-auth-oidc-client";
 import { AuthService } from "../../core/services/auth.service";
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { convertToParamMap } from '@angular/router';
 
 (globalThis as any).structuredClone = (obj: any) => JSON.parse(JSON.stringify(obj));
 
@@ -58,7 +57,7 @@ describe('CredentialIssuanceComponent', () => {
         { provide: OidcSecurityService, useValue: oidcSecurityService },
         { provide: StsConfigLoader, useValue: configService },
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(),
     ]
 }).compileComponents();
 

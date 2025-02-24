@@ -11,7 +11,7 @@ import { AuthModule } from 'angular-auth-oidc-client';
 import { Mandatee, Mandator, Power, Signer } from "../../../../core/models/entity/lear-credential-employee.entity";
 import { TempPower } from "../../../../core/models/temporal/temp-power.interface";
 import { Country } from './country.service';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 
 (globalThis as any).structuredClone = (obj: any) => JSON.parse(JSON.stringify(obj));
 
@@ -36,7 +36,7 @@ describe('FormCredentialService', () => {
     providers: [
         FormCredentialService,
         TranslateService,
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(),
         provideHttpClientTesting(),
     ]
 });
