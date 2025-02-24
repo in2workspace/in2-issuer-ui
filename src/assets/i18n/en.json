@@ -152,10 +152,8 @@
     "one_power_min": "There must be at least one power selected, and each power must have at least one action selected.",
     "unknown_error": "An unknown error occurred. Please try again.",
     "policy": {
-      "onboarding": {
         "title": "Access Denied",
         "message": "You do not have the required power to access."
-      }
     },
     "credentialOffer": {
       "invalid-url": "Unexpected error: invalid URL, can't get credential offer.",

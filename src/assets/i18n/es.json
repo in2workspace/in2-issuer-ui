@@ -154,10 +154,8 @@
       "credential_submission": "Ha ocurrido un error al crear la credencial.",
       "one_power_min":"Se requiere por lo menos un poder, y cada power requiere por los menos una acción.",
       "policy": {
-        "onboarding": {
           "title": "Acceso Denegado",
           "message": "No tienes los poderes necesarios para acceder."
-        }
       },
       "credentialOffer": {
         "invalid-url": "URL no válida. No se puede obtener la oferta de credencial.",

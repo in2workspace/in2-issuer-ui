@@ -153,10 +153,8 @@
       "credential_submission": "S'ha produït un error en crear la credencial.",
       "one_power_min":"Hi ha d'haver almenys un poder seleccionat, i cada poder requereix almenys una acció.",
       "policy": {
-        "onboarding": {
           "title": "Accés Denegat",
           "message": "No tens els poders necessaris per accedir-hi."
-        }
       },
       "credentialOffer": {
         "invalid-url": "URL no vàlida. No es pot obtenir l'oferta de credencial.",
