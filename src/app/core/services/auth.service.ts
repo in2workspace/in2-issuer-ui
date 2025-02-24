@@ -181,5 +181,4 @@ export class AuthService {
     return this.nameSubject.asObservable()
   }
 
-
 }
