@@ -1,75 +1,75 @@
-// import { TestBed } from '@angular/core/testing';
-// import { AuthService } from './auth.service';
-// import { OidcSecurityService } from 'angular-auth-oidc-client';
-// import { of } from 'rxjs';
-// import { UserDataAuthenticationResponse } from "../models/dto/user-data-authentication-response.dto";
-//
-// const mockAuthResponse = {
-//   isAuthenticated: false,
-//   userData: { emailAddress: 'test@example.com' },
-//   accessToken: 'dummyAccessToken',
-//   idToken: 'dummyIdToken'
-// };
-//
-// describe('AuthService', () => {
-//   let service: AuthService;
-//   let oidcSecurityService: {
-//     checkAuth: jest.Mock,
-//     authorize: jest.Mock,
-//     logoffAndRevokeTokens: jest.Mock
-//   };
-//
-//   beforeEach(() => {
-//     oidcSecurityService = {
-//       checkAuth: jest.fn().mockReturnValue(of(mockAuthResponse)),
-//       authorize: jest.fn(),
-//       logoffAndRevokeTokens: jest.fn()
-//     };
-//
-//     TestBed.configureTestingModule({
-//       providers: [
-//         AuthService,
-//         { provide: OidcSecurityService, useValue: oidcSecurityService }
-//       ]
-//     });
-//
-//     service = TestBed.inject(AuthService);
-//     Object.defineProperty(window, 'localStorage', {
-//       value: {
-//         clear: jest.fn()
-//       },
-//       writable: true
-//     });
-//   });
-//
-//   afterEach(() => {
-//     TestBed.resetTestingModule();
-//     jest.clearAllMocks();
-//   });
-//
-//   it('should be created', () => {
-//     expect(service).toBeTruthy();
-//   });
-//
-//   it('should call authorize on OidcSecurityService when login is called', () => {
-//     service.login();
-//     expect(oidcSecurityService.authorize).toHaveBeenCalled();
-//   });
-//
-//   it('should call logoffAndRevokeTokens and clear localStorage when logout is called', () => {
-//     service.logout();
-//     expect(localStorage.clear).toHaveBeenCalled();
-//     expect(oidcSecurityService.logoffAndRevokeTokens).toHaveBeenCalled();
-//   });
-//
-//   it('should return isAuthenticatedSubject as observable when isLoggedIn is called', done => {
-//     service.isLoggedIn().subscribe(isLoggedIn => {
-//       expect(isLoggedIn).toBeFalsy();
-//       done();
-//     });
-//   });
-//
-//
+import { TestBed } from '@angular/core/testing';
+import { AuthService } from './auth.service';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
+import { of } from 'rxjs';
+import { UserDataAuthenticationResponse } from "../models/dto/user-data-authentication-response.dto";
+
+const mockAuthResponse = {
+  isAuthenticated: false,
+  userData: { emailAddress: 'test@example.com' },
+  accessToken: 'dummyAccessToken',
+  idToken: 'dummyIdToken'
+};
+
+describe('AuthService', () => {
+  let service: AuthService;
+  let oidcSecurityService: {
+    checkAuth: jest.Mock,
+    authorize: jest.Mock,
+    logoffAndRevokeTokens: jest.Mock
+  };
+
+  beforeEach(() => {
+    oidcSecurityService = {
+      checkAuth: jest.fn().mockReturnValue(of(mockAuthResponse)),
+      authorize: jest.fn(),
+      logoffAndRevokeTokens: jest.fn()
+    };
+
+    TestBed.configureTestingModule({
+      providers: [
+        AuthService,
+        { provide: OidcSecurityService, useValue: oidcSecurityService }
+      ]
+    });
+
+    service = TestBed.inject(AuthService);
+    Object.defineProperty(window, 'localStorage', {
+      value: {
+        clear: jest.fn()
+      },
+      writable: true
+    });
+  });
+
+  afterEach(() => {
+    TestBed.resetTestingModule();
+    jest.clearAllMocks();
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
+
+  it('should call authorize on OidcSecurityService when login is called', () => {
+    service.login();
+    expect(oidcSecurityService.authorize).toHaveBeenCalled();
+  });
+
+  it('should call logoffAndRevokeTokens and clear localStorage when logout is called', () => {
+    service.logout();
+    expect(localStorage.clear).toHaveBeenCalled();
+    expect(oidcSecurityService.logoffAndRevokeTokens).toHaveBeenCalled();
+  });
+
+  it('should return isAuthenticatedSubject as observable when isLoggedIn is called', done => {
+    service.isLoggedIn().subscribe(isLoggedIn => {
+      expect(isLoggedIn).toBeFalsy();
+      done();
+    });
+  });
+
+
 //   it('should return user data as observable when getUserData is called', done => {
 //     service.getUserData().subscribe(userData => {
 //       expect(userData).toBeNull();
@@ -548,4 +548,4 @@
 //       });
 //     });
 //   });
-// });
+});

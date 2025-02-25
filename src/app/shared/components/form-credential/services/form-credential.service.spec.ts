@@ -1,107 +1,107 @@
-// import { TestBed } from '@angular/core/testing';
-// import { FormCredentialService, isCertification, isProductOffering } from './form-credential.service';
-// import { BehaviorSubject, of, throwError } from 'rxjs';
-// import { TranslateModule, TranslateService } from '@ngx-translate/core';
-// import { HttpClientTestingModule } from '@angular/common/http/testing';
-// import { MatPaginatorModule } from '@angular/material/paginator';
-// import { MatTableModule } from '@angular/material/table';
-// import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-// import { RouterModule } from '@angular/router';
-// import { AuthModule } from 'angular-auth-oidc-client';
-// import { Mandatee, Mandator, Power, Signer } from "../../../../core/models/entity/lear-credential-employee.entity";
-// import { TempPower } from "../../../../core/models/temporal/temp-power.interface";
-// import { Country } from './country.service';
-//
-// global.structuredClone = (obj: any) => JSON.parse(JSON.stringify(obj));
-//
-// describe('FormCredentialService', () => {
-//   let service: FormCredentialService;
-//   let credentialProcedureService: any;
-//   let mockCredential: Mandatee;
-//   let mockMandateeSelectedCountry: Country;
-//   let mockMandator: Mandator;
-//   let mockSigner: Signer;
-//   let mockTempPower: TempPower;
-//   let mockAddedOptions: TempPower[];
-//
-//   beforeEach(() => {
-//     TestBed.configureTestingModule({
-//       providers: [
-//         FormCredentialService,
-//         TranslateService,
-//       ],
-//       imports: [
-//         MatTableModule,
-//         MatPaginatorModule,
-//         HttpClientTestingModule,
-//         BrowserAnimationsModule,
-//         RouterModule.forRoot([]),
-//         TranslateModule.forRoot({}),
-//         AuthModule.forRoot({ config: {} }),
-//       ],
-//     });
-//     service = TestBed.inject(FormCredentialService);
-//     // popupComponent = TestBed.inject(PopupComponent);
-//     credentialProcedureService = {
-//       createProcedure: jest.fn()
-//     };
-//
-//     // Mock the return value of createProcedure
-//     credentialProcedureService.createProcedure = jest.fn().mockReturnValue(of({}));
-//
-//     mockCredential = {
-//       first_name: 'John',
-//       last_name: 'Doe',
-//       email: 'john.doe@example.com',
-//       mobile_phone: '123456789',
-//     };
-//     mockMandateeSelectedCountry = {
-//       name: 'Spain',
-//       phoneCode: '34',
-//       isoCountryCode: 'ES'
-//     };
-//     mockMandator = {
-//       organizationIdentifier: '1',
-//       organization: 'MandatorOrg',
-//       commonName: 'Mandator',
-//       emailAddress: 'mandator@example.com',
-//       serialNumber: '123456',
-//       country: 'ES',
-//     };
-//     mockSigner = {
-//       organizationIdentifier: '1',
-//       organization: 'MandatorOrg',
-//       commonName: 'Mandator',
-//       emailAddress: 'mandator@example.com',
-//       serialNumber: '123456',
-//       country: 'ES',
-//     };
-//     mockTempPower = {
-//       action: [],
-//       domain: 'domain',
-//       function: 'ProductOffering',
-//       type: 'type',
-//       execute: false,
-//       create: false,
-//       update: false,
-//       delete: false,
-//       upload: false,
-//       attest: false
-//     };
-//     mockAddedOptions = [
-//       { ...mockTempPower },
-//       { ...mockTempPower }
-//     ];
-//   });
-//
-//   afterEach(() => {
-//     jest.restoreAllMocks();
-//   });
-//
-//   it('should be created', () => {
-//     expect(service).toBeTruthy();
-//   });
-//
+import { TestBed } from '@angular/core/testing';
+import { FormCredentialService, isCertification, isProductOffering } from './form-credential.service';
+import { BehaviorSubject, of, throwError } from 'rxjs';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterModule } from '@angular/router';
+import { AuthModule } from 'angular-auth-oidc-client';
+import { Mandatee, Mandator, Power, Signer } from "../../../../core/models/entity/lear-credential-employee.entity";
+import { TempPower } from "../../../../core/models/temporal/temp-power.interface";
+import { Country } from './country.service';
+
+global.structuredClone = (obj: any) => JSON.parse(JSON.stringify(obj));
+
+describe('FormCredentialService', () => {
+  let service: FormCredentialService;
+  let credentialProcedureService: any;
+  let mockCredential: Mandatee;
+  let mockMandateeSelectedCountry: Country;
+  let mockMandator: Mandator;
+  let mockSigner: Signer;
+  let mockTempPower: TempPower;
+  let mockAddedOptions: TempPower[];
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        FormCredentialService,
+        TranslateService,
+      ],
+      imports: [
+        MatTableModule,
+        MatPaginatorModule,
+        HttpClientTestingModule,
+        BrowserAnimationsModule,
+        RouterModule.forRoot([]),
+        TranslateModule.forRoot({}),
+        AuthModule.forRoot({ config: {} }),
+      ],
+    });
+    service = TestBed.inject(FormCredentialService);
+    // popupComponent = TestBed.inject(PopupComponent);
+    credentialProcedureService = {
+      createProcedure: jest.fn()
+    };
+
+    // Mock the return value of createProcedure
+    credentialProcedureService.createProcedure = jest.fn().mockReturnValue(of({}));
+
+    // mockCredential = {
+    //   first_name: 'John',
+    //   last_name: 'Doe',
+    //   email: 'john.doe@example.com',
+    //   mobile_phone: '123456789',
+    // };
+    mockMandateeSelectedCountry = {
+      name: 'Spain',
+      phoneCode: '34',
+      isoCountryCode: 'ES'
+    };
+    mockMandator = {
+      organizationIdentifier: '1',
+      organization: 'MandatorOrg',
+      commonName: 'Mandator',
+      emailAddress: 'mandator@example.com',
+      serialNumber: '123456',
+      country: 'ES',
+    };
+    mockSigner = {
+      organizationIdentifier: '1',
+      organization: 'MandatorOrg',
+      commonName: 'Mandator',
+      emailAddress: 'mandator@example.com',
+      serialNumber: '123456',
+      country: 'ES',
+    };
+    mockTempPower = {
+      action: [],
+      domain: 'domain',
+      function: 'ProductOffering',
+      type: 'type',
+      execute: false,
+      create: false,
+      update: false,
+      delete: false,
+      upload: false,
+      attest: false
+    };
+    mockAddedOptions = [
+      { ...mockTempPower },
+      { ...mockTempPower }
+    ];
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
+
 //   it('should get plain added powers', ()=>{
 //     const exampleAddedPowers = [{power:'one'}, {power:'two'}];
 //     service.addedPowersSubject = new BehaviorSubject<any>(exampleAddedPowers);
@@ -723,10 +723,10 @@
 //     checkPowers = service.hasSelectedPower();
 //     expect(checkPowers).toBe(true);
 //   });
-//
-//
-// });
-//
-//
-//
-//
+
+
+});
+
+
+
+

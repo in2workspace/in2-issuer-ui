@@ -1,51 +1,51 @@
-// import { TestBed } from '@angular/core/testing';
-// import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-// import { CredentialProcedureService } from './credential-procedure.service';
-// import { environment } from 'src/environments/environment';
-// import { HttpErrorResponse } from '@angular/common/http';
-// import { ProcedureRequest } from '../models/dto/procedure-request.dto';
-// import { ProcedureResponse } from "../models/dto/procedure-response.dto";
-// import { LearCredentialEmployeeDataDetail } from "../models/dto/lear-credential-employee-data-detail.dto";
-// import { throwError } from 'rxjs';
-//
-// const notFoundErrorResp = new HttpErrorResponse({
-//   error: '404 error',
-//   status: 404, statusText: 'Not Found'
-// });
-//
-// const serverErrorResp = new HttpErrorResponse({
-//   error: '500 error',
-//   status: 500,
-//   statusText: 'Server Error'
-// });
-//
-// describe('CredentialProcedureService', () => {
-//   let service: CredentialProcedureService;
-//   let httpMock: HttpTestingController;
-//   const apiUrl = `${environment.base_url}${environment.save_credential}`;
-//   const proceduresURL = `${environment.base_url}${environment.procedures}`;
-//   const notificationUrl = `${environment.base_url}${environment.notification}`;
-//   const credentialOfferUrl = `${environment.base_url}${environment.credential_offer_url}`;
-//
-//   beforeEach(() => {
-//     TestBed.configureTestingModule({
-//       imports: [HttpClientTestingModule],
-//       providers: [CredentialProcedureService]
-//     });
-//
-//     service = TestBed.inject(CredentialProcedureService);
-//     httpMock = TestBed.inject(HttpTestingController);
-//   });
-//
-//   afterEach(() => {
-//     httpMock.verify();
-//     jest.clearAllMocks();
-//   });
-//
-//   it('should be created', () => {
-//     expect(service).toBeTruthy();
-//   });
-//
+import { TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { CredentialProcedureService } from './credential-procedure.service';
+import { environment } from 'src/environments/environment';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ProcedureRequest } from '../models/dto/procedure-request.dto';
+import { ProcedureResponse } from "../models/dto/procedure-response.dto";
+import { LearCredentialEmployeeDataDetail } from "../models/dto/lear-credential-employee-data-detail.dto";
+import { throwError } from 'rxjs';
+
+const notFoundErrorResp = new HttpErrorResponse({
+  error: '404 error',
+  status: 404, statusText: 'Not Found'
+});
+
+const serverErrorResp = new HttpErrorResponse({
+  error: '500 error',
+  status: 500,
+  statusText: 'Server Error'
+});
+
+describe('CredentialProcedureService', () => {
+  let service: CredentialProcedureService;
+  let httpMock: HttpTestingController;
+  const apiUrl = `${environment.base_url}${environment.save_credential}`;
+  const proceduresURL = `${environment.base_url}${environment.procedures}`;
+  const notificationUrl = `${environment.base_url}${environment.notification}`;
+  const credentialOfferUrl = `${environment.base_url}${environment.credential_offer_url}`;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
+      providers: [CredentialProcedureService]
+    });
+
+    service = TestBed.inject(CredentialProcedureService);
+    httpMock = TestBed.inject(HttpTestingController);
+  });
+
+  afterEach(() => {
+    httpMock.verify();
+    jest.clearAllMocks();
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
+
 //   it('should fetch credential procedures successfully', () => {
 //     const mockData: ProcedureResponse = {credential_procedures:[
 //       { credential_procedure:{procedure_id: '1', status: 'completed', subject: 'John Doe', updated: '2023-01-01', credential_type: 'LEARCredentialEmployee'}},
@@ -357,4 +357,4 @@
 //       }
 //     });
 //   });
-// });
+});
