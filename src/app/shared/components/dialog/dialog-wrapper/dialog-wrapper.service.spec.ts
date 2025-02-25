@@ -335,5 +335,33 @@ describe('DialogWrapperService', () => {
       expect(value).toBeUndefined(); // EMPTY no emet cap valor
     });
   });
+
+  it('should open a dialog and return dialogRef', () => {
+    const dialogData: DialogData = {
+      title: 'Test Title',
+      message: 'Test Message',
+      confirmationType: 'sync',
+      status: 'default'
+    };
+    
+    const callback = jest.fn(() => of('success'));
+    const dialogRefMock = {
+      afterClosed: jest.fn(() => of(true)),
+      close: jest.fn(),
+    } as unknown as MatDialogRef<DialogComponent, any>;
+  
+    matDialogMock.open.mockReturnValue(dialogRefMock);
+  
+    const result = service.openDialogWithCallback(dialogData, callback);
+  
+    expect(matDialogMock.open).toHaveBeenCalledWith(DialogComponent, {
+      data: { ...dialogData },
+      autoFocus: false,
+      disableClose: false
+    });
+  
+    expect(result).toBe(dialogRefMock);
+  });
+  
   
 });

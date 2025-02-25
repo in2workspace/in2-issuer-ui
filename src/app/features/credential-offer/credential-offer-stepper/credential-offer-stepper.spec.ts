@@ -1,7 +1,7 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
-import { BehaviorSubject, of, throwError } from 'rxjs';
+import { BehaviorSubject, of, throwError, EMPTY } from 'rxjs';
 import { RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { OidcSecurityService, StsConfigLoader } from "angular-auth-oidc-client";
@@ -801,8 +801,80 @@ it('should navigate when c_transaction_code is provided', () => {
   });
 
   
+  describe('openRefreshPopupEffect', () => {
+    let openDialogSpy: jest.SpyInstance;
+    let redirectSpy: jest.SpyInstance;
+    let consoleErrorSpy: jest.SpyInstance;
+
+    const dialogWrapperServiceMock = {
+      openDialogWithCallback: jest.fn(),
+      openErrorInfoDialog: jest.fn(),
+      dialog: {
+        closeAll: jest.fn()
+      }
+    };
+
+    beforeEach(() => {
+      openDialogSpy = jest.spyOn(dialogWrapperServiceMock, 'openDialogWithCallback');
+      redirectSpy = jest.spyOn(component as any, 'redirectToHomeAndShowErrorDialog');
+      consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
   
+    it('should not execute cancel callback when afterClosed emits true', fakeAsync(() => {
+      (component as any).startOrEndFirstCountdown$ = of('END');
+      const fakeDialogRef = { afterClosed: jest.fn(() => of(true)) };
+      openDialogSpy.mockReturnValue(fakeDialogRef as any);
   
+      (component as any).openRefreshPopupEffect.subscribe();
+      tick();
+  
+      expect(redirectSpy).not.toHaveBeenCalled();
+    }));
+
+  
+    it('should not execute cancel callback when afterClosed emits true', fakeAsync(() => {
+      Object.defineProperty(component, 'startOrEndFirstCountdown$', { get: () => of('END') });
+      const fakeDialogRef = { afterClosed: jest.fn(() => of(true)) };
+      openDialogSpy.mockReturnValue(fakeDialogRef as any);
+
+      component['openRefreshPopupEffect'].subscribe();
+      tick();
+
+      expect(redirectSpy).not.toHaveBeenCalled();
+    }));
+
+    it('should handle error from afterClosed observable', fakeAsync(() => {
+      Object.defineProperty(component, 'startOrEndFirstCountdown$', { get: () => of('END') });
+      const fakeDialogRef = { afterClosed: jest.fn(() => throwError(() => new Error('Test error'))) };
+      openDialogSpy.mockReturnValue(fakeDialogRef as any);
+
+      component['openRefreshPopupEffect'].subscribe({
+        error: () => {} 
+      });
+      tick();
+
+      expect(consoleErrorSpy).toHaveBeenCalled();
+    }));
+
+    it('should execute cancel callback when afterClosed emits false', fakeAsync(() => {
+      Object.defineProperty(component, 'startOrEndFirstCountdown$', { get: () => of('END') });
+    
+      const redirectSpy = jest.spyOn(component as any, 'redirectToHomeAndShowErrorDialog');
+      const fakeDialogRef = { afterClosed: jest.fn(() => of(false)) };
+      openDialogSpy.mockReturnValue(fakeDialogRef as any);
+    
+      component['openRefreshPopupEffect'].subscribe(() => {
+        expect(redirectSpy).toHaveBeenCalledWith("error.credentialOffer.expired");
+      });
+    
+      tick();
+    }));
+
+  });
 
   it('should emit on destroy$$ when ngOnDestroy is called', () => {
     const destroySpy = jest.fn();
