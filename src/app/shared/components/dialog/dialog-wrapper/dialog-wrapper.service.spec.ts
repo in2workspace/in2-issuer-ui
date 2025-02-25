@@ -157,6 +157,99 @@ describe('DialogWrapperService', () => {
     expect(loaderServiceMock.updateIsLoading).toHaveBeenCalledWith(false);
   });
 
+  
+  it('should set disableClose to true when disableClose parameter is "DISABLE_CLOSE"', () => {
+    const dialogData: DialogData = {
+      title: 'Test Title',
+      message: 'Test Message',
+      confirmationType: 'sync',
+      status: 'default'
+    };
+    const callback = jest.fn(() => of('success'));
+    const afterClosedSubject = new Subject<boolean>();
+    const dialogRefMock = {
+      afterClosed: jest.fn(() => afterClosedSubject.asObservable()),
+      close: jest.fn(),
+    } as unknown as MatDialogRef<DialogComponent, any>;
+  
+    matDialogMock.open.mockReturnValue(dialogRefMock);
+  
+    service.openDialogWithCallback(dialogData, callback, undefined, 'DISABLE_CLOSE');
+  
+    expect(matDialogMock.open).toHaveBeenCalledWith(DialogComponent, {
+      data: { ...dialogData },
+      autoFocus: false,
+      disableClose: true  
+    });
+  });
+  
+  it('should reset disableClose to false after async callback execution', () => {
+    const dialogData: DialogData = {
+      title: 'Async Title',
+      message: 'Async Message',
+      confirmationType: 'async',
+      status: 'default',
+      loadingData: { title: 'Loading', message: 'Loading Message' },
+    };
+    const callback = jest.fn(() => of('success'));
+    const afterConfirmSubject = new Subject<boolean>();
+    const dialogRefMock = {
+      componentInstance: {
+        afterConfirm$: jest.fn(() => afterConfirmSubject.asObservable()),
+        updateData: jest.fn(),
+      },
+      disableClose: false,
+      close: jest.fn(),
+    } as unknown as MatDialogRef<DialogComponent, any>;
+  
+    matDialogMock.open.mockReturnValue(dialogRefMock);
+  
+    service.openDialogWithCallback(dialogData, callback);
+  
+    afterConfirmSubject.next(true);
+    afterConfirmSubject.complete();
+  
+    expect(dialogRefMock.disableClose).toBe(false);
+    expect(loaderServiceMock.updateIsLoading).toHaveBeenCalledWith(false);
+  });
+  
+  it('should handle errors in the async callback and keep dialog open', () => {
+    const dialogData: DialogData = {
+      title: 'Async Error Title',
+      message: 'Async Error Message',
+      confirmationType: 'async',
+      status: 'default',
+      loadingData: { title: 'Loading', message: 'Loading Message' },
+    };
+    const callback = jest.fn(() => throwError(() => new Error('Async Callback Error')));
+    const afterConfirmSubject = new Subject<boolean>();
+    const dialogRefMock = {
+      componentInstance: {
+        afterConfirm$: jest.fn(() => afterConfirmSubject.asObservable()),
+        updateData: jest.fn(),
+      },
+      disableClose: false,
+      close: jest.fn(),
+    } as unknown as MatDialogRef<DialogComponent, any>;
+  
+    matDialogMock.open.mockReturnValue(dialogRefMock);
+  
+    service.openDialogWithCallback(dialogData, callback);
+  
+    afterConfirmSubject.next(true);
+    afterConfirmSubject.complete();
+  
+    expect(matDialogMock.open).toHaveBeenCalledWith(DialogComponent, {
+      data: { ...dialogData },
+      autoFocus: false,
+      disableClose: false
+    });
+    expect(callback).toHaveBeenCalled();
+    expect(dialogRefMock.close).not.toHaveBeenCalled();
+    expect(loaderServiceMock.updateIsLoading).toHaveBeenCalledWith(false);
+  });
+  
+
   it('should execute cancel callback when dialog is closed with false', () => {
     const dialogData: DialogData = {
       title: 'Cancel Title',

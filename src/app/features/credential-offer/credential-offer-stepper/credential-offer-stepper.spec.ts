@@ -799,6 +799,65 @@ it('should navigate when c_transaction_code is provided', () => {
     expect(dialogOpenSpy).toHaveBeenCalled();
     expect(dialogOpenSpy).toHaveBeenCalledWith(message);
   });
+
+  describe('openRefreshPopupEffect', () => {
+    let openDialogSpy: jest.SpyInstance;
+    let redirectSpy: jest.SpyInstance;
+    let consoleErrorSpy: jest.SpyInstance;
+
+    const dialogWrapperServiceMock = {
+      openDialogWithCallback: jest.fn(),
+      openErrorInfoDialog: jest.fn(),
+      dialog: {
+        closeAll: jest.fn()
+      }
+    };
+
+    beforeEach(() => {
+      openDialogSpy = jest.spyOn(dialogWrapperServiceMock, 'openDialogWithCallback');
+      redirectSpy = jest.spyOn(component as any, 'redirectToHomeAndShowErrorDialog');
+      consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+  
+    it('should not execute cancel callback when afterClosed emits true', fakeAsync(() => {
+      (component as any).startOrEndFirstCountdown$ = of('END');
+      const fakeDialogRef = { afterClosed: jest.fn(() => of(true)) };
+      openDialogSpy.mockReturnValue(fakeDialogRef as any);
+  
+      (component as any).openRefreshPopupEffect.subscribe();
+      tick();
+  
+      expect(redirectSpy).not.toHaveBeenCalled();
+    }));
+  
+    it('should not execute cancel callback when afterClosed emits true', fakeAsync(() => {
+      Object.defineProperty(component, 'startOrEndFirstCountdown$', { get: () => of('END') });
+      const fakeDialogRef = { afterClosed: jest.fn(() => of(true)) };
+      openDialogSpy.mockReturnValue(fakeDialogRef as any);
+
+      component['openRefreshPopupEffect'].subscribe();
+      tick();
+
+      expect(redirectSpy).not.toHaveBeenCalled();
+    }));
+
+    it('should handle error from afterClosed observable', fakeAsync(() => {
+      Object.defineProperty(component, 'startOrEndFirstCountdown$', { get: () => of('END') });
+      const fakeDialogRef = { afterClosed: jest.fn(() => throwError(() => new Error('Test error'))) };
+      openDialogSpy.mockReturnValue(fakeDialogRef as any);
+
+      component['openRefreshPopupEffect'].subscribe({
+        error: () => {} 
+      });
+      tick();
+
+      expect(consoleErrorSpy).toHaveBeenCalled();
+    }));
+  });
   
 
 });
