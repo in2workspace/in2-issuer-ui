@@ -857,6 +857,28 @@ it('should navigate when c_transaction_code is provided', () => {
 
       expect(consoleErrorSpy).toHaveBeenCalled();
     }));
+
+    it('should execute cancel callback when afterClosed emits false', fakeAsync(() => {
+      Object.defineProperty(component, 'startOrEndFirstCountdown$', { get: () => of('END') });
+    
+      const redirectSpy = jest.spyOn(component as any, 'redirectToHomeAndShowErrorDialog');
+      const fakeDialogRef = { afterClosed: jest.fn(() => of(false)) };
+      openDialogSpy.mockReturnValue(fakeDialogRef as any);
+    
+      component['openRefreshPopupEffect'].subscribe(() => {
+        expect(redirectSpy).toHaveBeenCalledWith("error.credentialOffer.expired");
+      });
+    
+      tick();
+    }));
+
+  });
+
+  it('should emit on destroy$$ when ngOnDestroy is called', () => {
+    const destroySpy = jest.fn();
+    component.destroy$$.subscribe(destroySpy);
+    (component as any).ngOnDestroy();
+    expect(destroySpy).toHaveBeenCalled();
   });
   
 
