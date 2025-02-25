@@ -46,9 +46,9 @@ const mockCredentialManagement: LEARCredentialEmployeeJwtPayload = {
               },
               "mandatee": {
                   "email": "test@test.es",
-                  "first_name": "test",
-                  "last_name": "test",
-                  "mobile_phone": "+34 12451212"
+                  "firstName": "test",
+                  "lastName": "test",
+                  "nationality": "ES"
               },
               "mandator": {
                   "commonName": "IN2",
@@ -222,11 +222,11 @@ describe('CredentialDetailComponent', () => {
       }
       return key;
     });
-  
+
     const sendReminderSpy = jest.spyOn(component, 'sendReminder').mockReturnValue(of(true));
-  
+
     component.openSendReminderDialog();
-  
+
     const expectedDialogData: DialogData = {
       title: 'Mock Title',
       message: 'Mock Message',
@@ -237,20 +237,20 @@ describe('CredentialDetailComponent', () => {
       expectedDialogData,
       expect.any(Function)
     );
-  
+
     const callback = dialogService.openDialogWithCallback.mock.calls[0][1];
     callback().subscribe();
-  
+
     expect(sendReminderSpy).toHaveBeenCalled();
   });
 
   it('should return EMPTY and log an error if credentialId is not defined', () => {
-    component.credentialId = null; 
-  
+    component.credentialId = null;
+
     const consoleErrorSpy = jest.spyOn(console, 'error');
-  
+
     const result = component.sendReminder();
-  
+
     result.subscribe({
       complete: () => {
         expect(consoleErrorSpy).toHaveBeenCalledWith('No credential id.');
@@ -260,10 +260,10 @@ describe('CredentialDetailComponent', () => {
       },
     });
   });
-  
+
   it('should send reminder, open success dialog, navigate, and reload page if credentialId is defined', fakeAsync(() => {
     component.credentialId = '123';
-  
+
     const sendReminderSpy = mockCredentialProcedureService.sendReminder.mockReturnValue(of(null));
     const dialogRef = {
       afterClosed: jest.fn().mockReturnValue(of(true)),
@@ -271,14 +271,14 @@ describe('CredentialDetailComponent', () => {
     jest.spyOn(dialogService, 'openDialog').mockReturnValue(dialogRef as any);
     const routerNavigateSpy = jest.spyOn(router, 'navigate').mockResolvedValue(true);
     const locationReloadSpy = jest.spyOn(location, 'reload').mockImplementation(() => {});
-  
+
     const result = component.sendReminder();
-  
+
     tick();
     result.subscribe({
       complete: () => {
         expect(sendReminderSpy).toHaveBeenCalledWith('123');
-  
+
         const expectedDialogData: DialogData = {
           title: translateService.instant("credentialDetail.sendReminderSuccess.title"),
           message: translateService.instant("credentialDetail.sendReminderSuccess.message"),
@@ -286,7 +286,7 @@ describe('CredentialDetailComponent', () => {
           status: 'default'
         };
         expect(dialogService.openDialog).toHaveBeenCalledWith(expectedDialogData);
-  
+
         expect(routerNavigateSpy).toHaveBeenCalledWith(['/organization/credentials']);
         expect(locationReloadSpy).toHaveBeenCalled();
       },
