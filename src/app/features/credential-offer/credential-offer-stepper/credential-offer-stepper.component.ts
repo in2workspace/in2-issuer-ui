@@ -234,11 +234,10 @@ export class CredentialOfferStepperComponent implements OnInit{
           delayWhen(()=>
             this.fetchedCredentialOffer$.pipe(
               filter(state => state.loading === false),
-            )),
-            tap(val=>console.log(val))
+            ))
         )
       }else{
-        return of(popupTimeInSeconds); //reset time
+        return of(popupTimeInSeconds);
       }
     })
   )
