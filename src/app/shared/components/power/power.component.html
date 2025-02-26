@@ -65,7 +65,7 @@
 <!-- Define a template for the toggle section -->
 <ng-template #toggleTemplate let-option="option" let-i="i">
   <div class="functions-container">
-    @if (option.tmf_function === 'Certification' && organizationIdentifierIsIn2) {
+    @if (option.function === 'Certification' && organizationIdentifierIsIn2) {
       <div class="toggles-container">
         <mat-slide-toggle [(ngModel)]="option.upload" name="upload-{{ i }}" [disabled]="isDisabled" color="primary">
           {{ "power.upload" | translate }}
@@ -75,7 +75,7 @@
         </mat-slide-toggle>
       </div>
     }
-    @if (option.tmf_function === 'ProductOffering') {
+    @if (option.function === 'ProductOffering') {
       <div class="toggles-container">
         <mat-slide-toggle [(ngModel)]="option.create" name="create-{{ i }}" [disabled]="isDisabled" color="primary">
           {{ "power.create" | translate }}
@@ -88,7 +88,7 @@
         </mat-slide-toggle>
       </div>
     }
-    @if (option.tmf_function === 'Onboarding' && organizationIdentifierIsIn2) {
+    @if (option.function === 'Onboarding' && organizationIdentifierIsIn2) {
       <div class="toggles-container">
         <mat-slide-toggle [(ngModel)]="option.execute" name="execute-{{ i }}" [disabled]="isDisabled" color="primary">
           {{ "power.execute" | translate }}
@@ -102,7 +102,7 @@
     mat-mini-fab class="small-icon-button delete-power"
     color="warn"
     aria-label="Remove power"
-    (click)="removePower(option.tmf_function)">
+    (click)="removePower(option.function)">
   <mat-icon style="display:block;width:25px">delete</mat-icon>
   </button>
 </ng-template>
