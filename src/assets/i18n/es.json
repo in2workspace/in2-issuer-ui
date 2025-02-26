@@ -51,6 +51,14 @@
     "sendReminderSuccess": {
       "title": "Recordatorio enviado con éxito",
       "message": "El recordatorio ha sido enviado con éxito."
+    },
+    "signCredentialConfirm": {
+      "title": "Firmar credencial",
+      "message": "Está seguro de firmar esta credencial?"
+    },
+    "signCredentialSuccess": {
+      "title": "Credencial firmada",
+      "message": "La credencial ha sido firmada con éxito."
     }
   },
   "credentialOffer": {

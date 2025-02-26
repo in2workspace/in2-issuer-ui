@@ -69,6 +69,7 @@ import { MatIcon } from '@angular/material/icon';
 export class FormCredentialComponent implements OnInit, OnDestroy {
   @ViewChild('formDirective') public formDirective!: FormGroupDirective;
   @Output() public sendReminder = new EventEmitter<void>();
+  @Output() public signCredential = new EventEmitter<void>();
   @Input({required:true}) public viewMode: 'create' | 'detail' = 'create';
   @Input() public asSigner: boolean = false;
   @Input() public isDisabled: boolean = false;
@@ -231,6 +232,10 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
     this.sendReminder.emit();
   }
 
+  public triggerSignCredential(): void {
+    this.signCredential.emit();
+  }
+
   //this function is currently unused, since user is redirected after successful submit
   public resetForm(): void {
     this.credential = this.formService.resetForm();
@@ -272,6 +277,10 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
   public showReminderButton(): boolean{
     // todo state WITHDRAWN is temporary, this reference shall be removed when there are no more VCs with this state
     return (this.viewMode === 'detail') && ((this.credentialStatus === 'WITHDRAWN') || (this.credentialStatus === 'DRAFT') || (this.credentialStatus === 'PEND_DOWNLOAD'))
+  }
+
+  public showSignCredentialButton(): boolean{
+    return (this.viewMode === 'detail') && (this.credentialStatus === 'PEND_SIGNATURE')
   }
 
   public ngOnDestroy(): void {

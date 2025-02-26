@@ -17,7 +17,7 @@ export class CredentialProcedureService {
   private readonly organizationProcedures = `${environment.base_url}${environment.procedures}`;
   private readonly credentialOfferUrl = `${environment.base_url}${environment.credential_offer_url}`;
   private readonly notificationProcedure =`${environment.base_url}${environment.notification}`;
-  //private sendFirma = `${environment.base_url}${environment.firma_credential}`; The`sendFirma` variable has been commented out as it was initially intended for the signature functionality,which remains incomplete. This configuration is currently unnecessary for the existing flows but is expected to be reintroduced in the future when the related use case is implemented.
+  private readonly signCredentialUrl = `${environment.base_url}${environment.sign_credential_url}`;
 
   private readonly http = inject(HttpClient);
 
@@ -46,6 +46,12 @@ export class CredentialProcedureService {
     );
   }
 
+  public signCredential(procedureId: string): Observable<void> {
+    return this.http.post<void>(`${this.signCredentialUrl}/${procedureId}`,{} ).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   public getCredentialOfferByTransactionCode(transactionCode: string): Observable<CredentialOfferResponse> {
     console.info('Getting credential offer by transaction code: ' + transactionCode);
     return this.http.get<CredentialOfferResponse>(`${this.credentialOfferUrl}/transaction-code/${transactionCode}`).pipe(
@@ -69,17 +75,5 @@ export class CredentialProcedureService {
     console.error('Error response body:', errorMessage);
     return throwError(()=>error);
   }
-
-  /**
-    The `signCredential` method has been commented out as the implementation was initially started
-    but left incomplete. Currently, this functionality is not required in the existing flows.
-    However, it is expected to be revisited and fully implemented in the future when the use case demands it.
-   **/
-  // public signCredential(id: string): Observable<void> {
-  //   return this.http.post(this.sendFirma, {'procedure-id':id}).pipe(
-  //     catchError(this.handleError)
-  //   );
-  // }
-
 
 }
