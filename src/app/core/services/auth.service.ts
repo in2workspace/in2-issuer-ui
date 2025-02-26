@@ -3,7 +3,7 @@ import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { UserDataAuthenticationResponse } from "../models/dto/user-data-authentication-response.dto";
-import { Mandator, Power, Signer } from "../models/entity/lear-credential-employee.entity";
+import {LEARCredentialEmployee, Mandator, Power, Signer} from "../models/entity/lear-credential-employee.entity";
 import {environment} from "../../../environments/environment";
 import { LEARCredentialEmployeeDataNormalizer } from '../models/entity/lear-credential-employee-data-normalizer';
 
@@ -42,12 +42,14 @@ export class AuthService {
       this.isAuthenticatedSubject.next(isAuthenticated);
 
       if (isAuthenticated) {
-        this.userPowers = this.extractUserPowers(userData);
         this.userDataSubject.next(userData);
 
         // Extract and normalize the VC using the normalizer class
         const learCredential = this.extractVCFromUserData(userData);
         const normalizedCredential = this.normalizer.normalizeLearCredential(learCredential);
+
+        this.userPowers = this.extractUserPowers(normalizedCredential);
+
 
         const mandator = {
           organizationIdentifier: normalizedCredential.credentialSubject.mandate.mandator.organizationIdentifier,
@@ -154,9 +156,8 @@ export class AuthService {
     return userData.vc || null;
   }
 
-  private extractUserPowers(userData: UserDataAuthenticationResponse): Power[] {
+  private extractUserPowers(learCredential: LEARCredentialEmployee): Power[] {
     try {
-      const learCredential = this.extractVCFromUserData(userData)
       return learCredential?.credentialSubject.mandate.power || [];
     } catch (error) {
       return [];
