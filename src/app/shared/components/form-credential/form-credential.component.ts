@@ -27,7 +27,7 @@ import { OrganizationIdentifierValidatorDirective } from '../../directives/valid
 import { OrganizationNameValidatorDirective } from '../../directives/validators/organization-name.validator.directive';
 import { MatSelect } from '@angular/material/select';
 import { CustomEmailValidatorDirective } from '../../directives/validators/custom-email-validator.directive';
-import { NgIf, NgTemplateOutlet, AsyncPipe } from '@angular/common';
+import {NgIf, NgTemplateOutlet, AsyncPipe, NgForOf} from '@angular/common';
 import { MaxLengthDirective } from '../../directives/validators/max-length-directive.directive';
 import { UnicodeValidatorDirective } from '../../directives/validators/unicode-validator.directive';
 import { MatInput } from '@angular/material/input';
@@ -70,6 +70,7 @@ import { MatIcon } from '@angular/material/icon';
     RouterLink,
     TranslatePipe,
     UnicodeValidatorDirective,
+    NgForOf,
   ],
 })
 export class FormCredentialComponent implements OnInit, OnDestroy {
@@ -222,10 +223,6 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy(): void {
     this.formService.reset();
-  }
-
-  public trackByCountryIso(country: Country): string {
-    return country.isoCountryCode;
   }
 
   private initializeCredential(): Mandatee {
