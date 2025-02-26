@@ -180,5 +180,4 @@ export class AuthService {
   public getName(): Observable<string> {
     return this.nameSubject.asObservable()
   }
-
 }
