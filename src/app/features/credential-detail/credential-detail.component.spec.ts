@@ -3,7 +3,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { of, throwError } from 'rxjs';
 import { CredentialDetailComponent } from './credential-detail.component';
-import { ActivatedRoute, provideRouter, Router, RouterLink, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { LEARCredentialEmployeeJwtPayload } from "../../core/models/entity/lear-credential-employee.entity";
 import { LearCredentialEmployeeDataDetail } from "../../core/models/dto/lear-credential-employee-data-detail.dto";
@@ -134,7 +134,7 @@ describe('CredentialDetailComponent', () => {
     router = {
       navigate: jest.fn().mockResolvedValue(() => Promise.resolve(undefined))
     }
-    configService = { loadConfigs:() => {} };
+    configService = {};
 
     oidcSecurityService = {
       checkAuth: jest.fn().mockReturnValue(of(mockAuthResponse)),

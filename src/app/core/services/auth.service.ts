@@ -108,24 +108,28 @@ export class AuthService {
 
   public handleLoginCallback(): void {
     this.oidcSecurityService.checkAuth()
-    .pipe(take(1))
-    .subscribe(({ isAuthenticated, userData, accessToken }) => {
-      if (isAuthenticated) {
+      .pipe(take(1))
+      .subscribe(({ isAuthenticated, userData, accessToken }) => {
+        if (isAuthenticated) {
 
-        this.userPowers = this.extractUserPowers(userData);
-        const hasOnboardingPower = this.hasOnboardingExecutePower();
+          const learCredential = this.extractVCFromUserData(userData);
+          const normalizedCredential = this.normalizer.normalizeLearCredential(learCredential);
+          this.userPowers = this.extractUserPowers(normalizedCredential);
 
-        if (!hasOnboardingPower) {
-          this.logout();
-          return;
+          const hasOnboardingPower = this.hasOnboardingExecutePower();
+
+          if (!hasOnboardingPower) {
+            this.logout();
+            return;
+          }
+
+          this.isAuthenticatedSubject.next(true);
+          this.userDataSubject.next(userData);
+          this.tokenSubject.next(accessToken);
         }
-
-        this.isAuthenticatedSubject.next(true);
-        this.userDataSubject.next(userData);
-        this.tokenSubject.next(accessToken);
-      }
-    });
+      });
   }
+
 
   public logout() {
     localStorage.clear();
