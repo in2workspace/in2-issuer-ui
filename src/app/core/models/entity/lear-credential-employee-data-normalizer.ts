@@ -1,3 +1,5 @@
+import { Mandatee, Power, LEARCredentialEmployee } from './lear-credential-employee.entity';
+
 // Interfaces for the raw JSON of Mandatee and Power
 interface RawMandatee {
   firstName?: string;
@@ -18,8 +20,6 @@ interface RawPower {
   type?: string;
   tmf_type?: string;
 }
-
-import { Mandatee, Power, LEARCredentialEmployee } from './lear-credential-employee.entity';
 
 export class LEARCredentialEmployeeDataNormalizer {
 
