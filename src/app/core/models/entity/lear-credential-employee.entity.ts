@@ -37,10 +37,10 @@ export interface LifeSpan {
 }
 
 export interface Mandatee {
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  mobile_phone?: string;
+  nationality: string;
 }
 
 export interface OrganizationDetails {
@@ -57,8 +57,8 @@ export interface Mandator extends OrganizationDetails {}
 export interface Signer extends OrganizationDetails {}
 
 export interface Power {
-  tmf_action: string | string[];
-  tmf_domain: string;
-  tmf_function: string;
-  tmf_type: string;
+  action: string | string[];
+  domain: string;
+  function: string;
+  type: string;
 }

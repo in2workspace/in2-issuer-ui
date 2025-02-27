@@ -69,7 +69,6 @@ describe('AuthService', () => {
     });
   });
 
-
   it('should return user data as observable when getUserData is called', done => {
     service.getUserData().subscribe(userData => {
       expect(userData).toBeNull();
@@ -93,7 +92,7 @@ describe('AuthService', () => {
 
   it('should return true if user has "Onboarding" power with action array containing "Execute"', () => {
     (service as any).userPowers = [
-      { tmf_function: 'Onboarding', tmf_action: ['Read', 'Execute', 'Write'] }
+      { function: 'Onboarding', action: ['Read', 'Execute', 'Write'] }
     ];
 
     const result = service.hasOnboardingExecutePower();
@@ -102,7 +101,7 @@ describe('AuthService', () => {
 
   it('should return false if user has "Onboarding" power but no "Execute" action', () => {
     (service as any).userPowers = [
-      { tmf_function: 'Onboarding', tmf_action: ['Read', 'Write'] }
+      { function: 'Onboarding', action: ['Read', 'Write'] }
     ];
 
     const result = service.hasOnboardingExecutePower();
@@ -111,7 +110,7 @@ describe('AuthService', () => {
 
   it('should return false if user has no "Onboarding" power', () => {
     (service as any).userPowers = [
-      { tmf_function: 'OtherFunction', tmf_action: 'Execute' }
+      { function: 'OtherFunction', action: 'Execute' }
     ];
 
     const result = service.hasOnboardingExecutePower();
@@ -251,9 +250,10 @@ describe('AuthService', () => {
               end_date_time: '2021-12-31T23:59:59Z'
             },
             mandatee: {
-              first_name: 'John',
-              last_name: 'Doe',
-              email: 'john.doe@example.com'
+              firstName: 'John',
+              lastName: 'Doe',
+              email: 'john.doe@example.com',
+              nationality: 'ES'
             },
             mandator: {
               organizationIdentifier: 'ORG123',
@@ -271,7 +271,7 @@ describe('AuthService', () => {
               serialNumber: '7891011',
               country: 'Signerland'
             },
-            power: [{ tmf_function: 'Onboarding', tmf_action: 'Execute' , tmf_domain: 'domain', tmf_type: 'type' }]
+            power: [{ function: 'Onboarding', action: 'Execute' , domain: 'domain', type: 'type' }]
           }
         },
         expirationDate: '2024-12-31T23:59:59Z',
@@ -347,12 +347,12 @@ describe('AuthService', () => {
               country: 'Signerland'
             },
             mandatee: {
-              first_name: 'John',
-              last_name: 'Doe',
+              firstName: 'John',
+              lastName: 'Doe',
               email: '',
-              mobile_phone: ''
+              nationality: ''
             },
-            power: [{ tmf_function: 'OtherFunction', tmf_action: 'Read', tmf_type: 'type', tmf_domain: 'domain' }]
+            power: [{ function: 'OtherFunction', action: 'Read', type: 'type', domain: 'domain' }]
           }
         },
         expirationDate: '2024-12-31T23:59:59Z',
@@ -444,12 +444,12 @@ describe('AuthService', () => {
               country: 'EU'
             },
             mandatee: {
-              first_name: 'John',
-              last_name: 'Doe',
+              firstName: 'John',
+              lastName: 'Doe',
               email: 'jhonDoe@example.com',
-              mobile_phone: ''
+              nationality: ''
             },
-            power: [{ tmf_function: 'Onboarding', tmf_action: 'Execute', tmf_domain: 'domain', tmf_type: 'type' }]
+            power: [{ function: 'Onboarding', action: 'Execute', domain: 'domain', type: 'type' }]
           }
         },
         expirationDate: '2024-12-31T23:59:59Z',

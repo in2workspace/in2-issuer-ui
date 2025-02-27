@@ -64,10 +64,10 @@ export class PowerComponent implements OnInit{
     }
 
     const newPower: TempPower = {
-      tmf_action: '',
-      tmf_domain: 'DOME',
-      tmf_function: selectedPower,
-      tmf_type: 'Domain',
+      action: '',
+      domain: 'DOME',
+      function: selectedPower,
+      type: 'Domain',
       execute: false,
       create: false,
       update: false,

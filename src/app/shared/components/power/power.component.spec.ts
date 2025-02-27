@@ -11,7 +11,7 @@ import { DialogData } from '../dialog/dialog.component';
 import { of } from 'rxjs';
 import { DialogWrapperService } from '../dialog/dialog-wrapper/dialog-wrapper.service';
 
-const mockDialogRef = { 
+const mockDialogRef = {
   afterClosed:jest.fn().mockReturnValue(of(true)) };
 
 describe('PowerComponent', () => {
@@ -119,10 +119,10 @@ describe('PowerComponent', () => {
 
     expect(mockFormService.addPower).toHaveBeenCalledWith(
       {
-        tmf_action: '',
-        tmf_domain: 'DOME',
-        tmf_function: 'Onboarding',
-        tmf_type: 'Domain',
+        action: '',
+        domain: 'DOME',
+        function: 'Onboarding',
+        type: 'Domain',
         execute: false,
         create: false,
         update: false,
@@ -145,10 +145,10 @@ describe('PowerComponent', () => {
 
     expect(mockFormService.addPower).toHaveBeenCalledWith(
       {
-        tmf_action: '',
-        tmf_domain: 'DOME',
-        tmf_function: 'Certification',
-        tmf_type: 'Domain',
+        action: '',
+        domain: 'DOME',
+        function: 'Certification',
+        type: 'Domain',
         execute: false,
         create: false,
         update: false,
@@ -182,10 +182,10 @@ describe('PowerComponent', () => {
 
     expect(mockFormService.addPower).toHaveBeenCalledWith(
       {
-        tmf_action: '',
-        tmf_domain: 'DOME',
-        tmf_function: 'Certification',
-        tmf_type: 'Domain',
+        action: '',
+        domain: 'DOME',
+        function: 'Certification',
+        type: 'Domain',
         execute: false,
         create: false,
         update: false,
@@ -217,18 +217,18 @@ describe('PowerComponent', () => {
       confirmationType: 'sync',
       status: 'default'
     };
-  
+
     jest.spyOn(mockFormService, 'removePower').mockImplementation();
-  
+
     component.removePower(powerToRemove);
-  
+
     expect(mockDialog.openDialogWithCallback).toHaveBeenCalledWith(
       expect.objectContaining(dialogData),
       expect.any(Function)
     );
-  
+
     const [, callbackFn] = mockDialog.openDialogWithCallback.mock.calls[0];
-  
+
     callbackFn();
     expect(mockFormService.removePower).toHaveBeenCalledWith(powerToRemove);
   });

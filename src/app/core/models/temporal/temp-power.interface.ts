@@ -1,8 +1,8 @@
 export interface TempPower {
-  tmf_action: string | string[];
-  tmf_domain: string;
-  tmf_function: string;
-  tmf_type: string;
+  action: string | string[];
+  domain: string;
+  function: string;
+  type: string;
   execute: boolean;
   create: boolean;
   update: boolean;
