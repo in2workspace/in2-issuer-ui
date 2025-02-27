@@ -1,8 +1,8 @@
 export const environment = {
   production: false,
   loginParams: {
-    login_url: 'https://localhost:8443/realms/CredentialIssuer',
-    client_id: 'account-console',
+    login_url: 'https://keycloak-dev.ssihub.org/realms/in2-issuer',
+    client_id: 'vc-auth-client',
     scope: 'openid profile email offline_access',
     grant_type: 'code'
   },

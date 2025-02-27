@@ -96,7 +96,7 @@ describe('AuthService', () => {
       { tmf_function: 'Onboarding', tmf_action: ['Read', 'Execute', 'Write'] }
     ];
 
-    const result = service.hasOnboardingExecutePower();
+    const result = service.hasPower('Onboarding','Execute');
     expect(result).toBeTruthy();
   });
 
@@ -105,7 +105,7 @@ describe('AuthService', () => {
       { tmf_function: 'Onboarding', tmf_action: ['Read', 'Write'] }
     ];
 
-    const result = service.hasOnboardingExecutePower();
+    const result = service.hasPower('Onboarding','Execute');
     expect(result).toBeFalsy();
   });
 
@@ -114,14 +114,14 @@ describe('AuthService', () => {
       { tmf_function: 'OtherFunction', tmf_action: 'Execute' }
     ];
 
-    const result = service.hasOnboardingExecutePower();
+    const result = service.hasPower('Onboarding','Execute');
     expect(result).toBeFalsy();
   });
 
   it('should return false if userPowers is empty', () => {
     (service as any).userPowers = [];
 
-    const result = service.hasOnboardingExecutePower();
+    const result = service.hasPower('Onboarding','Execute');
     expect(result).toBeFalsy();
   });
 

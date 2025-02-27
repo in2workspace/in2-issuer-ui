@@ -21,6 +21,18 @@
     "footer-license": "CC BY 4.0",
     "footer-privacy": "Política de Privacitat"
   },
+  "navbar": {
+    "menu": {
+      "logout": "Tancar sessió",
+      "settings": "Configuració"
+    }
+  },
+  "sidenav": {
+    "settings": "Configuració",
+    "schemes": "Esquemes",
+    "signatures": "Firmes",
+    "trushFramework": "TF"
+  },
   "mandator": {
     "organizationid": "Número VAT de l'empresa",
     "organizationidHint": "Introdueix només els caràcters de després de 'VAT-'. Per exemple, si el número complet és  'VAT-123ABC', introdueix '123ABC'",
@@ -141,10 +153,8 @@
       "credential_submission": "S'ha produït un error en crear la credencial.",
       "one_power_min":"Hi ha d'haver almenys un poder seleccionat, i cada poder requereix almenys una acció.",
       "policy": {
-        "onboarding": {
           "title": "Accés Denegat",
           "message": "No tens els poders necessaris per accedir-hi."
-        }
       },
       "credentialOffer": {
         "invalid-url": "URL no vàlida. No es pot obtenir l'oferta de credencial.",

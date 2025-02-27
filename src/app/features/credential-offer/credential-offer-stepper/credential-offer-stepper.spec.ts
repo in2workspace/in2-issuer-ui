@@ -1,7 +1,7 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
-import { BehaviorSubject, of, throwError, EMPTY } from 'rxjs';
+import { provideHttpClient, HttpErrorResponse } from '@angular/common/http';
+import { BehaviorSubject, of, throwError } from 'rxjs';
 import { RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { OidcSecurityService, StsConfigLoader } from "angular-auth-oidc-client";
@@ -13,7 +13,7 @@ import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { HomeComponent } from '../../home/home.component';
 import { TemplatePortal } from '@angular/cdk/portal';
 
-global.structuredClone = (obj: any) => JSON.parse(JSON.stringify(obj));
+(globalThis as any).structuredClone = (obj: any) => JSON.parse(JSON.stringify(obj));
 
 
 describe('Credential Offer Stepper', () => {
@@ -53,16 +53,17 @@ describe('Credential Offer Stepper', () => {
 
     await TestBed.configureTestingModule({
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    imports: [BrowserAnimationsModule, RouterModule.forRoot([{ path: 'home', component: HomeComponent }]), HttpClientModule, TranslateModule.forRoot({}), CredentialOfferStepperComponent, HomeComponent],
+    imports: [BrowserAnimationsModule, RouterModule.forRoot([{ path: 'home', component: HomeComponent }]), TranslateModule.forRoot({}), CredentialOfferStepperComponent, HomeComponent],
     providers: [
-      AuthService,
-      BreakpointObserver,
-      // { provide: TranslateService, useValue: translate },
-      TranslateService,
-      { provide: OidcSecurityService, useValue: oidcSecurityService },
-      { provide: StsConfigLoader, useValue: configService },
-      { provide: CredentialProcedureService, useValue: procedureService }
-    ],
+        AuthService,
+        BreakpointObserver,
+        // { provide: TranslateService, useValue: translate },
+        TranslateService,
+        { provide: OidcSecurityService, useValue: oidcSecurityService },
+        { provide: StsConfigLoader, useValue: configService },
+        { provide: CredentialProcedureService, useValue: procedureService },
+        provideHttpClient()
+    ]
 }).compileComponents();
 
     fixture = TestBed.createComponent(CredentialOfferStepperComponent);

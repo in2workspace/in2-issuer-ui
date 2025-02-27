@@ -1,6 +1,6 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { FormsModule, FormGroupDirective, FormGroup, FormControl } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { FormCredentialComponent } from './form-credential.component';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { CountryService } from './services/country.service';
@@ -9,7 +9,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
-import { Observer, of } from 'rxjs';
+import { of } from 'rxjs';
 import { MaxLengthDirective } from '../../directives/validators/max-length-directive.directive';
 import { CustomEmailValidatorDirective } from '../../directives/validators/custom-email-validator.directive';
 import { UnicodeValidatorDirective } from '../../directives/validators/unicode-validator.directive';
@@ -156,7 +156,9 @@ describe('FormCredentialComponent', () => {
       },
       getSigner(){
         return of(mockSigner);
-      }
+      },
+      hasPower: () => true
+ 
     } as jest.Mocked<any>
 
     mockRouter = {
@@ -164,16 +166,13 @@ describe('FormCredentialComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [
-        FormsModule,
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [FormsModule,
         TranslateModule.forRoot({}),
-        HttpClientModule,
         RouterModule.forRoot([]),
         FormCredentialComponent,
         MaxLengthDirective, CustomEmailValidatorDirective, UnicodeValidatorDirective, OrganizationNameValidatorDirective,
-        BrowserAnimationsModule
-
-    ],
+        BrowserAnimationsModule],
     providers: [
         TranslateService,
         { provide: CredentialProcedureService, useValue: mockCredentialProcedureService },
@@ -182,9 +181,9 @@ describe('FormCredentialComponent', () => {
         { provide: FormCredentialService, useValue: mockFormCredentialService },
         { provide: AuthService, useValue: mockAuthService },
         { provide: Router, useValue: mockRouter },
-        { provide: ActivatedRoute, useValue: { snapshot: { paramMap: {} } } }
-    ],
-    schemas: [NO_ERRORS_SCHEMA]
+        { provide: ActivatedRoute, useValue: { snapshot: { paramMap: {} } } },
+        provideHttpClient()
+    ]
 }).compileComponents();
   });
 
