@@ -31,15 +31,15 @@ export class CredentialProcedureService {
     return this.http.get<LearCredentialEmployeeDataDetail>(
       `${this.organizationProcedures}/${procedureId}/credential-decoded`
     ).pipe(
-      map(data => {
+      map(learCredentialEmployeeDataDetail => {
         // Normalize the vc part which is of type LEARCredentialEmployee
-        const normalizedVc = this.normalizer.normalizeLearCredential(data.credential.vc);
+        const normalizedLearCredentialEmployee = this.normalizer.normalizeLearCredential(learCredentialEmployeeDataDetail.credential.vc);
         // Rebuild the object, keeping the rest intact
         return {
-          ...data,
+          ...learCredentialEmployeeDataDetail,
           credential: {
-            ...data.credential,
-            vc: normalizedVc
+            ...learCredentialEmployeeDataDetail.credential,
+            vc: normalizedLearCredentialEmployee
           }
         } as LearCredentialEmployeeDataDetail;
       }),

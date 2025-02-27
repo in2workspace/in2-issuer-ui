@@ -31,9 +31,8 @@ export class LEARCredentialEmployeeDataNormalizer {
     // Create a copy to avoid modifying the original object
     const normalizedData = { ...data };
 
-    if (
-      normalizedData.credentialSubject.mandate
-    ) {
+    if (normalizedData.credentialSubject.mandate) {
+
       const mandate = normalizedData.credentialSubject.mandate;
 
       if (mandate.mandatee) {
