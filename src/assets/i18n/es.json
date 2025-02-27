@@ -21,6 +21,18 @@
     "footer-license": "CC BY 4.0",
     "footer-privacy": "Política de Privacidad"
   },
+  "navbar": {
+      "menu": {
+        "logout": "Cerrar sesión",
+        "settings": "Configuración"
+      }
+  },
+  "sidenav": {
+    "settings": "Configuración",
+    "schemes": "Esquemas",
+    "signatures": "Firmas",
+    "trushFramework": "TF"
+  },
   "mandator": {
     "organizationid": "Número VAT de empresa",
     "organizationidHint": "Introduzca solo los caracteres de después de 'VAT-'.Por ejemplo, si el número completo es 'VAT-123ABC', introduzca '123ABC'",
@@ -142,10 +154,8 @@
       "credential_submission": "Ha ocurrido un error al crear la credencial.",
       "one_power_min":"Se requiere por lo menos un poder, y cada power requiere por los menos una acción.",
       "policy": {
-        "onboarding": {
           "title": "Acceso Denegado",
           "message": "No tienes los poderes necesarios para acceder."
-        }
       },
       "credentialOffer": {
         "invalid-url": "URL no válida. No se puede obtener la oferta de credencial.",

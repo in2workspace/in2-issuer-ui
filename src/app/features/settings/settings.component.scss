@@ -1,0 +1,17 @@
+.settings__container {
+  min-height: 90vh;
+}
+  
+.settings__sidenav-header {
+  text-align: center;
+}
+  
+.settings__nav-link--active {
+  font-weight: bold !important;
+  background-color: var(--Light-Blue-Secondary) !important;
+}
+
+.settings__nav-item {
+  display: flex;
+  gap: 0.5rem;
+}

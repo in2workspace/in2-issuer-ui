@@ -12,9 +12,23 @@
             <span id="username" class="username"> {{userName}} </span>
             <span id="organization" class="organization"> {{organization}} </span>
           </span>
-          <a id="logout-link" href="#" (click)="logout()"><mat-icon >exit_to_app</mat-icon></a>
+          <button mat-icon-button [matMenuTriggerFor]="menu" (menuOpened)="isMenuOpen = true" (menuClosed)="isMenuOpen = false" >
+            <mat-icon>{{ isMenuOpen ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            @if(isCredentialIssuerAndConfigure()){
+              <button mat-menu-item  [routerLink]="'/settings'">
+                <mat-icon>settings</mat-icon>
+                <span>{{ "navbar.menu.settings" | translate }}</span>
+              </button>
+            }
+            <button id="logout-link" (click)="logout()" mat-menu-item >
+              <mat-icon>exit_to_app</mat-icon>
+              <span>{{ "navbar.menu.logout" | translate }}</span>
+            </button>
+          </mat-menu>
         </span>
       </li>
-    </ul>
+    </ul>  
   </nav>
 </header>
