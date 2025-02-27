@@ -39,7 +39,7 @@
     "firstnameid": "First name",
     "last_name": "Last name",
     "email": "Email",
-    "mobile_phone": "Mobile phone"
+    "nationality": "Nationality"
   },
   "credentialDetail": {
     "credentialDetails": "Credential details",

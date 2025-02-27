@@ -39,7 +39,7 @@
     "firstnameid": "ID del nom",
     "last_name": "Cognoms",
     "email": "Adreça de correu",
-    "mobile_phone": "Telèfon mòbil"
+    "nationality": "Nacionalitat"
   },
   "credentialDetail": {
     "credentialDetail": "Detall de la credencial",

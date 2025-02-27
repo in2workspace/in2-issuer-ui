@@ -39,7 +39,7 @@
     "firstnameid": "ID del nombre",
     "last_name": "Apellidos",
     "email": "Dirección de correo",
-    "mobile_phone": "Teléfono móvil"
+    "nationality": "Nacionalidad"
   },
   "credentialDetail": {
     "credentialDetail": "Detalle de la credencial",
