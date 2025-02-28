@@ -5,7 +5,6 @@ import { CredentialOfferOnboardingComponent } from '../credential-offer-steps/cr
 import { Component, computed, DestroyRef, effect, inject, OnInit, Signal, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatButtonModule } from '@angular/material/button';
-import { NavbarComponent } from 'src/app/shared/components/navbar/navbar.component';
 import { QRCodeModule } from 'angularx-qrcode';
 import { MatIcon } from '@angular/material/icon';
 import { catchError, delayWhen, EMPTY, filter, interval, map, merge, Observable, of, scan, shareReplay, startWith, Subject, switchMap, take, takeUntil, tap, throwError, timer } from 'rxjs';
@@ -61,7 +60,6 @@ export const undefinedCredentialOfferParamsState: CredentialOfferParamsState = {
     MatIcon, 
     MatProgressSpinnerModule, 
     MatStepperModule, 
-    NavbarComponent, 
     QRCodeModule,
     TranslatePipe
     ],
