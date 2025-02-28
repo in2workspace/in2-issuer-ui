@@ -12,7 +12,7 @@ export const environment = {
   wallet_url_test: window["env"]["wallet_url_test"] || 'http://localhost:4200',
   knowledge:{
     base_url: window["env"]["knowledgebase_url"] || "https://knowledgebase.dome-marketplace-sbx.org/",
-    wallet_path: ["env"]["wallet_path"] || "books/dome-digital-wallet-user-guide"
+    wallet_path: ["env"]["knowledge_wallet_path"] || "books/dome-digital-wallet-user-guide"
   },
   profile: window["env"]["profile"] || "lcl", //values: 'lcl', 'sbx', 'test', 'production'
   procedures: window["env"]["procedures"] || '/api/v1/procedures',
