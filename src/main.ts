@@ -5,7 +5,7 @@ import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
 import { ServeErrorInterceptor } from './app/core/interceptors/server-error-interceptor';
-import { AuthInterceptor, AuthModule } from 'angular-auth-oidc-client';
+import { AuthInterceptor, AuthModule, LogLevel } from 'angular-auth-oidc-client';
 import { HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http';
 import { RouterModule } from "@angular/router";
 import { routes } from "./app/app-routing";
@@ -36,6 +36,7 @@ bootstrapApplication(AppComponent, {
                 historyCleanupOff: false,
                 ignoreNonceAfterRefresh: true,
                 triggerRefreshWhenIdTokenExpired: false,
+                logLevel: LogLevel.Debug,
                 secureRoutes: [environment.base_url]
             },
         })),

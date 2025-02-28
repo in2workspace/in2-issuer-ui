@@ -47,7 +47,8 @@ export class NavbarComponent implements OnInit {
     this.authService.logout()
       .pipe(take(1))
       .subscribe(() => {
-        this.router.navigate(['/home'], {});
+        localStorage.clear();
+        sessionStorage.clear();
       });
   }
 
