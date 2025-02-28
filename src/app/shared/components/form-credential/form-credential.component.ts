@@ -23,7 +23,6 @@ import { UnicodeValidatorDirective } from '../../directives/validators/unicode-v
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatError, MatPrefix } from '@angular/material/form-field';
 import { MatCard, MatCardContent } from '@angular/material/card';
-import { NavbarComponent } from '../navbar/navbar.component';
 import { DialogWrapperService } from '../dialog/dialog-wrapper/dialog-wrapper.service';
 import { DialogData } from '../dialog/dialog.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -53,7 +52,6 @@ import { MatIcon } from '@angular/material/icon';
       MatSelect,
       MatSelectTrigger,
       MaxLengthDirective,
-      NavbarComponent,
       NgFor,
       NgIf,
       NgStyle,

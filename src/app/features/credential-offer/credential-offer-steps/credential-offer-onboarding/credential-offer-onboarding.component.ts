@@ -13,7 +13,7 @@ import { UpperCasePipe } from '@angular/common';
 })
 export class CredentialOfferOnboardingComponent{
   public qrColor = "#2d58a7";
-  public walletUsersGuideUrl = environment.knowledgebase_url + "books/dome-digital-wallet-user-guide";
+  public walletUsersGuideUrl = environment.knowledge.base_url + environment.knowledge.wallet_path;
   
   public walletUrl = environment.wallet_url || 'https://wallet.dome-marketplace-prd.org/';
   public walletTestUrl = environment.wallet_url_test || 'https://wallet.dome-marketplace-prd.org/';

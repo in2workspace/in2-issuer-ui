@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
 import { CredentialOfferComponent } from './credential-offer.component';
-import { NavbarComponent } from 'src/app/shared/components/navbar/navbar.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { QRCodeModule } from 'angularx-qrcode';
 import { NgIf } from '@angular/common';
@@ -11,7 +10,7 @@ describe('CredentialOfferComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [NavbarComponent, NgIf, QRCodeModule, TranslateModule.forRoot(), CredentialOfferComponent],
+      imports: [ NgIf, QRCodeModule, TranslateModule.forRoot(), CredentialOfferComponent],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(CredentialOfferComponent);
@@ -27,7 +26,7 @@ describe('CredentialOfferComponent', () => {
   });
 
   it('should initialize walletUsersGuideUrl with the correct value from the environment', () => {
-    const expectedGuideUrl = environment.knowledgebase_url + 'books/dome-digital-wallet-user-guide';
+    const expectedGuideUrl = environment.knowledge.base_url + 'books/dome-digital-wallet-user-guide';
     expect(component.walletUsersGuideUrl).toBe(expectedGuideUrl);
   });
 

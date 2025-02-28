@@ -14,7 +14,7 @@ import { environment } from 'src/environments/environment';
 export class CredentialOfferComponent{
   @Output() public refreshCredential = new EventEmitter<void>();
   public qrColor = "#2d58a7";
-  public walletUsersGuideUrl = environment.knowledgebase_url + "books/dome-digital-wallet-user-guide";
+  public walletUsersGuideUrl = environment.knowledge.base_url + environment.knowledge.wallet_path;
   public credentialOfferUri$ = input.required<string>();
 
   public readonly walletSameDeviceUrl = environment.wallet_url + 'tabs/home/';

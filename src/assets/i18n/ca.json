@@ -77,7 +77,7 @@
     "second-assistance": " per a més assistència.",
     "wallet-guide": "Guia d'Usuaris del Wallet",
     "expired-title": "Expiració d'oferta de credencial",
-    "ask-refresh": "L'oferta està a punt d'expirar. Vols refrescar-la o sortir?",
+    "ask-refresh": "L'oferta de credencial està a punt d'expirar. Vols refrescar-la o sortir? Si expira, n'hauràs de demanar una altra al teu representant legal.",
     "remaining-time": "Temps restant:",
     "first-step": {
       "title": "Escaneja el codi QR per iniciar sessió i accedir al Wallet de DOME.",

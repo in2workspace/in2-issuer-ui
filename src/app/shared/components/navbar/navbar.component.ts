@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { MatIcon } from '@angular/material/icon';
@@ -24,7 +24,6 @@ export class NavbarComponent implements OnInit {
 
   private readonly translate = inject(TranslateService);
   private readonly authService = inject(AuthService);
-  private readonly router = inject(Router);
   
   public ngOnInit() {
     this.authService.getMandator()
@@ -47,7 +46,7 @@ export class NavbarComponent implements OnInit {
     this.authService.logout()
       .pipe(take(1))
       .subscribe(() => {
-        this.router.navigate(['/home'], {});
+        sessionStorage.clear();
       });
   }
 

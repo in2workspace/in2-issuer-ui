@@ -9,7 +9,6 @@ import { CredentialProcedure, ProcedureResponse } from "../../core/models/dto/pr
 import { TranslatePipe } from '@ngx-translate/core';
 import { NgClass, DatePipe } from '@angular/common';
 import { MatButton, MatButtonModule } from '@angular/material/button';
-import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { debounceTime, Subject, take } from 'rxjs';
@@ -23,7 +22,6 @@ import { MatIcon } from '@angular/material/icon';
     styleUrls: ['./credential-management.component.scss'],
     standalone: true,
     imports: [
-        NavbarComponent,
         MatButton,
         MatButtonModule,
         MatTable,
