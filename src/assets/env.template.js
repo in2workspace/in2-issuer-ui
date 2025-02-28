@@ -10,6 +10,7 @@
   window["env"]["wallet_url"] = "${WALLET_URL}";
   window["env"]["wallet_url_test"] = "${WALLET_URL_TEST}";
   window["env"]["knowledgebase_url"] = "${KNOWLEDGEBASE_URL}";
+  window["env"]["wallet_path"] = "${WALLET_PATH}";
   window["env"]["profile"] = "${PROFILE}"; //values: 'lcl', 'sbx', 'test', 'production'
   window["env"]["procedures"] = "${PROCEDURES}";
   window["env"]["save_credential"] = "${SAVE_CREDENTIAL}";
