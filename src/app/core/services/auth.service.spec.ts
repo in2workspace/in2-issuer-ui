@@ -58,7 +58,6 @@ describe('AuthService', () => {
 
   it('should call logoffAndRevokeTokens and clear sessionStorage when logout is called', () => {
     service.logout();
-    // expect(sessionStorage.clear).toHaveBeenCalled();
     expect(oidcSecurityService.logoffAndRevokeTokens).toHaveBeenCalled();
   });
 

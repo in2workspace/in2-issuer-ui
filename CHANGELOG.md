@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-<!-- ## [1.7.1](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.7.1)
+## [1.7.1](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.7.1)
 ### Added
 - When leaving credential offer stepper (after clicking "Leave" on refresh popup) and being redirected to home, show warning popup.
 - Environment variable for knowledge wallet.
@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - In Mandator, remove placeholders 
 - Restructuring the navbar.
 ### Fixed
-- After logout, if the user tries to access the dashboard again, it redirects them back to the login. -->
+- After logout, if the user tries to access the dashboard again, it redirects them back to the login.
 
 ## [1.7.0](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.7.0)
 ### Added
