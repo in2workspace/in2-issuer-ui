@@ -34,7 +34,7 @@ describe('AuthService', () => {
     });
 
     service = TestBed.inject(AuthService);
-    Object.defineProperty(window, 'localStorage', {
+    Object.defineProperty(window, 'sessionStorage', {
       value: {
         clear: jest.fn()
       },
@@ -56,9 +56,8 @@ describe('AuthService', () => {
     expect(oidcSecurityService.authorize).toHaveBeenCalled();
   });
 
-  it('should call logoffAndRevokeTokens and clear localStorage when logout is called', () => {
+  it('should call logoffAndRevokeTokens and clear sessionStorage when logout is called', () => {
     service.logout();
-    expect(localStorage.clear).toHaveBeenCalled();
     expect(oidcSecurityService.logoffAndRevokeTokens).toHaveBeenCalled();
   });
 

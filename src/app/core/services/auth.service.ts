@@ -167,7 +167,6 @@ export class AuthService {
   }
 
   public logout() {
-    localStorage.clear();
     return this.oidcSecurityService.logoffAndRevokeTokens();
   }
 

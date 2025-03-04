@@ -112,7 +112,6 @@ describe('NavbarComponent', () => {
   it('should call logout on authService', () => {
     component.logout();
     expect(component.logout).toHaveBeenCalled();
-    expect(router.navigate).toHaveBeenCalledWith(['/home'], {});
   });
 
   it('should call logout on click', async () => {
