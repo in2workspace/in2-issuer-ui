@@ -50,7 +50,6 @@ import { MatIcon } from '@angular/material/icon';
     MatProgressSpinnerModule,
     MatSelect,
     MaxLengthDirective,
-    NavbarComponent,
     NgIf,
     NgTemplateOutlet,
     OrganizationIdentifierValidatorDirective,
