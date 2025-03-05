@@ -1,5 +1,5 @@
 import { AutoLoginPartialRoutesGuard } from 'angular-auth-oidc-client';
-import { OnboardingPolicy } from './core/policies/onboarding-policy';
+import { OnboardingPolicy, SettingsPolicy } from './core/policies/power-policies';
 import { routes } from "./app-routing";
 
 describe('App Routes', () => {
@@ -36,10 +36,18 @@ describe('App Routes', () => {
     expect(createCredRoute).toBeTruthy();
     expect(createCredRoute?.loadChildren).toBeDefined();
   });
-
+  it('should define lazy loading for settings with guards', () => {
+    const settingsRoute = routes.find((route) => route.path === 'settings');
+    expect(settingsRoute).toBeTruthy();
+    expect(settingsRoute?.loadChildren).toBeDefined();
+    expect(settingsRoute?.canActivate).toContain(AutoLoginPartialRoutesGuard);
+    expect(settingsRoute?.canActivate).toContain(SettingsPolicy);
+  });
   it('should redirect wildcard (**) to home', () => {
     const wildcardRoute = routes.find((route) => route.path === '**');
     expect(wildcardRoute).toBeTruthy();
     expect(wildcardRoute?.redirectTo).toBe('home');
   });
+
+
 });

@@ -1,17 +1,21 @@
 import { Component, inject } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet, NavigationEnd  } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { environment } from 'src/environments/environment';
+import { NavbarComponent } from '../app/shared/components/navbar/navbar.component';
+
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
     standalone: true,
-    imports: [RouterOutlet]
+    imports: [RouterOutlet, NavbarComponent]
 })
 export class AppComponent {
 public title = 'Credential-issuer-ui';
 private readonly translate = inject(TranslateService);
+public showNavbar = true;
+private readonly router= inject(Router)
 
 public constructor(){
     const lang = 'en';
@@ -34,5 +38,10 @@ public constructor(){
     if (link_favicon) {
       link_favicon.href = environment.customizations.favicon_src;
     }
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.showNavbar = !event.urlAfterRedirects.startsWith('/home');
+      }
+    });
  }
 }

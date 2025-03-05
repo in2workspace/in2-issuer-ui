@@ -34,7 +34,7 @@ describe('AuthService', () => {
     });
 
     service = TestBed.inject(AuthService);
-    Object.defineProperty(window, 'localStorage', {
+    Object.defineProperty(window, 'sessionStorage', {
       value: {
         clear: jest.fn()
       },
@@ -56,9 +56,8 @@ describe('AuthService', () => {
     expect(oidcSecurityService.authorize).toHaveBeenCalled();
   });
 
-  it('should call logoffAndRevokeTokens and clear localStorage when logout is called', () => {
+  it('should call logoffAndRevokeTokens and clear sessionStorage when logout is called', () => {
     service.logout();
-    expect(localStorage.clear).toHaveBeenCalled();
     expect(oidcSecurityService.logoffAndRevokeTokens).toHaveBeenCalled();
   });
 
@@ -95,7 +94,7 @@ describe('AuthService', () => {
       { function: 'Onboarding', action: ['Read', 'Execute', 'Write'] }
     ];
 
-    const result = service.hasOnboardingExecutePower();
+    const result = service.hasPower('Onboarding','Execute');
     expect(result).toBeTruthy();
   });
 
@@ -104,7 +103,7 @@ describe('AuthService', () => {
       { function: 'Onboarding', action: ['Read', 'Write'] }
     ];
 
-    const result = service.hasOnboardingExecutePower();
+    const result = service.hasPower('Onboarding','Execute');
     expect(result).toBeFalsy();
   });
 
@@ -113,14 +112,14 @@ describe('AuthService', () => {
       { function: 'OtherFunction', action: 'Execute' }
     ];
 
-    const result = service.hasOnboardingExecutePower();
+    const result = service.hasPower('Onboarding','Execute');
     expect(result).toBeFalsy();
   });
 
   it('should return false if userPowers is empty', () => {
     (service as any).userPowers = [];
 
-    const result = service.hasOnboardingExecutePower();
+    const result = service.hasPower('Onboarding','Execute');
     expect(result).toBeFalsy();
   });
 

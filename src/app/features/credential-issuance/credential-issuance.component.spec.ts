@@ -1,16 +1,15 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { of } from 'rxjs';
 import { CredentialIssuanceComponent } from './credential-issuance.component';
-import { RouterModule, ActivatedRoute } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { RouterModule, ActivatedRoute, convertToParamMap } from '@angular/router';
+import { TranslateModule, TranslateService} from '@ngx-translate/core';
 import { OidcSecurityService, StsConfigLoader } from "angular-auth-oidc-client";
 import { AuthService } from "../../core/services/auth.service";
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { convertToParamMap } from '@angular/router';
 
-global.structuredClone = (obj: any) => JSON.parse(JSON.stringify(obj));
+(globalThis as any).structuredClone = (obj: any) => JSON.parse(JSON.stringify(obj));
 
 describe('CredentialIssuanceComponent', () => {
   let component: CredentialIssuanceComponent;
@@ -47,22 +46,20 @@ describe('CredentialIssuanceComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      imports: [
-        BrowserAnimationsModule,
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    imports: [BrowserAnimationsModule,
         RouterModule.forRoot([]),
-        HttpClientModule,
         TranslateModule.forRoot({}),
-        CredentialIssuanceComponent
-      ],
-      providers: [
+        CredentialIssuanceComponent],
+    providers: [
         TranslateService,
         AuthService,
         { provide: OidcSecurityService, useValue: oidcSecurityService },
         { provide: StsConfigLoader, useValue: configService },
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
-      ],
-    }).compileComponents();
+        provideHttpClient(),
+    ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(CredentialIssuanceComponent);
     component = fixture.componentInstance;

@@ -1,6 +1,6 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { of, throwError } from 'rxjs';
 import { CredentialDetailComponent } from './credential-detail.component';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -143,14 +143,15 @@ describe('CredentialDetailComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-    imports: [BrowserAnimationsModule, HttpClientModule, TranslateModule.forRoot({}), CredentialDetailComponent],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+    imports: [BrowserAnimationsModule, TranslateModule.forRoot({}), CredentialDetailComponent],
     providers: [
         AuthService,
-      { provide: OidcSecurityService, useValue: oidcSecurityService },
-      { provide: StsConfigLoader, useValue: configService },
+        { provide: OidcSecurityService, useValue: oidcSecurityService },
+        { provide: StsConfigLoader, useValue: configService },
         TranslateService,
         { provide: Router, useValue: router },
-        { provide: DialogWrapperService, useValue: dialogService},
+        { provide: DialogWrapperService, useValue: dialogService },
         { provide: CredentialProcedureService, useValue: mockCredentialProcedureService },
         {
             provide: ActivatedRoute,
@@ -160,8 +161,8 @@ describe('CredentialDetailComponent', () => {
                 }),
             },
         },
-    ],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
+        provideHttpClient(),
+    ]
 })
 .overrideComponent(CredentialDetailComponent, {
   remove: { imports: [ FormCredentialComponent] },

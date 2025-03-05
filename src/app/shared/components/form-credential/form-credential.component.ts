@@ -1,14 +1,4 @@
-import {
-  Component,
-  DestroyRef,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-  ViewChild,
-  inject
-} from '@angular/core';
+import { Component, DestroyRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, inject} from '@angular/core';
 import { FormGroupDirective, FormsModule } from '@angular/forms';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { Country, CountryService } from './services/country.service';
@@ -33,7 +23,6 @@ import { UnicodeValidatorDirective } from '../../directives/validators/unicode-v
 import { MatInput } from '@angular/material/input';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 import { MatCard, MatCardContent } from '@angular/material/card';
-import { NavbarComponent } from '../navbar/navbar.component';
 import { DialogWrapperService } from '../dialog/dialog-wrapper/dialog-wrapper.service';
 import { DialogData } from '../dialog/dialog.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -104,7 +93,7 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
   private readonly dialog = inject(DialogWrapperService);
   private readonly loader = inject(LoaderService);
 
-  public constructor() {
+  public constructor(){
     this.countries = this.countryService.getSortedCountries();
     this.addedPowers$ = this.formService.getAddedPowers();
     this.hasIn2OrganizationId = this.authService.hasIn2OrganizationIdentifier();

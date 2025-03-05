@@ -1,18 +1,19 @@
-import {TestBed} from '@angular/core/testing';
-import {FormCredentialService, isCertification, isProductOffering} from './form-credential.service';
-import {BehaviorSubject, of, throwError} from 'rxjs';
-import {TranslateModule, TranslateService} from '@ngx-translate/core';
-import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {MatPaginatorModule} from '@angular/material/paginator';
-import {MatTableModule} from '@angular/material/table';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {RouterModule} from '@angular/router';
-import {AuthModule} from 'angular-auth-oidc-client';
-import {Mandatee, Mandator, Power, Signer} from "../../../../core/models/entity/lear-credential-employee.entity";
-import {TempPower} from "../../../../core/models/temporal/temp-power.interface";
-import {Country} from './country.service';
+import { TestBed } from '@angular/core/testing';
+import { FormCredentialService, isCertification, isProductOffering } from './form-credential.service';
+import { BehaviorSubject, of, throwError } from 'rxjs';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterModule } from '@angular/router';
+import { AuthModule } from 'angular-auth-oidc-client';
+import { Mandatee, Mandator, Power, Signer } from "../../../../core/models/entity/lear-credential-employee.entity";
+import { TempPower } from "../../../../core/models/temporal/temp-power.interface";
+import { Country } from './country.service';
+import { provideHttpClient } from '@angular/common/http';
 
-global.structuredClone = (obj: any) => JSON.parse(JSON.stringify(obj));
+(globalThis as any).structuredClone = (obj: any) => JSON.parse(JSON.stringify(obj));
 
 describe('FormCredentialService', () => {
   let service: FormCredentialService;
@@ -26,20 +27,19 @@ describe('FormCredentialService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        FormCredentialService,
-        TranslateService,
-      ],
-      imports: [
-        MatTableModule,
+    imports: [MatTableModule,
         MatPaginatorModule,
-        HttpClientTestingModule,
         BrowserAnimationsModule,
         RouterModule.forRoot([]),
         TranslateModule.forRoot({}),
-        AuthModule.forRoot({ config: {} }),
-      ],
-    });
+        AuthModule.forRoot({ config: {} })],
+    providers: [
+        FormCredentialService,
+        TranslateService,
+        provideHttpClient(),
+        provideHttpClientTesting(),
+    ]
+});
     service = TestBed.inject(FormCredentialService);
     // popupComponent = TestBed.inject(PopupComponent);
     credentialProcedureService = {

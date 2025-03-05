@@ -74,12 +74,11 @@ export class AuthService {
     }));
   }
 
-  // POLICY: login_restriction_policy
-  public hasOnboardingExecutePower(): boolean {
+  public hasPower(tmfFunction: string, tmfAction: string): boolean {
     return this.userPowers.some((power: Power) => {
-      if (power.function === "Onboarding") {
+      if (power.function === tmfFunction) {
         const action = power.action;
-        return action === "Execute" || (Array.isArray(action) && action.includes("Execute"));
+        return action === tmfAction || (Array.isArray(action) && action.includes(tmfAction));
       }
       return false;
     });
@@ -114,9 +113,9 @@ export class AuthService {
 
           const learCredential = this.extractVCFromUserData(userData);
           const normalizedCredential = this.normalizer.normalizeLearCredential(learCredential);
-          this.userPowers = this.extractUserPowers(normalizedCredential);
 
-          const hasOnboardingPower = this.hasOnboardingExecutePower();
+          this.userPowers = this.extractUserPowers(normalizedCredential);
+          const hasOnboardingPower = this.hasPower('Onboarding','Execute');
 
           if (!hasOnboardingPower) {
             this.logout();
@@ -130,9 +129,7 @@ export class AuthService {
       });
   }
 
-
   public logout() {
-    localStorage.clear();
     return this.oidcSecurityService.logoffAndRevokeTokens();
   }
 

@@ -5,7 +5,7 @@
   position: relative;
   top: 0;
   background: var(--primary-custom-color);
-  padding: 1.5rem 0;
+  padding: 1.1rem 0;
   margin-top: 0;
   width: 100%;
 
@@ -65,19 +65,19 @@
               font-size: 12px;
             }
           }
-
           mat-icon {
             color: var(--primary-contrast-custom-color);
-            margin-right: 0.5rem;
-            margin-left: 1rem;
           }
-
+          
         }
       }
     }
   }
 }
 
+.mat-mdc-menu-item  {
+  padding-right: 2rem !important ;
+}
 @media(width < 768px){
   .main-header{
     .navbar{

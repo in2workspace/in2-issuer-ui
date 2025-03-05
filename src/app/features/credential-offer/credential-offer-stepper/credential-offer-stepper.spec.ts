@@ -1,6 +1,6 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
+import { provideHttpClient, HttpErrorResponse } from '@angular/common/http';
 import { BehaviorSubject, of, throwError } from 'rxjs';
 import { RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -13,7 +13,7 @@ import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { HomeComponent } from '../../home/home.component';
 import { TemplatePortal } from '@angular/cdk/portal';
 
-global.structuredClone = (obj: any) => JSON.parse(JSON.stringify(obj));
+(globalThis as any).structuredClone = (obj: any) => JSON.parse(JSON.stringify(obj));
 
 
 describe('Credential Offer Stepper', () => {
@@ -53,16 +53,17 @@ describe('Credential Offer Stepper', () => {
 
     await TestBed.configureTestingModule({
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    imports: [BrowserAnimationsModule, RouterModule.forRoot([{ path: 'home', component: HomeComponent }]), HttpClientModule, TranslateModule.forRoot({}), CredentialOfferStepperComponent, HomeComponent],
+    imports: [BrowserAnimationsModule, RouterModule.forRoot([{ path: 'home', component: HomeComponent }]), TranslateModule.forRoot({}), CredentialOfferStepperComponent, HomeComponent],
     providers: [
-      AuthService,
-      BreakpointObserver,
-      // { provide: TranslateService, useValue: translate },
-      TranslateService,
-      { provide: OidcSecurityService, useValue: oidcSecurityService },
-      { provide: StsConfigLoader, useValue: configService },
-      { provide: CredentialProcedureService, useValue: procedureService }
-    ],
+        AuthService,
+        BreakpointObserver,
+        // { provide: TranslateService, useValue: translate },
+        TranslateService,
+        { provide: OidcSecurityService, useValue: oidcSecurityService },
+        { provide: StsConfigLoader, useValue: configService },
+        { provide: CredentialProcedureService, useValue: procedureService },
+        provideHttpClient()
+    ]
 }).compileComponents();
 
     fixture = TestBed.createComponent(CredentialOfferStepperComponent);
@@ -786,6 +787,101 @@ it('should navigate when c_transaction_code is provided', () => {
     setTimeout(()=>{
       expect(routerSpy).toHaveBeenCalledWith(['/home']);
     }, 1000);
+  });
+
+  it('should navigate to home and open VC-expired popup', ()=>{
+    const redirectSpy = jest.spyOn(component, 'redirectToHome');
+    const dialogOpenSpy = jest.spyOn(component['dialog'], 'openErrorInfoDialog');
+    const message = component['translate'].instant("error.credentialOffer.expired");
+
+    component.redirectToHomeAndShowErrorDialog(message);
+
+    expect(redirectSpy).toHaveBeenCalled();
+    expect(dialogOpenSpy).toHaveBeenCalled();
+    expect(dialogOpenSpy).toHaveBeenCalledWith(message);
+  });
+
+  
+  describe('openRefreshPopupEffect', () => {
+    let openDialogSpy: jest.SpyInstance;
+    let redirectSpy: jest.SpyInstance;
+    let consoleErrorSpy: jest.SpyInstance;
+
+    const dialogWrapperServiceMock = {
+      openDialogWithCallback: jest.fn(),
+      openErrorInfoDialog: jest.fn(),
+      dialog: {
+        closeAll: jest.fn()
+      }
+    };
+
+    beforeEach(() => {
+      openDialogSpy = jest.spyOn(dialogWrapperServiceMock, 'openDialogWithCallback');
+      redirectSpy = jest.spyOn(component as any, 'redirectToHomeAndShowErrorDialog');
+      consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+  
+    it('should not execute cancel callback when afterClosed emits true', fakeAsync(() => {
+      (component as any).startOrEndFirstCountdown$ = of('END');
+      const fakeDialogRef = { afterClosed: jest.fn(() => of(true)) };
+      openDialogSpy.mockReturnValue(fakeDialogRef as any);
+  
+      (component as any).openRefreshPopupEffect.subscribe();
+      tick();
+  
+      expect(redirectSpy).not.toHaveBeenCalled();
+    }));
+
+  
+    it('should not execute cancel callback when afterClosed emits true', fakeAsync(() => {
+      Object.defineProperty(component, 'startOrEndFirstCountdown$', { get: () => of('END') });
+      const fakeDialogRef = { afterClosed: jest.fn(() => of(true)) };
+      openDialogSpy.mockReturnValue(fakeDialogRef as any);
+
+      component['openRefreshPopupEffect'].subscribe();
+      tick();
+
+      expect(redirectSpy).not.toHaveBeenCalled();
+    }));
+
+    it('should handle error from afterClosed observable', fakeAsync(() => {
+      Object.defineProperty(component, 'startOrEndFirstCountdown$', { get: () => of('END') });
+      const fakeDialogRef = { afterClosed: jest.fn(() => throwError(() => new Error('Test error'))) };
+      openDialogSpy.mockReturnValue(fakeDialogRef as any);
+
+      component['openRefreshPopupEffect'].subscribe({
+        error: () => {} 
+      });
+      tick();
+
+      expect(consoleErrorSpy).toHaveBeenCalled();
+    }));
+
+    it('should execute cancel callback when afterClosed emits false', fakeAsync(() => {
+      Object.defineProperty(component, 'startOrEndFirstCountdown$', { get: () => of('END') });
+    
+      const redirectSpy = jest.spyOn(component as any, 'redirectToHomeAndShowErrorDialog');
+      const fakeDialogRef = { afterClosed: jest.fn(() => of(false)) };
+      openDialogSpy.mockReturnValue(fakeDialogRef as any);
+    
+      component['openRefreshPopupEffect'].subscribe(() => {
+        expect(redirectSpy).toHaveBeenCalledWith("error.credentialOffer.expired");
+      });
+    
+      tick();
+    }));
+
+  });
+
+  it('should emit on destroy$$ when ngOnDestroy is called', () => {
+    const destroySpy = jest.fn();
+    component.destroy$$.subscribe(destroySpy);
+    (component as any).ngOnDestroy();
+    expect(destroySpy).toHaveBeenCalled();
   });
   
 
