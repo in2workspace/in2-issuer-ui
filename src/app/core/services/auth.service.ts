@@ -41,13 +41,8 @@ export class AuthService {
 
       if (isAuthenticated) {
         this.userDataSubject.next(userData);
-
-        // Extract and normalize the VC using the normalizer class
-        const learCredential = this.extractVCFromUserData(userData);
-        const normalizedCredential = this.normalizer.normalizeLearCredential(learCredential);
-
-        this.userPowers = this.extractUserPowers(normalizedCredential);
-
+        console.log('user data:', userData)
+        const learCredential = this.extractVCFromUserData(userData)
 
         const mandator = {
           organizationIdentifier: normalizedCredential.credentialSubject.mandate.mandator.organizationIdentifier,
