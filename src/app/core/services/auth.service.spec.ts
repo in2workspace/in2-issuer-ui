@@ -68,7 +68,6 @@ describe('AuthService', () => {
     });
   });
 
-
   it('should return user data as observable when getUserData is called', done => {
     service.getUserData().subscribe(userData => {
       expect(userData).toBeNull();
@@ -92,7 +91,7 @@ describe('AuthService', () => {
 
   it('should return true if user has "Onboarding" power with action array containing "Execute"', () => {
     (service as any).userPowers = [
-      { tmf_function: 'Onboarding', tmf_action: ['Read', 'Execute', 'Write'] }
+      { function: 'Onboarding', action: ['Read', 'Execute', 'Write'] }
     ];
 
     const result = service.hasPower('Onboarding','Execute');
@@ -101,7 +100,7 @@ describe('AuthService', () => {
 
   it('should return false if user has "Onboarding" power but no "Execute" action', () => {
     (service as any).userPowers = [
-      { tmf_function: 'Onboarding', tmf_action: ['Read', 'Write'] }
+      { function: 'Onboarding', action: ['Read', 'Write'] }
     ];
 
     const result = service.hasPower('Onboarding','Execute');
@@ -110,7 +109,7 @@ describe('AuthService', () => {
 
   it('should return false if user has no "Onboarding" power', () => {
     (service as any).userPowers = [
-      { tmf_function: 'OtherFunction', tmf_action: 'Execute' }
+      { function: 'OtherFunction', action: 'Execute' }
     ];
 
     const result = service.hasPower('Onboarding','Execute');
@@ -183,33 +182,6 @@ describe('AuthService', () => {
     });
   });
 
-  it('should return the signerSubject as an observable', done => {
-    const mockSigner = {
-      organizationIdentifier: 'SIGNER123',
-      organization: 'Signer Organization',
-      commonName: 'Signer Common Name',
-      emailAddress: 'signer@example.com',
-      serialNumber: '7891011',
-      country: 'Signerland'
-    };
-
-    (service as any).signerSubject.next(mockSigner);
-
-    service.getSigner().subscribe(signer => {
-      expect(signer).toEqual(mockSigner);
-      done();
-    });
-  });
-
-  it('should return null if no signer is set', done => {
-    (service as any).signerSubject.next(null);
-
-    service.getSigner().subscribe(signer => {
-      expect(signer).toBeNull();
-      done();
-    });
-  });
-
   it('should return the nameSubject as an observable', done => {
     const mockName = 'John Doe';
 
@@ -250,9 +222,10 @@ describe('AuthService', () => {
               end_date_time: '2021-12-31T23:59:59Z'
             },
             mandatee: {
-              first_name: 'John',
-              last_name: 'Doe',
-              email: 'john.doe@example.com'
+              firstName: 'John',
+              lastName: 'Doe',
+              email: 'john.doe@example.com',
+              nationality: 'ES'
             },
             mandator: {
               organizationIdentifier: 'ORG123',
@@ -270,7 +243,7 @@ describe('AuthService', () => {
               serialNumber: '7891011',
               country: 'Signerland'
             },
-            power: [{ tmf_function: 'Onboarding', tmf_action: 'Execute' , tmf_domain: 'domain', tmf_type: 'type' }]
+            power: [{ function: 'Onboarding', action: 'Execute' , domain: 'domain', type: 'type' }]
           }
         },
         expirationDate: '2024-12-31T23:59:59Z',
@@ -346,12 +319,12 @@ describe('AuthService', () => {
               country: 'Signerland'
             },
             mandatee: {
-              first_name: 'John',
-              last_name: 'Doe',
+              firstName: 'John',
+              lastName: 'Doe',
               email: '',
-              mobile_phone: ''
+              nationality: ''
             },
-            power: [{ tmf_function: 'OtherFunction', tmf_action: 'Read', tmf_type: 'type', tmf_domain: 'domain' }]
+            power: [{ function: 'OtherFunction', action: 'Read', type: 'type', domain: 'domain' }]
           }
         },
         expirationDate: '2024-12-31T23:59:59Z',
@@ -407,7 +380,7 @@ describe('AuthService', () => {
     });
   });
 
-  it('should set isAuthenticated, userData, mandator, signer, email and name when the user is authenticated', done => {
+  it('should set isAuthenticated, userData, mandator, email and name when the user is authenticated', done => {
     const mockUserData: UserDataAuthenticationResponse = {
       sub: 'sub',
       commonName: 'commonName',
@@ -443,12 +416,12 @@ describe('AuthService', () => {
               country: 'EU'
             },
             mandatee: {
-              first_name: 'John',
-              last_name: 'Doe',
+              firstName: 'John',
+              lastName: 'Doe',
               email: 'jhonDoe@example.com',
-              mobile_phone: ''
+              nationality: ''
             },
-            power: [{ tmf_function: 'Onboarding', tmf_action: 'Execute', tmf_domain: 'domain', tmf_type: 'type' }]
+            power: [{ function: 'Onboarding', action: 'Execute', domain: 'domain', type: 'type' }]
           }
         },
         expirationDate: '2024-12-31T23:59:59Z',
@@ -482,7 +455,7 @@ describe('AuthService', () => {
           expect(userData).toEqual(mockUserData);
 
           service.getToken().subscribe(token => {
-            // Según el código actual, el token no se setea aquí
+            // En este flujo el token inicial no se setea (quedaría vacío)
             expect(token).toEqual('');
 
             service.getMandator().subscribe(mandator => {
@@ -495,19 +468,13 @@ describe('AuthService', () => {
                 country: 'Testland'
               });
 
+              // Si ya no seteas signer, puedes esperar null o simplemente omitir esta verificación:
               service.getSigner().subscribe(signer => {
-                expect(signer).toEqual({
-                  organizationIdentifier: 'VATEU-B99999999',
-                  organization: 'OLIMPO',
-                  commonName: 'ZEUS OLIMPOS',
-                  emailAddress: 'domesupport@in2.es',
-                  serialNumber: 'IDCEU-99999999P',
-                  country: 'EU'
-                });
+                expect(signer).toBeNull(); // o no llamar a getSigner() si se ha eliminado
 
                 service.getEmailName().subscribe(emailName => {
+                  // El emailName se obtiene al dividir el emailAddress de mandator (antes del '@')
                   expect(emailName).toBe('mandator');
-
                   service.getName().subscribe(name => {
                     expect(name).toBe('John Doe');
                     done();

@@ -1,5 +1,5 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { FormsModule, FormGroupDirective, FormGroup, FormControl } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { provideHttpClient } from '@angular/common/http';
 import { FormCredentialComponent } from './form-credential.component';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
@@ -15,17 +15,16 @@ import { CustomEmailValidatorDirective } from '../../directives/validators/custo
 import { UnicodeValidatorDirective } from '../../directives/validators/unicode-validator.directive';
 import { OrganizationNameValidatorDirective } from '../../directives/validators/organization-name.validator.directive';
 import { TempPower } from 'src/app/core/models/temporal/temp-power.interface';
-import { Power, Signer } from 'src/app/core/models/entity/lear-credential-employee.entity';
+import { Power } from 'src/app/core/models/entity/lear-credential-employee.entity';
 import { BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import { DialogWrapperService } from '../dialog/dialog-wrapper/dialog-wrapper.service';
 import { DialogData } from '../dialog/dialog.component';
-import { RouterTestingModule } from '@angular/router/testing';
 
 const mockTempPower: TempPower = {
-  tmf_action: 'action1',
-  tmf_domain: 'domain1',
-  tmf_function: 'function1',
-  tmf_type: 'type1',
+  action: 'action1',
+  domain: 'domain1',
+  function: 'function1',
+  type: 'type1',
   execute: true,
   create: false,
   update: false,
@@ -34,8 +33,8 @@ const mockTempPower: TempPower = {
   attest: true
 };
 const mockPowers: Power[] = [
-  { tmf_action: 'action1', tmf_domain: 'domain1', tmf_function: 'function1', tmf_type: 'type1' },
-  { tmf_action: 'action2', tmf_domain: 'domain2', tmf_function: 'function2', tmf_type: 'type2' }
+  { action: 'action1', domain: 'domain1', function: 'function1', type: 'type1' },
+  { action: 'action2', domain: 'domain2', function: 'function2', type: 'type2' }
 ];
 const countries: any[] = [
   {name:'Spain'},
@@ -49,14 +48,6 @@ const sortedCountries: any[] = [
   {name:'Portugal'},
   {name:'Spain'}
 ];
-const mockSigner:Signer = {
-  'organizationIdentifier': 'orgId',
-  'organization': 'org',
-  'commonName':'common',
-  'emailAddress':'email',
-  'serialNumber':'serialNum',
-  'country':'EU'
-};
 
 describe('FormCredentialComponent', () => {
   let component: FormCredentialComponent;
@@ -74,35 +65,29 @@ describe('FormCredentialComponent', () => {
     navigate: jest.Mock;
   };
   let mockFormCredentialService: {
-    addPower: jest.Mock<any>,
-    handleSelectChange: jest.Mock<any>,
-    submitCredential: jest.Mock<any>,
-    reset: jest.Mock<any>,
-    resetForm: jest.Mock<any>,
-    convertToTempPower: jest.Mock<any>,
-    checkTmfFunction: jest.Mock<any>,
-    getAddedPowers: jest.Mock<any>,
-    getPlainAddedPowers: jest.Mock<any>,
-    getSelectedPowerName: jest.Mock<any>,
-    getPlainSelectedPower: jest.Mock<any>,
-    setSelectedPowerName: jest.Mock<any>,
-    removePower: jest.Mock<any>,
-    checkIfPowerIsAdded: jest.Mock<any>,
-    powersHaveFunction: jest.Mock<any>,
-    hasSelectedPower: jest.Mock<any>,
-    getCountryNameFromIsoCode: jest.Mock<any>
-    getCountryPhoneFromIsoCountryCode: jest.Mock<any>,
-    getCountryFromName: jest.Mock<any>
+    addPower: jest.Mock,
+    handleSelectChange: jest.Mock,
+    submitCredential: jest.Mock,
+    reset: jest.Mock,
+    resetForm: jest.Mock,
+    convertToTempPower: jest.Mock,
+    checkTmfFunction: jest.Mock,
+    getAddedPowers: jest.Mock,
+    getPlainAddedPowers: jest.Mock,
+    getSelectedPowerName: jest.Mock,
+    getPlainSelectedPower: jest.Mock,
+    setSelectedPowerName: jest.Mock,
+    removePower: jest.Mock,
+    checkIfPowerIsAdded: jest.Mock,
+    powersHaveFunction: jest.Mock,
+    hasSelectedPower: jest.Mock,
+    getCountryNameFromIsoCode: jest.Mock
+    getCountryPhoneFromIsoCountryCode: jest.Mock,
+    getCountryFromName: jest.Mock
   };
 
   beforeEach(async () => {
-    let mockActivatedRoute = {
-      snapshot: {
-        paramMap: {
-          get: jest.fn().mockReturnValue(null)
-        }
-      }
-    };
+    jest.fn().mockReturnValue(null);
     mockCredentialProcedureService = {
     } as jest.Mocked<CredentialProcedureService>;
 
@@ -140,6 +125,7 @@ describe('FormCredentialComponent', () => {
       getCountryFromIsoCode: jest.fn(),
       getCountryFromName: jest.fn()
     };
+
     mockAuthService = {
       getMandator:()=> of(null),
       getEmailName() {
@@ -154,11 +140,8 @@ describe('FormCredentialComponent', () => {
       hasIn2OrganizationIdentifier(){
         return true
       },
-      getSigner(){
-        return of(mockSigner);
-      },
       hasPower: () => true
- 
+
     } as jest.Mocked<any>
 
     mockRouter = {
@@ -208,68 +191,6 @@ describe('FormCredentialComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('error matcher should return true if there is a mobile_phone and selectedCountryPrefix is missing or empty, and the mobile_phone control is dirty', () => {
-    const formGroup = new FormGroup({
-      mobile_phone: new FormControl('', { updateOn: 'change' })
-    });
-
-    const formDirective = {
-      form: formGroup
-    } as FormGroupDirective;
-
-    component.credential = { mobile_phone: '123456789' } as any;
-    component.selectedMandateeCountryIsoCode = '';
-
-    formGroup.controls['mobile_phone'].markAsDirty();
-
-    const isErrorState = component.countryErrorMatcher.isErrorState(
-      formGroup.controls['mobile_phone'],
-      formDirective
-    );
-
-    expect(isErrorState).toBe(true);
-  });
-
-  it('error matcher should return false if selectedCountryIsoCode is present', () => {
-    const formGroup = new FormGroup({
-      mobile_phone: new FormControl('', { updateOn: 'change' })
-    });
-
-    const formDirective = {
-      form: formGroup
-    } as FormGroupDirective;
-
-    component.credential = { mobile_phone: '123456789' } as any;
-    component.selectedMandateeCountryIsoCode = '+34';
-
-    const isErrorState = component.countryErrorMatcher.isErrorState(
-      formGroup.controls['mobile_phone'],
-      formDirective
-    );
-
-    expect(isErrorState).toBe(false);
-  });
-
-  it('error matcher should return false if mobile_phone control is not dirty', () => {
-    const formGroup = new FormGroup({
-      mobile_phone: new FormControl('', { updateOn: 'change' })
-    });
-
-    const formDirective = {
-      form: formGroup
-    } as FormGroupDirective;
-
-    component.credential = { mobile_phone: '123456789' } as any;
-    component.selectedMandateeCountryIsoCode = '';
-
-    const isErrorState = component.countryErrorMatcher.isErrorState(
-      formGroup.controls['mobile_phone'],
-      formDirective
-    );
-
-    expect(isErrorState).toBe(false);
-  });
-
   it('should get countries from service and sort them alphabetically', ()=>{
     component.ngOnInit();
     expect(mockCountryService.getSortedCountries).toHaveBeenCalled();
@@ -286,19 +207,7 @@ describe('FormCredentialComponent', () => {
     expect(component.hasIn2OrganizationId).toBe(true);
   });
 
-   it('should mark prefix and phone number as touched and dirty, respectively', ()=>{
-    const prefixControl = {control:{markAsTouched:jest.fn()}} as any;
-    const phoneControl = {control:{markAsDirty:jest.fn()}} as any;
-    const prefixSpy = jest.spyOn(prefixControl.control, 'markAsTouched');
-    const phoneSpy = jest.spyOn(phoneControl.control, 'markAsDirty');
-
-    component.markPrefixAndPhoneAsTouched(prefixControl, phoneControl);
-
-    expect(prefixSpy).toHaveBeenCalled();
-    expect(phoneSpy).toHaveBeenCalled();
-  });
-
-  it('should set mandator and signer correctly if mandator is returned', fakeAsync(() => {
+  it('should set mandator correctly if mandator is returned', fakeAsync(() => {
     const mockMandator = {
       organizationIdentifier: 'org123',
       organization: 'Org Name',
@@ -311,7 +220,6 @@ describe('FormCredentialComponent', () => {
     jest.spyOn(mockAuthService, 'hasIn2OrganizationIdentifier').mockReturnValue(false);
     jest.spyOn(mockAuthService, 'getMandator').mockReturnValue(of(mockMandator));
     component.viewMode='create';
-    component.asSigner=false;
 
     component.ngOnInit();
     fixture.detectChanges();
@@ -325,12 +233,11 @@ describe('FormCredentialComponent', () => {
       serialNumber: mockMandator.serialNumber,
       country: mockMandator.country,
     });
-    expect(component.signer).toEqual(mockSigner);
     expect(component.asSigner).toBe(false);
   }));
 
 
-  it('should not add mandator nor signer if mandator is null', ()=>{
+  it('should not add mandator if mandator is null', ()=>{
     component.ngOnInit();
     expect(component.mandator.commonName).toBe('');
     expect(component.mandator.country).toBe('');
@@ -339,14 +246,6 @@ describe('FormCredentialComponent', () => {
     expect(component.mandator.organizationIdentifier).toBe('');
     expect(component.mandator.serialNumber).toBe('');
 
-    expect(component.signer).toEqual({
-      organizationIdentifier: '',
-      organization: '',
-      commonName: '',
-      emailAddress: '',
-      serialNumber: '',
-      country: ''
-    });
   });
 
   it('should map power to tempPowers if viewMode is "detail"', () => {
@@ -368,16 +267,6 @@ describe('FormCredentialComponent', () => {
 
     expect(component.tempPowers).toEqual([]);
     expect(mockFormCredentialService.convertToTempPower).not.toHaveBeenCalled();
-  });
-
-  it('should get country name from iso code', ()=>{
-    component.getCountryNameFromIsoCode('any');
-    expect(mockCountryService.getCountryNameFromIsoCountryCode).toHaveBeenCalledWith('any');
-  });
-
-  it('should get country phone prefix from iso code', ()=>{
-    component.getCountryPhoneFromIsoCountryCode('any');
-    expect(mockCountryService.getCountryPhoneFromIsoCountryCode).toHaveBeenCalledWith('any');
   });
 
   it('should check if there is selected power', ()=>{
@@ -431,28 +320,26 @@ describe('FormCredentialComponent', () => {
         message: ''
       }
     };
-  
+
     jest.spyOn(component, 'submitCredential').mockReturnValue(of('Submitted'));
-  
+
     component.openSubmitDialog();
-  
+
     expect(dialogService.openDialogWithCallback).toHaveBeenCalledWith(
       expect.objectContaining(dialogData),
       expect.any(Function)
     );
-  
+
     const [, callbackFn] = dialogService.openDialogWithCallback.mock.calls[0];
-  
+
     callbackFn().subscribe(() => {
       expect(component.submitCredential).toHaveBeenCalled();
     });
   });
-  
+
 
   it('it should submit credential when submitCredential is called with selected power', () => {
-    component.selectedMandateeCountryIsoCode = 'US';
     component.asSigner = false;
-    mockCountryService.getCountryFromIsoCode.mockReturnValue('States');
     mockFormCredentialService.hasSelectedPower.mockReturnValue(true);
     mockFormCredentialService.powersHaveFunction.mockReturnValue(true);
     mockFormCredentialService.getPlainAddedPowers.mockReturnValue(mockPowers);
@@ -462,19 +349,15 @@ describe('FormCredentialComponent', () => {
     expect(mockFormCredentialService.submitCredential).toHaveBeenCalled();
     expect(mockFormCredentialService.submitCredential).toHaveBeenCalledWith(
       component.credential,
-      'States',
       undefined,
       mockPowers,
       component.mandator,
       component.addedMandatorLastName,
-      component.signer,
       mockCredentialProcedureService,
-      expect.any(Function)
     );
   });
 
   it('it should submit credential with selected mandator country if is Signer', () => {
-    mockCountryService.getCountryFromIsoCode.mockReturnValue('States');
     component.asSigner = true;
     mockCountryService.getCountryFromName.mockReturnValue('mandatorCountry');
     mockFormCredentialService.hasSelectedPower.mockReturnValue(true);
@@ -486,19 +369,15 @@ describe('FormCredentialComponent', () => {
     expect(mockFormCredentialService.submitCredential).toHaveBeenCalled();
     expect(mockFormCredentialService.submitCredential).toHaveBeenCalledWith(
       component.credential,
-      'States',
       'mandatorCountry',
       mockPowers,
       component.mandator,
       component.addedMandatorLastName,
-      component.signer,
       mockCredentialProcedureService,
-      expect.any(Function)
     );
   });
 
   it('it should not submit credential when submitCredential is called with no selected powers', () => {
-    component.selectedMandateeCountryIsoCode = 'US';
     mockFormCredentialService.hasSelectedPower.mockReturnValue(false);
     mockFormCredentialService.powersHaveFunction.mockReturnValue(true);
 
@@ -508,7 +387,6 @@ describe('FormCredentialComponent', () => {
   });
 
   it('it should not submit credential when submitCredential not all selected powers have selected functions', () => {
-    component.selectedMandateeCountryIsoCode = 'US';
     mockFormCredentialService.hasSelectedPower.mockReturnValue(true);
     mockFormCredentialService.powersHaveFunction.mockReturnValue(false);
 
@@ -518,18 +396,17 @@ describe('FormCredentialComponent', () => {
   });
 
   it('should navigate to credentials if submitting credential is successful and dialog data is correct', fakeAsync(() => {
-    mockCountryService.getCountryFromIsoCode.mockReturnValue('States');
     mockCountryService.getCountryFromName.mockReturnValue('mandatorCountry');
     const consoleErrorSpy = jest.spyOn(console, 'error');
-  
+
     component.asSigner = true;
     mockFormCredentialService.hasSelectedPower.mockReturnValue(true);
     mockFormCredentialService.powersHaveFunction.mockReturnValue(true);
-  
+
     jest.spyOn(mockFormCredentialService, 'submitCredential').mockReturnValue(of('Success'));
     const dialogAfterClosedMock = jest.fn().mockReturnValue(of(true));
     jest.spyOn(dialogService, 'openDialog').mockReturnValue({ afterClosed: dialogAfterClosedMock } as any);
-  
+
     Object.defineProperty(window, 'location', {
       value: {
         ...window.location,
@@ -537,23 +414,20 @@ describe('FormCredentialComponent', () => {
       },
       writable: true,
     });
-  
+
     jest.spyOn(mockRouter, 'navigate').mockResolvedValue(true);
-  
+
     const result = component.submitCredential();
     tick();
-  
+
     result.subscribe(() => {
       expect(mockFormCredentialService.submitCredential).toHaveBeenCalledWith(
         component.credential,
-        'States',
         'mandatorCountry',
         mockFormCredentialService.getPlainAddedPowers(),
         component.mandator,
         component.addedMandatorLastName,
-        component.signer,
         (component as any).credentialProcedureService,
-        expect.any(Function)
       );
 
       const expectedDialogData: DialogData = {
