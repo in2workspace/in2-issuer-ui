@@ -36,6 +36,7 @@ export class PoliciesService {
   }
 
   public checkSettingsPolicy(): Observable<boolean> {
+    
     return this.executePolicy('CredentialIssuer', 'Configure', '/organization/credentials');
   }
 }

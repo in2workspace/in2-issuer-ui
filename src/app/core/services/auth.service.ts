@@ -40,7 +40,7 @@ export class AuthService {
       if (isAuthenticated) {
         this.userPowers = this.extractUserPowers(userData);
         this.userDataSubject.next(userData);
-
+        console.log('user data:', userData)
         const learCredential = this.extractVCFromUserData(userData)
 
         const mandator = {

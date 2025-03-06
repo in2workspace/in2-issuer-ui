@@ -11,7 +11,7 @@ export const routes: Routes = [
   {
     path: 'settings',
     loadChildren: () => import('./features/settings/settings.routes').then(m => m.default),
-    canActivate: [AutoLoginPartialRoutesGuard, SettingsPolicy],
+    canActivate: [AutoLoginPartialRoutesGuard, SettingsPolicy, OnboardingPolicy],
   },
   {
     path: 'organization/credentials',
