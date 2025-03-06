@@ -72,7 +72,6 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
   @Input() public credentialStatus: string = '';
   @Input() public credential: Mandatee = this.initializeCredential();
   @Input() public mandator: OrganizationDetails = this.initializeOrganizationDetails();
-  public signer: OrganizationDetails = this.initializeOrganizationDetails();
   public isLoading$: Observable<boolean>;
 
   public addedPowers$: Observable<TempPower[]>;
@@ -114,18 +113,6 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
               country: mandator2.country
             };
           }
-          this.authService.getSigner()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(signer => {
-              this.signer = {
-                organizationIdentifier: signer?.organizationIdentifier ?? '',
-                organization: signer?.organization ?? '',
-                commonName: signer?.commonName ?? '',
-                emailAddress: signer?.emailAddress ?? '',
-                serialNumber: signer?.serialNumber ?? '',
-                country: signer?.country ?? ''
-              };
-            });
         }
       });
 
