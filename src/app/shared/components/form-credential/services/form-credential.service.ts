@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ProcedureRequest } from 'src/app/core/models/dto/procedure-request.dto';
 import { catchError } from 'rxjs/operators';
-import { Mandatee, Mandator, Power, Signer } from "../../../../core/models/entity/lear-credential-employee.entity";
+import { Mandatee, Mandator, Power } from "../../../../core/models/entity/lear-credential-employee.entity";
 import { Observable, BehaviorSubject } from 'rxjs';
 import { TempPower } from 'src/app/core/models/temporal/temp-power.interface';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
@@ -54,7 +54,7 @@ export class FormCredentialService {
   public removePower(optionToRemove:string){
     let currentAddedPowers = this.getPlainAddedPowers();
     currentAddedPowers = currentAddedPowers.filter(
-      (option) => option.tmf_function !== optionToRemove
+      (option) => option.function !== optionToRemove
     );
     this.setAddedPowers(currentAddedPowers);
   }
@@ -65,7 +65,7 @@ export class FormCredentialService {
   }
 
   public resetForm(): Mandatee {
-    return { first_name: '', last_name: '', email: '', mobile_phone: '' };
+    return { firstName: '', lastName: '', email: '', nationality: '' };
   }
 
   public handleSelectChange(event: Event): string {
@@ -75,28 +75,16 @@ export class FormCredentialService {
 
   public submitCredential(
     credential: Mandatee,
-    selectedMandateeCountry: Country | undefined,
     selectedMandatorCountry: Country | undefined,
     addedPowers: TempPower[],
     mandator: Mandator,
     mandatorLastName: string,
-    signer: Signer,
-    credentialProcedureService: CredentialProcedureService,
-    resetForm: () => void
+    credentialProcedureService: CredentialProcedureService
   ): Observable<void> {
 
     const credentialToSubmit = { ...credential };
     let mandatorToSubmit = structuredClone(mandator);
 
-    //Prepare mandatee
-    if(selectedMandateeCountry && credentialToSubmit.mobile_phone != ''){
-      const countryPrefix = `+${selectedMandateeCountry.phoneCode}`;
-
-      //this condition should not be possible since it is restricted in template
-      if (!credentialToSubmit.mobile_phone?.startsWith(countryPrefix)) {
-        credentialToSubmit.mobile_phone = `${countryPrefix} ${credentialToSubmit.mobile_phone}`;
-      }
-    }
 
     //Prepare mandator
     //this will only happen as a Signer
@@ -112,7 +100,7 @@ export class FormCredentialService {
 
     //Prepare powers
     const power: Power[] = addedPowers.map(option => {
-      return this.checkTmfFunction(option);
+      return this.checkFunction(option);
     });
 
     const credentialProcedure: ProcedureRequest = {
@@ -121,7 +109,6 @@ export class FormCredentialService {
       payload: {
         mandatee: credentialToSubmit,
         mandator: mandatorToSubmit,
-        signer: signer,
         power: power
       },
       operation_mode: "S"
@@ -137,54 +124,54 @@ export class FormCredentialService {
   }
 
   public convertToTempPower(power: Power): TempPower {
-    const tmf_action = Array.isArray(power.tmf_action) ? power.tmf_action : [power.tmf_action];
+    const action = Array.isArray(power.action) ? power.action : [power.action];
     return {
-      tmf_action: power.tmf_action,
-      tmf_domain: power.tmf_domain,
-      tmf_function: power.tmf_function,
-      tmf_type: power.tmf_type,
-      execute: tmf_action.includes('Execute'),
-      create: tmf_action.includes('Create'),
-      update: tmf_action.includes('Update'),
-      delete: tmf_action.includes('Delete'),
-      upload: tmf_action.includes('Upload'),
-      attest: tmf_action.includes('Attest')
+      action: power.action,
+      domain: power.domain,
+      function: power.function,
+      type: power.type,
+      execute: action.includes('Execute'),
+      create: action.includes('Create'),
+      update: action.includes('Update'),
+      delete: action.includes('Delete'),
+      upload: action.includes('Upload'),
+      attest: action.includes('Attest')
     };
   }
 
-  public checkTmfFunction(option: TempPower): Power {
-    if (option.tmf_function === 'Onboarding') {
+  public checkFunction(option: TempPower): Power {
+    if (option.function === 'Onboarding') {
       return {
-        tmf_action: option.execute ? 'Execute' : '',
-        tmf_domain: option.tmf_domain,
-        tmf_function: option.tmf_function,
-        tmf_type: option.tmf_type
+        action: option.execute ? 'Execute' : '',
+        domain: option.domain,
+        function: option.function,
+        type: option.type
       };
     }
-    let tmf_action: string[] = [];
-    switch (option.tmf_function) {
+    let action: string[] = [];
+    switch (option.function) {
       case 'Certification':
-        tmf_action=isCertification(option,tmf_action)
+        action=isCertification(option,action)
         break;
       case 'ProductOffering':
-        tmf_action=isProductOffering(option,tmf_action)
+        action=isProductOffering(option,action)
         break;
       default:
         break;
     }
 
     return {
-      tmf_action,
-      tmf_domain: option.tmf_domain,
-      tmf_function: option.tmf_function,
-      tmf_type: option.tmf_type
+      action: action,
+      domain: option.domain,
+      function: option.function,
+      type: option.type
     };
 
   }
 
   public checkIfPowerIsAdded(powerName: string): boolean{
     const addedPowers = this.getPlainAddedPowers();
-    return addedPowers.some(pow => pow.tmf_function === powerName);
+    return addedPowers.some(pow => pow.function === powerName);
   }
 
   public powersHaveFunction(): boolean{
@@ -199,18 +186,18 @@ export class FormCredentialService {
 
 }
 
-export function isCertification(option: TempPower,tmf_action: string[]) {
-  const tmf_action2=tmf_action;
-  if (option.upload) tmf_action2.push('Upload');
-  if (option.attest) tmf_action2.push('Attest');
-  return tmf_action2;
+export function isCertification(option: TempPower,action: string[]) {
+  const action2=action;
+  if (option.upload) action2.push('Upload');
+  if (option.attest) action2.push('Attest');
+  return action2;
 }
 
-export function isProductOffering(option: TempPower,tmf_action: string[]) {
-  const tmf_action2=tmf_action;
-  if (option.create) tmf_action2.push('Create');
-  if (option.update) tmf_action2.push('Update');
-  if (option.delete) tmf_action2.push('Delete');
-  return tmf_action2;
+export function isProductOffering(option: TempPower,action: string[]) {
+  const action2=action;
+  if (option.create) action2.push('Create');
+  if (option.update) action2.push('Update');
+  if (option.delete) action2.push('Delete');
+  return action2;
 }
 

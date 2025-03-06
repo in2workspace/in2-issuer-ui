@@ -6,7 +6,6 @@ import { CredentialProcedureService } from 'src/app/core/services/credential-pro
 import { LEARCredentialEmployeeJwtPayload } from "../../core/models/entity/lear-credential-employee.entity";
 import { LearCredentialEmployeeDataDetail } from "../../core/models/dto/lear-credential-employee-data-detail.dto";
 import { FormCredentialComponent } from '../../shared/components/form-credential/form-credential.component';
-import { NgIf } from '@angular/common';
 import { DialogWrapperService } from 'src/app/shared/components/dialog/dialog-wrapper/dialog-wrapper.service';
 import { DialogData } from 'src/app/shared/components/dialog/dialog.component';
 import { LoaderService } from 'src/app/core/services/loader.service';
@@ -16,7 +15,6 @@ import { LoaderService } from 'src/app/core/services/loader.service';
     templateUrl: './credential-detail.component.html',
     standalone: true,
     imports: [
-        NgIf,
         FormCredentialComponent,
         TranslatePipe
     ],
@@ -75,7 +73,7 @@ export class CredentialDetailComponent implements OnInit {
     const sendReminderAfterConfirm = (): Observable<boolean> => {
       return this.sendReminder();
     }
-    
+
     this.dialog.openDialogWithCallback(dialogData, sendReminderAfterConfirm);
 
   }
@@ -120,7 +118,9 @@ export class CredentialDetailComponent implements OnInit {
         const dialogRef = this.dialog.openDialog(dialogData);
         return dialogRef.afterClosed();
       }),
-      switchMap(() => from(this.router.navigate(['/organization/credentials']))),
+      switchMap(()  =>
+        from(this.router.navigate(['/organization/credentials']))
+      ),
       tap(() => location.reload())
     );
   }

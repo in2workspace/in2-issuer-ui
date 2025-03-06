@@ -21,6 +21,18 @@
     "footer-license": "CC BY 4.0",
     "footer-privacy": "Política de Privacitat"
   },
+  "navbar": {
+    "menu": {
+      "logout": "Tancar sessió",
+      "settings": "Configuració"
+    }
+  },
+  "sidenav": {
+    "settings": "Configuració",
+    "schemes": "Esquemes",
+    "signatures": "Firmes",
+    "trushFramework": "TF"
+  },
   "mandator": {
     "organizationid": "Número VAT de l'empresa",
     "organizationidHint": "Introdueix només els caràcters de després de 'VAT-'. Per exemple, si el número complet és  'VAT-123ABC', introdueix '123ABC'",
@@ -39,7 +51,7 @@
     "firstnameid": "ID del nom",
     "last_name": "Cognoms",
     "email": "Adreça de correu",
-    "mobile_phone": "Telèfon mòbil"
+    "nationality": "Nacionalitat"
   },
   "credentialDetail": {
     "credentialDetail": "Detall de la credencial",
@@ -73,7 +85,7 @@
     "second-assistance": " per a més assistència.",
     "wallet-guide": "Guia d'Usuaris del Wallet",
     "expired-title": "Expiració d'oferta de credencial",
-    "ask-refresh": "L'oferta està a punt d'expirar. Vols refrescar-la o sortir?",
+    "ask-refresh": "L'oferta de credencial està a punt d'expirar. Vols refrescar-la o sortir? Si expira, n'hauràs de demanar una altra al teu representant legal.",
     "remaining-time": "Temps restant:",
     "first-step": {
       "title": "Escaneja el codi QR per iniciar sessió i accedir al Wallet de DOME.",
@@ -149,10 +161,8 @@
       "credential_submission": "S'ha produït un error en crear la credencial.",
       "one_power_min":"Hi ha d'haver almenys un poder seleccionat, i cada poder requereix almenys una acció.",
       "policy": {
-        "onboarding": {
           "title": "Accés Denegat",
           "message": "No tens els poders necessaris per accedir-hi."
-        }
       },
       "credentialOffer": {
         "invalid-url": "URL no vàlida. No es pot obtenir l'oferta de credencial.",

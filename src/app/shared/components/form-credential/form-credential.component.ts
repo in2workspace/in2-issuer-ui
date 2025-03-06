@@ -1,11 +1,11 @@
-import { Component, DestroyRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
-import { FormControl, FormGroupDirective, NgForm, NgModel, FormsModule } from '@angular/forms';
+import { Component, DestroyRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, inject} from '@angular/core';
+import { FormGroupDirective, FormsModule } from '@angular/forms';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { Country, CountryService } from './services/country.service';
 import { FormCredentialService } from './services/form-credential.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { Router, RouterLink } from '@angular/router';
-import { ErrorStateMatcher, MatOption } from '@angular/material/core';
+import { MatOption } from '@angular/material/core';
 import { TempPower } from "../../../core/models/temporal/temp-power.interface";
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { from, Observable, of, switchMap, tap } from 'rxjs';
@@ -15,15 +15,14 @@ import { MatButton } from '@angular/material/button';
 import { PowerComponent } from '../power/power.component';
 import { OrganizationIdentifierValidatorDirective } from '../../directives/validators/organization-identifier.directive';
 import { OrganizationNameValidatorDirective } from '../../directives/validators/organization-name.validator.directive';
-import { MatSelect, MatSelectTrigger } from '@angular/material/select';
+import { MatSelect } from '@angular/material/select';
 import { CustomEmailValidatorDirective } from '../../directives/validators/custom-email-validator.directive';
-import { NgIf, NgStyle, NgFor, NgTemplateOutlet, AsyncPipe } from '@angular/common';
+import {NgIf, NgTemplateOutlet, AsyncPipe, NgForOf} from '@angular/common';
 import { MaxLengthDirective } from '../../directives/validators/max-length-directive.directive';
 import { UnicodeValidatorDirective } from '../../directives/validators/unicode-validator.directive';
 import { MatInput } from '@angular/material/input';
-import { MatFormField, MatLabel, MatError, MatPrefix } from '@angular/material/form-field';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 import { MatCard, MatCardContent } from '@angular/material/card';
-import { NavbarComponent } from '../navbar/navbar.component';
 import { DialogWrapperService } from '../dialog/dialog-wrapper/dialog-wrapper.service';
 import { DialogData } from '../dialog/dialog.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -31,46 +30,42 @@ import { LoaderService } from 'src/app/core/services/loader.service';
 import { MatIcon } from '@angular/material/icon';
 
 @Component({
-    selector: 'app-form-credential',
-    templateUrl: './form-credential.component.html',
-    styleUrls: ['./form-credential.component.scss'],
-    standalone: true,
-    imports: [
-      AsyncPipe,
-      CustomEmailValidatorDirective,
-      FormsModule,
-      MatButton,
-      MatCard,
-      MatCardContent,
-      MatError,
-      MatFormField,
-      MatIcon,
-      MatInput,
-      MatLabel,
-      MatOption,
-      MatPrefix,
-      MatProgressSpinnerModule,
-      MatSelect,
-      MatSelectTrigger,
-      MaxLengthDirective,
-      NavbarComponent,
-      NgFor,
-      NgIf,
-      NgStyle,
-      NgTemplateOutlet,
-      OrganizationIdentifierValidatorDirective,
-      OrganizationNameValidatorDirective,
-      PowerComponent,
-      RouterLink,
-      TranslatePipe,
-      UnicodeValidatorDirective,
-  ],  
+  selector: 'app-form-credential',
+  templateUrl: './form-credential.component.html',
+  styleUrls: ['./form-credential.component.scss'],
+  standalone: true,
+  imports: [
+    AsyncPipe,
+    CustomEmailValidatorDirective,
+    FormsModule,
+    MatButton,
+    MatCard,
+    MatCardContent,
+    MatError,
+    MatFormField,
+    MatIcon,
+    MatInput,
+    MatLabel,
+    MatOption,
+    MatProgressSpinnerModule,
+    MatSelect,
+    MaxLengthDirective,
+    NgIf,
+    NgTemplateOutlet,
+    OrganizationIdentifierValidatorDirective,
+    OrganizationNameValidatorDirective,
+    PowerComponent,
+    RouterLink,
+    TranslatePipe,
+    UnicodeValidatorDirective,
+    NgForOf,
+  ],
 })
 export class FormCredentialComponent implements OnInit, OnDestroy {
   @ViewChild('formDirective') public formDirective!: FormGroupDirective;
   @Output() public sendReminder = new EventEmitter<void>();
   @Output() public signCredential = new EventEmitter<void>();
-  @Input({required:true}) public viewMode: 'create' | 'detail' = 'create';
+  @Input({ required: true }) public viewMode: 'create' | 'detail' = 'create';
   @Input() public asSigner: boolean = false;
   @Input() public isDisabled: boolean = false;
   @Input() public title: string = '';
@@ -83,23 +78,10 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
 
   public addedPowers$: Observable<TempPower[]>;
 
-  public tempPowers: TempPower[] = []; //for detail view
+  public tempPowers: TempPower[] = [];
   public countries: Country[] = [];
-  public selectedMandateeCountryIsoCode: string = '';
   public hasIn2OrganizationId = false;
   public addedMandatorLastName: string = '';
-
-  //if mobile has been introduced and unfocused and there is not country, show error
-  public countryErrorMatcher: ErrorStateMatcher = {
-    isErrorState: (control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean => {
-      const mobilePhoneControl = form?.form.get('mobile_phone');
-      return (
-        !!this.credential.mobile_phone &&
-        (!this.selectedMandateeCountryIsoCode || this.selectedMandateeCountryIsoCode === '') &&
-        ((mobilePhoneControl?.dirty ?? false))
-      );
-    },
-  };
 
   public readonly translate = inject(TranslateService);
   private readonly credentialProcedureService = inject(CredentialProcedureService);
@@ -120,50 +102,40 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
 
   public ngOnInit(): void {
     this.authService.getMandator()
-    .pipe(takeUntilDestroyed(this.destroyRef))
-    .subscribe(mandator2 => {
-      if (mandator2) {
-        if(this.viewMode === "create" && !this.asSigner){
-          this.mandator = {
-            'organizationIdentifier': mandator2.organizationIdentifier,
-            'organization': mandator2.organization,
-            'commonName':mandator2.commonName,
-            'emailAddress':mandator2.emailAddress,
-            'serialNumber':mandator2.serialNumber,
-            'country':mandator2.country
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(mandator2 => {
+        if (mandator2) {
+          if (this.viewMode === "create" && !this.asSigner) {
+            this.mandator = {
+              organizationIdentifier: mandator2.organizationIdentifier,
+              organization: mandator2.organization,
+              commonName: mandator2.commonName,
+              emailAddress: mandator2.emailAddress,
+              serialNumber: mandator2.serialNumber,
+              country: mandator2.country
+            };
           }
+          this.authService.getSigner()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(signer => {
+              this.signer = {
+                organizationIdentifier: signer?.organizationIdentifier ?? '',
+                organization: signer?.organization ?? '',
+                commonName: signer?.commonName ?? '',
+                emailAddress: signer?.emailAddress ?? '',
+                serialNumber: signer?.serialNumber ?? '',
+                country: signer?.country ?? ''
+              };
+            });
         }
-        this.authService.getSigner()
-          .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe(signer => {
-            this.signer = {
-              organizationIdentifier: signer?.organizationIdentifier ?? '',
-              organization: signer?.organization ?? '',
-              commonName: signer?.commonName ?? '',
-              emailAddress: signer?.emailAddress ?? '',
-              serialNumber: signer?.serialNumber ?? '',
-              country: signer?.country ?? ''
-            }
-          });
-      }
-    });
+      });
 
     if (this.viewMode === 'detail') {
       this.tempPowers = this.power.map(power => this.formService.convertToTempPower(power));
     }
   }
 
-  public markPrefixAndPhoneAsTouched(prefixControl: NgModel, phoneControl: NgModel): void {
-    if (prefixControl) {
-      //so angular material can mark the input as invalid
-      prefixControl.control.markAsTouched();
-    }
-    if (phoneControl) {
-      phoneControl.control.markAsDirty();
-    }
-  }
-
-  public openSubmitDialog(){
+  public openSubmitDialog() {
     const dialogData: DialogData = {
       title: this.translate.instant("credentialIssuance.create-confirm-dialog.title"),
       message: this.translate.instant("credentialIssuance.create-confirm-dialog.message"),
@@ -176,35 +148,29 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
     };
 
     const submitAfterDialogClose = (): Observable<any> => {
-          return this.submitCredential();
-      };
+      return this.submitCredential();
+    };
     this.dialog.openDialogWithCallback(dialogData, submitAfterDialogClose);
   }
 
   public submitCredential(): Observable<any> {
-    //optional
-    const selectedMandateeCountry: Country|undefined = this.countryService.getCountryFromIsoCode(this.selectedMandateeCountryIsoCode);
-    //mandatory if asSigner
-    let selectedMandatorCountry: Country|undefined = undefined;
-    if(this.asSigner){
+    // mandatory if asSigner
+    let selectedMandatorCountry: Country | undefined = undefined;
+    if (this.asSigner) {
       selectedMandatorCountry = this.countryService.getCountryFromName(this.mandator.country);
     }
 
     if (this.hasSelectedPower() && this.selectedPowersHaveFunction()) {
-       return this.formService.submitCredential(
-          this.credential,
-          selectedMandateeCountry,
-          selectedMandatorCountry,
-          this.formService.getPlainAddedPowers(),
-          this.mandator,
-          this.addedMandatorLastName,
-          this.signer,
-          this.credentialProcedureService,
-          this.resetForm.bind(this)
-        )
+      return this.formService.submitCredential(
+        this.credential,
+        selectedMandatorCountry,
+        this.formService.getPlainAddedPowers(),
+        this.mandator,
+        this.addedMandatorLastName,
+        this.credentialProcedureService)
         .pipe(
-          //after submitting credential, show success popup and navigate to dashboard after close
-          switchMap(()  => {
+          // After submitting credential, show success popup and navigate to dashboard after close
+          switchMap(() => {
             const dialogData: DialogData = {
               title: this.translate.instant("credentialIssuance.create-success-dialog.title"),
               message: this.translate.instant("credentialIssuance.create-success-dialog.message"),
@@ -215,7 +181,7 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
             const dialogRef = this.dialog.openDialog(dialogData);
             return dialogRef.afterClosed();
           }),
-          switchMap(()=> from(this.navigateToCredentials())),
+          switchMap(() => from(this.navigateToCredentials())),
           tap(() => location.reload())
         );
     } else {
@@ -224,8 +190,8 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
     }
   }
 
-  public navigateToCredentials(): Promise<boolean>{
-    return this.router.navigate(['/organization/credentials'])
+  public navigateToCredentials(): Promise<boolean> {
+    return this.router.navigate(['/organization/credentials']);
   }
 
   public triggerSendReminder(): void {
@@ -236,37 +202,7 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
     this.signCredential.emit();
   }
 
-  //this function is currently unused, since user is redirected after successful submit
-  public resetForm(): void {
-    this.credential = this.formService.resetForm();
-    this.formDirective.resetForm();
-    this.formService.setAddedPowers([]);
-    this.authService.getMandator()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(mandator2 => {
-        if (mandator2) {
-          this.mandator = mandator2;
-          this.signer = { 
-            'organizationIdentifier': mandator2.organizationIdentifier,
-            'organization': mandator2.organization,
-            'commonName':mandator2.commonName,
-            'emailAddress':mandator2.emailAddress,
-            'serialNumber':mandator2.serialNumber,
-            'country':mandator2.country
-          }
-        }
-      });
-  }
-
-   //functions that are used in template; it may be better to avoid executing them in template
-  public getCountryNameFromIsoCode(code: string): string {
-    return this.countryService.getCountryNameFromIsoCountryCode(code);
-  }
-  public getCountryPhoneFromIsoCountryCode(code: string): string {
-    return this.countryService.getCountryPhoneFromIsoCountryCode(code);
-  }
-
-  public hasSelectedPower(): boolean{
+  public hasSelectedPower(): boolean {
     return this.formService.hasSelectedPower();
   }
 
@@ -274,14 +210,14 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
     return this.formService.powersHaveFunction();
   }
 
-  public showReminderButton(): boolean{
-    // todo state WITHDRAWN is temporary, this reference shall be removed when there are no more VCs with this state
-    return (this.viewMode === 'detail') && ((this.credentialStatus === 'WITHDRAWN') || (this.credentialStatus === 'DRAFT') || (this.credentialStatus === 'PEND_DOWNLOAD'))
+  public showReminderButton(): boolean {
+    return (this.viewMode === 'detail') && ((this.credentialStatus === 'WITHDRAWN') || (this.credentialStatus === 'DRAFT') || (this.credentialStatus === 'PEND_DOWNLOAD'));
   }
 
   public showSignCredentialButton(): boolean{
     return (this.viewMode === 'detail') && (this.credentialStatus === 'PEND_SIGNATURE')
   }
+
 
   public ngOnDestroy(): void {
     this.formService.reset();
@@ -289,10 +225,10 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
 
   private initializeCredential(): Mandatee {
     return {
-      first_name: '',
-      last_name: '',
+      firstName: '',
+      lastName: '',
       email: '',
-      mobile_phone: ''
+      nationality: ''
     };
   }
 

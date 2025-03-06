@@ -21,6 +21,18 @@
     "footer-license": "CC BY 4.0",
     "footer-privacy": "Privacy Policy"
   },
+  "navbar":{
+    "menu":{
+      "logout":"Logout",
+      "settings":"Settings"
+    }
+  },
+  "sidenav":{
+    "settings":"Settings",
+    "schemes":"Schemes",
+    "signatures":"Signatures",
+    "trushFramework":"TF"
+  },
   "mandator": {
     "organizationid": "Company VAT number",
     "organizationidHint": "Enter only the characters after 'VAT...-'. For example, if 'VATEU-123ABC', enter '123ABC'",
@@ -39,7 +51,7 @@
     "firstnameid": "First name",
     "last_name": "Last name",
     "email": "Email",
-    "mobile_phone": "Mobile phone"
+    "nationality": "Nationality"
   },
   "credentialDetail": {
     "credentialDetails": "Credential details",
@@ -73,7 +85,7 @@
     "second-assistance": " for assistance.",
     "wallet-guide": "Wallet Users Guide",
     "expired-title": "Credential offer expiring",
-    "ask-refresh": "Credential offer is about to expire. Would you like to refresh it or leave?",
+    "ask-refresh": "Credential offer is about to expire. Would you like to refresh it or leave? If it expires, you will need to request a new one from your legal representative.",
     "remaining-time": "Time remaining:",
     "first-step":{
       "title": "Scan the QR code to log in and access the DOME Wallet.",
@@ -148,10 +160,8 @@
     "one_power_min": "There must be at least one power selected, and each power must have at least one action selected.",
     "unknown_error": "An unknown error occurred. Please try again.",
     "policy": {
-      "onboarding": {
         "title": "Access Denied",
         "message": "You do not have the required power to access."
-      }
     },
     "credentialOffer": {
       "invalid-url": "Unexpected error: invalid URL, can't get credential offer.",

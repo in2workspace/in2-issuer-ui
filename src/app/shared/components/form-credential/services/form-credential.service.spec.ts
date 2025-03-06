@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { FormCredentialService, isCertification, isProductOffering } from './form-credential.service';
 import { BehaviorSubject, of, throwError } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -11,8 +11,9 @@ import { AuthModule } from 'angular-auth-oidc-client';
 import { Mandatee, Mandator, Power, Signer } from "../../../../core/models/entity/lear-credential-employee.entity";
 import { TempPower } from "../../../../core/models/temporal/temp-power.interface";
 import { Country } from './country.service';
+import { provideHttpClient } from '@angular/common/http';
 
-global.structuredClone = (obj: any) => JSON.parse(JSON.stringify(obj));
+(globalThis as any).structuredClone = (obj: any) => JSON.parse(JSON.stringify(obj));
 
 describe('FormCredentialService', () => {
   let service: FormCredentialService;
@@ -26,20 +27,19 @@ describe('FormCredentialService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        FormCredentialService,
-        TranslateService,
-      ],
-      imports: [
-        MatTableModule,
+    imports: [MatTableModule,
         MatPaginatorModule,
-        HttpClientTestingModule,
         BrowserAnimationsModule,
         RouterModule.forRoot([]),
         TranslateModule.forRoot({}),
-        AuthModule.forRoot({ config: {} }),
-      ],
-    });
+        AuthModule.forRoot({ config: {} })],
+    providers: [
+        FormCredentialService,
+        TranslateService,
+        provideHttpClient(),
+        provideHttpClientTesting(),
+    ]
+});
     service = TestBed.inject(FormCredentialService);
     // popupComponent = TestBed.inject(PopupComponent);
     credentialProcedureService = {
@@ -50,10 +50,10 @@ describe('FormCredentialService', () => {
     credentialProcedureService.createProcedure = jest.fn().mockReturnValue(of({}));
 
     mockCredential = {
-      first_name: 'John',
-      last_name: 'Doe',
+      firstName: 'John',
+      lastName: 'Doe',
       email: 'john.doe@example.com',
-      mobile_phone: '123456789',
+      nationality: 'ES',
     };
     mockMandateeSelectedCountry = {
       name: 'Spain',
@@ -77,10 +77,10 @@ describe('FormCredentialService', () => {
       country: 'ES',
     };
     mockTempPower = {
-      tmf_action: [],
-      tmf_domain: 'domain',
-      tmf_function: 'ProductOffering',
-      tmf_type: 'type',
+      action: [],
+      domain: 'domain',
+      function: 'ProductOffering',
+      type: 'type',
       execute: false,
       create: false,
       update: false,
@@ -152,9 +152,9 @@ describe('FormCredentialService', () => {
 
   it('should add a new power if not disabled', () => {
     const existingPowers: TempPower[] = [
-      { ...mockTempPower, tmf_function: 'ExistingPower' }
+      { ...mockTempPower, function: 'ExistingPower' }
     ];
-    const newPower: TempPower = { ...mockTempPower, tmf_function: 'NewPower' };
+    const newPower: TempPower = { ...mockTempPower, function: 'NewPower' };
     jest.spyOn(service, 'getPlainAddedPowers').mockReturnValue(existingPowers);
     const setAddedPowersSpy = jest.spyOn(service, 'setAddedPowers');
 
@@ -164,7 +164,7 @@ describe('FormCredentialService', () => {
   });
 
   it('should not add a new power if disabled', () => {
-    const newPower: TempPower = { ...mockTempPower, tmf_function: 'NewPower' };
+    const newPower: TempPower = { ...mockTempPower, function: 'NewPower' };
     const setAddedPowersSpy = jest.spyOn(service, 'setAddedPowers');
 
     service.addPower(newPower, true);
@@ -174,9 +174,9 @@ describe('FormCredentialService', () => {
 
   it('should remove the specified power from added powers', () => {
     const existingPowers: TempPower[] = [
-      { ...mockTempPower, tmf_function: 'Power1' },
-      { ...mockTempPower, tmf_function: 'Power2' },
-      { ...mockTempPower, tmf_function: 'Power3' },
+      { ...mockTempPower, function: 'Power1' },
+      { ...mockTempPower, function: 'Power2' },
+      { ...mockTempPower, function: 'Power3' },
     ];
 
     const powerToRemove = 'Power2';
@@ -186,15 +186,15 @@ describe('FormCredentialService', () => {
     service.removePower(powerToRemove);
 
     const expectedPowers = existingPowers.filter(
-      (power) => power.tmf_function !== powerToRemove
+      (power) => power.function !== powerToRemove
     );
     expect(setAddedPowersSpy).toHaveBeenCalledWith(expectedPowers);
   });
 
   it('should not modify added powers if the specified power is not found', () => {
     const existingPowers: TempPower[] = [
-      { ...mockTempPower, tmf_function: 'Power1' },
-      { ...mockTempPower, tmf_function: 'Power3' },
+      { ...mockTempPower, function: 'Power1' },
+      { ...mockTempPower, function: 'Power3' },
     ];
 
     const powerToRemove = 'Power2'; // Not in the list
@@ -218,18 +218,18 @@ describe('FormCredentialService', () => {
 
   it('should convert Power to TempPower correctly', () => {
     const power: Power = {
-      tmf_action: ['Execute', 'Create'],
-      tmf_domain: 'domain',
-      tmf_function: 'function',
-      tmf_type: 'type',
+      action: ['Execute', 'Create'],
+      domain: 'domain',
+      function: 'function',
+      type: 'type',
     };
 
     const tempPower: TempPower = service.convertToTempPower(power);
 
-    expect(tempPower.tmf_action).toEqual(['Execute', 'Create']);
-    expect(tempPower.tmf_domain).toBe('domain');
-    expect(tempPower.tmf_function).toBe('function');
-    expect(tempPower.tmf_type).toBe('type');
+    expect(tempPower.action).toEqual(['Execute', 'Create']);
+    expect(tempPower.domain).toBe('domain');
+    expect(tempPower.function).toBe('function');
+    expect(tempPower.type).toBe('type');
     expect(tempPower.execute).toBeTruthy();
     expect(tempPower.create).toBeTruthy();
     expect(tempPower.update).toBeFalsy();
@@ -239,10 +239,10 @@ describe('FormCredentialService', () => {
   it('should reset the form correctly', () => {
     const credential: Mandatee = service.resetForm();
 
-    expect(credential.first_name).toBe('');
-    expect(credential.last_name).toBe('');
+    expect(credential.firstName).toBe('');
+    expect(credential.lastName).toBe('');
     expect(credential.email).toBe('');
-    expect(credential.mobile_phone).toBe('');
+    expect(credential.nationality).toBe('');
   });
 
     it('should handle select change correctly', () => {
@@ -256,19 +256,16 @@ it('should submit credential correctly', (done) => {
   const mockMandatorCountry = undefined;
   jest.spyOn(service, 'resetForm');
   // jest.spyOn(popupComponent, 'showPopup');
-  jest.spyOn(service, 'checkTmfFunction');
+  jest.spyOn(service, 'checkFunction');
   credentialProcedureService.createProcedure.mockReturnValue(of({}));
 
   service.submitCredential(
     mockCredential,
-    mockMandateeSelectedCountry,
     mockMandatorCountry,
     mockAddedOptions,
     mockMandator,
     'lastName',
-    mockSigner,
-    credentialProcedureService as any,
-    service.resetForm
+    credentialProcedureService as any
   ).subscribe(() => {
     expect(credentialProcedureService.createProcedure).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -277,14 +274,13 @@ it('should submit credential correctly', (done) => {
         payload: expect.objectContaining({
           mandatee: expect.any(Object),
           mandator: expect.any(Object),
-          signer: mockSigner,
           power: expect.any(Array)
         }),
         operation_mode: 'S'
       })
     );
     // expect(service.resetForm).toHaveBeenCalled();
-    expect(service.checkTmfFunction).toHaveBeenCalledTimes(mockAddedOptions.length);
+    expect(service.checkFunction).toHaveBeenCalledTimes(mockAddedOptions.length);
     done();
   });
 });
@@ -297,14 +293,11 @@ it('should handle error when submitCredential fails', (done) => {
 
   service.submitCredential(
     mockCredential,
-    mockMandateeSelectedCountry,
     undefined,
     mockAddedOptions,
     mockMandator,
     'lastName',
-    mockSigner,
-    credentialProcedureService as any,
-    service.resetForm
+    credentialProcedureService as any
   ).subscribe({
     next: () => {
       done.fail('Should not reach next block');
@@ -320,100 +313,26 @@ it('should handle error when submitCredential fails', (done) => {
   });
 });
 
-it('should append country prefix to mobile_phone if not present', (done) => {
-  const mockCredential = {
-    mobile_phone: '123456789'
-  } as Mandatee;
-  const mockSelectedCountry = {
-    name: 'Spain',
-    phoneCode: '34',
-    isoCountryCode: 'ES'
-  };
-  const mockAddedOptions: TempPower[] = [];
-  const mockMandator = {} as Mandator;
-  const mockSigner = {} as Signer;
-
-  jest.spyOn(credentialProcedureService, 'createProcedure').mockImplementation((credentialProcedure) => {
-    expect((credentialProcedure as any).payload.mandatee.mobile_phone).toBe('+34 123456789');
-    return of({});
-  });
-
-  service.submitCredential(
-    mockCredential,
-    mockSelectedCountry,
-    undefined,
-    mockAddedOptions,
-    mockMandator,
-    'Doe',
-    mockSigner,
-    credentialProcedureService as any,
-    jest.fn()
-  ).subscribe(() => {
-    done();
-  }, (error) => {
-    done(error);
-  });
-});
-
-it('should not append country prefix to mobile_phone if already present', (done) => {
-  const mockCredential = {
-    mobile_phone: '+34 123456789'
-  } as Mandatee;
-  const mockSelectedCountry = {
-    name: 'name',
-    phoneCode: '34',
-    isoCountryCode: 'iso'
-  };
-  const mockAddedOptions: TempPower[] = [];
-  const mockMandator = {} as Mandator;
-  const mockSigner = {} as Signer;
-
-  jest.spyOn(credentialProcedureService, 'createProcedure').mockImplementation((credentialProcedure) => {
-    expect((credentialProcedure as any).payload.mandatee.mobile_phone).toBe('+34 123456789');
-    return of({});
-  });
-
-  service.submitCredential(
-    mockCredential,
-    mockSelectedCountry,
-    undefined,
-    mockAddedOptions,
-    mockMandator,
-    'Doe',
-    mockSigner,
-    credentialProcedureService as any,
-    jest.fn()
-  ).subscribe(() => {
-    done();
-  }, (error) => {
-    done(error);
-  });
-});
-
-
   it('should map addedOptions to Power objects correctly',() => {
 
     const expectedPower = {
-      tmf_action:'expectedAction',
-      tmf_domain: 'expectedDomain',
-      tmf_function: 'expectedFn',
-      tmf_type: 'expectedType',
+      action:'expectedAction',
+      domain: 'expectedDomain',
+      function: 'expectedFn',
+      type: 'expectedType',
       execute: true,
     };
 
-    const checkTmfSpy = jest.spyOn(service, 'checkTmfFunction').mockReturnValue(expectedPower);
+    const checkTmfSpy = jest.spyOn(service, 'checkFunction').mockReturnValue(expectedPower);
     credentialProcedureService.createProcedure.mockReturnValue(of({}));
 
     service.submitCredential(
       mockCredential,
-      mockMandateeSelectedCountry,
       undefined,
       mockAddedOptions,
       mockMandator,
       'lastName',
-      mockSigner,
-      credentialProcedureService,
-      service.resetForm
+      credentialProcedureService
     );
 
    expect(credentialProcedureService.createProcedure).toHaveBeenCalled();
@@ -428,12 +347,12 @@ it('should not append country prefix to mobile_phone if already present', (done)
     );
   });
 
-  it('should add "Upload" to tmf_action if option.upload is true', () => {
+  it('should add "Upload" to action if option.upload is true', () => {
     const option: TempPower = {
       ...mockTempPower,
-      tmf_domain: 'domain',
-      tmf_function: 'Certification',
-      tmf_type: 'type',
+      domain: 'domain',
+      function: 'Certification',
+      type: 'type',
       upload: true
     };
 
@@ -444,21 +363,21 @@ it('should not append country prefix to mobile_phone if already present', (done)
   it('should return an empty array if no conditions are true', () => {
     const option: TempPower = {
       ...mockTempPower,
-      tmf_domain: 'domain',
-      tmf_function: 'ProductOffering',
-      tmf_type: 'type',
+      domain: 'domain',
+      function: 'ProductOffering',
+      type: 'type',
     };
 
     const result = isCertification(option, []);
     expect(result).toEqual([]);
   });
 
-  it('should add "Create" to tmf_action if option.create is true', () => {
+  it('should add "Create" to action if option.create is true', () => {
     const option: TempPower = {
       ...mockTempPower,
-      tmf_domain: 'domain',
-      tmf_function: 'ProductOffering',
-      tmf_type: 'type',
+      domain: 'domain',
+      function: 'ProductOffering',
+      type: 'type',
       create: true
     };
 
@@ -466,12 +385,12 @@ it('should not append country prefix to mobile_phone if already present', (done)
     expect(result).toContain('Create');
   });
 
-  it('should add "Update" to tmf_action if option.update is true', () => {
+  it('should add "Update" to action if option.update is true', () => {
     const option: TempPower = {
       ...mockTempPower,
-      tmf_domain: 'domain',
-      tmf_function: 'ProductOffering',
-      tmf_type: 'type',
+      domain: 'domain',
+      function: 'ProductOffering',
+      type: 'type',
       update: true
     };
 
@@ -479,12 +398,12 @@ it('should not append country prefix to mobile_phone if already present', (done)
     expect(result).toContain('Update');
   });
 
-  it('should add "Delete" to tmf_action if option.delete is true', () => {
+  it('should add "Delete" to action if option.delete is true', () => {
     const option: TempPower = {
       ...mockTempPower,
-      tmf_domain: 'domain',
-      tmf_function: 'ProductOffering',
-      tmf_type: 'type',
+      domain: 'domain',
+      function: 'ProductOffering',
+      type: 'type',
       delete: true
     };
 
@@ -495,9 +414,9 @@ it('should not append country prefix to mobile_phone if already present', (done)
   it('should return an empty array if no conditions are true', () => {
     const option: TempPower = {
       ...mockTempPower,
-      tmf_domain: 'domain',
-      tmf_function: 'ProductOffering',
-      tmf_type: 'type',
+      domain: 'domain',
+      function: 'ProductOffering',
+      type: 'type',
     };
 
     const result = isProductOffering(option, []);
@@ -507,24 +426,24 @@ it('should not append country prefix to mobile_phone if already present', (done)
   it('should add the correct actions based on TempPower properties', () => {
     const tempPower: TempPower = {
       ...mockTempPower,
-      tmf_action: '',
+      action: '',
       upload: true,
     };
-    const tmf_action = ['InitialAction'];
+    const action = ['InitialAction'];
 
-    const result = isCertification(tempPower, tmf_action);
+    const result = isCertification(tempPower, action);
 
     expect(result).toEqual(['InitialAction', 'Upload']);
   });
 
-  it('should return tmf_action unchanged for isCertification if no TempPower properties are true', () => {
+  it('should return action unchanged for isCertification if no TempPower properties are true', () => {
     const tempPower: TempPower = {
       ...mockTempPower,
-      tmf_action: ''
+      action: ''
     };
-    const tmf_action = ['InitialAction'];
+    const action = ['InitialAction'];
 
-    const result = isCertification(tempPower, tmf_action);
+    const result = isCertification(tempPower, action);
 
     expect(result).toEqual(['InitialAction']);
   });
@@ -532,115 +451,115 @@ it('should not append country prefix to mobile_phone if already present', (done)
   it('should add the correct actions based on TempPower properties for create, update, and delete', () => {
     const tempPower: TempPower = {
       ...mockTempPower,
-      tmf_action: '',
+      action: '',
       create: true,
       update: true,
       delete: true,
     };
-    const tmf_action = ['InitialAction'];
+    const action = ['InitialAction'];
 
-    const result = isProductOffering(tempPower, tmf_action);
+    const result = isProductOffering(tempPower, action);
 
     expect(result).toEqual(['InitialAction', 'Create', 'Update', 'Delete']);
   });
 
-  it('should return tmf_action unchanged for isProductOffering if create, update, and delete are false', () => {
+  it('should return action unchanged for isProductOffering if create, update, and delete are false', () => {
     const tempPower: TempPower = {
       ...mockTempPower,
-      tmf_action: ''
+      action: ''
     };
-    const tmf_action = ['InitialAction'];
+    const action = ['InitialAction'];
 
-    const result = isProductOffering(tempPower, tmf_action);
+    const result = isProductOffering(tempPower, action);
 
     expect(result).toEqual(['InitialAction']);
   });
 
-  it('should return the correct object when tmf_function is Onboarding', () => {
+  it('should return the correct object when function is Onboarding', () => {
     const tempPower: TempPower = {
       ...mockTempPower,
-      tmf_action: '',
-      tmf_domain: 'domain1',
-      tmf_function: 'Onboarding',
-      tmf_type: 'type1',
+      action: '',
+      domain: 'domain1',
+      function: 'Onboarding',
+      type: 'type1',
       execute: true
     };
 
-    const result = service.checkTmfFunction(tempPower);
+    const result = service.checkFunction(tempPower);
 
     expect(result).toEqual({
-      tmf_action: 'Execute',
-      tmf_domain: 'domain1',
-      tmf_function: 'Onboarding',
-      tmf_type: 'type1'
+      action: 'Execute',
+      domain: 'domain1',
+      function: 'Onboarding',
+      type: 'type1'
     });
   });
 
-  it('should call isCertification and return the correct object when tmf_function is Certification', () => {
+  it('should call isCertification and return the correct object when function is Certification', () => {
     const tempPower: TempPower = {
       ...mockTempPower,
-      tmf_action: '',
-      tmf_domain: 'domain2',
-      tmf_function: 'Certification',
-      tmf_type: 'type2',
+      action: '',
+      domain: 'domain2',
+      function: 'Certification',
+      type: 'type2',
       upload: true
     };
 
-    const result = service.checkTmfFunction(tempPower);
+    const result = service.checkFunction(tempPower);
 
     expect(result).toEqual({
-      tmf_action: ['Upload'],
-      tmf_domain: 'domain2',
-      tmf_function: 'Certification',
-      tmf_type: 'type2'
+      action: ['Upload'],
+      domain: 'domain2',
+      function: 'Certification',
+      type: 'type2'
     });
   });
 
-  it('should call isProductOffering and return the correct object when tmf_function is ProductOffering', () => {
+  it('should call isProductOffering and return the correct object when function is ProductOffering', () => {
     const tempPower: TempPower = {
       ...mockTempPower,
-      tmf_action: '',
-      tmf_domain: 'domain3',
-      tmf_function: 'ProductOffering',
-      tmf_type: 'type3',
+      action: '',
+      domain: 'domain3',
+      function: 'ProductOffering',
+      type: 'type3',
       create: true,
       update: true
     };
 
-    const result = service.checkTmfFunction(tempPower);
+    const result = service.checkFunction(tempPower);
 
     expect(result).toEqual({
-      tmf_action: ['Create', 'Update'],
-      tmf_domain: 'domain3',
-      tmf_function: 'ProductOffering',
-      tmf_type: 'type3'
+      action: ['Create', 'Update'],
+      domain: 'domain3',
+      function: 'ProductOffering',
+      type: 'type3'
     });
   });
 
-  it('should return the correct object when tmf_function does not match any case', () => {
+  it('should return the correct object when function does not match any case', () => {
     const tempPower: TempPower = {
       ...mockTempPower,
-      tmf_action: '',
-      tmf_domain: 'domain4',
-      tmf_function: 'UnknownFunction',
-      tmf_type: 'type4'
+      action: '',
+      domain: 'domain4',
+      function: 'UnknownFunction',
+      type: 'type4'
     };
 
-    const result = service.checkTmfFunction(tempPower);
+    const result = service.checkFunction(tempPower);
 
     expect(result).toEqual({
-      tmf_action: [],
-      tmf_domain: 'domain4',
-      tmf_function: 'UnknownFunction',
-      tmf_type: 'type4'
+      action: [],
+      domain: 'domain4',
+      function: 'UnknownFunction',
+      type: 'type4'
     });
   });
 
   it('should return true if the power is added', () => {
     // Mock data
     const existingPowers: TempPower[] = [
-      { ...mockTempPower, tmf_function: 'Power1' },
-      { ...mockTempPower, tmf_function: 'Power2' },
+      { ...mockTempPower, function: 'Power1' },
+      { ...mockTempPower, function: 'Power2' },
     ];
 
     const powerToCheck = 'Power2';
@@ -657,8 +576,8 @@ it('should not append country prefix to mobile_phone if already present', (done)
 
   it('should return false if the power is not added', () => {
     const existingPowers: TempPower[] = [
-      { ...mockTempPower, tmf_function: 'Power1' },
-      { ...mockTempPower, tmf_function: 'Power3' },
+      { ...mockTempPower, function: 'Power1' },
+      { ...mockTempPower, function: 'Power3' },
     ];
     const powerToCheck = 'Power2'; // Not in the list
     jest.spyOn(service, 'getPlainAddedPowers').mockReturnValue(existingPowers);
@@ -723,8 +642,6 @@ it('should not append country prefix to mobile_phone if already present', (done)
     checkPowers = service.hasSelectedPower();
     expect(checkPowers).toBe(true);
   });
-
-
 });
 
 

@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { CredentialProcedureService } from './credential-procedure.service';
 import { environment } from 'src/environments/environment';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, provideHttpClient } from '@angular/common/http';
 import { ProcedureRequest } from '../models/dto/procedure-request.dto';
 import { ProcedureResponse } from "../models/dto/procedure-response.dto";
 import { LearCredentialEmployeeDataDetail } from "../models/dto/lear-credential-employee-data-detail.dto";
@@ -30,9 +30,9 @@ describe('CredentialProcedureService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [CredentialProcedureService]
-    });
+    imports: [],
+    providers: [CredentialProcedureService, provideHttpClient(), provideHttpClientTesting()]
+});
 
     service = TestBed.inject(CredentialProcedureService);
     httpMock = TestBed.inject(HttpTestingController);
@@ -112,10 +112,10 @@ describe('CredentialProcedureService', () => {
       format: "jwt_vc_json",
       payload: {
         mandatee: {
-          first_name: '',
-          last_name: '',
+          firstName: '',
+          lastName: '',
           email: '',
-          mobile_phone: ''
+          nationality: ''
         }, mandator: {
           organizationIdentifier: '',
           organization: '',
@@ -123,15 +123,7 @@ describe('CredentialProcedureService', () => {
           emailAddress: '',
           serialNumber: '',
           country: ''
-        }, power: [],
-        signer: {
-          commonName: '',
-          country: '',
-          emailAddress: '',
-          organization: '',
-          organizationIdentifier: '',
-          serialNumber: ''
-        }
+        }, power: []
       },
       operation_mode: "S"
     };
@@ -150,10 +142,10 @@ describe('CredentialProcedureService', () => {
       format: "jwt_vc_json",
       payload: {
         mandatee: {
-          first_name: '',
-          last_name: '',
+          firstName: '',
+          lastName: '',
           email: '',
-          mobile_phone: ''
+          nationality: ''
         }, mandator: {
           organizationIdentifier: '',
           organization: '',
@@ -161,15 +153,7 @@ describe('CredentialProcedureService', () => {
           emailAddress: '',
           serialNumber: '',
           country: ''
-        }, power: [],
-        signer: {
-          commonName: '',
-          country: '',
-          emailAddress: '',
-          organization: '',
-          organizationIdentifier: '',
-          serialNumber: ''
-        }
+        }, power: []
       },
       operation_mode: "S"
     };
@@ -289,9 +273,9 @@ describe('CredentialProcedureService', () => {
   it('should handle error when getCredentialOfferByTransactionCode fails', (done) => {
     const transactionCode = 'invalid-code';
     const errorResponse = { status: 404, message: 'Not Found' };
-  
+
     jest.spyOn(service['http'], 'get').mockReturnValue(throwError(() => errorResponse));
-  
+
     service.getCredentialOfferByTransactionCode(transactionCode).subscribe({
       next: () => {
         // No hauria d'arribar aquí
@@ -299,12 +283,12 @@ describe('CredentialProcedureService', () => {
       },
       error: (error) => {
         expect(error).toEqual(errorResponse);
-        done(); 
+        done();
       }
     });
   });
 });
-  
+
 describe('get credential offer by c-code', () => {
   it('should handle error when getting credential offer by c code', () => {
     const transactionCode = 'abc123';
@@ -337,9 +321,9 @@ describe('get credential offer by c-code', () => {
   it('should handle error when getCredentialOfferByCTransactionCode fails', (done) => {
     const transactionCode = 'invalid-code';
     const errorResponse = { status: 404, message: 'Not Found' };
-  
+
     jest.spyOn(service['http'], 'get').mockReturnValue(throwError(() => errorResponse));
-  
+
     service.getCredentialOfferByCTransactionCode(transactionCode).subscribe({
       next: () => {
         // No hauria d'arribar aquí
@@ -347,7 +331,7 @@ describe('get credential offer by c-code', () => {
       },
       error: (error) => {
         expect(error).toEqual(errorResponse);
-        done(); 
+        done();
       }
     });
   });

@@ -3,8 +3,10 @@ import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { UserDataAuthenticationResponse } from "../models/dto/user-data-authentication-response.dto";
-import { Mandator, Power, Signer } from "../models/entity/lear-credential-employee.entity";
+import {LEARCredentialEmployee, Mandator, Power, Signer} from "../models/entity/lear-credential-employee.entity";
 import {environment} from "../../../environments/environment";
+import { LEARCredentialEmployeeDataNormalizer } from '../models/entity/lear-credential-employee-data-normalizer';
+
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +21,8 @@ export class AuthService {
   private readonly emailSubject = new BehaviorSubject<string>('');
   private readonly nameSubject = new BehaviorSubject<string>('');
   private readonly profile =`${environment.profile}`;
+  private readonly normalizer = new LEARCredentialEmployeeDataNormalizer();
+
 
 
   private userPowers: Power[] = [];
@@ -38,26 +42,30 @@ export class AuthService {
       this.isAuthenticatedSubject.next(isAuthenticated);
 
       if (isAuthenticated) {
-        this.userPowers = this.extractUserPowers(userData);
         this.userDataSubject.next(userData);
 
-        const learCredential = this.extractVCFromUserData(userData)
+        // Extract and normalize the VC using the normalizer class
+        const learCredential = this.extractVCFromUserData(userData);
+        const normalizedCredential = this.normalizer.normalizeLearCredential(learCredential);
+
+        this.userPowers = this.extractUserPowers(normalizedCredential);
+
 
         const mandator = {
-          organizationIdentifier: learCredential.credentialSubject.mandate.mandator.organizationIdentifier,
-          organization: learCredential.credentialSubject.mandate.mandator.organization,
-          commonName: learCredential.credentialSubject.mandate.mandator.commonName,
-          emailAddress: learCredential.credentialSubject.mandate.mandator.emailAddress,
-          serialNumber: learCredential.credentialSubject.mandate.mandator.serialNumber,
-          country: learCredential.credentialSubject.mandate.mandator.country
+          organizationIdentifier: normalizedCredential.credentialSubject.mandate.mandator.organizationIdentifier,
+          organization: normalizedCredential.credentialSubject.mandate.mandator.organization,
+          commonName: normalizedCredential.credentialSubject.mandate.mandator.commonName,
+          emailAddress: normalizedCredential.credentialSubject.mandate.mandator.emailAddress,
+          serialNumber: normalizedCredential.credentialSubject.mandate.mandator.serialNumber,
+          country: normalizedCredential.credentialSubject.mandate.mandator.country
         };
         this.mandatorSubject.next(mandator);
 
         const signer = this.getProfileSigner()
         this.signerSubject.next(signer)
 
-        const emailName = learCredential.credentialSubject.mandate.mandator.emailAddress.split('@')[0];
-        const name = learCredential.credentialSubject.mandate.mandatee.first_name + ' ' + learCredential.credentialSubject.mandate.mandatee.last_name;
+        const emailName = normalizedCredential.credentialSubject.mandate.mandator.emailAddress.split('@')[0];
+        const name = normalizedCredential.credentialSubject.mandate.mandatee.firstName + ' ' + normalizedCredential.credentialSubject.mandate.mandatee.lastName;
 
         this.emailSubject.next(emailName);
         this.nameSubject.next(name);
@@ -66,49 +74,11 @@ export class AuthService {
     }));
   }
 
-
-  private extractVCFromUserData(userData: UserDataAuthenticationResponse) {
-    return userData.vc || null;
-  }
-
-  private extractUserPowers(userData: UserDataAuthenticationResponse): Power[] {
-    try {
-      const learCredential = this.extractVCFromUserData(userData)
-      return learCredential?.credentialSubject.mandate.power || [];
-    } catch (error) {
-      return [];
-    }
-  }
-
-  private getProfileSigner() {
-      if (this.profile && this.profile !== 'production') {
-        return {
-          organizationIdentifier: "VATEU-B99999999",
-          organization: "OLIMPO",
-          commonName: "ZEUS OLIMPOS",
-          emailAddress: "domesupport@in2.es",
-          serialNumber: "IDCEU-99999999P",
-          country: "EU",
-        };
-      } else {
-        return {
-          organizationIdentifier: "VATES-Q0000000J",
-          organization: "DOME Credential Issuer",
-          commonName: "56565656P Jesus Ruiz",
-          emailAddress: "jesus.ruiz@in2.es",
-          serialNumber: "IDCES-56565656P",
-          country: "ES",
-        };
-      }
-    }
-
-
-  // POLICY: login_restriction_policy
-  public hasOnboardingExecutePower(): boolean {
+  public hasPower(tmfFunction: string, tmfAction: string): boolean {
     return this.userPowers.some((power: Power) => {
-      if (power.tmf_function === "Onboarding") {
-        const action = power.tmf_action;
-        return action === "Execute" || (Array.isArray(action) && action.includes("Execute"));
+      if (power.function === tmfFunction) {
+        const action = power.action;
+        return action === tmfAction || (Array.isArray(action) && action.includes(tmfAction));
       }
       return false;
     });
@@ -137,27 +107,29 @@ export class AuthService {
 
   public handleLoginCallback(): void {
     this.oidcSecurityService.checkAuth()
-    .pipe(take(1))
-    .subscribe(({ isAuthenticated, userData, accessToken }) => {
-      if (isAuthenticated) {
+      .pipe(take(1))
+      .subscribe(({ isAuthenticated, userData, accessToken }) => {
+        if (isAuthenticated) {
 
-        this.userPowers = this.extractUserPowers(userData);
-        const hasOnboardingPower = this.hasOnboardingExecutePower();
+          const learCredential = this.extractVCFromUserData(userData);
+          const normalizedCredential = this.normalizer.normalizeLearCredential(learCredential);
 
-        if (!hasOnboardingPower) {
-          this.logout();
-          return;
+          this.userPowers = this.extractUserPowers(normalizedCredential);
+          const hasOnboardingPower = this.hasPower('Onboarding','Execute');
+
+          if (!hasOnboardingPower) {
+            this.logout();
+            return;
+          }
+
+          this.isAuthenticatedSubject.next(true);
+          this.userDataSubject.next(userData);
+          this.tokenSubject.next(accessToken);
         }
-
-        this.isAuthenticatedSubject.next(true);
-        this.userDataSubject.next(userData);
-        this.tokenSubject.next(accessToken);
-      }
-    });
+      });
   }
 
   public logout() {
-    localStorage.clear();
     return this.oidcSecurityService.logoffAndRevokeTokens();
   }
 
@@ -180,4 +152,39 @@ export class AuthService {
   public getName(): Observable<string> {
     return this.nameSubject.asObservable()
   }
+
+  private extractVCFromUserData(userData: UserDataAuthenticationResponse) {
+    return userData.vc || null;
+  }
+
+  private extractUserPowers(learCredential: LEARCredentialEmployee): Power[] {
+    try {
+      return learCredential?.credentialSubject.mandate.power || [];
+    } catch (error) {
+      return [];
+    }
+  }
+
+  private getProfileSigner() {
+    if (this.profile && this.profile !== 'production') {
+      return {
+        organizationIdentifier: "VATEU-B99999999",
+        organization: "OLIMPO",
+        commonName: "ZEUS OLIMPOS",
+        emailAddress: "domesupport@in2.es",
+        serialNumber: "IDCEU-99999999P",
+        country: "EU",
+      };
+    } else {
+      return {
+        organizationIdentifier: "VATES-Q0000000J",
+        organization: "DOME Credential Issuer",
+        commonName: "56565656P Jesus Ruiz",
+        emailAddress: "jesus.ruiz@in2.es",
+        serialNumber: "IDCES-56565656P",
+        country: "ES",
+      };
+    }
+  }
+
 }
