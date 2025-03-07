@@ -78,26 +78,45 @@ export class CredentialDetailComponent implements OnInit {
 
   }
 
-  public sendReminder(): Observable<boolean>{
+  public openSignCredentialDialog(): void {
+
+    const dialogData: DialogData = {
+      title: this.translate.instant("credentialDetail.signCredentialConfirm.title"),
+      message: this.translate.instant("credentialDetail.signCredentialConfirm.message"),
+      confirmationType: 'async',
+      status: 'default'
+    };
+
+    const signCredentialAfterConfirm = (): Observable<boolean> => {
+      return this.signCredential();
+    }
+    
+    this.dialog.openDialogWithCallback(dialogData, signCredentialAfterConfirm);
+
+  }
+
+  private executeCredentialAction(
+    action: (credentialId: string) => Observable<void>,
+    titleKey: string,
+    messageKey: string
+  ): Observable<boolean> {
     const credentialId = this.credentialId;
-    if (!credentialId){
+    if (!credentialId) {
       console.error('No credential id.');
       return EMPTY;
     }
-
-    return this.credentialProcedureService.sendReminder(credentialId)
-    // open success dialog and navigate to credentials
-    .pipe(
+  
+    return action(credentialId).pipe(
       switchMap(() => {
-            const dialogData: DialogData = {
-              title: this.translate.instant("credentialDetail.sendReminderSuccess.title"),
-              message: this.translate.instant("credentialDetail.sendReminderSuccess.message"),
-              confirmationType: 'none',
-              status: 'default'
-            };
-
-            const dialogRef = this.dialog.openDialog(dialogData);
-            return dialogRef.afterClosed();
+        const dialogData: DialogData = {
+          title: this.translate.instant(titleKey),
+          message: this.translate.instant(messageKey),
+          confirmationType: 'none',
+          status: 'default'
+        };
+  
+        const dialogRef = this.dialog.openDialog(dialogData);
+        return dialogRef.afterClosed();
       }),
       switchMap(()  =>
         from(this.router.navigate(['/organization/credentials']))
@@ -106,4 +125,20 @@ export class CredentialDetailComponent implements OnInit {
     );
   }
 
+  public sendReminder(): Observable<boolean> {
+    return this.executeCredentialAction(
+      (credentialId) => this.credentialProcedureService.sendReminder(credentialId),
+      "credentialDetail.sendReminderSuccess.title",
+      "credentialDetail.sendReminderSuccess.message"
+    );
+  }
+  
+  public signCredential(): Observable<boolean> {
+    return this.executeCredentialAction(
+      (credentialId) => this.credentialProcedureService.signCredential(credentialId),
+      "credentialDetail.signCredentialSuccess.title",
+      "credentialDetail.signCredentialSuccess.message"
+    );
+  }
+  
 }
