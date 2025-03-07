@@ -1,10 +1,11 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, WritableSignal, signal} from '@angular/core';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { UserDataAuthenticationResponse } from "../models/dto/user-data-authentication-response.dto";
-import { Mandator, Power, Signer } from "../models/entity/lear-credential-employee.entity";
+import { Mandator, Power, Signer, LEARCredentialEmployee } from "../models/entity/lear-credential-employee.entity";
 import {environment} from "../../../environments/environment";
+import { AuthLoginType } from '../models/enums/auth-login-type.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +20,7 @@ export class AuthService {
   private readonly emailSubject = new BehaviorSubject<string>('');
   private readonly nameSubject = new BehaviorSubject<string>('');
   private readonly profile =`${environment.profile}`;
+  public readonly authLoginType: WritableSignal<AuthLoginType> = signal(AuthLoginType.UNKNOWN);
 
 
   private userPowers: Power[] = [];
@@ -36,44 +38,80 @@ export class AuthService {
       take(1),
       map(({ isAuthenticated, userData}) => {
       this.isAuthenticatedSubject.next(isAuthenticated);
-
       if (isAuthenticated) {
-        this.userPowers = this.extractUserPowers(userData);
         this.userDataSubject.next(userData);
-        console.log('user data:', userData)
-        const learCredential = this.extractVCFromUserData(userData)
-
-        const mandator = {
-          organizationIdentifier: learCredential.credentialSubject.mandate.mandator.organizationIdentifier,
-          organization: learCredential.credentialSubject.mandate.mandator.organization,
-          commonName: learCredential.credentialSubject.mandate.mandator.commonName,
-          emailAddress: learCredential.credentialSubject.mandate.mandator.emailAddress,
-          serialNumber: learCredential.credentialSubject.mandate.mandator.serialNumber,
-          country: learCredential.credentialSubject.mandate.mandator.country
-        };
-        this.mandatorSubject.next(mandator);
-
         const signer = this.getProfileSigner()
         this.signerSubject.next(signer)
-
-        const emailName = learCredential.credentialSubject.mandate.mandator.emailAddress.split('@')[0];
-        const name = learCredential.credentialSubject.mandate.mandatee.first_name + ' ' + learCredential.credentialSubject.mandate.mandatee.last_name;
-
-        this.emailSubject.next(emailName);
-        this.nameSubject.next(name);
+        this.handleUserAuthentication(userData)
       }
       return isAuthenticated;
     }));
   }
 
+  private handleUserAuthentication(userData: UserDataAuthenticationResponse): void {
+    const learCredential = this.extractVCFromUserData(userData);
+    if (learCredential) {
+      this.authLoginType.update(() => AuthLoginType.VC);
+      this.handleVCLogin(learCredential);
+    } 
+    else {
+      try{
+        this.authLoginType.update(() => AuthLoginType.CERT); 
+        this.handleCertificateLogin(userData);
+      }
+      catch(error){
+        console.error(error);
+      } 
+    }
+  }
+
+  private handleCertificateLogin(userData: UserDataAuthenticationResponse): void {
+    const certData = this.extractDataFromCertificate(userData);
+    this.mandatorSubject.next(certData);
+    this.nameSubject.next(certData.commonName);
+  }
+
+  private extractDataFromCertificate(userData: UserDataAuthenticationResponse): Mandator {
+    if (!userData?.cert) {
+      throw new Error('Unknown authentication method.');
+    }
+    return {
+        organizationIdentifier: userData.cert.organizationIdentifier,
+        organization: userData.cert.organization,
+        commonName: userData.cert.commonName,
+        emailAddress: userData.cert.emailAddress,
+        serialNumber: userData.cert.serialNumber,
+        country: userData.cert.country
+      }
+  };
+  
+
+  private handleVCLogin(learCredential: LEARCredentialEmployee): void {
+    const mandator = {
+      organizationIdentifier: learCredential.credentialSubject.mandate.mandator.organizationIdentifier,
+      organization: learCredential.credentialSubject.mandate.mandator.organization,
+      commonName: learCredential.credentialSubject.mandate.mandator.commonName,
+      emailAddress: learCredential.credentialSubject.mandate.mandator.emailAddress,
+      serialNumber: learCredential.credentialSubject.mandate.mandator.serialNumber,
+      country: learCredential.credentialSubject.mandate.mandator.country
+    };
+    
+    this.mandatorSubject.next(mandator);
+  
+    const emailName = learCredential.credentialSubject.mandate.mandator.emailAddress.split('@')[0];
+    const name = learCredential.credentialSubject.mandate.mandatee.first_name + ' ' + learCredential.credentialSubject.mandate.mandatee.last_name;
+  
+    this.emailSubject.next(emailName);
+    this.nameSubject.next(name);
+    this.userPowers = this.extractUserPowers(learCredential);
+  }
 
   private extractVCFromUserData(userData: UserDataAuthenticationResponse) {
     return userData.vc || null;
   }
 
-  private extractUserPowers(userData: UserDataAuthenticationResponse): Power[] {
+  private extractUserPowers(learCredential: LEARCredentialEmployee): Power[] {
     try {
-      const learCredential = this.extractVCFromUserData(userData)
       return learCredential?.credentialSubject.mandate.power || [];
     } catch (error) {
       return [];
@@ -150,15 +188,19 @@ export class AuthService {
     .pipe(take(1))
     .subscribe(({ isAuthenticated, userData, accessToken }) => {
       if (isAuthenticated) {
-
-        this.userPowers = this.extractUserPowers(userData);
-        const hasOnboardingPower = this.hasPower('Onboarding','Execute');
-
-        if (!hasOnboardingPower) {
+        const learCredential = this.extractVCFromUserData(userData);
+        if(!learCredential && !userData?.cert){
           this.logout();
           return;
+        } 
+        else{
+          this.userPowers = this.extractUserPowers(userData.vc);
+          const hasOnboardingPower = this.hasPower('Onboarding','Execute');
+          if (!hasOnboardingPower) {
+            this.logout();
+            return;
+          }
         }
-
         this.isAuthenticatedSubject.next(true);
         this.userDataSubject.next(userData);
         this.tokenSubject.next(accessToken);

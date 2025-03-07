@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { AutoLoginPartialRoutesGuard } from 'angular-auth-oidc-client';
-import { OnboardingPolicy, SettingsPolicy } from "./core/policies/power-policies";
-
+import {basicGuard, settingsGuard} from './core/guards/accessLevel.guard'
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'home' },
   {
@@ -11,7 +10,7 @@ export const routes: Routes = [
   {
     path: 'settings',
     loadChildren: () => import('./features/settings/settings.routes').then(m => m.default),
-    canActivate: [AutoLoginPartialRoutesGuard, SettingsPolicy, OnboardingPolicy],
+    canActivate: [AutoLoginPartialRoutesGuard, settingsGuard],
   },
   {
     path: 'organization/credentials',
@@ -19,7 +18,7 @@ export const routes: Routes = [
       import(
         './features/credential-management/credential-management.routes'
         ).then((m) => m.default),
-    canActivate: [AutoLoginPartialRoutesGuard, OnboardingPolicy],
+    canActivate: [AutoLoginPartialRoutesGuard, basicGuard],
   },
   {
     path: 'organization/credentials/create',
@@ -27,7 +26,7 @@ export const routes: Routes = [
       import('./features/credential-issuance/credential-issuance.routes').then(
         (m) => m.default
       ),
-    canActivate: [AutoLoginPartialRoutesGuard, OnboardingPolicy],
+    canActivate: [AutoLoginPartialRoutesGuard, basicGuard],
   },
   {
     path: 'organization/credentials/create2/:id',
@@ -35,7 +34,7 @@ export const routes: Routes = [
       import('./features/credential-issuance/credential-issuance.routes').then(
         (m) => m.default
       ),
-    canActivate: [AutoLoginPartialRoutesGuard, OnboardingPolicy],
+    canActivate: [AutoLoginPartialRoutesGuard, basicGuard],
   },
   {
     path: 'credential-offer',
