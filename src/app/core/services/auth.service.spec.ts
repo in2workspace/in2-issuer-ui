@@ -182,33 +182,6 @@ describe('AuthService', () => {
     });
   });
 
-  it('should return the signerSubject as an observable', done => {
-    const mockSigner = {
-      organizationIdentifier: 'SIGNER123',
-      organization: 'Signer Organization',
-      commonName: 'Signer Common Name',
-      emailAddress: 'signer@example.com',
-      serialNumber: '7891011',
-      country: 'Signerland'
-    };
-
-    (service as any).signerSubject.next(mockSigner);
-
-    service.getSigner().subscribe(signer => {
-      expect(signer).toEqual(mockSigner);
-      done();
-    });
-  });
-
-  it('should return null if no signer is set', done => {
-    (service as any).signerSubject.next(null);
-
-    service.getSigner().subscribe(signer => {
-      expect(signer).toBeNull();
-      done();
-    });
-  });
-
   it('should return the nameSubject as an observable', done => {
     const mockName = 'John Doe';
 
@@ -407,7 +380,7 @@ describe('AuthService', () => {
     });
   });
 
-  it('should set isAuthenticated, userData, mandator, signer, email and name when the user is authenticated', done => {
+  it('should set isAuthenticated, userData, mandator, email and name when the user is authenticated', done => {
     const mockUserData: UserDataAuthenticationResponse = {
       sub: 'sub',
       commonName: 'commonName',
@@ -482,7 +455,7 @@ describe('AuthService', () => {
           expect(userData).toEqual(mockUserData);
 
           service.getToken().subscribe(token => {
-            // Según el código actual, el token no se setea aquí
+            // En este flujo el token inicial no se setea (quedaría vacío)
             expect(token).toEqual('');
 
             service.getMandator().subscribe(mandator => {
@@ -495,19 +468,13 @@ describe('AuthService', () => {
                 country: 'Testland'
               });
 
+              // Si ya no seteas signer, puedes esperar null o simplemente omitir esta verificación:
               service.getSigner().subscribe(signer => {
-                expect(signer).toEqual({
-                  organizationIdentifier: 'VATEU-B99999999',
-                  organization: 'OLIMPO',
-                  commonName: 'ZEUS OLIMPOS',
-                  emailAddress: 'domesupport@in2.es',
-                  serialNumber: 'IDCEU-99999999P',
-                  country: 'EU'
-                });
+                expect(signer).toBeNull(); // o no llamar a getSigner() si se ha eliminado
 
                 service.getEmailName().subscribe(emailName => {
+                  // El emailName se obtiene al dividir el emailAddress de mandator (antes del '@')
                   expect(emailName).toBe('mandator');
-
                   service.getName().subscribe(name => {
                     expect(name).toBe('John Doe');
                     done();

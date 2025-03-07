@@ -4,7 +4,6 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { UserDataAuthenticationResponse } from "../models/dto/user-data-authentication-response.dto";
 import {LEARCredentialEmployee, Mandator, Power, Signer} from "../models/entity/lear-credential-employee.entity";
-import {environment} from "../../../environments/environment";
 import { LEARCredentialEmployeeDataNormalizer } from '../models/entity/lear-credential-employee-data-normalizer';
 
 
@@ -20,7 +19,6 @@ export class AuthService {
   private readonly signerSubject = new BehaviorSubject<Signer | null>(null);
   private readonly emailSubject = new BehaviorSubject<string>('');
   private readonly nameSubject = new BehaviorSubject<string>('');
-  private readonly profile =`${environment.profile}`;
   private readonly normalizer = new LEARCredentialEmployeeDataNormalizer();
 
 
@@ -60,9 +58,6 @@ export class AuthService {
           country: normalizedCredential.credentialSubject.mandate.mandator.country
         };
         this.mandatorSubject.next(mandator);
-
-        const signer = this.getProfileSigner()
-        this.signerSubject.next(signer)
 
         const emailName = normalizedCredential.credentialSubject.mandate.mandator.emailAddress.split('@')[0];
         const name = normalizedCredential.credentialSubject.mandate.mandatee.firstName + ' ' + normalizedCredential.credentialSubject.mandate.mandatee.lastName;
@@ -164,27 +159,4 @@ export class AuthService {
       return [];
     }
   }
-
-  private getProfileSigner() {
-    if (this.profile && this.profile !== 'production') {
-      return {
-        organizationIdentifier: "VATEU-B99999999",
-        organization: "OLIMPO",
-        commonName: "ZEUS OLIMPOS",
-        emailAddress: "domesupport@in2.es",
-        serialNumber: "IDCEU-99999999P",
-        country: "EU",
-      };
-    } else {
-      return {
-        organizationIdentifier: "VATES-Q0000000J",
-        organization: "DOME Credential Issuer",
-        commonName: "56565656P Jesus Ruiz",
-        emailAddress: "jesus.ruiz@in2.es",
-        serialNumber: "IDCES-56565656P",
-        country: "ES",
-      };
-    }
-  }
-
 }

@@ -15,7 +15,7 @@ import { CustomEmailValidatorDirective } from '../../directives/validators/custo
 import { UnicodeValidatorDirective } from '../../directives/validators/unicode-validator.directive';
 import { OrganizationNameValidatorDirective } from '../../directives/validators/organization-name.validator.directive';
 import { TempPower } from 'src/app/core/models/temporal/temp-power.interface';
-import { Power, Signer } from 'src/app/core/models/entity/lear-credential-employee.entity';
+import { Power } from 'src/app/core/models/entity/lear-credential-employee.entity';
 import { BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import { DialogWrapperService } from '../dialog/dialog-wrapper/dialog-wrapper.service';
 import { DialogData } from '../dialog/dialog.component';
@@ -48,14 +48,6 @@ const sortedCountries: any[] = [
   {name:'Portugal'},
   {name:'Spain'}
 ];
-const mockSigner:Signer = {
-  'organizationIdentifier': 'orgId',
-  'organization': 'org',
-  'commonName':'common',
-  'emailAddress':'email',
-  'serialNumber':'serialNum',
-  'country':'EU'
-};
 
 describe('FormCredentialComponent', () => {
   let component: FormCredentialComponent;
@@ -148,9 +140,6 @@ describe('FormCredentialComponent', () => {
       hasIn2OrganizationIdentifier(){
         return true
       },
-      getSigner(){
-        return of(mockSigner);
-      },
       hasPower: () => true
 
     } as jest.Mocked<any>
@@ -218,7 +207,7 @@ describe('FormCredentialComponent', () => {
     expect(component.hasIn2OrganizationId).toBe(true);
   });
 
-  it('should set mandator and signer correctly if mandator is returned', fakeAsync(() => {
+  it('should set mandator correctly if mandator is returned', fakeAsync(() => {
     const mockMandator = {
       organizationIdentifier: 'org123',
       organization: 'Org Name',
@@ -231,7 +220,6 @@ describe('FormCredentialComponent', () => {
     jest.spyOn(mockAuthService, 'hasIn2OrganizationIdentifier').mockReturnValue(false);
     jest.spyOn(mockAuthService, 'getMandator').mockReturnValue(of(mockMandator));
     component.viewMode='create';
-    component.asSigner=false;
 
     component.ngOnInit();
     fixture.detectChanges();
@@ -245,12 +233,11 @@ describe('FormCredentialComponent', () => {
       serialNumber: mockMandator.serialNumber,
       country: mockMandator.country,
     });
-    expect(component.signer).toEqual(mockSigner);
     expect(component.asSigner).toBe(false);
   }));
 
 
-  it('should not add mandator nor signer if mandator is null', ()=>{
+  it('should not add mandator if mandator is null', ()=>{
     component.ngOnInit();
     expect(component.mandator.commonName).toBe('');
     expect(component.mandator.country).toBe('');
@@ -259,14 +246,6 @@ describe('FormCredentialComponent', () => {
     expect(component.mandator.organizationIdentifier).toBe('');
     expect(component.mandator.serialNumber).toBe('');
 
-    expect(component.signer).toEqual({
-      organizationIdentifier: '',
-      organization: '',
-      commonName: '',
-      emailAddress: '',
-      serialNumber: '',
-      country: ''
-    });
   });
 
   it('should map power to tempPowers if viewMode is "detail"', () => {
