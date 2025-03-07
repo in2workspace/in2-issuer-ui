@@ -1,11 +1,11 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, WritableSignal, signal} from '@angular/core';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { UserDataAuthenticationResponse } from "../models/dto/user-data-authentication-response.dto";
-import {LEARCredentialEmployee, Mandator, Power, Signer} from "../models/entity/lear-credential-employee.entity";
-import { LEARCredentialEmployeeDataNormalizer } from '../models/entity/lear-credential-employee-data-normalizer';
-
+import { Mandator, Power, Signer, LEARCredentialEmployee } from "../models/entity/lear-credential-employee.entity";
+import {environment} from "../../../environments/environment";
+import { AuthLoginType } from '../models/enums/auth-login-type.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -19,8 +19,8 @@ export class AuthService {
   private readonly signerSubject = new BehaviorSubject<Signer | null>(null);
   private readonly emailSubject = new BehaviorSubject<string>('');
   private readonly nameSubject = new BehaviorSubject<string>('');
-  private readonly normalizer = new LEARCredentialEmployeeDataNormalizer();
-
+  private readonly profile =`${environment.profile}`;
+  public readonly authLoginType: WritableSignal<AuthLoginType> = signal(AuthLoginType.UNKNOWN);
 
 
   private userPowers: Power[] = [];
@@ -38,30 +38,118 @@ export class AuthService {
       take(1),
       map(({ isAuthenticated, userData}) => {
       this.isAuthenticatedSubject.next(isAuthenticated);
-
       if (isAuthenticated) {
         this.userDataSubject.next(userData);
-        console.log('user data:', userData)
-        const learCredential = this.extractVCFromUserData(userData)
-
-        const mandator = {
-          organizationIdentifier: normalizedCredential.credentialSubject.mandate.mandator.organizationIdentifier,
-          organization: normalizedCredential.credentialSubject.mandate.mandator.organization,
-          commonName: normalizedCredential.credentialSubject.mandate.mandator.commonName,
-          emailAddress: normalizedCredential.credentialSubject.mandate.mandator.emailAddress,
-          serialNumber: normalizedCredential.credentialSubject.mandate.mandator.serialNumber,
-          country: normalizedCredential.credentialSubject.mandate.mandator.country
-        };
-        this.mandatorSubject.next(mandator);
-
-        const emailName = normalizedCredential.credentialSubject.mandate.mandator.emailAddress.split('@')[0];
-        const name = normalizedCredential.credentialSubject.mandate.mandatee.firstName + ' ' + normalizedCredential.credentialSubject.mandate.mandatee.lastName;
-
-        this.emailSubject.next(emailName);
-        this.nameSubject.next(name);
+        const signer = this.getProfileSigner()
+        this.signerSubject.next(signer)
+        this.handleUserAuthentication(userData)
       }
       return isAuthenticated;
     }));
+  }
+
+  private handleUserAuthentication(userData: UserDataAuthenticationResponse): void {
+    const learCredential = this.extractVCFromUserData(userData);
+    if (learCredential) {
+      this.authLoginType.update(() => AuthLoginType.VC);
+      this.handleVCLogin(learCredential);
+    } 
+    else {
+      try{
+        this.authLoginType.update(() => AuthLoginType.CERT); 
+        this.handleCertificateLogin(userData);
+      }
+      catch(error){
+        console.error(error);
+      } 
+    }
+  }
+
+  private handleCertificateLogin(userData: UserDataAuthenticationResponse): void {
+    const certData = this.extractDataFromCertificate(userData);
+    this.mandatorSubject.next(certData);
+    this.nameSubject.next(certData.commonName);
+  }
+
+  private extractDataFromCertificate(userData: UserDataAuthenticationResponse): Mandator {
+    if (!userData?.cert) {
+      throw new Error('Unknown authentication method.');
+    }
+    return {
+        organizationIdentifier: userData.cert.organizationIdentifier,
+        organization: userData.cert.organization,
+        commonName: userData.cert.commonName,
+        emailAddress: userData.cert.emailAddress,
+        serialNumber: userData.cert.serialNumber,
+        country: userData.cert.country
+      }
+  };
+  
+
+  private handleVCLogin(learCredential: LEARCredentialEmployee): void {
+    const mandator = {
+      organizationIdentifier: learCredential.credentialSubject.mandate.mandator.organizationIdentifier,
+      organization: learCredential.credentialSubject.mandate.mandator.organization,
+      commonName: learCredential.credentialSubject.mandate.mandator.commonName,
+      emailAddress: learCredential.credentialSubject.mandate.mandator.emailAddress,
+      serialNumber: learCredential.credentialSubject.mandate.mandator.serialNumber,
+      country: learCredential.credentialSubject.mandate.mandator.country
+    };
+    
+    this.mandatorSubject.next(mandator);
+  
+    const emailName = learCredential.credentialSubject.mandate.mandator.emailAddress.split('@')[0];
+    const name = learCredential.credentialSubject.mandate.mandatee.first_name + ' ' + learCredential.credentialSubject.mandate.mandatee.last_name;
+  
+    this.emailSubject.next(emailName);
+    this.nameSubject.next(name);
+    this.userPowers = this.extractUserPowers(learCredential);
+  }
+
+  private extractVCFromUserData(userData: UserDataAuthenticationResponse) {
+    return userData.vc || null;
+  }
+
+  private extractUserPowers(learCredential: LEARCredentialEmployee): Power[] {
+    try {
+      return learCredential?.credentialSubject.mandate.power || [];
+    } catch (error) {
+      return [];
+    }
+  }
+
+  private getProfileSigner() {
+      if (this.profile && this.profile !== 'production') {
+        return {
+          organizationIdentifier: "VATEU-B99999999",
+          organization: "OLIMPO",
+          commonName: "ZEUS OLIMPOS",
+          emailAddress: "domesupport@in2.es",
+          serialNumber: "IDCEU-99999999P",
+          country: "EU",
+        };
+      } else {
+        return {
+          organizationIdentifier: "VATES-Q0000000J",
+          organization: "DOME Credential Issuer",
+          commonName: "56565656P Jesus Ruiz",
+          emailAddress: "jesus.ruiz@in2.es",
+          serialNumber: "IDCES-56565656P",
+          country: "ES",
+        };
+      }
+    }
+
+
+  // POLICY: login_restriction_policy
+  public hasOnboardingExecutePower(): boolean {
+    return this.userPowers.some((power: Power) => {
+      if (power.tmf_function === "Onboarding") {
+        const action = power.tmf_action;
+        return action === "Execute" || (Array.isArray(action) && action.includes("Execute"));
+      }
+      return false;
+    });
   }
 
   public hasPower(tmfFunction: string, tmfAction: string): boolean {
@@ -97,26 +185,27 @@ export class AuthService {
 
   public handleLoginCallback(): void {
     this.oidcSecurityService.checkAuth()
-      .pipe(take(1))
-      .subscribe(({ isAuthenticated, userData, accessToken }) => {
-        if (isAuthenticated) {
-
-          const learCredential = this.extractVCFromUserData(userData);
-          const normalizedCredential = this.normalizer.normalizeLearCredential(learCredential);
-
-          this.userPowers = this.extractUserPowers(normalizedCredential);
+    .pipe(take(1))
+    .subscribe(({ isAuthenticated, userData, accessToken }) => {
+      if (isAuthenticated) {
+        const learCredential = this.extractVCFromUserData(userData);
+        if(!learCredential && !userData?.cert){
+          this.logout();
+          return;
+        } 
+        else{
+          this.userPowers = this.extractUserPowers(userData.vc);
           const hasOnboardingPower = this.hasPower('Onboarding','Execute');
-
           if (!hasOnboardingPower) {
             this.logout();
             return;
           }
-
-          this.isAuthenticatedSubject.next(true);
-          this.userDataSubject.next(userData);
-          this.tokenSubject.next(accessToken);
         }
-      });
+        this.isAuthenticatedSubject.next(true);
+        this.userDataSubject.next(userData);
+        this.tokenSubject.next(accessToken);
+      }
+    });
   }
 
   public logout() {
