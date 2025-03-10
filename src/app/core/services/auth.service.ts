@@ -36,11 +36,13 @@ export class AuthService {
   public checkAuth(): Observable<boolean> {
     return this.oidcSecurityService.checkAuth().pipe(
       take(1),
-      map(({ isAuthenticated, userData}) => {
+      map(({ isAuthenticated, userData,idToken}) => {
       this.isAuthenticatedSubject.next(isAuthenticated);
 
       if (isAuthenticated) {
         this.userDataSubject.next(userData);
+        console.log('userData::', idToken)
+        console.log('userData::', userData)
 
         // Extract and normalize the VC using the normalizer class
         const learCredential = this.extractVCFromUserData(userData);
