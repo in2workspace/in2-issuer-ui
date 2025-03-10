@@ -1,6 +1,6 @@
 import { AutoLoginPartialRoutesGuard } from 'angular-auth-oidc-client';
-import { OnboardingPolicy, SettingsPolicy } from './core/policies/power-policies';
 import { routes } from "./app-routing";
+import {basicGuard, settingsGuard} from './core/guards/accessLevel.guard'
 
 describe('App Routes', () => {
   it('should contain a default redirect to home', () => {
@@ -20,7 +20,7 @@ describe('App Routes', () => {
     expect(orgCredRoute).toBeTruthy();
     expect(orgCredRoute?.loadChildren).toBeDefined();
     expect(orgCredRoute?.canActivate).toContain(AutoLoginPartialRoutesGuard);
-    expect(orgCredRoute?.canActivate).toContain(OnboardingPolicy);
+    expect(orgCredRoute?.canActivate).toContain(basicGuard);
   });
 
   it('should define lazy loading for credential issuance with guards', () => {
@@ -28,7 +28,7 @@ describe('App Routes', () => {
     expect(createCredRoute).toBeTruthy();
     expect(createCredRoute?.loadChildren).toBeDefined();
     expect(createCredRoute?.canActivate).toContain(AutoLoginPartialRoutesGuard);
-    expect(createCredRoute?.canActivate).toContain(OnboardingPolicy);
+    expect(createCredRoute?.canActivate).toContain(basicGuard);
   });
 
   it('should define a lazy loading route for credential-offer', () => {
@@ -41,7 +41,7 @@ describe('App Routes', () => {
     expect(settingsRoute).toBeTruthy();
     expect(settingsRoute?.loadChildren).toBeDefined();
     expect(settingsRoute?.canActivate).toContain(AutoLoginPartialRoutesGuard);
-    expect(settingsRoute?.canActivate).toContain(SettingsPolicy);
+    expect(settingsRoute?.canActivate).toContain(settingsGuard);
   });
   it('should redirect wildcard (**) to home', () => {
     const wildcardRoute = routes.find((route) => route.path === '**');
