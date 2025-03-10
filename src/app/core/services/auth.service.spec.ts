@@ -466,11 +466,7 @@ describe('AuthService', () => {
                 emailAddress: 'mandator@example.com',
                 serialNumber: '123456',
                 country: 'Testland'
-              });
-
-              // Si ya no seteas signer, puedes esperar null o simplemente omitir esta verificación:
-              service.getSigner().subscribe(signer => {
-                expect(signer).toBeNull(); // o no llamar a getSigner() si se ha eliminado
+              });             
 
                 service.getEmailName().subscribe(emailName => {
                   // El emailName se obtiene al dividir el emailAddress de mandator (antes del '@')
@@ -480,7 +476,7 @@ describe('AuthService', () => {
                     done();
                   });
                 });
-              });
+             
             });
           });
         });
