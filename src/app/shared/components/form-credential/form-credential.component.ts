@@ -9,7 +9,7 @@ import { MatOption } from '@angular/material/core';
 import { TempPower } from "../../../core/models/temporal/temp-power.interface";
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { from, Observable, of, switchMap, tap } from 'rxjs';
-import { Mandatee, Issuer, OrganizationDetails, Power } from 'src/app/core/models/entity/lear-credential-employee.entity';
+import { Mandatee, OrganizationDetails, Power } from 'src/app/core/models/entity/lear-credential-employee.entity';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButton } from '@angular/material/button';
 import { PowerComponent } from '../power/power.component';
@@ -100,7 +100,6 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
-    console.log('miraç:: ', this.asSigner)
     this.authService.getMandator()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(mandator2 => {
