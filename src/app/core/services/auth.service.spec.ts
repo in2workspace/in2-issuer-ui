@@ -248,7 +248,14 @@ describe('AuthService', () => {
         },
         expirationDate: '2024-12-31T23:59:59Z',
         issuanceDate: '2024-01-01T00:00:00Z',
-        issuer: 'issuer-id',
+        issuer: {
+          organizationIdentifier: 'ORG123',
+          organization: 'Test Organization',
+          commonName: 'Mandator Name',
+          emailAddress: 'mandator@example.com',
+          serialNumber: '123456',
+          country: 'Testland'
+        },
         validFrom: '2024-01-01T00:00:00Z'
       },
       'tenant-id': 'tenant-idValue',
@@ -329,7 +336,14 @@ describe('AuthService', () => {
         },
         expirationDate: '2024-12-31T23:59:59Z',
         issuanceDate: '2024-01-01T00:00:00Z',
-        issuer: 'issuer-id',
+        issuer: {
+          organizationIdentifier: 'ORG123',
+          organization: 'Test Organization',
+          commonName: 'Mandator Name',
+          emailAddress: 'mandator@example.com',
+          serialNumber: '123456',
+          country: 'Testland'
+        },
         validFrom: '2024-01-01T00:00:00Z'
       },
       'tenant-id': 'tenant-id',
@@ -426,7 +440,14 @@ describe('AuthService', () => {
         },
         expirationDate: '2024-12-31T23:59:59Z',
         issuanceDate: '2024-01-01T00:00:00Z',
-        issuer: 'issuer-id',
+        issuer: {
+          organizationIdentifier: 'ORG123',
+          organization: 'Test Organization',
+          commonName: 'Mandator Name',
+          emailAddress: 'mandator@example.com',
+          serialNumber: '123456',
+          country: 'Testland'
+        },
         validFrom: '2024-01-01T00:00:00Z'
       },
       'tenant-id': 'tenant-id',

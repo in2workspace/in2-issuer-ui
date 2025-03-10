@@ -43,7 +43,14 @@ export const credentialMock: LEARCredentialEmployeeJwtPayload = {
       },
       expirationDate: 'aa',
       issuanceDate: 'aa',
-      issuer: 'aa',
+      issuer: {
+        organizationIdentifier: 'ORG123',
+        organization: 'Test Organization',
+        commonName: 'Mandator Name',
+        emailAddress: 'mandator@example.com',
+        serialNumber: '123456',
+        country: 'Testland'
+      },
       validFrom: 'aa',
     },
     jti: 'jti'

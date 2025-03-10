@@ -47,6 +47,14 @@
     "no-country-error": "Seleccione un prefijo",
     "phone-prefix": "Prefijo telefónico"
   },
+  "issuer": {
+    "organizationid": "Número VAT de empresa",
+    "organization": "Nombre de empresa",
+    "name": "Nombre",
+    "email": "Dirección electrónica",
+    "serialNumber": "Número de tarjeta ID",
+    "country": "País"
+  },
   "mandatee": {
     "firstnameid": "ID del nombre",
     "last_name": "Apellidos",
