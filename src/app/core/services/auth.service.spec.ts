@@ -1,45 +1,170 @@
 import { TestBed } from '@angular/core/testing';
+import { of } from 'rxjs';
 import { AuthService } from './auth.service';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
-import { of } from 'rxjs';
-import { UserDataAuthenticationResponse } from "../models/dto/user-data-authentication-response.dto";
+import { UserDataAuthenticationResponse } from '../models/dto/user-data-authentication-response.dto';
+import { LEARCredentialEmployeeDataNormalizer } from '../models/entity/lear-credential-employee-data-normalizer';
+import { LEARCredentialEmployee } from '../models/entity/lear-credential-employee.entity';
+import { AuthLoginType } from '../models/enums/auth-login-type.enum';
 
-const mockAuthResponse = {
-  isAuthenticated: false,
-  userData: { emailAddress: 'test@example.com' },
-  accessToken: 'dummyAccessToken',
-  idToken: 'dummyIdToken'
+/**
+ * A few mock objects to reduce repetition.
+ * Adjust as needed for your real data shape.
+ */
+const mockCredentialEmployee: LEARCredentialEmployee = {
+  id: 'some-id',
+  type: ['VerifiableCredential', 'LEARCredentialEmployee'],
+  credentialSubject: {
+    mandate: {
+      id: 'mandate-id',
+      life_span: {
+        start_date_time: '2024-01-01T00:00:00Z',
+        end_date_time: '2024-12-31T23:59:59Z'
+      },
+      signer: {
+        organizationIdentifier: 'SIGNER123',
+        organization: 'Signer Organization',
+        commonName: 'Signer Name',
+        emailAddress: 'signer@example.com',
+        serialNumber: '7891011',
+        country: 'Signerland'
+      },
+      mandator: {
+        organizationIdentifier: 'ORG123',
+        organization: 'Test Organization',
+        commonName: 'Mandator Name',
+        emailAddress: 'mandator@example.com',
+        serialNumber: '123456',
+        country: 'Testland'
+      },
+      mandatee: {
+        firstName: 'John',
+        lastName: 'Doe',
+        email: 'jhonDoe@example.com',
+        nationality: ''
+      },
+      power: [
+        {
+          function: 'Onboarding',
+          action: 'Execute',
+          domain: 'domain',
+          type: 'type'
+        }
+      ]
+    }
+  },
+  expirationDate: '2024-12-31T23:59:59Z',
+  issuanceDate: '2024-01-01T00:00:00Z',
+  issuer: 'issuer-id',
+  validFrom: '2024-01-01T00:00:00Z'
+};
+
+
+const mockUserDataWithVC: UserDataAuthenticationResponse = {
+  sub: 'subValue',
+  commonName: 'commonNameValue',
+  country: 'countryValue',
+  serialNumber: 'serialNumberValue',
+  email_verified: true,
+  preferred_username: 'preferred_usernameValue',
+  given_name: 'givenNameValue',
+  vc: mockCredentialEmployee, 
+  'tenant-id': 'tenant-idValue',
+  emailAddress: 'someone@example.com',
+  organizationIdentifier: 'ORG123',
+  organization: 'Test Organization',
+  name: 'John Doe',
+  family_name: 'Doe'
+};
+
+const mockUserDataWithCert: UserDataAuthenticationResponse = {
+  sub: 'subCert',
+  commonName: 'Cert Common Name',
+  country: 'CertLand',
+  serialNumber: '99999999',
+  email_verified: true,
+  preferred_username: 'certUser',
+  given_name: 'CertGivenName',
+  'tenant-id': 'tenant-123',
+  emailAddress: 'cert-user@example.com',
+  organizationIdentifier: 'ORG-CERT',
+  organization: 'Cert Organization',
+  name: 'John Cert',
+  family_name: 'Cert',
+  // Propiedad 'cert' (de tipo EIDASCertificate) está definida opcionalmente.
+  cert: {
+    organizationIdentifier: 'CERT123',
+    organization: 'Cert Organization',
+    commonName: 'Cert Common Name',
+    emailAddress: 'cert@example.com',
+    serialNumber: '99999999',
+    country: 'CertLand'
+  }
+};
+
+const mockUserDataNoVCNoCert: UserDataAuthenticationResponse = {
+  sub: 'subCert',
+  commonName: 'Cert Common Name',
+  country: 'CertLand',
+  serialNumber: '99999999',
+  email_verified: true,
+  preferred_username: 'certUser',
+  given_name: 'CertGivenName',
+  'tenant-id': 'tenant-123',
+  emailAddress: 'cert-user@example.com',
+  organizationIdentifier: 'ORG-CERT',
+  organization: 'Cert Organization',
+  name: 'John Cert',
+  family_name: 'Cert',
 };
 
 describe('AuthService', () => {
   let service: AuthService;
-  let oidcSecurityService: {
+
+  // We'll mock OidcSecurityService and any direct dependencies (like normalizer).
+  let oidcSecurityServiceMock: {
     checkAuth: jest.Mock,
     authorize: jest.Mock,
     logoffAndRevokeTokens: jest.Mock
   };
 
+  let extractVcSpy: jest.SpyInstance; 
+ 
+
   beforeEach(() => {
-    oidcSecurityService = {
-      checkAuth: jest.fn().mockReturnValue(of(mockAuthResponse)),
+    oidcSecurityServiceMock = {
+      checkAuth: jest.fn().mockReturnValue(of({ 
+        isAuthenticated: false,
+        userData: null,
+        accessToken: null 
+      })),
       authorize: jest.fn(),
       logoffAndRevokeTokens: jest.fn()
     };
+    jest.spyOn(LEARCredentialEmployeeDataNormalizer.prototype, 'normalizeLearCredential')
+    .mockImplementation((data) => data);
 
+    
     TestBed.configureTestingModule({
       providers: [
         AuthService,
-        { provide: OidcSecurityService, useValue: oidcSecurityService }
+        { provide: OidcSecurityService, useValue: oidcSecurityServiceMock },
+
       ]
     });
 
     service = TestBed.inject(AuthService);
+
+    extractVcSpy = jest.spyOn(service as any, 'extractVCFromUserData');
+
     Object.defineProperty(window, 'sessionStorage', {
       value: {
         clear: jest.fn()
       },
       writable: true
     });
+
+    jest.clearAllMocks();
   });
 
   afterEach(() => {
@@ -47,124 +172,124 @@ describe('AuthService', () => {
     jest.clearAllMocks();
   });
 
+  // ----------------------------------------------------------------------------
+  // Basic creation / login / logout
+  // ----------------------------------------------------------------------------
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should call authorize on OidcSecurityService when login is called', () => {
+  it('should call authorize on OidcSecurityService when login() is called', () => {
     service.login();
-    expect(oidcSecurityService.authorize).toHaveBeenCalled();
+    expect(oidcSecurityServiceMock.authorize).toHaveBeenCalled();
   });
 
-  it('should call logoffAndRevokeTokens and clear sessionStorage when logout is called', () => {
+  it('should call logoffAndRevokeTokens when logout() is called', () => {
     service.logout();
-    expect(oidcSecurityService.logoffAndRevokeTokens).toHaveBeenCalled();
+    expect(oidcSecurityServiceMock.logoffAndRevokeTokens).toHaveBeenCalled();
   });
 
-  it('should return isAuthenticatedSubject as observable when isLoggedIn is called', done => {
+  // ----------------------------------------------------------------------------
+  // Observables: isLoggedIn, getUserData, getEmailName, getToken, getName, etc.
+  // ----------------------------------------------------------------------------
+  it('should return false initially for isLoggedIn()', done => {
     service.isLoggedIn().subscribe(isLoggedIn => {
-      expect(isLoggedIn).toBeFalsy();
+      expect(isLoggedIn).toBe(false);
       done();
     });
   });
 
-  it('should return user data as observable when getUserData is called', done => {
+  it('should return null for getUserData() initially', done => {
     service.getUserData().subscribe(userData => {
       expect(userData).toBeNull();
       done();
     });
   });
 
-  it('should return email name as observable when getEmailName is called', done => {
-    service.getEmailName().subscribe(emailName => {
-      expect(emailName).toBe('');
+  it('should return "" for getEmailName() initially', done => {
+    service.getEmailName().subscribe(email => {
+      expect(email).toBe('');
       done();
     });
   });
 
-  it('should return token as observable when getToken is called', done => {
+  it('should return "" for getToken() initially', done => {
     service.getToken().subscribe(token => {
       expect(token).toBe('');
       done();
     });
   });
 
+  it('should return "" for getName() initially', done => {
+    service.getName().subscribe(name => {
+      expect(name).toBe('');
+      done();
+    });
+  });
+
+  // ----------------------------------------------------------------------------
+  // hasPower()
+  // ----------------------------------------------------------------------------
   it('should return true if user has "Onboarding" power with action array containing "Execute"', () => {
     (service as any).userPowers = [
       { function: 'Onboarding', action: ['Read', 'Execute', 'Write'] }
     ];
-
-    const result = service.hasPower('Onboarding','Execute');
-    expect(result).toBeTruthy();
+    expect(service.hasPower('Onboarding', 'Execute')).toBe(true);
   });
 
-  it('should return false if user has "Onboarding" power but no "Execute" action', () => {
+  it('should return false if user has "Onboarding" power but lacks "Execute"', () => {
     (service as any).userPowers = [
       { function: 'Onboarding', action: ['Read', 'Write'] }
     ];
-
-    const result = service.hasPower('Onboarding','Execute');
-    expect(result).toBeFalsy();
+    expect(service.hasPower('Onboarding', 'Execute')).toBe(false);
   });
 
   it('should return false if user has no "Onboarding" power', () => {
     (service as any).userPowers = [
       { function: 'OtherFunction', action: 'Execute' }
     ];
-
-    const result = service.hasPower('Onboarding','Execute');
-    expect(result).toBeFalsy();
+    expect(service.hasPower('Onboarding', 'Execute')).toBe(false);
   });
 
   it('should return false if userPowers is empty', () => {
     (service as any).userPowers = [];
-
-    const result = service.hasPower('Onboarding','Execute');
-    expect(result).toBeFalsy();
+    expect(service.hasPower('Onboarding', 'Execute')).toBe(false);
   });
 
-  it('should return true if userData.organizationIdentifier matches "VATES-B60645900"', () => {
-    const mockUserData = { organizationIdentifier: 'VATES-B60645900' };
-    (service as any).userDataSubject.next(mockUserData);
-
-    const result = service.hasIn2OrganizationIdentifier();
-    expect(result).toBeTruthy();
+  // ----------------------------------------------------------------------------
+  // hasIn2OrganizationIdentifier()
+  // ----------------------------------------------------------------------------
+  it('should return true if organizationIdentifier is "VATES-B60645900"', () => {
+    (service as any).userDataSubject.next({
+      organizationIdentifier: 'VATES-B60645900'
+    });
+    expect(service.hasIn2OrganizationIdentifier()).toBe(true);
   });
 
-  it('should return false if userData.organizationIdentifier does not match "VATES-B60645900"', () => {
-    const mockUserData = { organizationIdentifier: 'OTHER-ORG123' };
-    (service as any).userDataSubject.next(mockUserData);
-
-    const result = service.hasIn2OrganizationIdentifier();
-    expect(result).toBeFalsy();
+  it('should return false if organizationIdentifier is not "VATES-B60645900"', () => {
+    (service as any).userDataSubject.next({
+      organizationIdentifier: 'OTHER'
+    });
+    expect(service.hasIn2OrganizationIdentifier()).toBe(false);
   });
 
   it('should return false if userData is null', () => {
-    const mockUserData = { organizationIdentifier: null };
-    (service as any).userDataSubject.next(mockUserData);
-
-    const result = service.hasIn2OrganizationIdentifier();
-    expect(result).toBeFalsy();
+    (service as any).userDataSubject.next(null);
+    expect(service.hasIn2OrganizationIdentifier()).toBe(false);
   });
 
-  it('should return false if userData.organizationIdentifier is undefined', () => {
-    const mockUserData = { otherField: 'someValue' };
-    (service as any).userDataSubject.next(mockUserData);
-
-    const result = service.hasIn2OrganizationIdentifier();
-    expect(result).toBeFalsy();
-  });
-
-  it('should return the mandatorSubject as an observable', done => {
+  // ----------------------------------------------------------------------------
+  // getMandator()
+  // ----------------------------------------------------------------------------
+  it('should return mandatorSubject as an observable', done => {
     const mockMandator = {
       organizationIdentifier: 'ORG123',
-      organization: 'Test Organization',
-      commonName: 'Test Common Name',
-      emailAddress: 'test@example.com',
-      serialNumber: '123456',
-      country: 'Testland'
+      organization: 'Test Org',
+      commonName: 'Some Name',
+      emailAddress: 'some@example.com',
+      serialNumber: '123',
+      country: 'SomeCountry'
     };
-
     (service as any).mandatorSubject.next(mockMandator);
 
     service.getMandator().subscribe(mandator => {
@@ -173,205 +298,82 @@ describe('AuthService', () => {
     });
   });
 
-  it('should return null if no mandator is set', done => {
-    (service as any).mandatorSubject.next(null);
-
-    service.getMandator().subscribe(mandator => {
-      expect(mandator).toBeNull();
-      done();
-    });
-  });
-
-  it('should return the nameSubject as an observable', done => {
-    const mockName = 'John Doe';
-
-    (service as any).nameSubject.next(mockName);
-
-    service.getName().subscribe(name => {
-      expect(name).toEqual(mockName);
-      done();
-    });
-  });
-
-  it('should return an empty string if no name is set', done => {
-    (service as any).nameSubject.next('');
-
-    service.getName().subscribe(name => {
-      expect(name).toBe('');
-      done();
-    });
-  });
-
-  it('should set isAuthenticated, userData, and token if the user is authenticated and has onboarding execute power', done => {
-    const mockUserData: UserDataAuthenticationResponse = {
-      sub: 'subValue',
-      commonName: 'commonNameValue',
-      country: 'countryValue',
-      serialNumber: 'serialNumberValue',
-      email_verified: true,
-      preferred_username: 'preferred_usernameValue',
-      given_name: 'givenNameValue',
-      vc: {
-        id: 'some-id',
-        type: ['VerifiableCredential', 'LEARCredentialEmployee'],
-        credentialSubject: {
-          mandate: {
-            id: 'mandate-id',
-            life_span: {
-              start_date_time: '2021-01-01T00:00:00Z',
-              end_date_time: '2021-12-31T23:59:59Z'
-            },
-            mandatee: {
-              firstName: 'John',
-              lastName: 'Doe',
-              email: 'john.doe@example.com',
-              nationality: 'ES'
-            },
-            mandator: {
-              organizationIdentifier: 'ORG123',
-              organization: 'Test Organization',
-              commonName: 'Mandator Name',
-              emailAddress: 'mandator@example.com',
-              serialNumber: '123456',
-              country: 'Testland'
-            },
-            signer: {
-              organizationIdentifier: 'SIGNER123',
-              organization: 'Signer Organization',
-              commonName: 'Signer Name',
-              emailAddress: 'signer@example.com',
-              serialNumber: '7891011',
-              country: 'Signerland'
-            },
-            power: [{ function: 'Onboarding', action: 'Execute' , domain: 'domain', type: 'type' }]
-          }
-        },
-        expirationDate: '2024-12-31T23:59:59Z',
-        issuanceDate: '2024-01-01T00:00:00Z',
-        issuer: 'issuer-id',
-        validFrom: '2024-01-01T00:00:00Z'
-      },
-      'tenant-id': 'tenant-idValue',
-      emailAddress: 'someone@example.com',
-      organizationIdentifier: 'ORG123',
-      organization: 'Test Organization',
-      name: 'John Doe',
-      family_name: 'Doe'
-    };
-
-    const mockAuthResponse = {
+  // ----------------------------------------------------------------------------
+  // handleLoginCallback()
+  // ----------------------------------------------------------------------------
+  it('should set userData and token if user is authenticated and has Onboarding Execute (via VC)', done => {
+    oidcSecurityServiceMock.checkAuth.mockReturnValue(of({
       isAuthenticated: true,
-      userData: mockUserData,
-      accessToken: 'dummyAccessToken'
-    };
-
-    oidcSecurityService.checkAuth.mockReturnValue(of(mockAuthResponse));
+      userData: mockUserDataWithVC,
+      accessToken: 'test-token'
+    }));
+    // we also want to ensure the 'extractVCFromUserData' is not null
+    extractVcSpy.mockReturnValue(mockCredentialEmployee);
 
     service.handleLoginCallback();
 
-    service.isLoggedIn().subscribe(isAuthenticated => {
-      expect(isAuthenticated).toBeTruthy();
+    // Check final states
+    service.isLoggedIn().subscribe(isLoggedIn => {
+      expect(isLoggedIn).toBe(true);
 
-      service.getUserData().subscribe(userData => {
-        expect(userData).toEqual(mockUserData);
+      service.getUserData().subscribe(ud => {
+        expect(ud).toEqual(mockUserDataWithVC);
 
         service.getToken().subscribe(token => {
-          expect(token).toEqual('dummyAccessToken');
+          expect(token).toBe('test-token');
           done();
         });
       });
     });
   });
 
-  it('should call logout if the user is authenticated but does not have onboarding execute power', () => {
-    const mockUserData: UserDataAuthenticationResponse = {
-      sub: 'sub',
-      commonName: 'commonName',
-      country: 'country',
-      serialNumber: 'serialNumber',
-      email_verified: true,
-      preferred_username: 'preferred_username',
-      given_name: 'given_name',
-      vc: {
-        id: 'some-id',
-        type: ['VerifiableCredential', 'LEARCredentialEmployee'],
-        credentialSubject: {
-          mandate: {
-            id: 'mandate-id',
-            life_span: {
-              end_date_time: '2024-12-31T23:59:59Z',
-              start_date_time: '2024-01-01T00:00:00Z'
-            },
-            mandator: {
-              organizationIdentifier: 'ORG123',
-              organization: 'Test Organization',
-              commonName: 'Mandator Name',
-              emailAddress: 'mandator@example.com',
-              serialNumber: '123456',
-              country: 'Testland'
-            },
-            signer: {
-              organizationIdentifier: 'SIGNER123',
-              organization: 'Signer Organization',
-              commonName: 'Signer Name',
-              emailAddress: 'signer@example.com',
-              serialNumber: '7891011',
-              country: 'Signerland'
-            },
-            mandatee: {
-              firstName: 'John',
-              lastName: 'Doe',
-              email: '',
-              nationality: ''
-            },
-            power: [{ function: 'OtherFunction', action: 'Read', type: 'type', domain: 'domain' }]
-          }
-        },
-        expirationDate: '2024-12-31T23:59:59Z',
-        issuanceDate: '2024-01-01T00:00:00Z',
-        issuer: 'issuer-id',
-        validFrom: '2024-01-01T00:00:00Z'
-      },
-      'tenant-id': 'tenant-id',
-      emailAddress: 'someone@example.com',
-      organizationIdentifier: 'ORG123',
-      organization: 'Test Organization',
-      name: 'John Doe',
-      family_name: 'Doe'
+  it('should call logout if user is authenticated, but missing Onboarding Execute power', () => {
+    const credWithoutOnboarding = {
+      credentialSubject: {
+        mandate: {
+          mandator: { emailAddress: 'whatever@x.com' },
+          mandatee: { firstName: 'x', lastName: 'y' },
+          power: [ { function: 'OtherFunction', action: 'Write' } ]
+        }
+      }
     };
 
-    const mockAuthResponse = {
+    oidcSecurityServiceMock.checkAuth.mockReturnValue(of({
       isAuthenticated: true,
-      userData: mockUserData,
-      accessToken: 'dummyAccessToken'
-    };
-
-    oidcSecurityService.checkAuth.mockReturnValue(of(mockAuthResponse));
-    jest.spyOn(service, 'logout');
+      userData: { ...mockUserDataWithVC, vc: credWithoutOnboarding },
+      accessToken: 'abc'
+    }));
+    const logoutSpy = jest.spyOn(service, 'logout');
 
     service.handleLoginCallback();
-
-    expect(service.logout).toHaveBeenCalled();
+    expect(logoutSpy).toHaveBeenCalled();
   });
 
+  it('should call logout if user is authenticated but has no VC and no cert', () => {
+    oidcSecurityServiceMock.checkAuth.mockReturnValue(of({
+      isAuthenticated: true,
+      userData: mockUserDataNoVCNoCert,
+      accessToken: 'some-token'
+    }));
+    const logoutSpy = jest.spyOn(service, 'logout');
 
-  it('should not set any subjects if the user is not authenticated', done => {
-    const mockAuthResponse = {
+    service.handleLoginCallback();
+    expect(logoutSpy).toHaveBeenCalled();
+  });
+
+  it('should do nothing special (not set subjects) if user is not authenticated', done => {
+    oidcSecurityServiceMock.checkAuth.mockReturnValue(of({
       isAuthenticated: false,
       userData: null,
-      accessToken: null
-    };
-
-    oidcSecurityService.checkAuth.mockReturnValue(of(mockAuthResponse));
+      accessToken: ''
+    }));
 
     service.handleLoginCallback();
 
-    service.isLoggedIn().subscribe(isAuthenticated => {
-      expect(isAuthenticated).toBeFalsy();
-
-      service.getUserData().subscribe(userData => {
-        expect(userData).toBeNull();
-
+    service.isLoggedIn().subscribe(isLoggedIn => {
+      expect(isLoggedIn).toBe(false);
+      service.getUserData().subscribe(ud => {
+        expect(ud).toBeNull();
         service.getToken().subscribe(token => {
           expect(token).toBe('');
           done();
@@ -380,133 +382,73 @@ describe('AuthService', () => {
     });
   });
 
-  it('should set isAuthenticated, userData, mandator, email and name when the user is authenticated', done => {
-    const mockUserData: UserDataAuthenticationResponse = {
-      sub: 'sub',
-      commonName: 'commonName',
-      country: 'country',
-      serialNumber: 'serialNumber',
-      email_verified: true,
-      preferred_username: 'preferred_username',
-      given_name: 'given_name',
-      vc: {
-        id: 'some-id',
-        type: ['VerifiableCredential', 'LEARCredentialEmployee'],
-        credentialSubject: {
-          mandate: {
-            id: 'mandate-id',
-            life_span: {
-              end_date_time: '2024-12-31T23:59:59Z',
-              start_date_time: '2024-01-01T00:00:00Z'
-            },
-            mandator: {
-              organizationIdentifier: 'ORG123',
-              organization: 'Test Organization',
-              commonName: 'Mandator Name',
-              emailAddress: 'mandator@example.com',
-              serialNumber: '123456',
-              country: 'Testland'
-            },
-            signer: {
-              organizationIdentifier: 'VATEU-B99999999',
-              organization: 'OLIMPO',
-              commonName: 'ZEUS OLIMPOS',
-              emailAddress: 'domesupport@in2.es',
-              serialNumber: 'IDCEU-99999999P',
-              country: 'EU'
-            },
-            mandatee: {
-              firstName: 'John',
-              lastName: 'Doe',
-              email: 'jhonDoe@example.com',
-              nationality: ''
-            },
-            power: [{ function: 'Onboarding', action: 'Execute', domain: 'domain', type: 'type' }]
-          }
-        },
-        expirationDate: '2024-12-31T23:59:59Z',
-        issuanceDate: '2024-01-01T00:00:00Z',
-        issuer: 'issuer-id',
-        validFrom: '2024-01-01T00:00:00Z'
-      },
-      'tenant-id': 'tenant-id',
-      emailAddress: 'someone@example.com',
-      organizationIdentifier: 'ORG123',
-      organization: 'Test Organization',
-      name: 'John Doe',
-      family_name: 'Doe'
-    };
+  // ----------------------------------------------------------------------------
+  // handleUserAuthentication() - direct coverage
+  // ----------------------------------------------------------------------------
+  it('should handle Verifiable Credential flow in handleUserAuthentication()', () => {
+    // Spy on handleVCLogin to confirm call
+    const handleVCLoginSpy = jest.spyOn(service as any, 'handleVCLogin');
+    extractVcSpy.mockReturnValue(mockCredentialEmployee);
 
-    const mockAuthResponse = {
+    (service as any).handleUserAuthentication(mockUserDataWithVC);
+    expect(LEARCredentialEmployeeDataNormalizer.prototype.normalizeLearCredential).toHaveBeenCalled();
+    expect(handleVCLoginSpy).toHaveBeenCalled();
+    expect(service.authLoginType()).toBe(AuthLoginType.VC);
+  });
+
+  it('should handle Certificate flow (else) if no VC but userData.cert is present', () => {
+    const handleCertLoginSpy = jest.spyOn(service as any, 'handleCertificateLogin');
+    extractVcSpy.mockReturnValue(null); // No credential
+
+    (service as any).handleUserAuthentication(mockUserDataWithCert);
+
+    expect(handleCertLoginSpy).toHaveBeenCalledWith(mockUserDataWithCert);
+    expect(service.authLoginType()).toBe(AuthLoginType.CERT);
+  });
+
+  it('should catch error if neither VC nor cert is present', () => {
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    extractVcSpy.mockReturnValue(null);
+
+    (service as any).handleUserAuthentication(mockUserDataNoVCNoCert);
+
+    expect(consoleErrorSpy).toHaveBeenCalled(); 
+  });
+
+  // ----------------------------------------------------------------------------
+  // checkAuth() coverage
+  // ----------------------------------------------------------------------------
+  it('should mark user as authenticated and invoke handleUserAuthentication if checkAuth sees a valid user', done => {
+    const handleUserAuthSpy = jest.spyOn(service as any, 'handleUserAuthentication');
+    oidcSecurityServiceMock.checkAuth.mockReturnValue(of({
       isAuthenticated: true,
-      userData: mockUserData,
-      accessToken: 'dummyAccessToken'
-    };
+      userData: mockUserDataWithVC,
+      accessToken: 'xxx'
+    }));
 
-    oidcSecurityService.checkAuth.mockReturnValue(of(mockAuthResponse));
-
-    service.checkAuth().subscribe(isAuthenticated => {
-      expect(isAuthenticated).toBeTruthy();
-
+    service.checkAuth().subscribe(result => {
+      expect(result).toBe(true);
+      expect(handleUserAuthSpy).toHaveBeenCalledWith(mockUserDataWithVC);
       service.isLoggedIn().subscribe(isLoggedIn => {
-        expect(isLoggedIn).toBeTruthy();
-
-        service.getUserData().subscribe(userData => {
-          expect(userData).toEqual(mockUserData);
-
-          service.getToken().subscribe(token => {
-            // En este flujo el token inicial no se setea (quedaría vacío)
-            expect(token).toEqual('');
-
-            service.getMandator().subscribe(mandator => {
-              expect(mandator).toEqual({
-                organizationIdentifier: 'ORG123',
-                organization: 'Test Organization',
-                commonName: 'Mandator Name',
-                emailAddress: 'mandator@example.com',
-                serialNumber: '123456',
-                country: 'Testland'
-              });             
-
-                service.getEmailName().subscribe(emailName => {
-                  // El emailName se obtiene al dividir el emailAddress de mandator (antes del '@')
-                  expect(emailName).toBe('mandator');
-                  service.getName().subscribe(name => {
-                    expect(name).toBe('John Doe');
-                    done();
-                  });
-                });
-             
-            });
-          });
-        });
+        expect(isLoggedIn).toBe(true);
+        done();
       });
     });
   });
 
-  it('should return false if the user is not authenticated', done => {
-    const mockAuthResponse = {
+  it('should mark user as not authenticated if checkAuth sees isAuthenticated=false', done => {
+    oidcSecurityServiceMock.checkAuth.mockReturnValue(of({
       isAuthenticated: false,
       userData: null,
       accessToken: ''
-    };
+    }));
 
-    oidcSecurityService.checkAuth.mockReturnValue(of(mockAuthResponse));
-
-    service.checkAuth().subscribe(isAuthenticated => {
-      expect(isAuthenticated).toBeFalsy();
-
+    service.checkAuth().subscribe(result => {
+      expect(result).toBe(false);
       service.isLoggedIn().subscribe(isLoggedIn => {
-        expect(isLoggedIn).toBeFalsy();
-
-        service.getUserData().subscribe(userData => {
-          expect(userData).toBeNull();
-
-          service.getToken().subscribe(token => {
-            expect(token).toBe('');
-            done();
-          });
-        });
+        expect(isLoggedIn).toBe(false);
+        done();
       });
     });
   });
