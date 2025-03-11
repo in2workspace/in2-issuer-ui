@@ -36,7 +36,7 @@ export class AuthService {
   public checkAuth(): Observable<boolean> {
     return this.oidcSecurityService.checkAuth().pipe(
       take(1),
-      map(({ isAuthenticated, userData,idToken}) => {
+      map(({ isAuthenticated, userData}) => {
       this.isAuthenticatedSubject.next(isAuthenticated);
 
       if (isAuthenticated) {
