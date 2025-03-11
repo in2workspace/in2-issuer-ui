@@ -35,6 +35,8 @@ export class CredentialProcedureService {
     ).pipe(
       map(learCredentialEmployeeDataDetail => {
         // Normalize the vc part which is of type LEARCredentialEmployee
+        console.log("LearCredentialEmployeeDataDetail: ", learCredentialEmployeeDataDetail);
+      
         const normalizedLearCredentialEmployee = this.normalizer.normalizeLearCredential(learCredentialEmployeeDataDetail.credential.vc);
         // Rebuild the object, keeping the rest intact
         return {
