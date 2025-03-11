@@ -70,6 +70,7 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
   @Input() public title: string = '';
   @Input() public power: Power[] = [];
   @Input() public credentialStatus: string = '';
+  @Input() public issuer: OrganizationDetails = this.initializeOrganizationDetails();
   @Input() public credential: Mandatee = this.initializeCredential();
   @Input() public mandator: OrganizationDetails = this.initializeOrganizationDetails();
   public isLoading$: Observable<boolean>;

@@ -47,6 +47,14 @@
     "no-country-error": "Selecciona un prefix",
     "phone-prefix": "Prefix mòbil"
   },
+  "issuer": {
+    "organizationid": "Número VAT de l'empresa",
+    "organization": "Nom de l'empresa",
+    "name": "Nom",
+    "email": "Adreça electrònica",
+    "serialNumber": "Número de targeta ID",
+    "country": "País"
+  },
   "mandatee": {
     "firstnameid": "ID del nom",
     "last_name": "Cognoms",

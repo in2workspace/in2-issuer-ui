@@ -47,6 +47,14 @@
     "no-country-error": "Please select a phone prefix",
     "phone-prefix": "Phone prefix"
   },
+  "issuer": {
+    "organizationid": "Company VAT number",
+    "organization": "Company name",
+    "name": "Name",
+    "email": "Email",
+    "serialNumber": "ID card number",
+    "country": "Country"
+  },
   "mandatee": {
     "firstnameid": "First name",
     "last_name": "Last name",

@@ -71,7 +71,14 @@ const mockCredentialManagement: LEARCredentialEmployeeJwtPayload = {
       },
       "expirationDate": "2024-06-29T14:01:03.809829546Z",
       "issuanceDate": "2024-05-30T14:01:03.809829546Z",
-      "issuer": "VATES-B60645900",
+      "issuer": {
+        organizationIdentifier: 'ORG123',
+        organization: 'Test Organization',
+        commonName: 'Mandator Name',
+        emailAddress: 'mandator@example.com',
+        serialNumber: '123456',
+        country: 'Testland'
+      },
       "validFrom": "2024-05-30T14:01:03.809829546Z"
   },
   "jti": "e2975afc-6df2-4183-b84b-d797133650eb"
