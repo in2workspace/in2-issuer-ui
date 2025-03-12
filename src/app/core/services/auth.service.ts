@@ -1,11 +1,11 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, WritableSignal, signal } from '@angular/core';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { UserDataAuthenticationResponse } from "../models/dto/user-data-authentication-response.dto";
-import {LEARCredentialEmployee, Mandator, Power, Signer} from "../models/entity/lear-credential-employee.entity";
+import {LEARCredentialEmployee, Mandator, Power} from "../models/entity/lear-credential-employee.entity";
 import { LEARCredentialEmployeeDataNormalizer } from '../models/entity/lear-credential-employee-data-normalizer';
-
+import { RolType } from '../models/enums/auth-rol-type.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -16,10 +16,10 @@ export class AuthService {
   private readonly userDataSubject = new BehaviorSubject<UserDataAuthenticationResponse |null>(null);
   private readonly tokenSubject = new BehaviorSubject<string>('');
   private readonly mandatorSubject = new BehaviorSubject<Mandator | null>(null);
-  private readonly signerSubject = new BehaviorSubject<Signer | null>(null);
   private readonly emailSubject = new BehaviorSubject<string>('');
   private readonly nameSubject = new BehaviorSubject<string>('');
   private readonly normalizer = new LEARCredentialEmployeeDataNormalizer();
+  public readonly rolType: WritableSignal<RolType> = signal(RolType.LEAR);
 
 
 
@@ -41,31 +41,71 @@ export class AuthService {
 
       if (isAuthenticated) {
         this.userDataSubject.next(userData);
-        // Extract and normalize the VC using the normalizer class
-        const learCredential = this.extractVCFromUserData(userData);
-        const normalizedCredential = this.normalizer.normalizeLearCredential(learCredential);
-
-        this.userPowers = this.extractUserPowers(normalizedCredential);
-
-
-        const mandator = {
-          organizationIdentifier: normalizedCredential.credentialSubject.mandate.mandator.organizationIdentifier,
-          organization: normalizedCredential.credentialSubject.mandate.mandator.organization,
-          commonName: normalizedCredential.credentialSubject.mandate.mandator.commonName,
-          emailAddress: normalizedCredential.credentialSubject.mandate.mandator.emailAddress,
-          serialNumber: normalizedCredential.credentialSubject.mandate.mandator.serialNumber,
-          country: normalizedCredential.credentialSubject.mandate.mandator.country
-        };
-        this.mandatorSubject.next(mandator);
-
-        const emailName = normalizedCredential.credentialSubject.mandate.mandator.emailAddress.split('@')[0];
-        const name = normalizedCredential.credentialSubject.mandate.mandatee.firstName + ' ' + normalizedCredential.credentialSubject.mandate.mandatee.lastName;
-
-        this.emailSubject.next(emailName);
-        this.nameSubject.next(name);
+        this.handleUserAuthentication(userData)
       }
       return isAuthenticated;
     }));
+  }
+
+  private handleUserAuthentication(userData: UserDataAuthenticationResponse): void {
+    if(this.getRol(userData)=='LER'){
+      this.handleCertificateLogin(userData);
+      this.rolType.update(() => RolType.LER);
+    }
+    else{
+      try{
+        const learCredential = this.extractVCFromUserData(userData);
+        const normalizedCredential = this.normalizer.normalizeLearCredential(learCredential);
+        this.handleVCLogin(normalizedCredential);
+      } 
+      catch(error){
+        console.error(error)
+      }
+    } 
+  }
+
+  private getRol(userData: UserDataAuthenticationResponse):RolType|null{
+    if (userData?.rol) {
+      return userData.rol;
+    }
+    return null;
+  }
+
+  private handleCertificateLogin(userData: UserDataAuthenticationResponse): void {
+    const certData = this.extractDataFromCertificate(userData);
+    this.mandatorSubject.next(certData);
+    this.nameSubject.next(certData.commonName);
+  }
+
+  private extractDataFromCertificate(userData: UserDataAuthenticationResponse): Mandator {
+    return {
+        organizationIdentifier: userData.organizationIdentifier,
+        organization: userData.organization,
+        commonName: userData.name,
+        emailAddress: userData?.email ?? '',
+        serialNumber: userData?.serial_number ?? '',
+        country: userData.country
+      }
+  };
+
+  private handleVCLogin(learCredential: LEARCredentialEmployee): void {
+    const mandator = {
+      organizationIdentifier: learCredential.credentialSubject.mandate.mandator.organizationIdentifier,
+      organization: learCredential.credentialSubject.mandate.mandator.organization,
+      commonName: learCredential.credentialSubject.mandate.mandator.commonName,
+      emailAddress: learCredential.credentialSubject.mandate.mandator.emailAddress,
+      serialNumber: learCredential.credentialSubject.mandate.mandator.serialNumber,
+      country: learCredential.credentialSubject.mandate.mandator.country
+    };
+    
+    this.mandatorSubject.next(mandator);
+  
+    const emailName = learCredential.credentialSubject.mandate.mandator.emailAddress.split('@')[0];
+    const name = learCredential.credentialSubject.mandate.mandatee.firstName + ' ' + learCredential.credentialSubject.mandate.mandatee.lastName;
+  
+    this.emailSubject.next(emailName);
+    this.nameSubject.next(name);
+    this.userPowers = this.extractUserPowers(learCredential);
   }
 
   public hasPower(tmfFunction: string, tmfAction: string): boolean {
@@ -91,10 +131,6 @@ export class AuthService {
     return this.mandatorSubject.asObservable();
   }
 
-  public getSigner(): Observable<Signer | null> {
-    return this.signerSubject.asObservable();
-  }
-
   public login(): void {
     this.oidcSecurityService.authorize();
   }
@@ -103,17 +139,21 @@ export class AuthService {
     this.oidcSecurityService.checkAuth()
       .pipe(take(1))
       .subscribe(({ isAuthenticated, userData, accessToken }) => {
-        if (isAuthenticated) {
-
-          const learCredential = this.extractVCFromUserData(userData);
-          const normalizedCredential = this.normalizer.normalizeLearCredential(learCredential);
-
-          this.userPowers = this.extractUserPowers(normalizedCredential);
-          const hasOnboardingPower = this.hasPower('Onboarding','Execute');
-
-          if (!hasOnboardingPower) {
+        if (isAuthenticated ) {
+          if(!userData?.rol && !userData?.vc){
             this.logout();
             return;
+          } 
+          const learCredential = this.extractVCFromUserData(userData);
+
+          if(learCredential!=null){
+            const normalizedCredential = this.normalizer.normalizeLearCredential(learCredential);
+            this.userPowers = this.extractUserPowers(normalizedCredential);
+            const hasOnboardingPower = this.hasPower('Onboarding','Execute');
+            if (!hasOnboardingPower) {
+              this.logout();
+              return;
+            }
           }
 
           this.isAuthenticatedSubject.next(true);
@@ -148,7 +188,10 @@ export class AuthService {
   }
 
   private extractVCFromUserData(userData: UserDataAuthenticationResponse) {
-    return userData.vc || null;
+    if(!userData?.vc){
+      throw new Error('VC claim error.')
+    }
+    return userData.vc;
   }
 
   private extractUserPowers(learCredential: LEARCredentialEmployee): Power[] {
