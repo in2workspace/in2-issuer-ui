@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - login with eIDAS certificate
 
+## [1.8.2](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.8.2)
+### Added
+- Solution to spelling error.
+
+## [1.8.1](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.8.1)
+### Added
+- Display credential issuer information in the credential detail view.
+
 ## [1.8.0](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.8.0)
 ### Added
 - Compatibility with LEARCredential V2

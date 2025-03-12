@@ -14,7 +14,7 @@ export interface LEARCredentialEmployee {
   credentialSubject: CredentialSubject;
   expirationDate: string;
   issuanceDate: string;
-  issuer: string;
+  issuer: Issuer;
   validFrom: string;
 }
 
@@ -51,6 +51,7 @@ export interface OrganizationDetails {
   serialNumber: string;
   country: string;
 }
+export interface Issuer extends OrganizationDetails {}
 
 export interface Mandator extends OrganizationDetails {}
 
