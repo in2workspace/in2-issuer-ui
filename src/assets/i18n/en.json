@@ -69,7 +69,7 @@
       "message": "Are you sure you want to send a reminder for this credential offer?"
     },
     "sendReminderSuccess": {
-      "title": "Reminder sent sucessfully",
+      "title": "Reminder sent successfully",
       "message": "The credential offer reminder was sent successfully."
     }, 
     "signCredentialConfirm": {
