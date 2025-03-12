@@ -5,7 +5,7 @@ import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { UserDataAuthenticationResponse } from '../models/dto/user-data-authentication-response.dto';
 import { LEARCredentialEmployeeDataNormalizer } from '../models/entity/lear-credential-employee-data-normalizer';
 import { LEARCredentialEmployee } from '../models/entity/lear-credential-employee.entity';
-import { AuthLoginType } from '../models/enums/auth-login-type.enum';
+import { RolType } from '../models/enums/auth-rol-type.enum';
 
 /**
  * A few mock objects to reduce repetition.
@@ -55,7 +55,14 @@ const mockCredentialEmployee: LEARCredentialEmployee = {
   },
   expirationDate: '2024-12-31T23:59:59Z',
   issuanceDate: '2024-01-01T00:00:00Z',
-  issuer: 'issuer-id',
+  issuer: {
+    organizationIdentifier: 'ORG123',
+    organization: 'Test Organization',
+    commonName: 'Mandator Name',
+    emailAddress: 'mandator@example.com',
+    serialNumber: '123456',
+    country: 'Testland'
+  },
   validFrom: '2024-01-01T00:00:00Z'
 };
 
@@ -92,14 +99,7 @@ const mockUserDataWithCert: UserDataAuthenticationResponse = {
   name: 'John Cert',
   family_name: 'Cert',
   // Propiedad 'cert' (de tipo EIDASCertificate) está definida opcionalmente.
-  cert: {
-    organizationIdentifier: 'CERT123',
-    organization: 'Cert Organization',
-    commonName: 'Cert Common Name',
-    emailAddress: 'cert@example.com',
-    serialNumber: '99999999',
-    country: 'CertLand'
-  }
+  rol: RolType.LEAR
 };
 
 const mockUserDataNoVCNoCert: UserDataAuthenticationResponse = {
@@ -393,17 +393,20 @@ describe('AuthService', () => {
     (service as any).handleUserAuthentication(mockUserDataWithVC);
     expect(LEARCredentialEmployeeDataNormalizer.prototype.normalizeLearCredential).toHaveBeenCalled();
     expect(handleVCLoginSpy).toHaveBeenCalled();
-    expect(service.authLoginType()).toBe(AuthLoginType.VC);
+    expect(service.rolType()).toBe(RolType.LEAR);
   });
 
-  it('should handle Certificate flow (else) if no VC but userData.cert is present', () => {
+  it('should handle Certificate flow if user role is LER', () => {
     const handleCertLoginSpy = jest.spyOn(service as any, 'handleCertificateLogin');
-    extractVcSpy.mockReturnValue(null); // No credential
+    const getRolSpy = jest.spyOn(service as any, 'getRol').mockReturnValue(RolType.LER);
+    const rolTypeUpdateSpy = jest.spyOn(service.rolType, 'update');
 
     (service as any).handleUserAuthentication(mockUserDataWithCert);
 
+    expect(getRolSpy).toHaveBeenCalledWith(mockUserDataWithCert);
     expect(handleCertLoginSpy).toHaveBeenCalledWith(mockUserDataWithCert);
-    expect(service.authLoginType()).toBe(AuthLoginType.CERT);
+    expect(rolTypeUpdateSpy).toHaveBeenCalledWith(expect.any(Function));
+
   });
 
   it('should catch error if neither VC nor cert is present', () => {

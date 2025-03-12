@@ -5,8 +5,7 @@ import { map, take } from 'rxjs/operators';
 import { UserDataAuthenticationResponse } from "../models/dto/user-data-authentication-response.dto";
 import {LEARCredentialEmployee, Mandator, Power} from "../models/entity/lear-credential-employee.entity";
 import { LEARCredentialEmployeeDataNormalizer } from '../models/entity/lear-credential-employee-data-normalizer';
-import { AuthLoginType } from '../models/enums/auth-login-type.enum';
-
+import { RolType } from '../models/enums/auth-rol-type.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +19,7 @@ export class AuthService {
   private readonly emailSubject = new BehaviorSubject<string>('');
   private readonly nameSubject = new BehaviorSubject<string>('');
   private readonly normalizer = new LEARCredentialEmployeeDataNormalizer();
-  public readonly authLoginType: WritableSignal<AuthLoginType> = signal(AuthLoginType.UNKNOWN);
+  public readonly rolType: WritableSignal<RolType> = signal(RolType.LEAR);
 
 
 
@@ -49,21 +48,27 @@ export class AuthService {
   }
 
   private handleUserAuthentication(userData: UserDataAuthenticationResponse): void {
-    const learCredential = this.extractVCFromUserData(userData);
-    if (learCredential) {
-      const normalizedCredential = this.normalizer.normalizeLearCredential(learCredential);
-      this.authLoginType.update(() => AuthLoginType.VC);
-      this.handleVCLogin(normalizedCredential);
-    } 
-    else {
-      try{
-        this.authLoginType.update(() => AuthLoginType.CERT); 
-        this.handleCertificateLogin(userData);
-      }
-      catch(error){
-        console.error(error);
-      } 
+    if(this.getRol(userData)=='LER'){
+      this.handleCertificateLogin(userData);
+      this.rolType.update(() => RolType.LER);
     }
+    else{
+      try{
+        const learCredential = this.extractVCFromUserData(userData);
+        const normalizedCredential = this.normalizer.normalizeLearCredential(learCredential);
+        this.handleVCLogin(normalizedCredential);
+      } 
+      catch(error){
+        console.error(error)
+      }
+    } 
+  }
+
+  private getRol(userData: UserDataAuthenticationResponse):RolType|null{
+    if (userData?.rol) {
+      return userData.rol;
+    }
+    return null;
   }
 
   private handleCertificateLogin(userData: UserDataAuthenticationResponse): void {
@@ -73,16 +78,13 @@ export class AuthService {
   }
 
   private extractDataFromCertificate(userData: UserDataAuthenticationResponse): Mandator {
-    if (!userData?.cert) {
-      throw new Error('Unknown authentication method.');
-    }
     return {
-        organizationIdentifier: userData.cert.organizationIdentifier,
-        organization: userData.cert.organization,
-        commonName: userData.cert.commonName,
-        emailAddress: userData.cert.emailAddress,
-        serialNumber: userData.cert.serialNumber,
-        country: userData.cert.country
+        organizationIdentifier: userData.organizationIdentifier,
+        organization: userData.organization,
+        commonName: userData.name,
+        emailAddress: userData?.email ?? '',
+        serialNumber: userData?.serial_number ?? '',
+        country: userData.country
       }
   };
 
@@ -137,13 +139,13 @@ export class AuthService {
     this.oidcSecurityService.checkAuth()
       .pipe(take(1))
       .subscribe(({ isAuthenticated, userData, accessToken }) => {
-        if (isAuthenticated) {
-
-          const learCredential = this.extractVCFromUserData(userData);
-          if(!learCredential && !userData?.cert){
+        if (isAuthenticated ) {
+          if(!userData?.rol && !userData?.vc){
             this.logout();
             return;
           } 
+          const learCredential = this.extractVCFromUserData(userData);
+
           if(learCredential!=null){
             const normalizedCredential = this.normalizer.normalizeLearCredential(learCredential);
             this.userPowers = this.extractUserPowers(normalizedCredential);
@@ -186,7 +188,10 @@ export class AuthService {
   }
 
   private extractVCFromUserData(userData: UserDataAuthenticationResponse) {
-    return userData.vc || null;
+    if(!userData?.vc){
+      throw new Error('VC claim error.')
+    }
+    return userData.vc;
   }
 
   private extractUserPowers(learCredential: LEARCredentialEmployee): Power[] {

@@ -1,13 +1,5 @@
 import { LEARCredentialEmployee } from "../entity/lear-credential-employee.entity";
-
-export interface EIDASCertificate {
-  organizationIdentifier: string;
-  organization: string;
-  commonName: string;
-  emailAddress: string;
-  serialNumber: string;
-  country: string;
-}
+import {RolType } from '../enums/auth-rol-type.enum'
 export interface UserDataAuthenticationResponse {
   sub: string;
   commonName: string;
@@ -22,6 +14,8 @@ export interface UserDataAuthenticationResponse {
   organization: string;
   name: string;
   family_name: string;
+  serial_number?:string;
+  email?:string
+  rol?: RolType;
   vc?: LEARCredentialEmployee;
-  cert?: EIDASCertificate;
 }
