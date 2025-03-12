@@ -8,6 +8,7 @@ import { ProcedureResponse } from '../models/dto/procedure-response.dto';
 import { LearCredentialEmployeeDataDetail } from '../models/dto/lear-credential-employee-data-detail.dto';
 import { CredentialOfferResponse } from '../models/dto/credential-offer-response';
 import { LEARCredentialEmployeeDataNormalizer } from '../models/entity/lear-credential-employee-data-normalizer';
+import { LEARCredentialEmployee, LEARCredentialEmployeeJwtPayload } from '../models/entity/lear-credential-employee.entity';
 
 @Injectable({
   providedIn: 'root'
@@ -34,16 +35,20 @@ export class CredentialProcedureService {
       `${this.organizationProcedures}/${procedureId}/credential-decoded`
     ).pipe(
       map(learCredentialEmployeeDataDetail => {
-        // Normalize the vc part which is of type LEARCredentialEmployee
-        console.log("LearCredentialEmployeeDataDetail: ", learCredentialEmployeeDataDetail);
-      
-        const normalizedLearCredentialEmployee = this.normalizer.normalizeLearCredential(learCredentialEmployeeDataDetail.credential.vc);
-        // Rebuild the object, keeping the rest intact
+        const { credential } = learCredentialEmployeeDataDetail;
+        // If vc exists, we normalize it, otherwise we assume that credential is already of the expected type
+        const credentialData = credential.vc 
+          ? credential.vc 
+          : (credential as unknown as LEARCredentialEmployee);
+          
+        // Normalize the part which is of type LEARCredentialEmployee
+        const normalizedCredential = this.normalizer.normalizeLearCredential(credentialData);
+  
         return {
           ...learCredentialEmployeeDataDetail,
           credential: {
-            ...learCredentialEmployeeDataDetail.credential,
-            vc: normalizedLearCredentialEmployee
+            ...credential,
+            vc: normalizedCredential
           }
         } as LearCredentialEmployeeDataDetail;
       }),

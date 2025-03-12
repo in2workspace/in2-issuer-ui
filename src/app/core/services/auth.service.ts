@@ -148,8 +148,6 @@ export class AuthService {
   }
 
   private extractVCFromUserData(userData: UserDataAuthenticationResponse) {
-    console.log("userData", userData);
-    console.log("userData.vc", userData.vc);
     return userData.vc || null;
   }
 
