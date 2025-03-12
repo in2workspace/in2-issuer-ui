@@ -108,6 +108,7 @@ describe('CredentialDetailComponent', () => {
   let mockCredentialProcedureService: {
     getCredentialProcedureById: jest.Mock;
     sendReminder: jest.Mock;
+    signCredential: jest.Mock;
   };
   let dialogService: {
     openDialog: jest.Mock,
@@ -132,7 +133,8 @@ describe('CredentialDetailComponent', () => {
   beforeEach(async () => {
     mockCredentialProcedureService = {
       getCredentialProcedureById: jest.fn(),
-      sendReminder: jest.fn()
+      sendReminder: jest.fn(),
+      signCredential: jest.fn()
     };
     dialogService = {
       openDialog: jest.fn(),
@@ -295,6 +297,88 @@ describe('CredentialDetailComponent', () => {
         };
         expect(dialogService.openDialog).toHaveBeenCalledWith(expectedDialogData);
 
+        expect(routerNavigateSpy).toHaveBeenCalledWith(['/organization/credentials']);
+        expect(locationReloadSpy).toHaveBeenCalled();
+      },
+    });
+    tick();
+  }));
+
+  it('should open a dialog with correct data and callback', () => {
+    jest.spyOn(translateService, 'instant').mockImplementation((key: any) => {
+      if (key === 'credentialDetail.signCredentialConfirm.title') {
+        return 'Mock Title';
+      }
+      if (key === 'credentialDetail.signCredentialConfirm.message') {
+        return 'Mock Message';
+      }
+      return key;
+    });
+  
+    const signCredentialSpy = jest.spyOn(component, 'signCredential').mockReturnValue(of(true));
+  
+    component.openSignCredentialDialog();
+  
+    const expectedDialogData: DialogData = {
+      title: 'Mock Title',
+      message: 'Mock Message',
+      confirmationType: 'async',
+      status: 'default'
+    };
+    expect(dialogService.openDialogWithCallback).toHaveBeenCalledWith(
+      expectedDialogData,
+      expect.any(Function)
+    );
+  
+    const callback = dialogService.openDialogWithCallback.mock.calls[0][1];
+    callback().subscribe();
+  
+    expect(signCredentialSpy).toHaveBeenCalled();
+  });
+
+  it('should return EMPTY and log an error if credentialId is not defined', () => {
+    component.credentialId = null; 
+  
+    const consoleErrorSpy = jest.spyOn(console, 'error');
+  
+    const result = component.signCredential();
+  
+    result.subscribe({
+      complete: () => {
+        expect(consoleErrorSpy).toHaveBeenCalledWith('No credential id.');
+        expect(mockCredentialProcedureService.signCredential).not.toHaveBeenCalled();
+        expect(dialogService.openDialogWithCallback).not.toHaveBeenCalled();
+        expect(router.navigate).not.toHaveBeenCalled();
+      },
+    });
+  });
+  
+  it('should sign credential, open success dialog, navigate, and reload page if credentialId is defined', fakeAsync(() => {
+    component.credentialId = '123';
+  
+    const signCredentialSpy = mockCredentialProcedureService.signCredential.mockReturnValue(of(null));
+    const dialogRef = {
+      afterClosed: jest.fn().mockReturnValue(of(true)),
+    };
+    jest.spyOn(dialogService, 'openDialog').mockReturnValue(dialogRef as any);
+    const routerNavigateSpy = jest.spyOn(router, 'navigate').mockResolvedValue(true);
+    const locationReloadSpy = jest.spyOn(location, 'reload').mockImplementation(() => {});
+  
+    const result = component.signCredential();
+  
+    tick();
+    result.subscribe({
+      complete: () => {
+        expect(signCredentialSpy).toHaveBeenCalledWith('123');
+  
+        const expectedDialogData: DialogData = {
+          title: translateService.instant("credentialDetail.signCredentialSuccess.title"),
+          message: translateService.instant("credentialDetail.signCredentialSuccess.message"),
+          confirmationType: 'none',
+          status: 'default'
+        };
+        expect(dialogService.openDialog).toHaveBeenCalledWith(expectedDialogData);
+  
         expect(routerNavigateSpy).toHaveBeenCalledWith(['/organization/credentials']);
         expect(locationReloadSpy).toHaveBeenCalled();
       },
