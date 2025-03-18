@@ -3,10 +3,10 @@ import { of, Observable } from 'rxjs';
 import { basicGuard, settingsGuard } from './accessLevel.guard'; 
 import { AuthService } from '../services/auth.service';
 import { PoliciesService } from '../services/policies.service';
-import { RolType } from '../models/enums/auth-rol-type.enum';
+import { RoleType } from '../models/enums/auth-rol-type.enum';
 
 const mockAuthService = {
-  rolType: jest.fn()
+  roleType: jest.fn()
 };
 
 const mockPoliciesService = {
@@ -30,8 +30,8 @@ describe('AccessLevel Guard Tests', () => {
 
  
   describe('basicGuard', () => {
-    it('should return true (Observable) when  RolType = LER', (done) => {
-      mockAuthService.rolType.mockReturnValue(RolType.LER);
+    it('should return true (Observable) when  RoleType = LER', (done) => {
+      mockAuthService.roleType.mockReturnValue(RoleType.LER);
 
       TestBed.runInInjectionContext(() => {
         const result$ = basicGuard(null as any, null as any) as Observable<boolean>;
@@ -43,8 +43,8 @@ describe('AccessLevel Guard Tests', () => {
       });
     });
 
-    it('should call checkOnboardingPolicy when RolType != LER', (done) => {
-      mockAuthService.rolType.mockReturnValue(RolType.LEAR);
+    it('should call checkOnboardingPolicy when RoleType != LER', (done) => {
+      mockAuthService.roleType.mockReturnValue(RoleType.LEAR);
       mockPoliciesService.checkOnboardingPolicy.mockReturnValue(of(true));
 
       TestBed.runInInjectionContext(() => {
@@ -58,8 +58,8 @@ describe('AccessLevel Guard Tests', () => {
       });
     });
 
-    it('should return the same value as checkOnboardingPolicy (false) when RolType != LER', (done) => {
-      mockAuthService.rolType.mockReturnValue(RolType.LEAR);
+    it('should return the same value as checkOnboardingPolicy (false) when RoleType != LER', (done) => {
+      mockAuthService.roleType.mockReturnValue(RoleType.LEAR);
       mockPoliciesService.checkOnboardingPolicy.mockReturnValue(of(false));
 
       TestBed.runInInjectionContext(() => {
@@ -76,8 +76,8 @@ describe('AccessLevel Guard Tests', () => {
 
  
   describe('settingsGuard', () => {
-    it('should return true (Observable) when RolType = LER', (done) => {
-      mockAuthService.rolType.mockReturnValue(RolType.LER);
+    it('should return true (Observable) when RoleType = LER', (done) => {
+      mockAuthService.roleType.mockReturnValue(RoleType.LER);
 
       TestBed.runInInjectionContext(() => {
         const result$ = settingsGuard(null as any, null as any) as Observable<boolean>;
@@ -89,8 +89,8 @@ describe('AccessLevel Guard Tests', () => {
       });
     });
 
-    it('should call checkSettingsPolicy when RolType != LEAR', (done) => {
-      mockAuthService.rolType.mockReturnValue(RolType.LEAR);
+    it('should call checkSettingsPolicy when RoleType != LEAR', (done) => {
+      mockAuthService.roleType.mockReturnValue(RoleType.LEAR);
       mockPoliciesService.checkSettingsPolicy.mockReturnValue(of(true));
 
       TestBed.runInInjectionContext(() => {
@@ -104,8 +104,8 @@ describe('AccessLevel Guard Tests', () => {
       });
     });
 
-    it('should return the same value as checkSettingsPolicy (false) when RolType != LEAR', (done) => {
-      mockAuthService.rolType.mockReturnValue(RolType.LEAR);
+    it('should return the same value as checkSettingsPolicy (false) when RoleType != LEAR', (done) => {
+      mockAuthService.roleType.mockReturnValue(RoleType.LEAR);
       mockPoliciesService.checkSettingsPolicy.mockReturnValue(of(false));
 
       TestBed.runInInjectionContext(() => {

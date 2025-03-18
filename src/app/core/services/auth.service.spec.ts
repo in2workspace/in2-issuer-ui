@@ -5,7 +5,7 @@ import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { UserDataAuthenticationResponse } from '../models/dto/user-data-authentication-response.dto';
 import { LEARCredentialEmployeeDataNormalizer } from '../models/entity/lear-credential-employee-data-normalizer';
 import { LEARCredentialEmployee } from '../models/entity/lear-credential-employee.entity';
-import { RolType } from '../models/enums/auth-rol-type.enum';
+import { RoleType } from '../models/enums/auth-rol-type.enum';
 
 /**
  * A few mock objects to reduce repetition.
@@ -99,7 +99,7 @@ const mockUserDataWithCert: UserDataAuthenticationResponse = {
   name: 'John Cert',
   family_name: 'Cert',
   // Propiedad 'cert' (de tipo EIDASCertificate) está definida opcionalmente.
-  rol: RolType.LEAR
+  role: RoleType.LEAR
 };
 
 const mockUserDataNoVCNoCert: UserDataAuthenticationResponse = {
@@ -260,7 +260,7 @@ describe('AuthService', () => {
   // hasIn2OrganizationIdentifier()
   // ----------------------------------------------------------------------------
   it('should return true if organizationIdentifier is "VATES-B60645900"', () => {
-    (service as any).userDataSubject.next({
+    (service as any).mandatorSubject.next({
       organizationIdentifier: 'VATES-B60645900'
     });
     expect(service.hasIn2OrganizationIdentifier()).toBe(true);
@@ -393,19 +393,19 @@ describe('AuthService', () => {
     (service as any).handleUserAuthentication(mockUserDataWithVC);
     expect(LEARCredentialEmployeeDataNormalizer.prototype.normalizeLearCredential).toHaveBeenCalled();
     expect(handleVCLoginSpy).toHaveBeenCalled();
-    expect(service.rolType()).toBe(RolType.LEAR);
+    expect(service.roleType()).toBe(RoleType.LEAR);
   });
 
   it('should handle Certificate flow if user role is LER', () => {
     const handleCertLoginSpy = jest.spyOn(service as any, 'handleCertificateLogin');
-    const getRolSpy = jest.spyOn(service as any, 'getRol').mockReturnValue(RolType.LER);
-    const rolTypeUpdateSpy = jest.spyOn(service.rolType, 'update');
+    const getRoleSpy = jest.spyOn(service as any, 'getRole').mockReturnValue(RoleType.LER);
+    const roleTypeUpdateSpy = jest.spyOn(service.roleType, 'update');
 
     (service as any).handleUserAuthentication(mockUserDataWithCert);
 
-    expect(getRolSpy).toHaveBeenCalledWith(mockUserDataWithCert);
+    expect(getRoleSpy).toHaveBeenCalledWith(mockUserDataWithCert);
     expect(handleCertLoginSpy).toHaveBeenCalledWith(mockUserDataWithCert);
-    expect(rolTypeUpdateSpy).toHaveBeenCalledWith(expect.any(Function));
+    expect(roleTypeUpdateSpy).toHaveBeenCalledWith(expect.any(Function));
 
   });
 

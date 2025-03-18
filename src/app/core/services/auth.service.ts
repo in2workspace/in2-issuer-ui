@@ -5,7 +5,7 @@ import { map, take } from 'rxjs/operators';
 import { UserDataAuthenticationResponse } from "../models/dto/user-data-authentication-response.dto";
 import {LEARCredentialEmployee, Mandator, Power} from "../models/entity/lear-credential-employee.entity";
 import { LEARCredentialEmployeeDataNormalizer } from '../models/entity/lear-credential-employee-data-normalizer';
-import { RolType } from '../models/enums/auth-rol-type.enum';
+import { RoleType } from '../models/enums/auth-rol-type.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +19,7 @@ export class AuthService {
   private readonly emailSubject = new BehaviorSubject<string>('');
   private readonly nameSubject = new BehaviorSubject<string>('');
   private readonly normalizer = new LEARCredentialEmployeeDataNormalizer();
-  public readonly rolType: WritableSignal<RolType> = signal(RolType.LEAR);
+  public readonly roleType: WritableSignal<RoleType> = signal(RoleType.LEAR);
 
 
 
@@ -48,9 +48,9 @@ export class AuthService {
   }
 
   private handleUserAuthentication(userData: UserDataAuthenticationResponse): void {
-    if(this.getRol(userData)=='LER'){
+    if(this.getRole(userData)=='LER'){
       this.handleCertificateLogin(userData);
-      this.rolType.update(() => RolType.LER);
+      this.roleType.update(() => RoleType.LER);
     }
     else{
       try{
@@ -64,9 +64,9 @@ export class AuthService {
     } 
   }
 
-  private getRol(userData: UserDataAuthenticationResponse):RolType|null{
-    if (userData?.rol) {
-      return userData.rol;
+  private getRole(userData: UserDataAuthenticationResponse):RoleType|null{
+    if (userData?.role) {
+      return userData.role;
     }
     return null;
   }
@@ -120,9 +120,10 @@ export class AuthService {
 
   // POLICY: user_powers_restriction_policy
   public hasIn2OrganizationIdentifier() : boolean {
-    const userData = this.userDataSubject.getValue();
-    if (userData != null){
-      return "VATES-B60645900" === userData.organizationIdentifier;
+    //const userData = this.userDataSubject.getValue();
+    const mandatorData = this.mandatorSubject.getValue()
+    if (mandatorData != null){
+      return "VATES-B60645900" === mandatorData.organizationIdentifier;
     }
     return false
   }

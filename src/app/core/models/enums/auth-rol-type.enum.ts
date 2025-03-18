@@ -1,4 +1,4 @@
-export enum RolType {
+export enum RoleType {
     LEAR = 'LEAR',
     LER = 'LER',
 }

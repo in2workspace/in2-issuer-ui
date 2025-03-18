@@ -1,5 +1,5 @@
 import { LEARCredentialEmployee } from "../entity/lear-credential-employee.entity";
-import {RolType } from '../enums/auth-rol-type.enum'
+import {RoleType } from '../enums/auth-rol-type.enum'
 export interface UserDataAuthenticationResponse {
   sub: string;
   commonName: string;
@@ -16,6 +16,6 @@ export interface UserDataAuthenticationResponse {
   family_name: string;
   serial_number?:string;
   email?:string
-  rol?: RolType;
+  role?: RoleType;
   vc?: LEARCredentialEmployee;
 }
