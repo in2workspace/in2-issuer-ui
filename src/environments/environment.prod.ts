@@ -4,7 +4,7 @@ export const environment = {
     has_login: true,
     login_url: window["env"]["login_url"] || 'https://localhost:8443/realms/CredentialIssuer',
     client_id: window["env"]["client_id"] || 'account-console',
-    scope: 'openid profile email',
+    scope: 'openid profile email learcredential',
     grant_type: window["env"]["grant_type"] || 'code'
   },
   base_url: window["env"]["base_url"] || 'http://localhost:8081',
