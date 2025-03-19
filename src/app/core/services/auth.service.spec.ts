@@ -88,11 +88,13 @@ const mockUserDataWithCert: UserDataAuthenticationResponse = {
   sub: 'subCert',
   commonName: 'Cert Common Name',
   country: 'CertLand',
+  serial_number: '99999999',
   serialNumber: '99999999',
   email_verified: true,
   preferred_username: 'certUser',
   given_name: 'CertGivenName',
   'tenant-id': 'tenant-123',
+  email:'cert-user@example.com',
   emailAddress: 'cert-user@example.com',
   organizationIdentifier: 'ORG-CERT',
   organization: 'Cert Organization',
@@ -395,7 +397,26 @@ describe('AuthService', () => {
     expect(handleVCLoginSpy).toHaveBeenCalled();
     expect(service.roleType()).toBe(RoleType.LEAR);
   });
+   
+  it('should return the user role if present', () => {
+    const mockUserData = { role: RoleType.LEAR } as UserDataAuthenticationResponse;
+    const result = (service as any).getRole(mockUserData);
+    expect(result).toBe(RoleType.LEAR);
+  });
+  
+  it('should extract certificate data correctly', () => {
+    const result = (service as any).extractDataFromCertificate(mockUserDataWithCert);
 
+    expect(result).toEqual({
+      organizationIdentifier: mockUserDataWithCert.organizationIdentifier,
+      organization: mockUserDataWithCert.organization,
+      commonName: mockUserDataWithCert.name,
+      emailAddress: mockUserDataWithCert.email ,
+      serialNumber: mockUserDataWithCert.serialNumber ,
+      country: mockUserDataWithCert.country
+    });
+
+  })
 
   it('should catch error if neither VC nor cert is present', () => {
     const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
