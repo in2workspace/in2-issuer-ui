@@ -60,19 +60,20 @@ export class AuthService {
   }
 
   //TODO when role access is configured
+  // NOSONAR:Perform tests when certificate access is active
   private getRole(userData: UserDataAuthenticationResponse):RoleType|null{
     if (userData?.role) {
       return userData.role;
     }
     return null;
   }
-
+  // NOSONAR:Perform tests when certificate access is active
   private handleCertificateLogin(userData: UserDataAuthenticationResponse): void {
     const certData = this.extractDataFromCertificate(userData);
     this.mandatorSubject.next(certData);
     this.nameSubject.next(certData.commonName);
   }
-
+  // NOSONAR:Perform tests when certificate access is active
   private extractDataFromCertificate(userData: UserDataAuthenticationResponse): Mandator {
     return {
         organizationIdentifier: userData.organizationIdentifier,
