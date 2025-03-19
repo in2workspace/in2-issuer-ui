@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+//FIXME : Change version to minor instead of patch
 ## [1.8.3](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.8.3)
 ### Added
 - Added button to sign credential when sync flux fails
