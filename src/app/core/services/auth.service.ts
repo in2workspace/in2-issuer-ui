@@ -48,7 +48,7 @@ export class AuthService {
   }
 
   private handleUserAuthentication(userData: UserDataAuthenticationResponse): void {
-     //TODO when accessing with certificate update signal role LER and  handleCertificateLogin
+     //Future work: when accessing with certificate update signal role LER and  handleCertificateLogin
       try{
         const learCredential = this.extractVCFromUserData(userData);
         const normalizedCredential = this.normalizer.normalizeLearCredential(learCredential);
@@ -59,7 +59,7 @@ export class AuthService {
       }
   }
 
-  //TODO when role access is configured
+  //Future work: when role access is configured
   private getRole(userData: UserDataAuthenticationResponse):RoleType|null{
     if (userData?.role) {
       return userData.role;
