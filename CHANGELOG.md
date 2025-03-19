@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added button to sign credential when sync flux fails
 ### Fixed
-- Fixed parsing vc when we receive it without jwt payload
+- Small fixes
 
 ## [1.8.2](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.8.2)
 ### Added
