@@ -48,11 +48,7 @@ export class AuthService {
   }
 
   private handleUserAuthentication(userData: UserDataAuthenticationResponse): void {
-    if(this.getRole(userData)=='LER'){
-      this.handleCertificateLogin(userData);
-      this.roleType.update(() => RoleType.LER);
-    }
-    else{
+     //TODO when accessing with certificate update signal role LER and  handleCertificateLogin
       try{
         const learCredential = this.extractVCFromUserData(userData);
         const normalizedCredential = this.normalizer.normalizeLearCredential(learCredential);
@@ -61,9 +57,9 @@ export class AuthService {
       catch(error){
         console.error(error)
       }
-    } 
   }
 
+  //TODO when role access is configured
   private getRole(userData: UserDataAuthenticationResponse):RoleType|null{
     if (userData?.role) {
       return userData.role;
@@ -120,7 +116,6 @@ export class AuthService {
 
   // POLICY: user_powers_restriction_policy
   public hasIn2OrganizationIdentifier() : boolean {
-    //const userData = this.userDataSubject.getValue();
     const mandatorData = this.mandatorSubject.getValue()
     if (mandatorData != null){
       return "VATES-B60645900" === mandatorData.organizationIdentifier;
@@ -141,7 +136,7 @@ export class AuthService {
       .pipe(take(1))
       .subscribe(({ isAuthenticated, userData, accessToken }) => {
         if (isAuthenticated ) {
-          if(!userData?.rol && !userData?.vc){
+          if(!userData?.role && !userData?.vc){
             this.logout();
             return;
           } 

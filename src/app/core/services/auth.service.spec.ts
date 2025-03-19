@@ -396,18 +396,6 @@ describe('AuthService', () => {
     expect(service.roleType()).toBe(RoleType.LEAR);
   });
 
-  it('should handle Certificate flow if user role is LER', () => {
-    const handleCertLoginSpy = jest.spyOn(service as any, 'handleCertificateLogin');
-    const getRoleSpy = jest.spyOn(service as any, 'getRole').mockReturnValue(RoleType.LER);
-    const roleTypeUpdateSpy = jest.spyOn(service.roleType, 'update');
-
-    (service as any).handleUserAuthentication(mockUserDataWithCert);
-
-    expect(getRoleSpy).toHaveBeenCalledWith(mockUserDataWithCert);
-    expect(handleCertLoginSpy).toHaveBeenCalledWith(mockUserDataWithCert);
-    expect(roleTypeUpdateSpy).toHaveBeenCalledWith(expect.any(Function));
-
-  });
 
   it('should catch error if neither VC nor cert is present', () => {
     const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
