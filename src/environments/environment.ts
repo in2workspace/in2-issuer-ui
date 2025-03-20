@@ -9,7 +9,6 @@ export const environment = {
   wallet_url_test: 'http://localhost:4200',
   knowledge:{
     base_url: "https://knowledgebase.dome-marketplace-sbx.org/",
-    wallet_path: "books/dome-digital-wallet-user-guide"
   } ,
   profile: "lcl", //values: 'lcl', 'sbx', 'test', 'production'
   procedures: '/api/v1/procedures',

@@ -1,5 +1,5 @@
-export const loginParams = Object.freeze({
-    client_id: "account-console",
-    scope: "openid profile email offline_access",
-    grant_type: "code"
+export const LOGIN_PARAMS = Object.freeze({
+    CLIENT_ID: "account-console",
+    SCOPE: "openid profile email offline_access",
+    GRANT_TYPE: "code"
 });

@@ -8,7 +8,6 @@ interface Window {
         wallet_url?: string;
         wallet_url_test?: string;
         knowledgebase_url?: string;
-        knowledge_wallet_path?: string;
         profile?: string;
         procedures?: string;
         saveCredential?: string;

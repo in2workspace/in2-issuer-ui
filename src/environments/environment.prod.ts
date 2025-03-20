@@ -24,10 +24,9 @@ export const environment = {
   // REQUIRED
   wallet_url_test: window["env"]["wallet_url_test"] || 'http://localhost:4200',
   // REQUIRED
+  // Consider unnesting
   knowledge:{
     base_url: window["env"]["knowledgebase_url"] || "https://knowledgebase.dome-marketplace-sbx.org/",
-    // Should be a CONSTANT
-    wallet_path: ["env"]["knowledge_wallet_path"] || "books/dome-digital-wallet-user-guide"
   },
   // REMOVE per ser coherents amb altres apps i backend, s'hauria d'eliminar; 
   profile: window["env"]["profile"] || "lcl", //values: 'lcl', 'sbx', 'test', 'production'
