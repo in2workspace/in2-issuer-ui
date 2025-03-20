@@ -37,8 +37,6 @@ export class AuthService {
     return this.oidcSecurityService.checkAuth().pipe(
       take(1),
       map(({ isAuthenticated, userData}) => {
-      userData.role= RoleType.LER;
-      console.log('This is the role he comes in with',  userData.role)
       if(this.getRole(userData)!='LEAR')  throw new Error('Error Role.'+ this.getRole(userData));
       this.isAuthenticatedSubject.next(isAuthenticated);
 

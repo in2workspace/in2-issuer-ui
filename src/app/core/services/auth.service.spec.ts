@@ -81,7 +81,8 @@ const mockUserDataWithVC: UserDataAuthenticationResponse = {
   organizationIdentifier: 'ORG123',
   organization: 'Test Organization',
   name: 'John Doe',
-  family_name: 'Doe'
+  family_name: 'Doe',
+  role: RoleType.LEAR
 };
 
 const mockUserDataWithCert: UserDataAuthenticationResponse = {
@@ -452,7 +453,7 @@ describe('AuthService', () => {
   it('should mark user as not authenticated if checkAuth sees isAuthenticated=false', done => {
     oidcSecurityServiceMock.checkAuth.mockReturnValue(of({
       isAuthenticated: false,
-      userData: null,
+      userData: mockUserDataWithCert,
       accessToken: ''
     }));
 
