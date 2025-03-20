@@ -1,16 +1,10 @@
 export const environment = {
   production: true,
   loginParams: {
-    // CONSTANT
-    // client_id: window["env"]["client_id"] || 'account-console',
-    // CONSTANT
-    // scope: window["env"]["scope"] || 'openid profile email offline_access',
-    // CONSTANT
-    // grant_type: window["env"]["grant_type"] || 'code',
     // REQUIRED
-    login_url: window["env"]["login_url"] || 'https://localhost:8443/realms/CredentialIssuer'
+    login_url: window["env"]["login_url"] || 'https://localhost:8443/realms/CredentialIssuer',
     // SHOULD BE ADDED, REQUIRED
-    // login_realm_path: window["env"]["login_realm_path"] || 'realms/issuer'
+    login_realm_path: window["env"]["login_realm_path"] || 'realms/issuer'
   },
   // Issuer API base url
   // used as auth module secureRoutes
