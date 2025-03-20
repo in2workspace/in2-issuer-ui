@@ -11,7 +11,7 @@ export const basicGuard: CanActivateFn = () => {
   const authService = inject(AuthService);
   const loginType = authService.roleType();
   if (loginType === RoleType.LER) {
-    return of(true);
+    return of(false);
   }else{
     return policiesService.checkOnboardingPolicy()
   }
@@ -23,7 +23,7 @@ export const settingsGuard: CanActivateFn = () => {
   const authService = inject(AuthService);
   const loginType = authService.roleType();
   if (loginType === RoleType.LER) {
-    return of(true);
+    return of(false);
   }else{
     return policiesService.checkSettingsPolicy()
   }

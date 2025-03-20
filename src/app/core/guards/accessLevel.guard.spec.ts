@@ -37,7 +37,7 @@ describe('AccessLevel Guard Tests', () => {
         const result$ = basicGuard(null as any, null as any) as Observable<boolean>;
 
         result$.subscribe((value) => {
-          expect(value).toBe(true);
+          expect(value).toBe(false);
           done();
         });
       });
@@ -83,7 +83,7 @@ describe('AccessLevel Guard Tests', () => {
         const result$ = settingsGuard(null as any, null as any) as Observable<boolean>;
 
         result$.subscribe((value) => {
-          expect(value).toBe(true);
+          expect(value).toBe(false);
           done();
         });
       });
