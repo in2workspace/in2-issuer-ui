@@ -37,10 +37,10 @@ export class AuthService {
     return this.oidcSecurityService.checkAuth().pipe(
       take(1),
       map(({ isAuthenticated, userData}) => {
-      if(this.getRole(userData)!=RoleType.LEAR)  throw new Error('Error Role.'+ this.getRole(userData));
       this.isAuthenticatedSubject.next(isAuthenticated);
 
       if (isAuthenticated) {
+        if(this.getRole(userData)!=RoleType.LEAR)  throw new Error('Error Role. '+ this.getRole(userData));
         this.userDataSubject.next(userData);
         this.handleUserAuthentication(userData)
       }
