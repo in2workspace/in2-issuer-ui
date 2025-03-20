@@ -20,7 +20,7 @@ export const environment = {
   wallet_url: window["env"]["wallet_url"] || 'http://localhost:4200',
   // Wallet base URL shown in credential offer to point to the same environment for test purposes
   // Example (SBX): https://wallet.dome-marketplace-sbx.org/
-  // Maybe rename such as "wallet_url_environment"?
+  // todo Consider renaming such as "wallet_url_environment"?
   // REQUIRED
   wallet_url_test: window["env"]["wallet_url_test"] || 'http://localhost:4200',
   // REQUIRED
@@ -28,10 +28,8 @@ export const environment = {
   knowledge:{
     base_url: window["env"]["knowledgebase_url"] || "https://knowledgebase.dome-marketplace-sbx.org/",
   },
-  // REMOVE per ser coherents amb altres apps i backend, s'hauria d'eliminar; 
-  profile: window["env"]["profile"] || "lcl", //values: 'lcl', 'sbx', 'test', 'production'
   // SHOULD BE ADDED instead of "profile"; rethink naming
-  // show_wallet_url_test: window["env"]["show_wallet_url_test"] || false,
+  show_wallet_url_test: window["env"]["show_wallet_url_test"] || false,
   customizations:{
     colors:{ 
       // OPTIONAL with fallback
@@ -44,8 +42,10 @@ export const environment = {
       secondary_contrast: window["env"]["secondary_contrast"] || '#dde6f6',
     },
     // REQUIRED
+    // Consider pointing directly to image (ex.: "no-image.png")
     logo_src: window["env"]["logo_src"] || "assets/logos/no-image.png",
     // OPTIONAL with fallback
+    // Consider pointing directly to image (ex.: "favicon.png")
     favicon_src: window["env"]["favicon_src"] || "assets/icon/favicon.png"  
   }
 };

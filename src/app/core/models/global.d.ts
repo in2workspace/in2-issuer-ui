@@ -8,7 +8,7 @@ interface Window {
         wallet_url?: string;
         wallet_url_test?: string;
         knowledgebase_url?: string;
-        profile?: string;
+        show_wallet_url_test: boolean;
         procedures?: string;
         saveCredential?: string;
         credential_offer_url?: string;

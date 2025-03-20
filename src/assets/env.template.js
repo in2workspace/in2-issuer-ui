@@ -8,7 +8,7 @@
   window["env"]["wallet_url"] = "${WALLET_URL}";
   window["env"]["wallet_url_test"] = "${WALLET_URL_TEST}";
   window["env"]["knowledgebase_url"] = "${KNOWLEDGEBASE_URL}";
-  window["env"]["profile"] = "${PROFILE}"; //values: 'lcl', 'sbx', 'test', 'production'
+  window["env"]["show_wallet_url_test"] = "${SHOW_WALLET_URL_TEST}";
   window["env"]["primary"] = "${PRIMARY}";
   window["env"]["primary_contrast"]= "${PRIMARY_CONTRAST}";
   window["env"]["secondary"] = "${SECONDARY}";

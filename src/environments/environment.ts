@@ -10,7 +10,7 @@ export const environment = {
   knowledge:{
     base_url: "https://knowledgebase.dome-marketplace-sbx.org/",
   } ,
-  profile: "lcl", //values: 'lcl', 'sbx', 'test', 'production'
+  show_wallet_url_test: window["env"]["show_wallet_url_test"] || false,
   customizations:{
     colors:{ 
       primary:'#2d58a7',
