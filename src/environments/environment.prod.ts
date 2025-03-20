@@ -32,16 +32,6 @@ export const environment = {
   profile: window["env"]["profile"] || "lcl", //values: 'lcl', 'sbx', 'test', 'production'
   // SHOULD BE ADDED instead of "profile"; rethink naming
   // show_wallet_url_test: window["env"]["show_wallet_url_test"] || false,
-  // CONSTANT
-  procedures: window["env"]["procedures"] || '/api/v1/procedures',
-  // CONSTANT
-  save_credential: window["env"]["saveCredential"] || '/vci/v1/issuances',
-  // CONSTANT
-  credential_offer_url: window["env"]["credential_offer_url"] || '/api/v1/credential-offer',
-  // CONSTANT
-  notification: window["env"]["notification"] || '/api/v1/notifications',
-  // CONSTANT
-  sign_credential_url: window["env"]["sign_credential_url"] || '/api/v1/retry-sign-credential',
   customizations:{
     colors:{ 
       // OPTIONAL with fallback

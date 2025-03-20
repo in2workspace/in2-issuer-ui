@@ -9,11 +9,6 @@
   window["env"]["wallet_url_test"] = "${WALLET_URL_TEST}";
   window["env"]["knowledgebase_url"] = "${KNOWLEDGEBASE_URL}";
   window["env"]["profile"] = "${PROFILE}"; //values: 'lcl', 'sbx', 'test', 'production'
-  window["env"]["procedures"] = "${PROCEDURES}";
-  window["env"]["save_credential"] = "${SAVE_CREDENTIAL}";
-  window["env"]["credential_offer_url"] = "${CREDENTIAL_OFFER_URI}";
-  window["env"]["notification"] = "${NOTIFICATION}";
-  window["env"]["sign_credential_url"]= "${SIGN_CREDENTIAL_URL}"
   window["env"]["primary"] = "${PRIMARY}";
   window["env"]["primary_contrast"]= "${PRIMARY_CONTRAST}";
   window["env"]["secondary"] = "${SECONDARY}";
