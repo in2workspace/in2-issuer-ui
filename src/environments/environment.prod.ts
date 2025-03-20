@@ -1,8 +1,6 @@
 export const environment = {
   production: true,
   loginParams: {
-    // not used --REMOVE
-    // has_login: true,
     // CONSTANT
     // client_id: window["env"]["client_id"] || 'account-console',
     // CONSTANT
