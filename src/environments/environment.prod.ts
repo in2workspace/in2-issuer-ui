@@ -1,5 +1,6 @@
 export const environment = {
   production: true,
+  // todo consider grouping as "url"
     // REQUIRED
     // Consider renaming as "keycloak_external_domain"
     iam_url: window["env"]["iam_url"] || 'https://localhost:8443/realms/CredentialIssuer',
@@ -9,6 +10,7 @@ export const environment = {
   // used as auth module secureRoutes
   // used as credential-procedure requests url
   // Example: https://issuer.dome-marketplace-lcl.org/issuer-api
+  // todo consider renaming as server_url
   // REQUIRED
   base_url: window["env"]["base_url"] || 'http://localhost:8081',
   // Wallet base url
@@ -45,6 +47,7 @@ export const environment = {
     logo_src: window["env"]["logo_src"] || "assets/logos/no-image.png",
     // OPTIONAL with fallback
     // Consider pointing directly to image (ex.: "favicon.png")
+    //todo apply in app.component-index
     favicon_src: window["env"]["favicon_src"] || "assets/icon/favicon.png"  
   }
 };
