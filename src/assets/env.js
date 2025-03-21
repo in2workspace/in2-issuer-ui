@@ -2,8 +2,8 @@
   window.env = window.env || {};
 
   // Environment variables
-  window["env"]["login_url"] = "${LOGIN_URL}";
-  window["env"]["login_realm_paht"] = "${LOGIN_REALM_PATH}";
+  window["env"]["iam_url"] = "${IAM_EXTERNAL_DOMAIN}";
+  window["env"]["iam_realm_path"] = "${IAM_REALM_PATH}";
   window["env"]["base_url"] = "${BASE_URL}";
   window["env"]["wallet_url"] = "${WALLET_URL}";
   window["env"]["wallet_url_test"] = "${WALLET_URL_TEST}";

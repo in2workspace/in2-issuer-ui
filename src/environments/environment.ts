@@ -1,9 +1,7 @@
 export const environment = {
   production: false,
-  loginParams: {
-    login_url: 'https://keycloak-dev.ssihub.org/realms/in2-issuer',
-    login_realm_path: 'realms/issuer'
-  },
+  iam_url: 'https://keycloak-dev.ssihub.org/realms/in2-issuer',
+  iam_realm_path: 'realms/issuer',
   base_url: 'http://localhost:8081',
   wallet_url: 'http://localhost:4200',
   wallet_url_test: 'http://localhost:4200',

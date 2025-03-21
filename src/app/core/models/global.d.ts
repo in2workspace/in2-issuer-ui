@@ -2,8 +2,8 @@
 
 interface Window {
     env: {
-        login_url?: string;
-        login_realm_path?: string;
+        iam_url?: string;
+        iam_realm_path?: string;
         base_url?: string;
         wallet_url?: string;
         wallet_url_test?: string;

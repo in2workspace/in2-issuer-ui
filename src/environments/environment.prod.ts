@@ -1,11 +1,10 @@
 export const environment = {
   production: true,
-  loginParams: {
     // REQUIRED
-    login_url: window["env"]["login_url"] || 'https://localhost:8443/realms/CredentialIssuer',
-    // SHOULD BE ADDED, REQUIRED
-    login_realm_path: window["env"]["login_realm_path"] || 'realms/issuer'
-  },
+    // Consider renaming as "keycloak_external_domain"
+    iam_url: window["env"]["iam_url"] || 'https://localhost:8443/realms/CredentialIssuer',
+    //? SHOULD BE ADDED?, REQUIRED
+    iam_realm_path: window["env"]["iam_realm_path"] || 'realms/issuer',
   // Issuer API base url
   // used as auth module secureRoutes
   // used as credential-procedure requests url
