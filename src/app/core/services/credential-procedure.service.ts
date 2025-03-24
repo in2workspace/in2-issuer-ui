@@ -8,16 +8,17 @@ import { ProcedureResponse } from '../models/dto/procedure-response.dto';
 import { LearCredentialEmployeeDataDetail } from '../models/dto/lear-credential-employee-data-detail.dto';
 import { CredentialOfferResponse } from '../models/dto/credential-offer-response';
 import { LEARCredentialEmployeeDataNormalizer } from '../models/entity/lear-credential-employee-data-normalizer';
+import { API_PATH } from '../constants/api-paths.constants';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CredentialProcedureService {
 
-  private readonly saveCredential = `${environment.base_url}${environment.save_credential}`;
-  private readonly organizationProcedures = `${environment.base_url}${environment.procedures}`;
-  private readonly credentialOfferUrl = `${environment.base_url}${environment.credential_offer_url}`;
-  private readonly notificationProcedure = `${environment.base_url}${environment.notification}`;
+  private readonly saveCredential = `${environment.server_url}${API_PATH.SAVE_CREDENTIAL}`;
+  private readonly organizationProcedures = `${environment.server_url}${API_PATH.PROCEDURES}`;
+  private readonly credentialOfferUrl = `${environment.server_url}${API_PATH.CREDENTIAL_OFFER}`;
+  private readonly notificationProcedure = `${environment.server_url}${API_PATH.NOTIFICATION}`;
   private readonly http = inject(HttpClient);
   private readonly normalizer = new LEARCredentialEmployeeDataNormalizer();
 

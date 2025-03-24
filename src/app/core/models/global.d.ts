@@ -4,7 +4,7 @@ interface Window {
     env: {
         iam_url?: string;
         iam_realm_path?: string;
-        base_url?: string;
+        server_url?: string;
         wallet_url?: string;
         wallet_url_test?: string;
         knowledgebase_url?: string;

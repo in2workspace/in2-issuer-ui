@@ -41,7 +41,7 @@ describe('HomeComponent', () => {
 
   it('should set walletUrl and knowledgebase_url from environment', () => {
     expect(component.walletUrl).toBe(environment.wallet_url);
-    expect(component.knowledgebase_url).toBe(environment.knowledge.base_url);
+    expect(component.knowledgebase_url).toBe(environment.knowledgebase_url);
   });
 
   it('should call authService.login when login() is called', () => {

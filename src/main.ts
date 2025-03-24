@@ -37,7 +37,7 @@ bootstrapApplication(AppComponent, {
                 historyCleanupOff: false,
                 ignoreNonceAfterRefresh: true,
                 triggerRefreshWhenIdTokenExpired: false,
-                secureRoutes: [environment.base_url]
+                secureRoutes: [environment.server_url]
             },
         })),
         { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

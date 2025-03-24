@@ -1,14 +1,14 @@
+//this template is used for local serving ("ng serve") and testing
+
 export const environment = {
   production: false,
   iam_url: 'https://keycloak-dev.ssihub.org/realms/in2-issuer',
   iam_realm_path: 'realms/issuer',
-  base_url: 'http://localhost:8081',
+  server_url: 'http://localhost:8081',
   wallet_url: 'http://localhost:4200',
   wallet_url_test: 'http://localhost:4200',
-  knowledge:{
-    base_url: "https://knowledgebase.dome-marketplace-sbx.org/",
-  } ,
-  show_wallet_url_test: window["env"]["show_wallet_url_test"] || false,
+  show_wallet_url_test: true,
+  knowledgebase_url: "https://knowledgebase.dome-marketplace-sbx.org/",
   customizations:{
     colors:{ 
       primary:'#2d58a7',

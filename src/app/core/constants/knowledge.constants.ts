@@ -1,3 +1,5 @@
-export const KNOWLEDGE = Object.freeze({
-    WALLET_PATH: "books/dome-digital-wallet-user-guide"
+export const KNOWLEDGEBASE_PATH = Object.freeze({
+    WALLET: "books/dome-digital-wallet-user-guide"
 });
+
+

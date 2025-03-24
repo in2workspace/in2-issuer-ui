@@ -7,6 +7,7 @@ import { ProcedureRequest } from '../models/dto/procedure-request.dto';
 import { ProcedureResponse } from "../models/dto/procedure-response.dto";
 import { LearCredentialEmployeeDataDetail } from "../models/dto/lear-credential-employee-data-detail.dto";
 import { throwError } from 'rxjs';
+import { API_PATH } from '../constants/api-paths.constants';
 
 const notFoundErrorResp = new HttpErrorResponse({
   error: '404 error',
@@ -22,10 +23,10 @@ const serverErrorResp = new HttpErrorResponse({
 describe('CredentialProcedureService', () => {
   let service: CredentialProcedureService;
   let httpMock: HttpTestingController;
-  const apiUrl = `${environment.base_url}${environment.save_credential}`;
-  const proceduresURL = `${environment.base_url}${environment.procedures}`;
-  const notificationUrl = `${environment.base_url}${environment.notification}`;
-  const credentialOfferUrl = `${environment.base_url}${environment.credential_offer_url}`;
+  const apiUrl = `${environment.server_url}${API_PATH.SAVE_CREDENTIAL}`;
+  const proceduresURL = `${environment.server_url}${API_PATH.PROCEDURES}`;
+  const notificationUrl = `${environment.server_url}${API_PATH.NOTIFICATION}`;
+  const credentialOfferUrl = `${environment.server_url}${API_PATH.CREDENTIAL_OFFER}`;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
