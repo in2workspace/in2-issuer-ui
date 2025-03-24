@@ -11,6 +11,7 @@ import { RouterModule } from "@angular/router";
 import { routes } from "./app/app-routing";
 import { HttpLoaderFactory } from "./app/core/services/translate-http-loader.factory";
 import { overrideDefaultValueAccessor } from './app/core/overrides/value-accessor.overrides';
+import { IAM_PARAMS } from './app/core/constants/iam.constants';
 
 overrideDefaultValueAccessor();
 
@@ -25,12 +26,12 @@ bootstrapApplication(AppComponent, {
         }), AuthModule.forRoot({
             config: {
                 postLoginRoute: '/organization/credentials',
-                authority: environment.loginParams.login_url,
+                authority: environment.iam_url,
                 redirectUrl: `${window.location.origin}`,
                 postLogoutRedirectUri: window.location.origin,
-                clientId: environment.loginParams.client_id,
-                scope: environment.loginParams.scope,
-                responseType: environment.loginParams.grant_type,
+                clientId: IAM_PARAMS.CLIENT_ID,
+                scope: IAM_PARAMS.SCOPE,
+                responseType: IAM_PARAMS.GRANT_TYPE,
                 silentRenew: true,
                 useRefreshToken: true,
                 historyCleanupOff: false,
