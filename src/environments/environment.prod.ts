@@ -3,9 +3,9 @@ export const environment = {
   loginParams: {
     has_login: true,
     login_url: window["env"]["login_url"] || 'https://localhost:8443/realms/CredentialIssuer',
-    client_id: window["env"]["client_id"] || 'account-console',
-    scope: window["env"]["scope"] || 'openid profile email offline_access',
-    grant_type: window["env"]["grant_type"] || 'code'
+    client_id: window["env"]["client_id"] || 'vc-auth-client',
+    scope: 'openid profile email learcredential role',
+    grant_type: 'code'
   },
   base_url: window["env"]["base_url"] || 'http://localhost:8081',
   wallet_url: window["env"]["wallet_url"] || 'http://localhost:4200',
