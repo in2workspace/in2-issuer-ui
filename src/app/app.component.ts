@@ -4,7 +4,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { environment } from 'src/environments/environment';
 import { NavbarComponent } from '../app/shared/components/navbar/navbar.component';
 import { DOCUMENT } from '@angular/common';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { filter, map, startWith } from 'rxjs';
 
 @Component({
     selector: 'app-root',
@@ -16,23 +17,18 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 export class AppComponent{
 public title = 'Credential-issuer-ui';
 private readonly translate = inject(TranslateService);
-public showNavbar = true;
-private readonly router= inject(Router)
+private readonly router= inject(Router);
 private readonly document = inject(DOCUMENT);
+public readonly showNavbar$ = toSignal(this.router.events.pipe(
+  filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+  map((event: NavigationEnd) => !event.urlAfterRedirects.startsWith('/home')),
+  startWith(!this.router.url.startsWith('/home'))
+));
 
 public constructor(){
     this.setLanguage();
     this.setCustomColors();
     this.setFavicon();
-
-    //todo do this declaratively
-    this.router.events
-    .pipe(takeUntilDestroyed())
-    .subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        this.showNavbar = !event.urlAfterRedirects.startsWith('/home');
-      }
-    });
  }
 
  private setLanguage(){
