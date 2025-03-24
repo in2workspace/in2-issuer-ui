@@ -17,6 +17,6 @@ export const environment = {
       secondary_contrast:'#dde6f6'
     },
     logo_src:"assets/logos/logo-dome-issuer-reduced.png",
-    favicon_src:"assets/icon/favicon.png"  
+    favicon_src:"assets/icons/favicon.png"  
   }
 };
