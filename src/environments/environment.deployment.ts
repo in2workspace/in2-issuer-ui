@@ -5,7 +5,6 @@ export const environment = {
   // Keycloak URL (REQUIRED) 
   iam_url: window["env"]["iam_url"],
   // Keycloak realm path (REQUIRED)
-  // todo TO BE ADDED --> currently it is included in iam_url
   iam_realm_path: window["env"]["iam_realm_path"],
   // Issuer API base URL (REQUIRED)
   server_url: window["env"]["server_url"],
