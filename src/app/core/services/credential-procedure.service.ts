@@ -8,7 +8,7 @@ import { ProcedureResponse } from '../models/dto/procedure-response.dto';
 import { LearCredentialEmployeeDataDetail } from '../models/dto/lear-credential-employee-data-detail.dto';
 import { CredentialOfferResponse } from '../models/dto/credential-offer-response';
 import { LEARCredentialEmployeeDataNormalizer } from '../models/entity/lear-credential-employee-data-normalizer';
-import { LEARCredentialEmployee, LEARCredentialEmployeeJwtPayload } from '../models/entity/lear-credential-employee.entity';
+import { LEARCredentialEmployee } from '../models/entity/lear-credential-employee.entity';
 
 @Injectable({
   providedIn: 'root'
