@@ -3,6 +3,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { QRCodeModule } from 'angularx-qrcode';
 import { NgIf, UpperCasePipe } from '@angular/common';
 import { environment } from 'src/environments/environment';
+import { KNOWLEDGEBASE_PATH } from 'src/app/core/constants/knowledge.constants';
 
 @Component({
     selector: 'app-credential-offer',
@@ -14,7 +15,7 @@ import { environment } from 'src/environments/environment';
 export class CredentialOfferComponent{
   @Output() public refreshCredential = new EventEmitter<void>();
   public qrColor = "#2d58a7";
-  public walletUsersGuideUrl = environment.knowledge.base_url + environment.knowledge.wallet_path;
+  public walletUsersGuideUrl = environment.knowledgebase_url + KNOWLEDGEBASE_PATH.WALLET;
   public credentialOfferUri$ = input.required<string>();
 
   public readonly walletSameDeviceUrl = environment.wallet_url + 'tabs/home/';
@@ -24,7 +25,7 @@ export class CredentialOfferComponent{
   });
 
   //TEST URLS
-  public profile = environment.profile; 
+  public readonly showWalletSameDeviceUrlTest =  environment.show_wallet_url_test;
   public readonly walletSameDeviceTestUrl = environment.wallet_url_test + 'tabs/home/';
   
   public walletSameDeviceTestUrl$ = computed<string>(()=>{

@@ -54,12 +54,12 @@ describe('CredentialOfferOnboardingComponent', () => {
     environment.wallet_url_test = originalWalletTestUrl;
   });
 
-  it('should get profile', () => {
-    expect(component.profile).toBe(environment.profile);
+  it('should get showWalletSameDeviceUrlTest', () => {
+    expect(component.showWalletSameDeviceUrlTest).toBe(environment.show_wallet_url_test);
   });
 
   it('should initialize walletUsersGuideUrl with the correct value from the environment', () => {
-    const expectedGuideUrl = environment.knowledge.base_url + "books/dome-digital-wallet-user-guide";
+    const expectedGuideUrl = environment.knowledgebase_url + "books/dome-digital-wallet-user-guide";
     expect(component.walletUsersGuideUrl).toBe(expectedGuideUrl);
   });
 
