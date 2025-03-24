@@ -1,6 +1,5 @@
 export const IAM_PARAMS = Object.freeze({
-    // todo check values in Helm
     CLIENT_ID: "vc-auth-client",
-    SCOPE: "openid profile email learcredential role'",
+    SCOPE: "openid profile email offline_access vc mandator",
     GRANT_TYPE: "code"
 });
