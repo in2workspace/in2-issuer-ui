@@ -15,6 +15,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 export class HomeComponent{
   public walletUrl = environment.wallet_url;
   public knowledgebase_url = environment.knowledgebase_url;
+  public readonly logoSrc = "../../../assets/logos/" + environment.customizations.logo_src;
 
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
