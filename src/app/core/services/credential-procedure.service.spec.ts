@@ -26,6 +26,7 @@ describe('CredentialProcedureService', () => {
   const proceduresURL = `${environment.base_url}${environment.procedures}`;
   const notificationUrl = `${environment.base_url}${environment.notification}`;
   const credentialOfferUrl = `${environment.base_url}${environment.credential_offer_url}`;
+  const signCredentialUrl = `${environment.base_url}${environment.sign_credential_url}`;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -185,7 +186,19 @@ describe('CredentialProcedureService', () => {
     req.flush({});
   });
 
-  it('should handle error when sending reminder', () => {
+  it('should sign credential successfully', () => {
+    const procedureId = '1';
+
+    service.signCredential(procedureId).subscribe(data => {
+      expect(data).toBeTruthy();
+    });
+
+    const req = httpMock.expectOne(`${signCredentialUrl}/${procedureId}`);
+    expect(req.request.method).toBe('POST');
+    req.flush({});
+  });
+
+  it('should handle error when sending reminder or signing credential', () => {
     const procedureId = '1';
     const errorResponse = new HttpErrorResponse({
       error: '500 error',
@@ -200,8 +213,21 @@ describe('CredentialProcedureService', () => {
       }
     );
 
-    const req = httpMock.expectOne(`${notificationUrl}/${procedureId}`);
-    req.flush('500 error', errorResponse);
+    service.signCredential(procedureId).subscribe(
+      data => fail('should have failed with 500 error'),
+      (error: string) => {
+        expect(error).toContain('Server-side error: 500');
+      }
+    );
+
+    const requests = httpMock.match(() => true);
+
+    expect(requests.length).toBeGreaterThanOrEqual(2);
+
+    requests.forEach((req) => {
+      expect(req.request.method).toBe('POST');
+      req.flush('500 error', errorResponse);
+    });
   });
 
   describe('Get credential offer by transaction code', () => {

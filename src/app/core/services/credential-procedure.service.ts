@@ -8,6 +8,7 @@ import { ProcedureResponse } from '../models/dto/procedure-response.dto';
 import { LearCredentialEmployeeDataDetail } from '../models/dto/lear-credential-employee-data-detail.dto';
 import { CredentialOfferResponse } from '../models/dto/credential-offer-response';
 import { LEARCredentialEmployeeDataNormalizer } from '../models/entity/lear-credential-employee-data-normalizer';
+import { LEARCredentialEmployee } from '../models/entity/lear-credential-employee.entity';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,8 @@ export class CredentialProcedureService {
   private readonly organizationProcedures = `${environment.base_url}${environment.procedures}`;
   private readonly credentialOfferUrl = `${environment.base_url}${environment.credential_offer_url}`;
   private readonly notificationProcedure = `${environment.base_url}${environment.notification}`;
+  private readonly signCredentialUrl = `${environment.base_url}${environment.sign_credential_url}`;
+
   private readonly http = inject(HttpClient);
   private readonly normalizer = new LEARCredentialEmployeeDataNormalizer();
 
@@ -32,14 +35,20 @@ export class CredentialProcedureService {
       `${this.organizationProcedures}/${procedureId}/credential-decoded`
     ).pipe(
       map(learCredentialEmployeeDataDetail => {
-        // Normalize the vc part which is of type LEARCredentialEmployee
-        const normalizedLearCredentialEmployee = this.normalizer.normalizeLearCredential(learCredentialEmployeeDataDetail.credential.vc);
-        // Rebuild the object, keeping the rest intact
+        const { credential } = learCredentialEmployeeDataDetail;
+        // If vc exists, we normalize it, otherwise we assume that credential is already of the expected type
+        const credentialData = credential.vc 
+          ? credential.vc 
+          : (credential as unknown as LEARCredentialEmployee);
+          
+        // Normalize the part which is of type LEARCredentialEmployee
+        const normalizedCredential = this.normalizer.normalizeLearCredential(credentialData);
+  
         return {
           ...learCredentialEmployeeDataDetail,
           credential: {
-            ...learCredentialEmployeeDataDetail.credential,
-            vc: normalizedLearCredentialEmployee
+            ...credential,
+            vc: normalizedCredential
           }
         } as LearCredentialEmployeeDataDetail;
       }),
@@ -56,6 +65,12 @@ export class CredentialProcedureService {
 
   public sendReminder(procedureId: string): Observable<void> {
     return this.http.post<void>(`${this.notificationProcedure}/${procedureId}`, {}).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  public signCredential(procedureId: string): Observable<void> {
+    return this.http.post<void>(`${this.signCredentialUrl}/${procedureId}`, {} ).pipe(
       catchError(this.handleError)
     );
   }

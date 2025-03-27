@@ -64,6 +64,7 @@ import { MatIcon } from '@angular/material/icon';
 export class FormCredentialComponent implements OnInit, OnDestroy {
   @ViewChild('formDirective') public formDirective!: FormGroupDirective;
   @Output() public sendReminder = new EventEmitter<void>();
+  @Output() public signCredential = new EventEmitter<void>();
   @Input({ required: true }) public viewMode: 'create' | 'detail' = 'create';
   @Input() public asSigner: boolean = false;
   @Input() public isDisabled: boolean = false;
@@ -185,6 +186,10 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
     this.sendReminder.emit();
   }
 
+  public triggerSignCredential(): void {
+    this.signCredential.emit();
+  }
+
   public hasSelectedPower(): boolean {
     return this.formService.hasSelectedPower();
   }
@@ -196,6 +201,11 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
   public showReminderButton(): boolean {
     return (this.viewMode === 'detail') && ((this.credentialStatus === 'WITHDRAWN') || (this.credentialStatus === 'DRAFT') || (this.credentialStatus === 'PEND_DOWNLOAD'));
   }
+
+  public showSignCredentialButton(): boolean{
+    return (this.viewMode === 'detail') && (this.credentialStatus === 'PEND_SIGNATURE')
+  }
+
 
   public ngOnDestroy(): void {
     this.formService.reset();
