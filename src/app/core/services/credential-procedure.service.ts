@@ -76,14 +76,14 @@ export class CredentialProcedureService {
         ) {
           errorMessage = this.translate.instant('error.credentialOffer.first_email_failed');
           this.dialog.openErrorInfoDialog(errorMessage);
-          this.redirectToHome();
+          this.redirectToDashboard();
 
           return throwError(() => new Error(errorMessage));
         }
 
         errorMessage = this.translate.instant("error.generic.unexpected");
         this.dialog.openErrorInfoDialog(errorMessage);
-        this.redirectToHome();
+        this.redirectToDashboard();
         return throwError(() => error);
       })
     );
@@ -103,13 +103,13 @@ export class CredentialProcedureService {
         ) {
           errorMessage = this.translate.instant('error.credentialOffer.send_reminder_email_failed');
           this.dialog.openErrorInfoDialog(errorMessage);
-          this.redirectToHome();
+          this.redirectToDashboard();
           return throwError(() => new Error(errorMessage));
         }
 
         errorMessage = this.translate.instant("error.generic.unexpected");
         this.dialog.openErrorInfoDialog(errorMessage);
-        this.redirectToHome();
+        this.redirectToDashboard();
         return throwError(() => error);
       })
     );
@@ -135,9 +135,9 @@ export class CredentialProcedureService {
     );
   }
 
-  public redirectToHome(): void{
+  public redirectToDashboard(): void{
     setTimeout(()=>{
-      this.router.navigate(['/home']);
+      this.router.navigate(['/organization/credentials']);
     }, 0);
   }
 
