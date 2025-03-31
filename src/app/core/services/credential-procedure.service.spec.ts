@@ -7,6 +7,9 @@ import { ProcedureRequest } from '../models/dto/procedure-request.dto';
 import { ProcedureResponse } from "../models/dto/procedure-response.dto";
 import { LearCredentialEmployeeDataDetail } from "../models/dto/lear-credential-employee-data-detail.dto";
 import { throwError } from 'rxjs';
+import {DialogWrapperService} from "../../shared/components/dialog/dialog-wrapper/dialog-wrapper.service";
+import {TranslateService} from "@ngx-translate/core";
+import {Router} from "@angular/router";
 
 const notFoundErrorResp = new HttpErrorResponse({
   error: '404 error',
@@ -22,6 +25,9 @@ const serverErrorResp = new HttpErrorResponse({
 describe('CredentialProcedureService', () => {
   let service: CredentialProcedureService;
   let httpMock: HttpTestingController;
+  let dialogSpy: jest.Mocked<DialogWrapperService>;
+  let translateSpy: jest.Mocked<TranslateService>;
+  let routerSpy: jest.Mocked<Router>;
   const apiUrl = `${environment.base_url}${environment.save_credential}`;
   const proceduresURL = `${environment.base_url}${environment.procedures}`;
   const notificationUrl = `${environment.base_url}${environment.notification}`;
@@ -31,11 +37,20 @@ describe('CredentialProcedureService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
     imports: [],
-    providers: [CredentialProcedureService, provideHttpClient(), provideHttpClientTesting()]
+    providers: [CredentialProcedureService,
+      provideHttpClient(),
+      provideHttpClientTesting(),
+      { provide: DialogWrapperService, useValue: { openErrorInfoDialog: jest.fn(), openWarningDialog: jest.fn() } },
+      { provide: TranslateService, useValue: { instant: jest.fn((key: string) => key) } },
+      { provide: Router, useValue: { navigate: jest.fn() } }
+    ]
 });
 
     service = TestBed.inject(CredentialProcedureService);
     httpMock = TestBed.inject(HttpTestingController);
+    dialogSpy = TestBed.inject(DialogWrapperService) as jest.Mocked<DialogWrapperService>;
+    translateSpy = TestBed.inject(TranslateService) as jest.Mocked<TranslateService>;
+    routerSpy = TestBed.inject(Router) as jest.Mocked<Router>;
   });
 
   afterEach(() => {
@@ -366,5 +381,71 @@ describe('get credential offer by c-code', () => {
         expect(error).toBe('Server-side error: 500 Internal Server Error');
       }
     });
+  });
+
+  it('should handle createProcedure error for "first_email_failed"', () => {
+    const issuanceRequestMock: ProcedureRequest = {
+      schema: "LEARCredentialEmployee",
+      format: "jwt_vc_json",
+      payload: {
+        mandatee: { firstName: 'John', lastName: 'Doe', email: 'john@example.com', nationality: 'ES' },
+        mandator: { organizationIdentifier: 'ID123', organization: 'Org', commonName: 'OrgName', emailAddress: 'contact@org.com', serialNumber: 'SN123', country: 'ES' },
+        power: []
+      },
+      operation_mode: "S"
+    };
+
+    const errorResponse = new HttpErrorResponse({
+      error: { message: 'The credential was created but there was an error sending the credential offer email' },
+      status: 201,
+      statusText: 'Created'
+    });
+
+    service.createProcedure(issuanceRequestMock).subscribe({
+      next: () => fail('should have failed with first_email_failed error'),
+      error: (err: Error) => {
+        // Verificamos que se haya llamado a la traducción con la clave correcta
+        expect(translateSpy.instant).toHaveBeenCalledWith('error.credentialOffer.first_email_failed');
+        // Verificamos que el mensaje del error contenga la clave traducida
+        expect(err.message).toContain('error.credentialOffer.first_email_failed');
+        // Se debe mostrar el diálogo de error (o warning según tu implementación)
+        expect(dialogSpy.openErrorInfoDialog).toHaveBeenCalled();
+        // Si redirectToHome() usa router.navigate, se puede verificar
+        // expect(routerSpy.navigate).toHaveBeenCalled();
+      }
+    });
+
+    const req = httpMock.expectOne(apiUrl);
+    expect(req.request.method).toBe('POST');
+    req.flush(
+      { message: 'The credential was created but there was an error sending the credential offer email' },
+      errorResponse
+    );
+  });
+
+  it('should handle sendReminder error for "send_reminder_email_failed"', () => {
+    const procedureId = '1';
+    const errorResponse = new HttpErrorResponse({
+      error: { message: 'Error sending the reminder, please get in touch with the support team' },
+      status: 503,
+      statusText: 'Service Unavailable'
+    });
+
+    service.sendReminder(procedureId).subscribe({
+      next: () => fail('should have failed with send_reminder_email_failed error'),
+      error: (err: Error) => {
+        expect(translateSpy.instant).toHaveBeenCalledWith('error.credentialOffer.send_reminder_email_failed');
+        expect(err.message).toContain('error.credentialOffer.send_reminder_email_failed');
+        expect(dialogSpy.openErrorInfoDialog).toHaveBeenCalled();
+        // expect(routerSpy.navigate).toHaveBeenCalled();
+      }
+    });
+
+    const req = httpMock.expectOne(`${notificationUrl}/${procedureId}`);
+    expect(req.request.method).toBe('POST');
+    req.flush(
+      { message: 'Error sending the reminder, please get in touch with the support team' },
+      errorResponse
+    );
   });
 });
