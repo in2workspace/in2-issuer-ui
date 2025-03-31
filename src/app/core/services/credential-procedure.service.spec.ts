@@ -404,14 +404,10 @@ describe('get credential offer by c-code', () => {
     service.createProcedure(issuanceRequestMock).subscribe({
       next: () => fail('should have failed with first_email_failed error'),
       error: (err: Error) => {
-        // Verificamos que se haya llamado a la traducción con la clave correcta
         expect(translateSpy.instant).toHaveBeenCalledWith('error.credentialOffer.first_email_failed');
-        // Verificamos que el mensaje del error contenga la clave traducida
         expect(err.message).toContain('error.credentialOffer.first_email_failed');
-        // Se debe mostrar el diálogo de error (o warning según tu implementación)
         expect(dialogSpy.openErrorInfoDialog).toHaveBeenCalled();
-        // Si redirectToHome() usa router.navigate, se puede verificar
-        // expect(routerSpy.navigate).toHaveBeenCalled();
+        expect(routerSpy.navigate).toHaveBeenCalled();
       }
     });
 
@@ -437,7 +433,7 @@ describe('get credential offer by c-code', () => {
         expect(translateSpy.instant).toHaveBeenCalledWith('error.credentialOffer.send_reminder_email_failed');
         expect(err.message).toContain('error.credentialOffer.send_reminder_email_failed');
         expect(dialogSpy.openErrorInfoDialog).toHaveBeenCalled();
-        // expect(routerSpy.navigate).toHaveBeenCalled();
+        expect(routerSpy.navigate).toHaveBeenCalled();
       }
     });
 
