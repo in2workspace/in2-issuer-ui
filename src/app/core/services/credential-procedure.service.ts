@@ -9,6 +9,9 @@ import { LearCredentialEmployeeDataDetail } from '../models/dto/lear-credential-
 import { CredentialOfferResponse } from '../models/dto/credential-offer-response';
 import { LEARCredentialEmployeeDataNormalizer } from '../models/entity/lear-credential-employee-data-normalizer';
 import { LEARCredentialEmployee } from '../models/entity/lear-credential-employee.entity';
+import {DialogWrapperService} from "../../shared/components/dialog/dialog-wrapper/dialog-wrapper.service";
+import {TranslateService} from "@ngx-translate/core";
+import {Router} from "@angular/router";
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +26,9 @@ export class CredentialProcedureService {
 
   private readonly http = inject(HttpClient);
   private readonly normalizer = new LEARCredentialEmployeeDataNormalizer();
+  private readonly dialog = inject(DialogWrapperService);
+  private readonly translate = inject(TranslateService);
+  private readonly router = inject(Router);
 
   public getCredentialProcedures(): Observable<ProcedureResponse> {
     return this.http.get<ProcedureResponse>(this.organizationProcedures).pipe(
@@ -37,13 +43,13 @@ export class CredentialProcedureService {
       map(learCredentialEmployeeDataDetail => {
         const { credential } = learCredentialEmployeeDataDetail;
         // If vc exists, we normalize it, otherwise we assume that credential is already of the expected type
-        const credentialData = credential.vc 
-          ? credential.vc 
+        const credentialData = credential.vc
+          ? credential.vc
           : (credential as unknown as LEARCredentialEmployee);
-          
+
         // Normalize the part which is of type LEARCredentialEmployee
         const normalizedCredential = this.normalizer.normalizeLearCredential(credentialData);
-  
+
         return {
           ...learCredentialEmployeeDataDetail,
           credential: {
@@ -56,16 +62,54 @@ export class CredentialProcedureService {
     );
   }
 
-
   public createProcedure(procedureRequest: ProcedureRequest): Observable<void> {
     return this.http.post<void>(this.saveCredential, procedureRequest).pipe(
-      catchError(this.handleError)
+      catchError((error: HttpErrorResponse) => {
+        const errorStatus = error?.status || error?.error?.status || 0;
+        let errorMessage = '';
+
+        if (
+          errorStatus === 201 &&
+          error.error?.message === 'The credential was created but there was an error sending the credential offer email'
+        ) {
+          errorMessage = this.translate.instant('error.credentialOffer.first_email_failed') ||
+            'The credential was created but there was an error sending the credential offer email';
+          this.dialog.openErrorInfoDialog(errorMessage);
+          this.redirectToHome();
+
+          return throwError(() => new Error(errorMessage));
+        }
+
+        errorMessage = this.translate.instant("error.generic.unexpected");
+        this.dialog.openErrorInfoDialog(errorMessage);
+        this.redirectToHome();
+        return throwError(() => error);
+      })
     );
   }
 
   public sendReminder(procedureId: string): Observable<void> {
     return this.http.post<void>(`${this.notificationProcedure}/${procedureId}`, {}).pipe(
-      catchError(this.handleError)
+      catchError((error: HttpErrorResponse) => {
+        const errorStatus = error?.status || error?.error?.status || 0;
+        let errorMessage = '';
+
+        if (
+          errorStatus === 503 &&
+          error.error?.message === 'Error sending the reminder, please get in touch with the support team'
+        ) {
+          errorMessage = this.translate.instant('error.credentialOffer.send_reminder_email_failed') ||
+            'Error sending the reminder, please get in touch with the support team';
+          this.dialog.openErrorInfoDialog(errorMessage);
+          this.redirectToHome();
+          return throwError(() => new Error(errorMessage));
+        }
+
+        errorMessage = this.translate.instant("error.generic.unexpected");
+        this.dialog.openErrorInfoDialog(errorMessage);
+        this.redirectToHome();
+        return throwError(() => error);
+      })
     );
   }
 
@@ -87,6 +131,12 @@ export class CredentialProcedureService {
     return this.http.get<CredentialOfferResponse>(`${this.credentialOfferUrl}/c-transaction-code/${cTransactionCode}`).pipe(
       catchError(this.handleError)
     );
+  }
+
+  public redirectToHome(): void{
+    setTimeout(()=>{
+      this.router.navigate(['/home']);
+    }, 0);
   }
 
   private handleError(error: HttpErrorResponse) {
