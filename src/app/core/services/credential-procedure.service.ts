@@ -81,10 +81,7 @@ export class CredentialProcedureService {
           return throwError(() => new Error(errorMessage));
         }
 
-        errorMessage = this.translate.instant("error.generic.unexpected");
-        this.dialog.openErrorInfoDialog(errorMessage);
-        this.redirectToDashboard();
-        return throwError(() => error);
+        return this.handleError(error)
       })
     );
   }
@@ -107,10 +104,7 @@ export class CredentialProcedureService {
           return throwError(() => new Error(errorMessage));
         }
 
-        errorMessage = this.translate.instant("error.generic.unexpected");
-        this.dialog.openErrorInfoDialog(errorMessage);
-        this.redirectToDashboard();
-        return throwError(() => error);
+        return this.handleError(error)
       })
     );
   }
