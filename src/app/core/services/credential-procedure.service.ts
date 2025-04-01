@@ -65,8 +65,8 @@ export class CredentialProcedureService {
   public createProcedure(procedureRequest: ProcedureRequest): Observable<void> {
     return this.http.post<void>(this.saveCredential, procedureRequest).pipe(
       catchError((error: HttpErrorResponse) => {
-        const errorStatus = error.status || error.error?.status;
-        let errorMessage = error.error?.message || error.message;
+        const errorStatus = error.status;
+        let errorMessage = error.error;
 
         console.log("createProcedure error.message:", errorMessage);
 
@@ -76,11 +76,8 @@ export class CredentialProcedureService {
         ) {
           errorMessage = this.translate.instant('error.credentialOffer.first_email_failed');
           this.dialog.openErrorInfoDialog(errorMessage);
-          this.redirectToDashboard();
-
-          return throwError(() => new Error(errorMessage));
         }
-
+        this.redirectToDashboard();
         return this.handleError(error)
       })
     );
@@ -89,8 +86,8 @@ export class CredentialProcedureService {
   public sendReminder(procedureId: string): Observable<void> {
     return this.http.post<void>(`${this.notificationProcedure}/${procedureId}`, {}).pipe(
       catchError((error: HttpErrorResponse) => {
-        const errorStatus = error.status || error.error?.status;
-        let errorMessage = error.error?.message || error.message;
+        const errorStatus = error.status;
+        let errorMessage = error.error;
 
         console.log("sendReminder error.message:", errorMessage);
 
@@ -100,10 +97,8 @@ export class CredentialProcedureService {
         ) {
           errorMessage = this.translate.instant('error.credentialOffer.send_reminder_email_failed');
           this.dialog.openErrorInfoDialog(errorMessage);
-          this.redirectToDashboard();
-          return throwError(() => new Error(errorMessage));
         }
-
+        this.redirectToDashboard();
         return this.handleError(error)
       })
     );
