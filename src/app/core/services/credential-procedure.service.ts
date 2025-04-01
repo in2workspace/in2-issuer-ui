@@ -65,14 +65,14 @@ export class CredentialProcedureService {
   public createProcedure(procedureRequest: ProcedureRequest): Observable<void> {
     return this.http.post<void>(this.saveCredential, procedureRequest).pipe(
       catchError((error: HttpErrorResponse) => {
-        console.log("createProcedure error.message:", error.error?.message);
+        const errorStatus = error.status || error.error?.status;
+        let errorMessage = error.error?.message || error.message;
 
-        const errorStatus = error?.status || error?.error?.status || 0;
-        let errorMessage = '';
+        console.log("createProcedure error.message:", errorMessage);
 
         if (
           errorStatus === 201 &&
-          error.error?.message === 'The credential was created but there was an error sending the credential offer email'
+          errorMessage === 'The credential was created but there was an error sending the credential offer email'
         ) {
           errorMessage = this.translate.instant('error.credentialOffer.first_email_failed');
           this.dialog.openErrorInfoDialog(errorMessage);
@@ -89,14 +89,14 @@ export class CredentialProcedureService {
   public sendReminder(procedureId: string): Observable<void> {
     return this.http.post<void>(`${this.notificationProcedure}/${procedureId}`, {}).pipe(
       catchError((error: HttpErrorResponse) => {
-        console.log("sendReminder error.message:", error.error?.message);
+        const errorStatus = error.status || error.error?.status;
+        let errorMessage = error.error?.message || error.message;
 
-        const errorStatus = error?.status || error?.error?.status || 0;
-        let errorMessage = '';
+        console.log("sendReminder error.message:", errorMessage);
 
         if (
           errorStatus === 503 &&
-          error.error?.message === 'Error sending the reminder, please get in touch with the support team'
+          errorMessage === 'Error sending the reminder, please get in touch with the support team'
         ) {
           errorMessage = this.translate.instant('error.credentialOffer.send_reminder_email_failed');
           this.dialog.openErrorInfoDialog(errorMessage);
