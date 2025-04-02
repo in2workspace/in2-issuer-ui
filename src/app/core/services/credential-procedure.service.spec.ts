@@ -395,7 +395,7 @@ describe('get credential offer by c-code', () => {
     service.sendReminder(procedureId).subscribe({
       next: () => fail('should have failed with a server mail error'),
       error: (err: HttpErrorResponse) => {
-        expect(translateSpy.instant).toHaveBeenCalledWith('error.server_mail_error.message');
+        expect(translateSpy.instant).toHaveBeenCalledWith('error.serverMailError.message');
         expect(dialogSpy.openErrorInfoDialog).toHaveBeenCalled();
         expect(routerSpy.navigate).toHaveBeenCalled();
         expect(err).toEqual(errorResponse);
