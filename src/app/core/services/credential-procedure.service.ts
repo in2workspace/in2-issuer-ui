@@ -1,14 +1,14 @@
-import { inject, Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
-import { ProcedureRequest } from '../models/dto/procedure-request.dto';
-import { ProcedureResponse } from '../models/dto/procedure-response.dto';
-import { LearCredentialEmployeeDataDetail } from '../models/dto/lear-credential-employee-data-detail.dto';
-import { CredentialOfferResponse } from '../models/dto/credential-offer-response';
-import { LEARCredentialEmployeeDataNormalizer } from '../models/entity/lear-credential-employee-data-normalizer';
-import { LEARCredentialEmployee } from '../models/entity/lear-credential-employee.entity';
+import {inject, Injectable} from '@angular/core';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {Observable, throwError} from 'rxjs';
+import {catchError, map} from 'rxjs/operators';
+import {environment} from 'src/environments/environment';
+import {ProcedureRequest} from '../models/dto/procedure-request.dto';
+import {ProcedureResponse} from '../models/dto/procedure-response.dto';
+import {LearCredentialEmployeeDataDetail} from '../models/dto/lear-credential-employee-data-detail.dto';
+import {CredentialOfferResponse} from '../models/dto/credential-offer-response';
+import {LEARCredentialEmployeeDataNormalizer} from '../models/entity/lear-credential-employee-data-normalizer';
+import {LEARCredentialEmployee} from '../models/entity/lear-credential-employee.entity';
 import {DialogWrapperService} from "../../shared/components/dialog/dialog-wrapper/dialog-wrapper.service";
 import {TranslateService} from "@ngx-translate/core";
 import {Router} from "@angular/router";
@@ -64,43 +64,13 @@ export class CredentialProcedureService {
 
   public createProcedure(procedureRequest: ProcedureRequest): Observable<void> {
     return this.http.post<void>(this.saveCredential, procedureRequest).pipe(
-      catchError((error: HttpErrorResponse) => {
-        const errorStatus = error.status;
-        let errorMessage = error.error;
-
-        console.log("createProcedure error.message:", errorMessage);
-
-        if (
-          errorStatus === 201 &&
-          errorMessage === 'The credential was created but there was an error sending the credential offer email'
-        ) {
-          errorMessage = this.translate.instant('error.credentialOffer.first_email_failed');
-          this.dialog.openErrorInfoDialog(errorMessage);
-        }
-        this.redirectToDashboard();
-        return this.handleError(error)
-      })
+      catchError(this.handleError)
     );
   }
 
   public sendReminder(procedureId: string): Observable<void> {
     return this.http.post<void>(`${this.notificationProcedure}/${procedureId}`, {}).pipe(
-      catchError((error: HttpErrorResponse) => {
-        const errorStatus = error.status;
-        let errorMessage = error.error;
-
-        console.log("sendReminder error.message:", errorMessage);
-
-        if (
-          errorStatus === 503 &&
-          errorMessage === 'Error sending the reminder, please get in touch with the support team'
-        ) {
-          errorMessage = this.translate.instant('error.credentialOffer.send_reminder_email_failed');
-          this.dialog.openErrorInfoDialog(errorMessage);
-        }
-        this.redirectToDashboard();
-        return this.handleError(error)
-      })
+      catchError(this.handleError)
     );
   }
 
@@ -131,13 +101,24 @@ export class CredentialProcedureService {
   }
 
   private handleError(error: HttpErrorResponse) {
-    let errorMessage: string;
-    if (error.error instanceof ErrorEvent) {
-      errorMessage = `Client-side error: ${error.error.message}`;
+    const errorDetail = error.error && error.error.message ? error.error.message : error.message;
+
+    // If the error is a 503 and the message is 'Error during communication with the mail server', show a dialog
+    if (error.status === 503 && errorDetail === 'Error during communication with the mail server') {
+      const errorMessage = this.translate.instant('error.credentialIssuance.server_mail_error.message');
+      const errorTitle = this.translate.instant('error.credentialIssuance.server_mail_error.title');
+      this.dialog.openErrorInfoDialog(errorMessage, errorTitle);
+      this.redirectToDashboard();
+      return throwError(() => new Error(errorMessage));
+    } else if (error.error instanceof ErrorEvent) {
+      // Client-side error.
+      console.error(`Client-side error: ${errorDetail}`);
+      return throwError(() => new Error(`Client-side error: ${errorDetail}`));
     } else {
-      errorMessage = `Server-side error: ${error.status} ${error.message}`;
+      // Server-side error.
+      const defaultErrorMessage = `Server-side error: ${error.status} ${errorDetail}`;
+      console.error('Error response body:', defaultErrorMessage);
+      return throwError(() => new Error(defaultErrorMessage));
     }
-    console.error('Error response body:', errorMessage);
-    return throwError(() => error);
   }
 }

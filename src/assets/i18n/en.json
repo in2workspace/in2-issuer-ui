@@ -175,8 +175,12 @@
       "invalid-url": "Unexpected error: invalid URL, can't get credential offer.",
       "unexpected": "An unexpected error occurred. Please try again later or contact your company's Legal Representative to get a new credential.",
       "expired": "This credential offer is invalid. It may have expired or been replaced by a new one. If a new offer was sent, please check your email. If it has expired, contact your company's Legal Representative to request a new credential offer.",
-      "first_email_failed" : "The credential was created, but the email could not be sent. Please try to send a reminder to the receiver.",
-      "send_reminder_email_failed" : "The send reminder could not be sent. If the problem persists, please contact with the support team."
+    },
+    "credentialIssuance": {
+      "server_mail_error": {
+        "title": "Mail server error",
+        "message": "There was an error with the mail server. Please try again later to send a send reminder, if problem persist contact support team."
+      }
     },
     "form":{
       "required": "This field is required.",

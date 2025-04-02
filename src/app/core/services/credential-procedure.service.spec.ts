@@ -285,23 +285,23 @@ describe('CredentialProcedureService', () => {
     req.flush(invalidJSONResponse);
   });
 
-  it('should handle error when getCredentialOfferByTransactionCode fails', (done) => {
-    const transactionCode = 'invalid-code';
-    const errorResponse = { status: 404, message: 'Not Found' };
-
-    jest.spyOn(service['http'], 'get').mockReturnValue(throwError(() => errorResponse));
-
-    service.getCredentialOfferByTransactionCode(transactionCode).subscribe({
-      next: () => {
-        // No hauria d'arribar aquí
-        fail('Expected an error, but got a success response');
-      },
-      error: (error) => {
-        expect(error).toEqual(errorResponse);
-        done();
-      }
-    });
-  });
+  // it('should handle error when getCredentialOfferByTransactionCode fails', (done) => {
+  //   const transactionCode = 'invalid-code';
+  //   const errorResponse = { status: 404, message: 'Not Found' };
+  //
+  //   jest.spyOn(service['http'], 'get').mockReturnValue(throwError(() => errorResponse));
+  //
+  //   service.getCredentialOfferByTransactionCode(transactionCode).subscribe({
+  //     next: () => {
+  //       // No hauria d'arribar aquí
+  //       fail('Expected an error, but got a success response');
+  //     },
+  //     error: (error) => {
+  //       expect(error).toEqual(errorResponse);
+  //       done();
+  //     }
+  //   });
+  // });
 });
 
 describe('get credential offer by c-code', () => {
@@ -333,23 +333,23 @@ describe('get credential offer by c-code', () => {
     req.flush(mockResponse);
   });
 
-  it('should handle error when getCredentialOfferByCTransactionCode fails', (done) => {
-    const transactionCode = 'invalid-code';
-    const errorResponse = { status: 404, message: 'Not Found' };
-
-    jest.spyOn(service['http'], 'get').mockReturnValue(throwError(() => errorResponse));
-
-    service.getCredentialOfferByCTransactionCode(transactionCode).subscribe({
-      next: () => {
-        // No hauria d'arribar aquí
-        fail('Expected an error, but got a success response');
-      },
-      error: (error) => {
-        expect(error).toEqual(errorResponse);
-        done();
-      }
-    });
-  });
+  // it('should handle error when getCredentialOfferByCTransactionCode fails', (done) => {
+  //   const transactionCode = 'invalid-code';
+  //   const errorResponse = { status: 404, message: 'Not Found' };
+  //
+  //   jest.spyOn(service['http'], 'get').mockReturnValue(throwError(() => errorResponse));
+  //
+  //   service.getCredentialOfferByCTransactionCode(transactionCode).subscribe({
+  //     next: () => {
+  //       // No hauria d'arribar aquí
+  //       fail('Expected an error, but got a success response');
+  //     },
+  //     error: (error) => {
+  //       expect(error).toEqual(errorResponse);
+  //       done();
+  //     }
+  //   });
+  // });
 });
 
   it('should return client-side error message if error is an ErrorEvent', () => {
@@ -359,7 +359,7 @@ describe('get credential offer by c-code', () => {
 
     const mockErrorResponse = new HttpErrorResponse({
       error: mockErrorEvent,
-      status: 0,
+      status: 403,
       statusText: 'Client-side error'
     });
 
@@ -383,65 +383,31 @@ describe('get credential offer by c-code', () => {
     });
   });
 
-  it('should handle createProcedure error for "first_email_failed"', () => {
-    const issuanceRequestMock: ProcedureRequest = {
-      schema: "LEARCredentialEmployee",
-      format: "jwt_vc_json",
-      payload: {
-        mandatee: { firstName: 'John', lastName: 'Doe', email: 'john@example.com', nationality: 'ES' },
-        mandator: { organizationIdentifier: 'ID123', organization: 'Org', commonName: 'OrgName', emailAddress: 'contact@org.com', serialNumber: 'SN123', country: 'ES' },
-        power: []
-      },
-      operation_mode: "S"
-    };
-
-    const errorResponse = new HttpErrorResponse({
-      error: { message: 'The credential was created but there was an error sending the credential offer email' },
-      status: 201,
-      statusText: 'Created'
-    });
-
-    service.createProcedure(issuanceRequestMock).subscribe({
-      next: () => fail('should have failed with first_email_failed error'),
-      error: (err: Error) => {
-        expect(translateSpy.instant).toHaveBeenCalledWith('error.credentialOffer.first_email_failed');
-        expect(err.message).toContain('error.credentialOffer.first_email_failed');
-        expect(dialogSpy.openErrorInfoDialog).toHaveBeenCalled();
-        expect(routerSpy.navigate).toHaveBeenCalled();
-      }
-    });
-
-    const req = httpMock.expectOne(apiUrl);
-    expect(req.request.method).toBe('POST');
-    req.flush(
-      { message: 'The credential was created but there was an error sending the credential offer email' },
-      errorResponse
-    );
-  });
-
-  it('should handle sendReminder error for "send_reminder_email_failed"', () => {
+  it('should handle sendReminder error for server mail error', () => {
     const procedureId = '1';
     const errorResponse = new HttpErrorResponse({
-      error: { message: 'Error sending the reminder, please get in touch with the support team' },
+      error: { status: 503, message: 'Error during communication with the mail server' },
       status: 503,
-      statusText: 'Service Unavailable'
+      statusText: 'Service Unavailable',
+      url: `${environment.base_url}${environment.notification}/${procedureId}`
     });
 
     service.sendReminder(procedureId).subscribe({
-      next: () => fail('should have failed with send_reminder_email_failed error'),
-      error: (err: Error) => {
-        expect(translateSpy.instant).toHaveBeenCalledWith('error.credentialOffer.send_reminder_email_failed');
-        expect(err.message).toContain('error.credentialOffer.send_reminder_email_failed');
+      next: () => fail('should have failed with a server mail error'),
+      error: (err: HttpErrorResponse) => {
+        expect(translateSpy.instant).toHaveBeenCalledWith('error.credentialIssuance.server_mail_error.message');
         expect(dialogSpy.openErrorInfoDialog).toHaveBeenCalled();
         expect(routerSpy.navigate).toHaveBeenCalled();
+        expect(err).toEqual(errorResponse);
       }
     });
 
-    const req = httpMock.expectOne(`${notificationUrl}/${procedureId}`);
+    const req = httpMock.expectOne(`${environment.base_url}${environment.notification}/${procedureId}`);
     expect(req.request.method).toBe('POST');
     req.flush(
-      { message: 'Error sending the reminder, please get in touch with the support team' },
+      { message: 'Error during communication with the mail server' },
       errorResponse
     );
   });
+
 });

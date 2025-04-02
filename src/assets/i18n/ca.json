@@ -179,6 +179,12 @@
         "first_email_failed": "La credencial s'ha creat, però no s'ha pogut enviar el correu electrònic. Si us plau, intenteu enviar un recordatori al receptor.",
         "send_reminder_email_failed": "No s'ha pogut enviar el recordatori. Si el problema persisteix, si us plau, contacteu amb l'equip de suport."
       },
+      "credentialIssuance": {
+        "server-mail-error": {
+          "title": "Error del servidor de correu",
+          "message": "S'ha produït un error amb el servidor de correu. Si us plau, torneu-ho a intentar més tard per enviar un recordatori; si el problema persisteix, poseu-vos en contacte amb el nostre equip de suport."
+        }
+      },
       "form":{
         "required": "Camp obligatori.",
         "invalid_character": "Caràcter/s invàlid/s",
