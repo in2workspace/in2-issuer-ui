@@ -176,15 +176,11 @@
       "credentialOffer": {
         "invalid-url": "URL no válida. No se puede obtener la oferta de credencial.",
         "unexpected": "Se produjo un error inesperado. Inténtalo de nuevo más tarde o contacta con el Representante Legal de tu empresa para obtener una nueva credencial.",
-        "expired": "Esta oferta de credencial no es válida. Es posible que haya caducado o que haya sido sustituida por una nueva. Si se envió una nueva oferta, revise su correo electrónico. Si ha caducado, póngase en contacto con el representante legal de su empresa para solicitar una nueva oferta de credencial.",
-        "first_email_failed": "La credencial fue creada, pero no se pudo enviar el correo. Por favor, intente enviar un recordatorio al destinatario.",
-        "send_reminder_email_failed": "No se pudo enviar el recordatorio. Si el problema persiste, por favor contacte con el equipo de soporte."
+        "expired": "Esta oferta de credencial no es válida. Es posible que haya caducado o que haya sido sustituida por una nueva. Si se envió una nueva oferta, revise su correo electrónico. Si ha caducado, póngase en contacto con el representante legal de su empresa para solicitar una nueva oferta de credencial."
       },
-      "credentialIssuance": {
-        "server_mail_error": {
-          "title": "Error del Servidor de Correo",
-          "message": "Se produjo un error con el servidor de correo. Por favor, inténtalo de nuevo más tarde para enviar un recordatorio; si el problema persiste, contacta con nuestro equipo de soporte."
-        }
+      "server_mail_error": {
+        "title": "Error del Servidor de Correo",
+        "message": "Se produjo un error con el servidor de correo. Por favor, inténtalo de nuevo más tarde para enviar un recordatorio; si el problema persiste, contacta con nuestro equipo de soporte."
       },
       "form":{
         "required": "Campo obligatorio.",

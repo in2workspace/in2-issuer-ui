@@ -175,15 +175,11 @@
       "credentialOffer": {
         "invalid-url": "URL no vàlida. No es pot obtenir l'oferta de credencial.",
         "unexpected": "S'ha produït un error inesperat. Torna-ho a intentar més tard o posa't en contacte amb el Representant Legal de la teva empresa per obtenir una nova credencial.",
-        "expired": "Aquesta oferta de credencial no és vàlida. És possible que hagi caducat o que hagi estat substituïda per una nova. Si s'ha enviat una nova oferta, revisi el seu correu electrònic. Si ha caducat, posi's en contacte amb el representant legal de la seva empresa per sol·licitar una nova oferta de credencial.",
-        "first_email_failed": "La credencial s'ha creat, però no s'ha pogut enviar el correu electrònic. Si us plau, intenteu enviar un recordatori al receptor.",
-        "send_reminder_email_failed": "No s'ha pogut enviar el recordatori. Si el problema persisteix, si us plau, contacteu amb l'equip de suport."
+        "expired": "Aquesta oferta de credencial no és vàlida. És possible que hagi caducat o que hagi estat substituïda per una nova. Si s'ha enviat una nova oferta, revisi el seu correu electrònic. Si ha caducat, posi's en contacte amb el representant legal de la seva empresa per sol·licitar una nova oferta de credencial."
       },
-      "credentialIssuance": {
-        "server_mail_error": {
-          "title": "Error del servidor de correu",
-          "message": "S'ha produït un error amb el servidor de correu. Si us plau, torneu-ho a intentar més tard per enviar un recordatori; si el problema persisteix, poseu-vos en contacte amb el nostre equip de suport."
-        }
+      "serverMailError": {
+        "title": "Error del servidor de correu",
+        "message": "S'ha produït un error amb el servidor de correu. Si us plau, torneu-ho a intentar més tard per enviar un recordatori; si el problema persisteix, poseu-vos en contacte amb el nostre equip de suport."
       },
       "form":{
         "required": "Camp obligatori.",
