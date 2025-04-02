@@ -113,8 +113,8 @@ export class CredentialProcedureService {
     console.log('handleError -> status:', error.status, 'errorDetail:', errorDetail);
 
     if (error.status === 503 && errorDetail.trim() === 'Error during communication with the mail server') {
-      const errorMessage = this.translate.instant('error.credentialIssuance.server_mail_error.message');
-      const errorTitle = this.translate.instant('error.credentialIssuance.server_mail_error.title');
+      const errorMessage = this.translate.instant('error.ServerMailError.message');
+      const errorTitle = this.translate.instant('error.ServerMailError.title');
       console.log('Translated errorMessage:', errorMessage);
       console.log('Translated errorTitle:', errorTitle);
       this.dialog.openErrorInfoDialog(errorMessage, errorTitle);
