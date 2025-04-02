@@ -180,7 +180,7 @@
         "send_reminder_email_failed": "No s'ha pogut enviar el recordatori. Si el problema persisteix, si us plau, contacteu amb l'equip de suport."
       },
       "credentialIssuance": {
-        "server-mail-error": {
+        "server_mail_error": {
           "title": "Error del servidor de correu",
           "message": "S'ha produït un error amb el servidor de correu. Si us plau, torneu-ho a intentar més tard per enviar un recordatori; si el problema persisteix, poseu-vos en contacte amb el nostre equip de suport."
         }

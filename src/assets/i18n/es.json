@@ -181,7 +181,7 @@
         "send_reminder_email_failed": "No se pudo enviar el recordatorio. Si el problema persiste, por favor contacte con el equipo de soporte."
       },
       "credentialIssuance": {
-        "server-mail-error": {
+        "server_mail_error": {
           "title": "Error del Servidor de Correo",
           "message": "Se produjo un error con el servidor de correo. Por favor, inténtalo de nuevo más tarde para enviar un recordatorio; si el problema persiste, contacta con nuestro equipo de soporte."
         }
