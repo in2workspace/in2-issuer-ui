@@ -100,7 +100,7 @@ export class CredentialProcedureService {
     }, 0);
   }
 
-  private handleError(error: HttpErrorResponse) {
+  private handleError = (error: HttpErrorResponse) => {
     let errorDetail: string;
     if (error.error && typeof error.error === 'object' && error.error.message) {
       errorDetail = error.error.message;
@@ -112,11 +112,9 @@ export class CredentialProcedureService {
 
     console.log('handleError -> status:', error.status, 'errorDetail:', errorDetail);
 
-    // If the error is a 503 with a specific message, show a dialog and redirect to dashboard
-    if (error.status === 503 && errorDetail === 'Error during communication with the mail server') {
-      console.log('Handling 503 error with specific message');
-      const errorMessage = this.translate.instant('error.serverMailError.message');
-      const errorTitle = this.translate.instant('error.serverMailError.title');
+    if (error.status === 503 && errorDetail.trim() === 'Error during communication with the mail server') {
+      const errorMessage = this.translate.instant('error.credentialIssuance.server_mail_error.message');
+      const errorTitle = this.translate.instant('error.credentialIssuance.server_mail_error.title');
       console.log('Translated errorMessage:', errorMessage);
       console.log('Translated errorTitle:', errorTitle);
       this.dialog.openErrorInfoDialog(errorMessage, errorTitle);
@@ -131,4 +129,5 @@ export class CredentialProcedureService {
       return throwError(() => new Error(defaultErrorMessage));
     }
   }
+
 }
