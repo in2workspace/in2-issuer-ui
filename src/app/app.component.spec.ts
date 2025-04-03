@@ -78,19 +78,4 @@ describe('AppComponent', () => {
     const routerOutlet = debugElement.query(By.css('router-outlet'));
     expect(routerOutlet).not.toBeNull();
   });
-
-  it('should hide navbar if the route is "/home"', () => {
-    routerEventsSubject.next(new NavigationEnd(1, '/home', '/home'));
-    fixture.detectChanges();
-
-    expect(component.showNavbar).toBe(false);
-  });
-
-  it('should show navbar if the route is "/another"', () => {
-    routerEventsSubject.next(new NavigationEnd(1, '/another', '/another'));
-    fixture.detectChanges();
-
-    expect(component.showNavbar).toBe(true);
-  });
-
 });

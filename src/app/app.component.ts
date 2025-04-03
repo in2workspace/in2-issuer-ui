@@ -1,11 +1,11 @@
-import { Component, inject, OnDestroy } from '@angular/core';
-import { Router, RouterOutlet, NavigationEnd  } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
-import { environment } from 'src/environments/environment';
-import { NavbarComponent } from '../app/shared/components/navbar/navbar.component';
-import { DOCUMENT } from '@angular/common';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { filter, map, startWith } from 'rxjs';
+import {Component, inject} from '@angular/core';
+import {NavigationEnd, Router, RouterOutlet} from '@angular/router';
+import {TranslateService} from '@ngx-translate/core';
+import {environment} from 'src/environments/environment';
+import {NavbarComponent} from '../app/shared/components/navbar/navbar.component';
+import {DOCUMENT} from '@angular/common';
+import {toSignal} from '@angular/core/rxjs-interop';
+import {filter, map, startWith} from 'rxjs';
 
 @Component({
     selector: 'app-root',
@@ -61,7 +61,7 @@ public constructor(){
   faviconLink.type = 'image/x-icon';
   faviconLink.rel = 'icon';
   faviconLink.href = 'assets/icons/' + faviconSrc;
-  
+
   this.document.head.appendChild(faviconLink);
 
   // load apple-touch icon from environment
@@ -69,7 +69,7 @@ public constructor(){
   appleFaviconLink.type = 'image/x-icon';
   appleFaviconLink.rel = 'apple-touch-icon';
   appleFaviconLink.href = 'assets/icons/' + faviconSrc;
-  
+
   this.document.head.appendChild(appleFaviconLink);
 }
 
