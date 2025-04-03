@@ -123,6 +123,54 @@ export class DialogWrapperService {
 
   }
 
+  public openDialogWithForm<TFormValue>(
+    dialogData: DialogData,                               
+    validateForm: (formInstance: any) => boolean,         
+    getFormValue: (formInstance: any) => TFormValue,     
+    asyncOperation: (formValue: TFormValue) => Observable<any>
+  ): MatDialogRef<DialogComponent, any> {
+
+    const dialogRef = this.dialog.open(
+      DialogComponent, 
+      { 
+        data: { ...dialogData },
+        autoFocus: false,
+        disableClose: true
+      },
+    );
+
+    dialogRef.componentInstance.afterConfirm$().subscribe(() => {
+      const formInstance = dialogRef.componentInstance.getEmbeddedInstance<any>();
+      if (!formInstance) return;
+
+      if (!validateForm(formInstance)) {
+        if (typeof formInstance.markTouched === 'function') {
+          formInstance.markTouched();
+        }
+        return;
+      }
+
+      this.loader.updateIsLoading(true);
+
+      const formValue = getFormValue(formInstance);
+      asyncOperation(formValue).subscribe({
+        next: (res) => {
+          if (res && res.noChanges) {
+            //Another logic not yet established could be implemented.
+            console.info('There are no changes to update.');
+          }
+          dialogRef.close();
+          this.loader.updateIsLoading(false);    
+        },
+        error: (err) => {
+          console.error('Error executing asyncOperation', err);
+          this.loader.updateIsLoading(false);
+        },
+      });
+    });
+    return dialogRef;
+  }
+ 
   private executeCallbackOnCondition(callback: observableCallback, condition: boolean): Observable<any> {
     if(condition){
       return callback();
