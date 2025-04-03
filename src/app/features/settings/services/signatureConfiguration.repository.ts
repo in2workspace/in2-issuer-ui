@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import {SignatureConfigTable, SignatureConfigurationRequest,SignatureConfigurationResponse } from '../models/signature.models'
+import {SignatureConfigTable, SignatureConfigurationRequest,SignatureConfigurationResponse, SignatureMode } from '../models/signature.models'
 import {API_PATH} from 'src/app/core/constants/api-paths.constants';
 import { environment } from 'src/environments/environment';
 @Injectable({ providedIn: 'root' })
@@ -18,7 +18,8 @@ export class SignatureConfigurationRepository {
     return this.http.get<SignatureConfigurationResponse>(this.configurationUrl+`/${id}`);
   }
 
-  getAllSignatureConfiguration(): Observable<SignatureConfigTable []> {
+  getAllSignatureConfiguration(signatureMode:SignatureMode): Observable<SignatureConfigTable []> {
+    const params = new HttpParams().set('signatureMode', signatureMode);
     return this.http.get<SignatureConfigTable[]>(this.configurationUrl);
   }
 

@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import {SignatureConfigurationRequest, SignatureConfigTable, SignatureConfigurationResponse} from '../models/signature.models';
+import {SignatureConfigurationRequest, SignatureConfigTable, SignatureConfigurationResponse, SignatureMode} from '../models/signature.models';
 import { SignatureConfigurationRepository } from './signatureConfiguration.repository';
 import {  map, Observable } from 'rxjs';
 
@@ -13,8 +13,8 @@ export class SignatureConfigurationService {
     return this.repository.saveSignatureConfiguration(payloadSignature);
   }
 
-  getAllConfiguration(): Observable<SignatureConfigTable[] | null> {
-    return this.repository.getAllSignatureConfiguration().pipe(
+  getAllConfiguration(signatureMode:SignatureMode): Observable<SignatureConfigTable[] | null> {
+    return this.repository.getAllSignatureConfiguration(signatureMode).pipe(
       map((config: any[]) => {
         if (!config || config.length === 0) {
           return null;

@@ -217,7 +217,7 @@ export class SignaturesComponent  {
   
   
   reloadCredentialList(): void {
-    this.signatureConfigService.getAllConfiguration().subscribe({
+    this.signatureConfigService.getAllConfiguration(SignatureMode.CLOUD).subscribe({
       next: (credentials) => {
         this.signatureConfigDataSource.data = credentials ?? [];
         this.loader.updateIsLoading(false);

@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { SignatureConfigurationService } from './signatureConfiguration.service';
 import { SignatureConfigurationRepository } from './signatureConfiguration.repository';
 import { of } from 'rxjs';
-import { SignatureConfigurationRequest, SignatureConfigurationResponse } from '../models/signature.models';
+import { SignatureConfigurationRequest, SignatureConfigurationResponse, SignatureMode } from '../models/signature.models';
 
 describe('SignatureConfigurationService', () => {
   let service: SignatureConfigurationService;
@@ -64,7 +64,7 @@ describe('SignatureConfigurationService', () => {
   });
 
   it('should call getAllConfiguration and map data correctly', (done) => {
-    service.getAllConfiguration().subscribe(data => {
+    service.getAllConfiguration(SignatureMode.CLOUD).subscribe(data => {
       expect(data).toEqual([
         {
           id: '123',
@@ -78,7 +78,7 @@ describe('SignatureConfigurationService', () => {
 
   it('should return null if no config found in getAllConfiguration', (done) => {
     repositoryMock.getAllSignatureConfiguration.mockReturnValueOnce(of([]));
-    service.getAllConfiguration().subscribe(data => {
+    service.getAllConfiguration(SignatureMode.CLOUD).subscribe(data => {
       expect(data).toBeNull();
       done();
     });

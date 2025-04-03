@@ -4,6 +4,7 @@ import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ConfigurationService } from '../services/configuration.service';
 import { SignatureConfigurationService } from '../services/signatureConfiguration.service';
+import { SignatureMode } from '../models/signature.models';
 
 @Injectable({ providedIn: 'root' })
 export class SignatureConfigResolver implements Resolve<any> {
@@ -13,7 +14,7 @@ export class SignatureConfigResolver implements Resolve<any> {
   resolve() {
     return forkJoin({
       config: this.configurationService.getConfiguration().pipe(catchError(() => of(null))),
-      credentialList: this.signatureConfigService.getAllConfiguration().pipe(catchError(() => of([])))
+      credentialList: this.signatureConfigService.getAllConfiguration(SignatureMode.CLOUD).pipe(catchError(() => of([])))
     });
   }
 }
