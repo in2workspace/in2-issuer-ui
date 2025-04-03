@@ -249,7 +249,6 @@ export class SignaturesComponent  {
     });
   }
 
-   
 
   createConfiguration() {
     this.configurationService.saveConfiguration(this.enableRemoteSignature, this.signatureMode).subscribe({
