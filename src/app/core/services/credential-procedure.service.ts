@@ -1,14 +1,17 @@
-import { inject, Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
-import { ProcedureRequest } from '../models/dto/procedure-request.dto';
-import { ProcedureResponse } from '../models/dto/procedure-response.dto';
-import { LearCredentialEmployeeDataDetail } from '../models/dto/lear-credential-employee-data-detail.dto';
-import { CredentialOfferResponse } from '../models/dto/credential-offer-response';
-import { LEARCredentialEmployeeDataNormalizer } from '../models/entity/lear-credential-employee-data-normalizer';
-import { LEARCredentialEmployee } from '../models/entity/lear-credential-employee.entity';
+import {inject, Injectable} from '@angular/core';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {Observable, throwError} from 'rxjs';
+import {catchError, map} from 'rxjs/operators';
+import {environment} from 'src/environments/environment';
+import {ProcedureRequest} from '../models/dto/procedure-request.dto';
+import {ProcedureResponse} from '../models/dto/procedure-response.dto';
+import {LearCredentialEmployeeDataDetail} from '../models/dto/lear-credential-employee-data-detail.dto';
+import {CredentialOfferResponse} from '../models/dto/credential-offer-response';
+import {LEARCredentialEmployeeDataNormalizer} from '../models/entity/lear-credential-employee-data-normalizer';
+import {LEARCredentialEmployee} from '../models/entity/lear-credential-employee.entity';
+import {DialogWrapperService} from "../../shared/components/dialog/dialog-wrapper/dialog-wrapper.service";
+import {TranslateService} from "@ngx-translate/core";
+import {Router} from "@angular/router";
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +26,9 @@ export class CredentialProcedureService {
 
   private readonly http = inject(HttpClient);
   private readonly normalizer = new LEARCredentialEmployeeDataNormalizer();
+  private readonly dialog = inject(DialogWrapperService);
+  private readonly translate = inject(TranslateService);
+  private readonly router = inject(Router);
 
   public getCredentialProcedures(): Observable<ProcedureResponse> {
     return this.http.get<ProcedureResponse>(this.organizationProcedures).pipe(
@@ -37,13 +43,13 @@ export class CredentialProcedureService {
       map(learCredentialEmployeeDataDetail => {
         const { credential } = learCredentialEmployeeDataDetail;
         // If vc exists, we normalize it, otherwise we assume that credential is already of the expected type
-        const credentialData = credential.vc 
-          ? credential.vc 
+        const credentialData = credential.vc
+          ? credential.vc
           : (credential as unknown as LEARCredentialEmployee);
-          
+
         // Normalize the part which is of type LEARCredentialEmployee
         const normalizedCredential = this.normalizer.normalizeLearCredential(credentialData);
-  
+
         return {
           ...learCredentialEmployeeDataDetail,
           credential: {
@@ -55,7 +61,6 @@ export class CredentialProcedureService {
       catchError(this.handleError)
     );
   }
-
 
   public createProcedure(procedureRequest: ProcedureRequest): Observable<void> {
     return this.http.post<void>(this.saveCredential, procedureRequest).pipe(
@@ -89,14 +94,40 @@ export class CredentialProcedureService {
     );
   }
 
-  private handleError(error: HttpErrorResponse) {
-    let errorMessage: string;
-    if (error.error instanceof ErrorEvent) {
-      errorMessage = `Client-side error: ${error.error.message}`;
-    } else {
-      errorMessage = `Server-side error: ${error.status} ${error.message}`;
-    }
-    console.error('Error response body:', errorMessage);
-    return throwError(() => error);
+  public redirectToDashboard(): void{
+    setTimeout(()=>{
+      this.router.navigate(['/organization/credentials']);
+    }, 0);
   }
+
+  private readonly handleError = (error: HttpErrorResponse) => {
+    let errorDetail: string;
+    if (error.error && typeof error.error === 'object' && error.error.message) {
+      errorDetail = error.error.message;
+    } else if (error.error && typeof error.error === 'string') {
+      errorDetail = error.error;
+    } else {
+      errorDetail = error.message;
+    }
+
+    console.log('handleError -> status:', error.status, 'errorDetail:', errorDetail);
+
+    if (error.status === 503 && errorDetail.trim() === 'Error during communication with the mail server') {
+      const errorMessage = this.translate.instant('error.serverMailError.message');
+      const errorTitle = this.translate.instant('error.serverMailError.title');
+      console.log('Translated errorMessage:', errorMessage);
+      console.log('Translated errorTitle:', errorTitle);
+      this.dialog.openErrorInfoDialog(errorMessage, errorTitle);
+      this.redirectToDashboard();
+      return throwError(() => new Error(errorMessage));
+    } else if (error.error instanceof ErrorEvent) {
+      console.error(`Client-side error: ${errorDetail}`);
+      return throwError(() => new Error(`Client-side error: ${errorDetail}`));
+    } else {
+      const defaultErrorMessage = `Server-side error: ${error.status} ${errorDetail}`;
+      console.error('Error response body:', defaultErrorMessage);
+      return throwError(() => new Error(defaultErrorMessage));
+    }
+  }
+
 }

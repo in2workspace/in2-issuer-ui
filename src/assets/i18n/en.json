@@ -176,7 +176,11 @@
       "unexpected": "An unexpected error occurred. Please try again later or contact your company's Legal Representative to get a new credential.",
       "expired": "This credential offer is invalid. It may have expired or been replaced by a new one. If a new offer was sent, please check your email. If it has expired, contact your company's Legal Representative to request a new credential offer."
     },
-    "form": {
+    "serverMailError": {
+      "title": "Mail server error",
+      "message": "There was an error with the mail server. Please try again later to send a send reminder, if problem persist contact support team."
+    },
+    "form":{
       "required": "This field is required.",
       "invalid_character": "Invalid character/s",
       "only_letters_and_numbers": "Only letters and numbers are allowed",
