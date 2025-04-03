@@ -217,6 +217,7 @@ export class SignaturesComponent  {
   
   
   reloadCredentialList(): void {
+    //At the moment the cloud is fixed, which is the only one that can be edited.
     this.signatureConfigService.getAllConfiguration(SignatureMode.CLOUD).subscribe({
       next: (credentials) => {
         this.signatureConfigDataSource.data = credentials ?? [];
