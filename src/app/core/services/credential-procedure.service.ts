@@ -100,7 +100,7 @@ export class CredentialProcedureService {
     }, 0);
   }
 
-  private handleError = (error: HttpErrorResponse) => {
+  private readonly handleError = (error: HttpErrorResponse) => {
     let errorDetail: string;
     if (error.error && typeof error.error === 'object' && error.error.message) {
       errorDetail = error.error.message;

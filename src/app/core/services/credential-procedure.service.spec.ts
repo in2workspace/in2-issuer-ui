@@ -285,24 +285,27 @@ describe('CredentialProcedureService', () => {
     req.flush(invalidJSONResponse);
   });
 
-  // it('should handle error when getCredentialOfferByTransactionCode fails', (done) => {
-  //   const transactionCode = 'invalid-code';
-  //   const errorResponse = { status: 404, message: 'Not Found' };
-  //
-  //   jest.spyOn(service['http'], 'get').mockReturnValue(throwError(() => errorResponse));
-  //
-  //   service.getCredentialOfferByTransactionCode(transactionCode).subscribe({
-  //     next: () => {
-  //       // No hauria d'arribar aquí
-  //       fail('Expected an error, but got a success response');
-  //     },
-  //     error: (error) => {
-  //       expect(error).toEqual(errorResponse);
-  //       done();
-  //     }
-  //   });
-  // });
-});
+    it('should handle error when getCredentialOfferByTransactionCode fails', (done) => {
+      const transactionCode = 'invalid-code';
+      const errorResponse = new HttpErrorResponse({
+        error: { message: 'Not Found' },
+        status: 404,
+        statusText: 'Not Found'
+      });
+
+      jest.spyOn(service['http'], 'get').mockReturnValue(throwError(() => errorResponse));
+
+      service.getCredentialOfferByTransactionCode(transactionCode).subscribe({
+        next: () => {
+          fail('Expected an error, but got a success response');
+        },
+        error: (err: Error) => {
+          expect(err.message).toContain('Server-side error: 404 Not Found');
+          done();
+        }
+      });
+    });
+  });
 
 describe('get credential offer by c-code', () => {
   it('should handle error when getting credential offer by c code', () => {
@@ -332,24 +335,6 @@ describe('get credential offer by c-code', () => {
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });
-
-  // it('should handle error when getCredentialOfferByCTransactionCode fails', (done) => {
-  //   const transactionCode = 'invalid-code';
-  //   const errorResponse = { status: 404, message: 'Not Found' };
-  //
-  //   jest.spyOn(service['http'], 'get').mockReturnValue(throwError(() => errorResponse));
-  //
-  //   service.getCredentialOfferByCTransactionCode(transactionCode).subscribe({
-  //     next: () => {
-  //       // No hauria d'arribar aquí
-  //       fail('Expected an error, but got a success response');
-  //     },
-  //     error: (error) => {
-  //       expect(error).toEqual(errorResponse);
-  //       done();
-  //     }
-  //   });
-  // });
 });
 
   it('should return client-side error message if error is an ErrorEvent', () => {
