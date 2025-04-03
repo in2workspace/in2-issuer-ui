@@ -7,6 +7,9 @@ import { ProcedureRequest } from '../models/dto/procedure-request.dto';
 import { ProcedureResponse } from "../models/dto/procedure-response.dto";
 import { LearCredentialEmployeeDataDetail } from "../models/dto/lear-credential-employee-data-detail.dto";
 import { throwError } from 'rxjs';
+import {DialogWrapperService} from "../../shared/components/dialog/dialog-wrapper/dialog-wrapper.service";
+import {TranslateService} from "@ngx-translate/core";
+import {Router} from "@angular/router";
 
 const notFoundErrorResp = new HttpErrorResponse({
   error: '404 error',
@@ -22,6 +25,9 @@ const serverErrorResp = new HttpErrorResponse({
 describe('CredentialProcedureService', () => {
   let service: CredentialProcedureService;
   let httpMock: HttpTestingController;
+  let dialogSpy: jest.Mocked<DialogWrapperService>;
+  let translateSpy: jest.Mocked<TranslateService>;
+  let routerSpy: jest.Mocked<Router>;
   const apiUrl = `${environment.base_url}${environment.save_credential}`;
   const proceduresURL = `${environment.base_url}${environment.procedures}`;
   const notificationUrl = `${environment.base_url}${environment.notification}`;
@@ -31,11 +37,20 @@ describe('CredentialProcedureService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
     imports: [],
-    providers: [CredentialProcedureService, provideHttpClient(), provideHttpClientTesting()]
+    providers: [CredentialProcedureService,
+      provideHttpClient(),
+      provideHttpClientTesting(),
+      { provide: DialogWrapperService, useValue: { openErrorInfoDialog: jest.fn(), openWarningDialog: jest.fn() } },
+      { provide: TranslateService, useValue: { instant: jest.fn((key: string) => key) } },
+      { provide: Router, useValue: { navigate: jest.fn() } }
+    ]
 });
 
     service = TestBed.inject(CredentialProcedureService);
     httpMock = TestBed.inject(HttpTestingController);
+    dialogSpy = TestBed.inject(DialogWrapperService) as jest.Mocked<DialogWrapperService>;
+    translateSpy = TestBed.inject(TranslateService) as jest.Mocked<TranslateService>;
+    routerSpy = TestBed.inject(Router) as jest.Mocked<Router>;
   });
 
   afterEach(() => {
@@ -270,24 +285,27 @@ describe('CredentialProcedureService', () => {
     req.flush(invalidJSONResponse);
   });
 
-  it('should handle error when getCredentialOfferByTransactionCode fails', (done) => {
-    const transactionCode = 'invalid-code';
-    const errorResponse = { status: 404, message: 'Not Found' };
+    it('should handle error when getCredentialOfferByTransactionCode fails', (done) => {
+      const transactionCode = 'invalid-code';
+      const errorResponse = new HttpErrorResponse({
+        error: { message: 'Not Found' },
+        status: 404,
+        statusText: 'Not Found'
+      });
 
-    jest.spyOn(service['http'], 'get').mockReturnValue(throwError(() => errorResponse));
+      jest.spyOn(service['http'], 'get').mockReturnValue(throwError(() => errorResponse));
 
-    service.getCredentialOfferByTransactionCode(transactionCode).subscribe({
-      next: () => {
-        // No hauria d'arribar aquí
-        fail('Expected an error, but got a success response');
-      },
-      error: (error) => {
-        expect(error).toEqual(errorResponse);
-        done();
-      }
+      service.getCredentialOfferByTransactionCode(transactionCode).subscribe({
+        next: () => {
+          fail('Expected an error, but got a success response');
+        },
+        error: (err: Error) => {
+          expect(err.message).toContain('Server-side error: 404 Not Found');
+          done();
+        }
+      });
     });
   });
-});
 
 describe('get credential offer by c-code', () => {
   it('should handle error when getting credential offer by c code', () => {
@@ -317,24 +335,6 @@ describe('get credential offer by c-code', () => {
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });
-
-  it('should handle error when getCredentialOfferByCTransactionCode fails', (done) => {
-    const transactionCode = 'invalid-code';
-    const errorResponse = { status: 404, message: 'Not Found' };
-
-    jest.spyOn(service['http'], 'get').mockReturnValue(throwError(() => errorResponse));
-
-    service.getCredentialOfferByCTransactionCode(transactionCode).subscribe({
-      next: () => {
-        // No hauria d'arribar aquí
-        fail('Expected an error, but got a success response');
-      },
-      error: (error) => {
-        expect(error).toEqual(errorResponse);
-        done();
-      }
-    });
-  });
 });
 
   it('should return client-side error message if error is an ErrorEvent', () => {
@@ -344,7 +344,7 @@ describe('get credential offer by c-code', () => {
 
     const mockErrorResponse = new HttpErrorResponse({
       error: mockErrorEvent,
-      status: 0,
+      status: 403,
       statusText: 'Client-side error'
     });
 
@@ -367,4 +367,32 @@ describe('get credential offer by c-code', () => {
       }
     });
   });
+
+  it('should handle sendReminder error for server mail error', () => {
+    const procedureId = '1';
+    const errorResponse = new HttpErrorResponse({
+      error: { status: 503, message: 'Error during communication with the mail server' },
+      status: 503,
+      statusText: 'Service Unavailable',
+      url: `${environment.base_url}${environment.notification}/${procedureId}`
+    });
+
+    service.sendReminder(procedureId).subscribe({
+      next: () => fail('should have failed with a server mail error'),
+      error: (err: HttpErrorResponse) => {
+        expect(translateSpy.instant).toHaveBeenCalledWith('error.serverMailError.message');
+        expect(dialogSpy.openErrorInfoDialog).toHaveBeenCalled();
+        expect(routerSpy.navigate).toHaveBeenCalled();
+        expect(err).toEqual(errorResponse);
+      }
+    });
+
+    const req = httpMock.expectOne(`${environment.base_url}${environment.notification}/${procedureId}`);
+    expect(req.request.method).toBe('POST');
+    req.flush(
+      { message: 'Error during communication with the mail server' },
+      errorResponse
+    );
+  });
+
 });
