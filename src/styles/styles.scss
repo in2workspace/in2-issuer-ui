@@ -75,3 +75,7 @@ p{
 .dense-1 {
   @include mat.all-component-densities(-3);
 }
+
+.ml-2{
+  margin-left:2rem ;
+}

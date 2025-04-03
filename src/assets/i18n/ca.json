@@ -203,6 +203,47 @@
       "ok": "D'acord",
       "close": "Tancar",
       "cancel": "Cancel·lar",
-      "accept": "Acceptar"
+      "accept": "Acceptar",
+       "delete" : "Eliminar",
+       "save" : "Desar"
+    },
+    "signature": {
+      "settings": {
+        "title": "Configuració de signatura",
+        "enableRemote": "Habilitar signatura remota",
+        "save": "Desar",
+        "mode": {
+          "CLOUD": "Núvol",
+          "SERVER": "Servidor"
+        },
+       "table": {
+        "providerId": "Proveïdor",
+        "credentialName": "Nom de la credencial",
+        "actions": "Accions",
+        "addCredential": "Afegir credencial"
+      },
+      "modal": {
+        "delete": {
+          "title": "Eliminar credencial",
+          "message": "Estàs segur que vols eliminar aquesta credencial?"
+        },
+        "edit": {
+          "title": "Editar credencial"
+        },
+        "create": {
+          "title": "Afegir credencial"
+        }
+      },
+      "formCloudPrivider": {
+        "cloudProvider": "Proveïdor al núvol",
+        "credentialName": "Nom de la credencial",
+        "clientId": "ID del client",
+        "clientSecret": "Secret del client",
+        "credentialId": "ID de la credencial",
+        "credentialPassword": "Contrasenya de la credencial",
+        "secret": "Secret (TOTP)",
+        "reason": "Motiu"
+      }
     }
+  }
 }

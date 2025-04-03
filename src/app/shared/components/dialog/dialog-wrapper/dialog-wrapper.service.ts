@@ -123,6 +123,68 @@ export class DialogWrapperService {
 
   }
 
+  public openDialogWithForm<TFormValue>(
+    dialogData: DialogData,                               // título, mensajes, loadingData opcional, etc.
+    validateForm: (formInstance: any) => boolean,         // tu lógica de validación
+    getFormValue: (formInstance: any) => TFormValue,      // cómo extraer el valor del form
+    asyncOperation: (formValue: TFormValue) => Observable<any>
+  ): MatDialogRef<DialogComponent, any> {
+
+    // Forzamos que tenga confirmación async para que el Dialog muestre los botones Aceptar/Cancelar
+   
+
+    // Abrimos el diálogo
+    const dialogRef = this.dialog.open(
+      DialogComponent, 
+      { 
+        data: { ...dialogData },
+        autoFocus: false,
+        disableClose: true
+      },
+    );
+
+    // Nos suscribimos al "Confirmar"
+    dialogRef.componentInstance.afterConfirm$().subscribe(() => {
+      // 1) Obtenemos la instancia del form
+      const formInstance = dialogRef.componentInstance.getEmbeddedInstance<any>();
+      if (!formInstance) return;
+
+      // 2) Validamos
+      if (!validateForm(formInstance)) {
+        // Marcar campos como tocados, si el form expone un método
+        if (typeof formInstance.markTouched === 'function') {
+          formInstance.markTouched();
+        }
+        return;
+      }
+
+      // 3) Loading
+      if (dialogData.loadingData) {
+        dialogRef.componentInstance.updateData({
+          loadingData: dialogData.loadingData
+        });
+      }
+      this.loader.updateIsLoading(true);
+
+      // 4) Ejecutamos la operación
+      const formValue = getFormValue(formInstance);
+      asyncOperation(formValue).subscribe({
+        next: () => {
+          dialogRef.close(); // Solo cierra si todo sale bien
+        },
+        error: (err) => {
+          console.error('❌ Error ejecutando asyncOperation', err);
+          // No cierra el diálogo, se queda abierto
+        },
+        complete: () => {
+          this.loader.updateIsLoading(false);
+        }
+      });
+    });
+
+    return dialogRef;
+  }
+ 
   private executeCallbackOnCondition(callback: observableCallback, condition: boolean): Observable<any> {
     if(condition){
       return callback();

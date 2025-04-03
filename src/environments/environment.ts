@@ -6,7 +6,7 @@ export const environment = {
     scope: 'openid profile email offline_access',
     grant_type: 'code'
   },
-  base_url: 'http://localhost:8081',
+  base_url: 'http://localhost:8080',
   wallet_url: 'http://localhost:4200',
   wallet_url_test: 'http://localhost:4200',
   knowledge:{

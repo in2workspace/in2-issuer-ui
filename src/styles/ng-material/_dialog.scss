@@ -1,6 +1,6 @@
 @import './../variables';
 
-.dialog-custom{
+.dialog-custom, .responsive-dialog{
     .mat-mdc-dialog-container .mdc-dialog__surface {
         border-radius: 8px !important;
       }
@@ -9,13 +9,7 @@
         background-color: white;
     }
 
-      div[mat-dialog-content]{
-        display:flex;
-        gap: 12px;
-        width: 500px;
-        max-width: 100%;
-      }
-
+    
     div[mat-dialog-actions]{
         padding: 24px 24px 24px 18px;
         justify-content: center !important;
@@ -35,4 +29,38 @@
             }
         }
     }
+}
+
+
+.dialog-custom{
+  div[mat-dialog-content]{
+    display:flex;
+    gap: 12px;
+    width: 500px;
+    max-width: 100%;
+  }
+} 
+
+.responsive-dialog  {
+  div[mat-dialog-content]{
+    min-width: 900px;
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow: auto;
+    border-radius: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .responsive-dialog 
+   {
+    div[mat-dialog-content]{
+      display:flex;
+      width: 100vw;
+      height: 100vh;
+      max-width: 100vw;
+      max-height: 100vh;
+      border-radius: 0;
+    }
+  }
 }
