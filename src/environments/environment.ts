@@ -10,13 +10,13 @@ export const environment = {
   show_wallet_url_test: true,
   knowledgebase_url: "https://knowledgebase.dome-marketplace-sbx.org/",
   customizations:{
-    colors:{ 
+    colors:{
       primary:'#2d58a7',
       primary_contrast:'#ffffff',
       secondary:'#2cb6b2',
       secondary_contrast:'#dde6f6'
     },
     logo_src:"dome-issuer.png",
-    favicon_src:"dome-favicon.png"  
+    favicon_src:"dome-favicon.png"
   }
 };

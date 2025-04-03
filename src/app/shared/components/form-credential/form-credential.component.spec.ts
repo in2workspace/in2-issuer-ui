@@ -303,9 +303,42 @@ describe('FormCredentialComponent', () => {
 
   });
 
+  it('should check if signCredential should be shown according to VC status', ()=>{
+    component.viewMode = 'create';
+    component.credentialStatus = 'WITHDRAWN';
+    let showBtn = component.showSignCredentialButton();
+    expect(showBtn).toBe(false);
+
+    component.viewMode = 'detail';
+    showBtn = component.showSignCredentialButton();
+    expect(showBtn).toBe(false);
+
+    component.credentialStatus = 'PEND_DOWNLOAD';
+    showBtn = component.showSignCredentialButton();
+    expect(showBtn).toBe(false);
+
+    component.credentialStatus = 'DRAFT';
+    showBtn = component.showSignCredentialButton();
+    expect(showBtn).toBe(false);
+
+    component.credentialStatus = 'VALID';
+    showBtn = component.showSignCredentialButton();
+    expect(showBtn).toBe(false);
+
+    component.credentialStatus = 'PEND_SIGNATURE';
+    showBtn = component.showSignCredentialButton();
+    expect(showBtn).toBe(true);
+  });
+
   it('should emit sendReminder event when triggerSendReminder is called', () => {
     const spy = jest.spyOn(component.sendReminder, 'emit');
     component.triggerSendReminder();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should emit signCredential event when triggerSignCredential is called', () => {
+    const spy = jest.spyOn(component.signCredential, 'emit');
+    component.triggerSignCredential();
     expect(spy).toHaveBeenCalled();
   });
 

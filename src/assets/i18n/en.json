@@ -71,6 +71,14 @@
     "sendReminderSuccess": {
       "title": "Reminder sent successfully",
       "message": "The credential offer reminder was sent successfully."
+    },
+    "signCredentialConfirm": {
+      "title": "Sign Credential",
+      "message": "Are you sure you want to sign this credential?"
+    },
+    "signCredentialSuccess": {
+      "title": "Credential signed",
+      "message": "The credential was signed successfully."
     }
   },
   "credentialOffer": {
@@ -166,7 +174,11 @@
     "credentialOffer": {
       "invalid-url": "Unexpected error: invalid URL, can't get credential offer.",
       "unexpected": "An unexpected error occurred. Please try again later or contact your company's Legal Representative to get a new credential.",
-      "expired": "This credential offer has expired. Please contact your company's Legal Representative to get a new one."
+      "expired": "This credential offer is invalid. It may have expired or been replaced by a new one. If a new offer was sent, please check your email. If it has expired, contact your company's Legal Representative to request a new credential offer."
+    },
+    "serverMailError": {
+      "title": "Mail server error",
+      "message": "There was an error with the mail server. Please try again later to send a send reminder, if problem persist contact support team."
     },
     "form":{
       "required": "This field is required.",
