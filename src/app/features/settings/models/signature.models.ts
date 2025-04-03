@@ -11,8 +11,7 @@ export interface SignatureConfigTable{
 }
 
 
-export interface signatureConfigurationRequest{
-    organizationIdentifier: string;
+export interface SignatureConfigurationRequest{
     enableRemoteSignature: boolean;
     signatureMode: string;
     cloudProviderId: string;
@@ -24,9 +23,8 @@ export interface signatureConfigurationRequest{
     secret ?: string;
 }
 
-export interface signatureConfigurationResponse{
+export interface SignatureConfigurationResponse{
     id:string;
-    organizationIdentifier: string;
     enableRemoteSignature: boolean;
     signatureMode: string;
     cloudProviderId: string;
@@ -36,14 +34,10 @@ export interface signatureConfigurationResponse{
 }
 
 
-export interface cloudProvider {
-    id: string;
-    provider: string;
-    url: string;
-    authMethod: string;
-    authGrantType: string;
-    requiresTOTP: boolean;
-} 
+export interface UpdateSignatureConfigurationRequest
+  extends SignatureConfigurationRequest {
+  rationale: string;
+}
 
 
 

@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
-import {signatureConfigurationRequest, SignatureConfigTable, signatureConfigurationResponse} from '../models/signature.models';
+import {SignatureConfigurationRequest, SignatureConfigTable, SignatureConfigurationResponse} from '../models/signature.models';
 import { SignatureConfigurationRepository } from './signatureConfiguration.repository';
-import {  map, Observable, of, switchMap, throwError } from 'rxjs';
+import {  map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +9,7 @@ import {  map, Observable, of, switchMap, throwError } from 'rxjs';
 export class SignatureConfigurationService {
   private readonly repository= inject(SignatureConfigurationRepository);
 
-  saveSignatureConfiguration(payloadSignature: signatureConfigurationRequest): Observable<void> {
+  saveSignatureConfiguration(payloadSignature: SignatureConfigurationRequest): Observable<void> {
     return this.repository.saveSignatureConfiguration(payloadSignature);
   }
 
@@ -29,18 +29,18 @@ export class SignatureConfigurationService {
     );
   }
 
-  getSignatureConfigById(id:string): Observable<signatureConfigurationResponse > {
+  getSignatureConfigById(id:string): Observable<SignatureConfigurationResponse > {
     return this.repository.getSignatureConfigById(id);
   }
-  deleteSignatureConfiguration(id: string): Observable<void> {
-    return this.repository.deleteSignatureConfiguration(id); 
+  deleteSignatureConfiguration(id: string, rationale:string): Observable<void> {
+    return this.repository.deleteSignatureConfiguration(id, rationale); 
  }
 
-  updateConfiguration(config: Partial<signatureConfigurationRequest>): Observable<void> {
-    return this.repository.updateSignatureConfiguration(config);
+  updateConfiguration(id:string, config: Partial<SignatureConfigurationRequest>): Observable<void> {
+    return this.repository.updateSignatureConfiguration(id, config);
   } 
 
-  addCredentialConfiguration(config: signatureConfigurationRequest): Observable<void> {
+  addCredentialConfiguration(config: SignatureConfigurationRequest): Observable<void> {
     return this.repository.addCredentialConfiguration(config);
   }
 

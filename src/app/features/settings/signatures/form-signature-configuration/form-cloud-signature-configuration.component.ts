@@ -5,16 +5,17 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
-import {SECRET_INITIAL_VALUE} from '../../models/signature.constants'
+import {SECRET_INITIAL_VALUE, SECRETS_FIELDS} from '../../models/signature.constants'
 import {providersMock} from 'src/app/core/mocks/signatureConfiguration'
-import { cloudProvider, signatureConfigurationResponse , FormMode} from '../../models/signature.models';
+import { CloudProvider } from '../../models/provider.models';
+import { SignatureConfigurationResponse , FormMode} from '../../models/signature.models';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatIconModule } from '@angular/material/icon';
 import { ProviderService } from '../../services/provider.service';
 
 
 export const FORM_MODE = new InjectionToken<FormMode>('FORM_MODE');
-export const DATA_CREDENTIAL = new InjectionToken<signatureConfigurationResponse>('DATA_CREDENTIAL');
+export const DATA_CREDENTIAL = new InjectionToken<SignatureConfigurationResponse>('DATA_CREDENTIAL');
 
 @Component({
   selector: 'app-form-cloud-signature-configuration',
@@ -29,7 +30,7 @@ export const DATA_CREDENTIAL = new InjectionToken<signatureConfigurationResponse
   styleUrl: './form-cloud-signature-configuration.component.scss'
 })
 export class FormCloudSignatureConfigurationComponent {
-  cloudProviders:cloudProvider[] = providersMock; 
+  cloudProviders:CloudProvider[] = providersMock; 
   private fb = inject(FormBuilder);
   readonly formMode = inject(FORM_MODE);
   formDataCredential = inject(DATA_CREDENTIAL,{optional: true});
@@ -39,10 +40,18 @@ export class FormCloudSignatureConfigurationComponent {
   showSecret:boolean = false;
   readonly cloudProviderCredential = this.createForm();
   private providerService = inject(ProviderService);
+  SECRET:string= 'secret';
 
   
   constructor() {
+    if(this.formMode!='delete') this.getAllProviders();
+    if (this.formMode === 'edit'&& this.formDataCredential ) {
+      this.patchInitialValues(this.formDataCredential);
+    }
+    this.configureFormByMode();
+  }
 
+  getAllProviders() {
     this.providerService.getAllProvider().subscribe({
       next: (providers) => {
         this.cloudProviders = providers; 
@@ -51,13 +60,10 @@ export class FormCloudSignatureConfigurationComponent {
         console.error('Error loading providers', err);
       }
     });
-    if (this.formMode === 'edit'&& this.formDataCredential ) {
-      this.patchInitialValues(this.formDataCredential);
-    }
-    this.configureFormByMode();
   }
 
-  patchInitialValues(data: signatureConfigurationResponse): void {
+
+  patchInitialValues(data: SignatureConfigurationResponse): void {
     this.cloudProviderCredential.patchValue({
       cloudProviderId: data.cloudProviderId,
       credentialName: data.credentialName,
@@ -66,18 +72,22 @@ export class FormCloudSignatureConfigurationComponent {
     });
   
     //When edited, the user cannot see the secret values ​​but can edit them.    
-    this.cloudProviderCredential.get('clientSecret')?.setValue(SECRET_INITIAL_VALUE);
-    this.cloudProviderCredential.get('credentialPassword')?.setValue(SECRET_INITIAL_VALUE);
-    this.cloudProviderCredential.get('secret')?.setValue(SECRET_INITIAL_VALUE);
+    this.fillSecretFieldsWithPlaceholder();
+  }
+
+  private fillSecretFieldsWithPlaceholder(): void {  
+    for (const field of SECRETS_FIELDS) {
+      this.cloudProviderCredential.get(field)?.setValue(SECRET_INITIAL_VALUE);
+    }
   }
 
   onProviderChange(providerId: string): void {
-      this.clearOnFocus('secret')
+      this.clearOnFocus(this.SECRET)
       const  cloudProvider = this.cloudProviders.find(provider => provider.id === providerId);
       if(cloudProvider){
         const isSameAsOriginal = this.formMode === 'edit' && providerId === this.formDataCredential?.id;
         this.requiresTOTP = !isSameAsOriginal && cloudProvider.requiresTOTP;
-        const secretControl = this.cloudProviderCredential.get('secret');
+        const secretControl = this.cloudProviderCredential.get(this.SECRET);
         if (secretControl) {
           if (this.requiresTOTP) {
             secretControl.setValidators(Validators.required);
@@ -100,12 +110,13 @@ export class FormCloudSignatureConfigurationComponent {
         'credentialPassword',
         'secret',
       ],
+      // When edited, secrets can be edited but are not visible, and they are no longer mandatory because they are actually in the vault.
       edit: ['cloudProviderId',
             'credentialName',
             'clientId',
             'credentialId',
-            'reason'],
-      delete: ['reason']
+            'rationale'],
+      delete: ['rationale']
     };
 
     const requiredFields = requiredFieldsByMode[this.formMode];
@@ -145,7 +156,7 @@ export class FormCloudSignatureConfigurationComponent {
       credentialId: [''],
       credentialPassword: [''],
       secret: [''],
-      reason: ['']
+      rationale: ['']
     });
   }
 

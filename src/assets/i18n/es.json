@@ -244,7 +244,7 @@
           "credentialId": "ID de la Credencial",
           "credentialPassword": "Contraseña de la Credencial",
           "secret": "Secreto (TOTP)",
-          "reason": "Motivo"
+          "rationale": "Motivo"
         }      
       }
     }

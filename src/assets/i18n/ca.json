@@ -242,7 +242,7 @@
         "credentialId": "ID de la credencial",
         "credentialPassword": "Contrasenya de la credencial",
         "secret": "Secret (TOTP)",
-        "reason": "Motiu"
+        "rationale": "Motiu"
       }
     }
   }

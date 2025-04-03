@@ -77,20 +77,6 @@ th {
     mat-card{
       height: 100%;
     }
-
-    .country-mobile {
-      flex-direction: row;
-      align-items: flex-start;
-      gap: 1rem;
-
-      .country {
-        min-width: 10%;
-      }
-
-      .phone {
-        width: calc(100%);
-      }
-    }
   }
 
 }

@@ -68,7 +68,7 @@
   
       <mat-form-field class="col" appearance="fill">
         <mat-label>{{ "signature.settings.formCloudPrivider.credentialPassword"| translate }}</mat-label>
-        <input matInput  [type]="showCredentialPassword ? 'text' : 'password'" formControlName="credentialPassword" maxlength="255" [required]="formMode=='create'">
+        <input matInput  [type]="showCredentialPassword ? 'text' : 'password'" formControlName="credentialPassword" maxlength="255" [required]="formMode=='create'" (focus)="clearOnFocus('credentialPassword')">
         <button  mat-icon-button matSuffix type="button" (click)="showCredentialPassword = !showCredentialPassword"
           [attr.aria-label]="'Toggle password visibility'">
           <mat-icon>{{ showCredentialPassword ? 'visibility' : 'visibility_off' }}</mat-icon>
@@ -82,7 +82,7 @@
   
       <mat-form-field class="col" appearance="fill">
         <mat-label>{{ "signature.settings.formCloudPrivider.secret"| translate }}</mat-label>
-        <input matInput  [type]="showSecret ? 'text' : 'password'" formControlName="secret" maxlength="255" [required]="requiresTOTP">
+        <input matInput  [type]="showSecret ? 'text' : 'password'" formControlName="secret" maxlength="255" [required]="requiresTOTP" (focus)="clearOnFocus('secret')">
         <button  mat-icon-button matSuffix type="button" (click)="showSecret = !showSecret"
           [attr.aria-label]="'Toggle password visibility'">
            <mat-icon>{{ showSecret ? 'visibility' : 'visibility_off' }}</mat-icon>
@@ -102,9 +102,9 @@
   @if(formMode!='create'){
     <div class="row">
       <mat-form-field class="col" appearance="fill">
-        <mat-label>{{ "signature.settings.formCloudPrivider.reason"| translate }}</mat-label>
-        <input matInput formControlName="reason" required>
-          @if(cloudProviderCredential.get('reason')?.hasError('required')){
+        <mat-label>{{ "signature.settings.formCloudPrivider.rationale"| translate }}</mat-label>
+        <input matInput formControlName="rationale" required>
+          @if(cloudProviderCredential.get('rationale')?.hasError('required')){
             <mat-error >
               {{ "error.form.required"| translate }}
             </mat-error>

@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import {CloudProvider} from '../models/provider.models';
-import {  map, Observable, of, switchMap, throwError } from 'rxjs';
+import {  map, Observable } from 'rxjs';
 import {ProviderRepository} from './provider.repository';
 @Injectable({
   providedIn: 'root'

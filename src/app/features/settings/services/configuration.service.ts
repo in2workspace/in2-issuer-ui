@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import {SignatureConfigPayload} from '../models/signature.models';
 import { ConfigurationRepository } from './configuration.repository';
-import { EMPTY, map, Observable, of, switchMap, throwError } from 'rxjs';
+import {  map, Observable, of, switchMap, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
