@@ -13,7 +13,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     imports: [QRCodeModule, TranslatePipe],
 })
 export class HomeComponent{
-  public walletUrl = environment.server_url ?? '';
+  public walletUrl = environment.wallet_url ?? '';
   public knowledgebase_url = environment.knowledgebase_url;
   public readonly logoSrc = "../../../assets/logos/" + environment.customizations.logo_src;
 
