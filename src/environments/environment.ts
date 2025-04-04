@@ -3,7 +3,6 @@
 export const environment = {
   production: false,
   iam_url: 'https://keycloak-dev.ssihub.org/realms/in2-issuer',
-  iam_realm_path: 'realms/issuer',
   server_url: 'http://localhost:8081',
   wallet_url: 'http://localhost:4200',
   wallet_url_test: 'http://localhost:4200',

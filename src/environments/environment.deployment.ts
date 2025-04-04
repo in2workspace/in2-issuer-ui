@@ -2,10 +2,8 @@
 
 export const environment = {
   production: true,
-  // Keycloak URL (REQUIRED) 
+  // Keycloak URL (REQUIRED)
   iam_url: window["env"]["iam_url"],
-  // Keycloak realm path (REQUIRED)
-  iam_realm_path: window["env"]["iam_realm_path"],
   // Issuer API base URL (REQUIRED)
   server_url: window["env"]["server_url"],
   // Wallet base URL; currently points to PRD (REQUIRED)
@@ -19,7 +17,7 @@ export const environment = {
   // Knowledgebase base URL (REQUIRED)
   knowledgebase_url: window["env"]["knowledgebase_url"],
   customizations:{
-    colors:{ 
+    colors:{
       // (OPTIONAL with fallback)
       primary: window["env"]["primary"] ?? '#2d58a7',
       // (OPTIONAL with fallback)
@@ -32,6 +30,6 @@ export const environment = {
     // Main app logo name, shown in the navbar. Points to "assets/logos/" (REQUIRED)
     logo_src: window["env"]["logo_src"],
     // App favicon. Points to "assets/icons/" (OPTIONAL with fallback)
-    favicon_src: window["env"]["favicon_src"] || "dome-favicon.png"  
+    favicon_src: window["env"]["favicon_src"] || "dome-favicon.png"
   }
 };
