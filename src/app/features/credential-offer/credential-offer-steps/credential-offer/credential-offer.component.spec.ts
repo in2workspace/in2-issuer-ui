@@ -1,9 +1,10 @@
-import { TestBed } from '@angular/core/testing';
-import { CredentialOfferComponent } from './credential-offer.component';
-import { TranslateModule } from '@ngx-translate/core';
-import { QRCodeModule } from 'angularx-qrcode';
-import { NgIf } from '@angular/common';
-import { environment } from 'src/environments/environment';
+import {TestBed} from '@angular/core/testing';
+import {CredentialOfferComponent} from './credential-offer.component';
+import {TranslateModule} from '@ngx-translate/core';
+import {QRCodeModule} from 'angularx-qrcode';
+import {NgIf} from '@angular/common';
+import {environment} from 'src/environments/environment';
+import {API} from "../../../../core/constants/api.constants";
 
 describe('CredentialOfferComponent', () => {
   let component: CredentialOfferComponent;
@@ -38,38 +39,38 @@ describe('CredentialOfferComponent', () => {
   it('should compute walletSameDeviceUrl$ correctly when credentialOfferUri$ is provided', () => {
     const credentialOfferUriMock = 'mockCredentialOfferUri';
     (component as any).credentialOfferUri$ = () => credentialOfferUriMock;
-  
+
     const expectedComputedUrl =
       environment.wallet_url + 'tabs/home/' + credentialOfferUriMock;
-  
+
     expect(component.walletSameDeviceUrl$()).toBe(expectedComputedUrl);
   });
 
   it('should get showWalletSameDeviceUrlTest', () => {
-    expect(component.showWalletSameDeviceUrlTest).toBe(environment.show_wallet_url_test);
+    expect(component.showWalletSameDeviceUrlTest).toBe(API.SHOW_WALLET_URL_TEST);
   });
 
   it('should initialize walletSameDeviceTestUrl with the correct value from the environment', () => {
-    const expectedTestUrl = environment.wallet_url_test + 'tabs/home/';
+    const expectedTestUrl = API.WALLET_URL_TEST + 'tabs/home/';
     expect(component.walletSameDeviceTestUrl).toBe(expectedTestUrl);
   });
 
   it('should compute walletSameDeviceTestUrl$ correctly when credentialOfferUri$ is provided', () => {
     const credentialOfferUriMock = 'mockCredentialOfferUri';
     (component as any).credentialOfferUri$ = () => credentialOfferUriMock;
-  
+
     const expectedComputedTestUrl =
-      environment.wallet_url_test + 'tabs/home/' + credentialOfferUriMock;
-  
+      API.WALLET_URL_TEST + 'tabs/home/' + credentialOfferUriMock;
+
     expect(component.walletSameDeviceTestUrl$()).toBe(expectedComputedTestUrl);
   });
 
   it('should remove the protocol from the given URL string', () => {
     const inputUrl = 'https://example.com';
     const expectedOutput = 'httpsexample.com';
-    
+
     const result = component.removeProtocol(inputUrl);
-    
+
     expect(result).toBe(expectedOutput);
   });
 

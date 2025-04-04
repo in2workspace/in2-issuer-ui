@@ -12,18 +12,18 @@ import {LEARCredentialEmployee} from '../models/entity/lear-credential-employee.
 import {DialogWrapperService} from "../../shared/components/dialog/dialog-wrapper/dialog-wrapper.service";
 import {TranslateService} from "@ngx-translate/core";
 import {Router} from "@angular/router";
-import {API_PATH} from "../constants/api-paths.constants";
+import {API} from "../constants/api.constants";
 
 @Injectable({
   providedIn: 'root'
 })
 export class CredentialProcedureService {
 
-  private readonly saveCredential = `${environment.server_url}${API_PATH.SAVE_CREDENTIAL}`;
-  private readonly organizationProcedures = `${environment.server_url}${API_PATH.SAVE_CREDENTIAL}`;
-  private readonly credentialOfferUrl = `${environment.server_url}${API_PATH.CREDENTIAL_OFFER}`;
-  private readonly notificationProcedure = `${environment.server_url}${API_PATH.NOTIFICATION}`;
-  private readonly signCredentialUrl = `${environment.server_url}${API_PATH.SIGN_CREDENTIAL}`;
+  private readonly saveCredential = `${environment.server_url}${API.SAVE_CREDENTIAL_PATH}`;
+  private readonly organizationProcedures = `${environment.server_url}${API.SAVE_CREDENTIAL_PATH}`;
+  private readonly credentialOfferUrl = `${environment.server_url}${API.CREDENTIAL_OFFER_PATH}`;
+  private readonly notificationProcedure = `${environment.server_url}${API.NOTIFICATION_PATH}`;
+  private readonly signCredentialUrl = `${environment.server_url}${API.SIGN_CREDENTIAL_PATH}`;
 
   private readonly http = inject(HttpClient);
   private readonly normalizer = new LEARCredentialEmployeeDataNormalizer();

@@ -8,12 +8,6 @@ export const environment = {
   server_url: window["env"]["server_url"],
   // Wallet base URL; currently points to PRD (REQUIRED)
   wallet_url: window["env"]["wallet_url"],
-  // Wallet URL used for testing in non-PRD environments (REQUIRED)
-  //? required or optional?
-  wallet_url_test: window["env"]["wallet_url_test"],
-  // Defines whether link to wallet_test_url is shown (REQUIRED)
-  //? required or optional?
-  show_wallet_url_test: window["env"]["show_wallet_url_test"] || false,
   // Knowledgebase base URL (REQUIRED)
   knowledgebase_url: window["env"]["knowledgebase_url"],
   customizations:{

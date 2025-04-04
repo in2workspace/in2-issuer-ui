@@ -1,16 +1,16 @@
-import { TestBed } from '@angular/core/testing';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { CredentialProcedureService } from './credential-procedure.service';
-import { environment } from 'src/environments/environment';
-import { HttpErrorResponse, provideHttpClient } from '@angular/common/http';
-import { ProcedureRequest } from '../models/dto/procedure-request.dto';
-import { ProcedureResponse } from "../models/dto/procedure-response.dto";
-import { LearCredentialEmployeeDataDetail } from "../models/dto/lear-credential-employee-data-detail.dto";
-import { throwError } from 'rxjs';
+import {TestBed} from '@angular/core/testing';
+import {HttpTestingController, provideHttpClientTesting} from '@angular/common/http/testing';
+import {CredentialProcedureService} from './credential-procedure.service';
+import {environment} from 'src/environments/environment';
+import {HttpErrorResponse, provideHttpClient} from '@angular/common/http';
+import {ProcedureRequest} from '../models/dto/procedure-request.dto';
+import {ProcedureResponse} from "../models/dto/procedure-response.dto";
+import {LearCredentialEmployeeDataDetail} from "../models/dto/lear-credential-employee-data-detail.dto";
+import {throwError} from 'rxjs';
 import {DialogWrapperService} from "../../shared/components/dialog/dialog-wrapper/dialog-wrapper.service";
 import {TranslateService} from "@ngx-translate/core";
 import {Router} from "@angular/router";
-import {API_PATH} from "../constants/api-paths.constants";
+import {API} from "../constants/api.constants";
 
 const notFoundErrorResp = new HttpErrorResponse({
   error: '404 error',
@@ -29,11 +29,11 @@ describe('CredentialProcedureService', () => {
   let dialogSpy: jest.Mocked<DialogWrapperService>;
   let translateSpy: jest.Mocked<TranslateService>;
   let routerSpy: jest.Mocked<Router>;
-  const apiUrl = `${environment.server_url}${API_PATH.SAVE_CREDENTIAL}`;
-  const proceduresURL = `${environment.server_url}${API_PATH.SAVE_CREDENTIAL}`;
-  const notificationUrl = `${environment.server_url}${API_PATH.NOTIFICATION}`;
-  const credentialOfferUrl = `${environment.server_url}${API_PATH.CREDENTIAL_OFFER}`;
-  const signCredentialUrl = `${environment.server_url}${API_PATH.SIGN_CREDENTIAL}`;
+  const apiUrl = `${environment.server_url}${API.SAVE_CREDENTIAL_PATH}`;
+  const proceduresURL = `${environment.server_url}${API.SAVE_CREDENTIAL_PATH}`;
+  const notificationUrl = `${environment.server_url}${API.NOTIFICATION_PATH}`;
+  const credentialOfferUrl = `${environment.server_url}${API.CREDENTIAL_OFFER_PATH}`;
+  const signCredentialUrl = `${environment.server_url}${API.SIGN_CREDENTIAL_PATH}`;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
