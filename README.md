@@ -49,20 +49,18 @@ We offer a Docker image to run the application. You can find it in [Docker Hub](
 Here, you can find an example of how to run the application with all the required services and configuration.
 ### Issuer UI
 The application needs key custom environment variables to be configured
-- LOGIN_URL: login url for your Keycloak realm
-- CLIENT_ID: Keycloak client responsible for the registration
+- IAM_URL: login url for your Keycloak realm
+- IAM_PATH: login path for your Keycloak realm
+- SERVER_URL: base url of the Issuer API
 - WALLET_URL: Url of the Wallet application intended to be used to retrieve the credentials
-- BASE_URL: base url of the Issuer API
 
 #### Example of a typical configuration:
 ```
 docker run -d \
   --name issuer-ui \
-  -e LOGIN_URL=http://keycloak-external.org/realms/CredentialIssuer \
-  -e CLIENT_ID=account-console \
-  -e SCOPE="openid profile email offline_access" \
-  -e GRANT_TYPE=code \
-  -e BASE_URL=http://issuer-api.com/ \
+  -e IAM_URL=http://keycloak-external.org/realms/CredentialIssuer \
+  -e IAM_PATH=realms/CredentialIssuer \
+  -e SERVER_URL=http://issuer-api.com/ \
   -e WALLET_URL=http://wallet.com/ \
   -p 4201:8080 \
   in2workspace/issuer-ui:v1.0.0

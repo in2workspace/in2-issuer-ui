@@ -20,7 +20,7 @@ export class NavbarComponent implements OnInit {
   public organization: string = '';
   public selectedLanguage = 'en';
   public isMenuOpen:boolean = false;
-  public readonly logoSrc= environment.customizations.logo_src;
+  public readonly logoSrc= "../../../assets/logos/" + environment.customizations.logo_src;
 
   private readonly translate = inject(TranslateService);
   private readonly authService = inject(AuthService);
