@@ -4,6 +4,7 @@ import { AuthService } from 'src/app/core/services/auth.service';
 import { environment } from 'src/environments/environment';
 import { QRCodeModule } from 'angularx-qrcode';
 import { TranslatePipe } from '@ngx-translate/core';
+import {KNOWLEDGEBASE_PATH} from "../../core/constants/knowledge.constants";
 
 @Component({
     selector: 'app-home',
@@ -13,8 +14,8 @@ import { TranslatePipe } from '@ngx-translate/core';
     imports: [QRCodeModule, TranslatePipe],
 })
 export class HomeComponent{
-  public walletUrl = environment.wallet_url;
-  public knowledgebase_url = environment.knowledgebase_url;
+  public walletUrl = environment.server_url ?? '';
+  public knowledgebase_url = KNOWLEDGEBASE_PATH.WALLET;
   public readonly logoSrc = "../../../assets/logos/" + environment.customizations.logo_src;
 
   private readonly router = inject(Router);
