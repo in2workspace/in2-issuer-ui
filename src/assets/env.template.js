@@ -3,10 +3,10 @@
 
   // Environment variables
   //todo external env var has to be changed in Helm
-  window["env"]["iam_url"] = "${IAM_EXTERNAL_DOMAIN}";
+  window["env"]["iam_url"] = "${IAM_URL}";
   window["env"]["server_url"] = "${BASE_URL}";
   window["env"]["wallet_url"] = "${WALLET_URL}";
-  window["env"]["knowledgebase_url"] = "${KNOWLEDGEBASE_URL}";
+  window["env"]["knowledge_base_url"] = "${KNOWLEDGE_BASE_URL}";
   window["env"]["primary"] = "${PRIMARY}";
   window["env"]["primary_contrast"]= "${PRIMARY_CONTRAST}";
   window["env"]["secondary"] = "${SECONDARY}";

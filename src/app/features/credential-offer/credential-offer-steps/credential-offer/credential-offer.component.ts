@@ -15,7 +15,7 @@ import {API} from "../../../../core/constants/api.constants";
 export class CredentialOfferComponent{
   @Output() public refreshCredential = new EventEmitter<void>();
   public qrColor = "#2d58a7";
-  public walletUsersGuideUrl = environment.knowledgebase_url + KNOWLEDGEBASE_PATH.WALLET;
+  public walletUsersGuideUrl = environment.knowledge_base_url + KNOWLEDGEBASE_PATH.WALLET;
   public credentialOfferUri$ = input.required<string>();
 
   public readonly walletSameDeviceUrl = environment.wallet_url + 'tabs/home/';

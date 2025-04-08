@@ -14,7 +14,7 @@ import {API} from "../../../../core/constants/api.constants";
 })
 export class CredentialOfferOnboardingComponent{
   public qrColor = "#2d58a7";
-  public walletUsersGuideUrl = environment.knowledgebase_url + KNOWLEDGEBASE_PATH.WALLET;
+  public walletUsersGuideUrl = environment.knowledge_base_url + KNOWLEDGEBASE_PATH.WALLET;
 
   public walletUrl = environment.wallet_url || 'https://wallet.dome-marketplace-prd.org/';
   public walletTestUrl = API.WALLET_URL_TEST || 'https://wallet.dome-marketplace-prd.org/';

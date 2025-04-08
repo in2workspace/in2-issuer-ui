@@ -43,9 +43,9 @@ describe('HomeComponent', () => {
     expect(component.logoSrc).toBe("../../../assets/logos/" + environment.customizations.logo_src);
   });
 
-  it('should set walletUrl and knowledgebase_url from environment', () => {
+  it('should set walletUrl and knowledge_base_url from environment', () => {
     expect(component.walletUrl).toBe(environment.wallet_url);
-    expect(component.knowledgebase_url).toBe(environment.knowledgebase_url);
+    expect(component.knowledge_base_url).toBe(environment.knowledge_base_url);
   });
 
   it('should call authService.login when login() is called', () => {
