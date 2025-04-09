@@ -1,15 +1,16 @@
-import { TestBed } from '@angular/core/testing';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { CredentialProcedureService } from './credential-procedure.service';
-import { environment } from 'src/environments/environment';
-import { HttpErrorResponse, provideHttpClient } from '@angular/common/http';
-import { ProcedureRequest } from '../models/dto/procedure-request.dto';
-import { ProcedureResponse } from "../models/dto/procedure-response.dto";
-import { LearCredentialEmployeeDataDetail } from "../models/dto/lear-credential-employee-data-detail.dto";
-import { throwError } from 'rxjs';
+import {TestBed} from '@angular/core/testing';
+import {HttpTestingController, provideHttpClientTesting} from '@angular/common/http/testing';
+import {CredentialProcedureService} from './credential-procedure.service';
+import {environment} from 'src/environments/environment';
+import {HttpErrorResponse, provideHttpClient} from '@angular/common/http';
+import {ProcedureRequest} from '../models/dto/procedure-request.dto';
+import {ProcedureResponse} from "../models/dto/procedure-response.dto";
+import {LearCredentialEmployeeDataDetail} from "../models/dto/lear-credential-employee-data-detail.dto";
+import {throwError} from 'rxjs';
 import {DialogWrapperService} from "../../shared/components/dialog/dialog-wrapper/dialog-wrapper.service";
 import {TranslateService} from "@ngx-translate/core";
 import {Router} from "@angular/router";
+import {API} from "../constants/api.constants";
 
 const notFoundErrorResp = new HttpErrorResponse({
   error: '404 error',
@@ -28,11 +29,11 @@ describe('CredentialProcedureService', () => {
   let dialogSpy: jest.Mocked<DialogWrapperService>;
   let translateSpy: jest.Mocked<TranslateService>;
   let routerSpy: jest.Mocked<Router>;
-  const apiUrl = `${environment.base_url}${environment.save_credential}`;
-  const proceduresURL = `${environment.base_url}${environment.procedures}`;
-  const notificationUrl = `${environment.base_url}${environment.notification}`;
-  const credentialOfferUrl = `${environment.base_url}${environment.credential_offer_url}`;
-  const signCredentialUrl = `${environment.base_url}${environment.sign_credential_url}`;
+  const apiUrl = `${environment.server_url}${API.SAVE_CREDENTIAL_PATH}`;
+  const proceduresURL = `${environment.server_url}${API.PROCEDURES_PATH}`;
+  const notificationUrl = `${environment.server_url}${API.NOTIFICATION_PATH}`;
+  const credentialOfferUrl = `${environment.server_url}${API.CREDENTIAL_OFFER_PATH}`;
+  const signCredentialUrl = `${environment.server_url}${API.SIGN_CREDENTIAL_PATH}`;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -374,7 +375,7 @@ describe('get credential offer by c-code', () => {
       error: { status: 503, message: 'Error during communication with the mail server' },
       status: 503,
       statusText: 'Service Unavailable',
-      url: `${environment.base_url}${environment.notification}/${procedureId}`
+      url: notificationUrl
     });
 
     service.sendReminder(procedureId).subscribe({
@@ -387,7 +388,7 @@ describe('get credential offer by c-code', () => {
       }
     });
 
-    const req = httpMock.expectOne(`${environment.base_url}${environment.notification}/${procedureId}`);
+    const req = httpMock.expectOne(`${notificationUrl}/${procedureId}`);
     expect(req.request.method).toBe('POST');
     req.flush(
       { message: 'Error during communication with the mail server' },
