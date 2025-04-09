@@ -20,7 +20,7 @@ import {API} from "../constants/api.constants";
 export class CredentialProcedureService {
 
   private readonly saveCredential = `${environment.server_url}${API.SAVE_CREDENTIAL_PATH}`;
-  private readonly organizationProcedures = `${environment.server_url}${API.SAVE_CREDENTIAL_PATH}`;
+  private readonly organizationProcedures = `${environment.server_url}${API.PROCEDURES_PATH}`;
   private readonly credentialOfferUrl = `${environment.server_url}${API.CREDENTIAL_OFFER_PATH}`;
   private readonly notificationProcedure = `${environment.server_url}${API.NOTIFICATION_PATH}`;
   private readonly signCredentialUrl = `${environment.server_url}${API.SIGN_CREDENTIAL_PATH}`;

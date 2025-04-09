@@ -30,7 +30,7 @@ describe('CredentialProcedureService', () => {
   let translateSpy: jest.Mocked<TranslateService>;
   let routerSpy: jest.Mocked<Router>;
   const apiUrl = `${environment.server_url}${API.SAVE_CREDENTIAL_PATH}`;
-  const proceduresURL = `${environment.server_url}${API.SAVE_CREDENTIAL_PATH}`;
+  const proceduresURL = `${environment.server_url}${API.PROCEDURES_PATH}`;
   const notificationUrl = `${environment.server_url}${API.NOTIFICATION_PATH}`;
   const credentialOfferUrl = `${environment.server_url}${API.CREDENTIAL_OFFER_PATH}`;
   const signCredentialUrl = `${environment.server_url}${API.SIGN_CREDENTIAL_PATH}`;
