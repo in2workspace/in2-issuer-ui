@@ -8,8 +8,8 @@ import { SignatureMode } from '../models/signature.models';
 
 @Injectable({ providedIn: 'root' })
 export class SignatureConfigResolver implements Resolve<any> {
-  private configurationService = inject(ConfigurationService);
-  private signatureConfigService = inject(SignatureConfigurationService);
+  private readonly configurationService = inject(ConfigurationService);
+  private readonly signatureConfigService = inject(SignatureConfigurationService);
 
   resolve() {
     return forkJoin({

@@ -31,7 +31,7 @@ export const DATA_CREDENTIAL = new InjectionToken<SignatureConfigurationResponse
 })
 export class FormCloudSignatureConfigurationComponent {
   cloudProviders:CloudProvider[] = providersMock; 
-  private fb = inject(FormBuilder);
+  private readonly fb = inject(FormBuilder);
   readonly formMode = inject(FORM_MODE);
   formDataCredential = inject(DATA_CREDENTIAL,{optional: true});
   showClientSecret:boolean = false;
@@ -39,7 +39,7 @@ export class FormCloudSignatureConfigurationComponent {
   requiresTOTP:boolean = false;
   showSecret:boolean = false;
   readonly cloudProviderCredential = this.createForm();
-  private providerService = inject(ProviderService);
+  private readonly providerService = inject(ProviderService);
   SECRET:string= 'secret';
 
   

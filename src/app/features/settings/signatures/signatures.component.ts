@@ -3,12 +3,10 @@ import { MatCard, MatCardContent } from '@angular/material/card';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatRadioModule} from '@angular/material/radio';
 import {FormsModule} from '@angular/forms';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableModule, MatTableDataSource} from '@angular/material/table';
 import { MatButton, MatButtonModule } from '@angular/material/button';
-import { MatTableDataSource } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSortModule } from '@angular/material/sort';
-import { MatSort } from '@angular/material/sort';
+import { MatSortModule, MatSort } from '@angular/material/sort';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ConfigurationService } from '../services/configuration.service';
 import { SignatureConfigPayload, SignatureMode, FormMode, SignatureConfigurationRequest, SignatureConfigurationResponse, UpdateSignatureConfigurationRequest} from '../models/signature.models';
@@ -20,8 +18,7 @@ import {DISPLAYED_COLUMNS, SECRET_INITIAL_VALUE,SPECIAL_EDIT_FIELDS, SECRETS_FIE
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ComponentPortal } from '@angular/cdk/portal';
-import { DATA_CREDENTIAL, FormCloudSignatureConfigurationComponent } from './form-signature-configuration/form-cloud-signature-configuration.component'; 
-import { FORM_MODE } from './form-signature-configuration/form-cloud-signature-configuration.component';
+import { DATA_CREDENTIAL, FormCloudSignatureConfigurationComponent, FORM_MODE } from './form-signature-configuration/form-cloud-signature-configuration.component'; 
 import { ActivatedRoute } from '@angular/router';
 import { LoaderService } from 'src/app/core/services/loader.service';
 
@@ -40,8 +37,8 @@ export class SignaturesComponent  {
   enableRemoteSignature: boolean = false;
   signatureModes: string[] = Object.values(SignatureMode);
   displayedColumns: string[] = DISPLAYED_COLUMNS;
-  private configurationService = inject(ConfigurationService); 
-  private signatureConfigService = inject(SignatureConfigurationService); 
+  private readonly configurationService = inject(ConfigurationService); 
+  private readonly signatureConfigService = inject(SignatureConfigurationService); 
   private readonly dialog = inject(DialogWrapperService);
   private readonly translate = inject(TranslateService);
   private route = inject(ActivatedRoute);

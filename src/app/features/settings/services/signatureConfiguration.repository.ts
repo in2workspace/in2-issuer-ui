@@ -1,10 +1,10 @@
-import { inject } from '@angular/core';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {SignatureConfigTable, SignatureConfigurationRequest,SignatureConfigurationResponse, SignatureMode } from '../models/signature.models'
 import {API_PATH} from 'src/app/core/constants/api-paths.constants';
 import { environment } from 'src/environments/environment';
+
 @Injectable({ providedIn: 'root' })
 export class SignatureConfigurationRepository {
   private readonly http = inject(HttpClient);
@@ -20,7 +20,7 @@ export class SignatureConfigurationRepository {
 
   getAllSignatureConfiguration(signatureMode:SignatureMode): Observable<SignatureConfigTable []> {
     const params = new HttpParams().set('signatureMode', signatureMode);
-    return this.http.get<SignatureConfigTable[]>(this.configurationUrl);
+    return this.http.get<SignatureConfigTable[]>(this.configurationUrl, { params } );
   }
 
   updateSignatureConfiguration(id:string, payload: Partial<SignatureConfigurationRequest>): Observable<void> {
