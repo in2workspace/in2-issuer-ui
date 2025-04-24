@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Refactor configurations: changed some parameter names and made some of them constants.
 
+## [1.10.3](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.10.3)
+### Modify
+- Change CREDENTIAL_OFFER_URI env name to CREDENTIAL_OFFER_URL.
+
 ## [1.10.2](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.10.2)
 ### Fixed
 - Fix error to handle email failure.
