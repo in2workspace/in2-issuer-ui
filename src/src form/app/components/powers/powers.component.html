@@ -1,0 +1,34 @@
+<div [formGroup]="powerForm">
+    <label for="powerSelect">Available Powers:</label>
+  
+    <select #powerSelect>
+      <option value="" disabled selected>Select a power</option>
+      @for (power of availablePowers(); track power.name) {
+        <option [value]="power.name" [disabled]="isPowerAdded(power.name)">
+          {{ power.name }}
+        </option>
+      }
+    </select>
+  
+    <button (click)="addPowerByName(powerSelect.value)">
+      Add
+    </button>
+  
+    <div formArrayName="selectedPowers">
+      @for (i of powerIndexes; track i) {
+        <div [formGroup]="getPowerGroupAt(i)">
+          @for (fn of getPowerFunctionsAt(i); track fn) {
+            <label>
+              <input type="checkbox" [formControlName]="fn" />
+              {{ fn }}
+            </label>
+          }
+        </div>
+      }
+    </div>
+  
+    @if (powerForm.invalid && powerForm.touched) {
+      <p style="color: red;">At least one power with a selected function is required.</p>
+    }
+  </div>
+  
