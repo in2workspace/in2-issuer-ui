@@ -48,7 +48,7 @@ describe('CredentialOfferOnboardingComponent', () => {
   });
 
   it('should initialize walletUsersGuideUrl with the correct value from the environment', () => {
-    const expectedGuideUrl = environment.knowledge_base_url + "books/dome-digital-wallet-user-guide";
+    const expectedGuideUrl = environment.knowledge_base_url + "/books/dome-digital-wallet-user-guide";
     expect(component.walletUsersGuideUrl).toBe(expectedGuideUrl);
   });
 
