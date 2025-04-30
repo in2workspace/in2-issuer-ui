@@ -18,7 +18,7 @@ export class CredentialOfferComponent{
   public walletUsersGuideUrl = environment.knowledge_base_url + KNOWLEDGEBASE_PATH.WALLET;
   public credentialOfferUri$ = input.required<string>();
 
-  public readonly walletSameDeviceUrl = environment.wallet_url + 'tabs/home/';
+  public readonly walletSameDeviceUrl = environment.wallet_url + '/tabs/home/';
   public walletSameDeviceUrl$ = computed<string>(()=>{
     const cutOfferUri = this.removeProtocol(this.credentialOfferUri$());
     return this.walletSameDeviceUrl + cutOfferUri
@@ -26,7 +26,7 @@ export class CredentialOfferComponent{
 
   //TEST URLS
   public readonly showWalletSameDeviceUrlTest =  API.SHOW_WALLET_URL_TEST;
-  public readonly walletSameDeviceTestUrl = API.WALLET_URL_TEST + 'tabs/home/';
+  public readonly walletSameDeviceTestUrl = API.WALLET_URL_TEST + '/tabs/home/';
 
   public walletSameDeviceTestUrl$ = computed<string>(()=>{
     const cutOfferUri = this.removeProtocol(this.credentialOfferUri$());
