@@ -11,6 +11,30 @@ export type FormFieldSchema = {
   
 
 export const LearCredentialEmployeeFormSchema: FormSchema = {
+    mandatee: {
+      type: 'group',
+      display: 'main',
+      fields: {
+        // id: { type: 'control' },
+        firstName: { type: 'control' },
+        lastName: { type: 'control' },
+        email: { type: 'control' },
+        // mobile_phone: { type: 'control' },
+        nationality: { type: 'control' },
+      },
+    },
+    mandator: {
+      type: 'group',
+      display: 'side',
+      fields: {
+        commonName: { type: 'control' },
+        emailAddress: { type: 'control' },
+        serialNumber: { type: 'control' },
+        organization: { type: 'control' },
+        organizationIdentifier: { type: 'control' },
+        country: { type: 'control' },
+      },
+    },
     issuer: {
       type: 'group',
       display: 'side',
@@ -24,35 +48,11 @@ export const LearCredentialEmployeeFormSchema: FormSchema = {
         serialNumber: { type: 'control' }
       },
     },
-    mandatee: {
-      type: 'group',
-      display: 'main',
-      fields: {
-        id: { type: 'control' },
-        email: { type: 'control' },
-        firstName: { type: 'control' },
-        lastName: { type: 'control' },
-        mobile_phone: { type: 'control' },
-        nationality: { type: 'control' },
-      },
-    },
-    mandator: {
-      type: 'group',
-      display: 'side',
-      fields: {
-        commonName: { type: 'control' },
-        country: { type: 'control' },
-        emailAddress: { type: 'control' },
-        organization: { type: 'control' },
-        organizationIdentifier: { type: 'control' },
-        serialNumber: { type: 'control' },
-      },
-    },
     power: {
       type: 'array',
       display: 'main', //template expects it to be main
       itemSchema: {
-        id: { type: 'control' },
+        // id: { type: 'control' },
         action: { type: 'control' },
         domain: { type: 'control' },
         function: { type: 'control' },
@@ -62,19 +62,6 @@ export const LearCredentialEmployeeFormSchema: FormSchema = {
   };
   
   export const LearCredentialMachineFormSchema: FormSchema = {
-    issuer: {
-      type: 'group',
-      display: 'side',
-      fields: {
-        // id: { type: 'control' },
-        organizationIdentifier: { type: 'control'},
-        organization: { type: 'control' },
-        country: { type: 'control' },
-        commonName: { type: 'control' },
-        emailAddress: { type: 'control' },
-        serialNumber: { type: 'control' }
-      },
-    },
     mandatee: {
       type: 'group',
       display: 'main',
@@ -105,6 +92,19 @@ export const LearCredentialEmployeeFormSchema: FormSchema = {
         organization: { type: 'control' },
         organizationIdentifier: { type: 'control' },
         serialNumber: { type: 'control' },
+      },
+    },
+    issuer: {
+      type: 'group',
+      display: 'side',
+      fields: {
+        // id: { type: 'control' },
+        organizationIdentifier: { type: 'control'},
+        organization: { type: 'control' },
+        country: { type: 'control' },
+        commonName: { type: 'control' },
+        emailAddress: { type: 'control' },
+        serialNumber: { type: 'control' }
       },
     },
     power: {
