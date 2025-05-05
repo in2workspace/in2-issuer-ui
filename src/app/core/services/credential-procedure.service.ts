@@ -1,6 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {Observable, throwError} from 'rxjs';
+import {Observable, of, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {environment} from 'src/environments/environment';
 import {ProcedureRequest} from '../models/dto/procedure-request.dto';
@@ -12,6 +12,8 @@ import {LEARCredentialEmployee} from '../models/entity/lear-credential-employee.
 import {DialogWrapperService} from "../../shared/components/dialog/dialog-wrapper/dialog-wrapper.service";
 import {TranslateService} from "@ngx-translate/core";
 import {Router} from "@angular/router";
+import { mockCredentialCertification, mockCredentialEmployee, mockCredentialMachine } from 'src/app/features/detail/mocks/detail-mocks';
+import { LearCredentialDataDetail } from 'src/app/features/detail/models/detail-models';
 
 @Injectable({
   providedIn: 'root'
@@ -60,6 +62,19 @@ export class CredentialProcedureService {
       }),
       catchError(this.handleError)
     );
+  }
+
+  public getCredentialProcedureDetailsById(procedureId: string): Observable<LearCredentialDataDetail> {
+    switch (procedureId) {
+      case '1':
+        return of(mockCredentialEmployee);
+      case '2':
+        return of(mockCredentialMachine);
+      case '3':
+        return of(mockCredentialCertification);
+      default:
+        throw new Error(`Unknown mock procedureId: ${procedureId}`);
+    }
   }
 
   public createProcedure(procedureRequest: ProcedureRequest): Observable<void> {

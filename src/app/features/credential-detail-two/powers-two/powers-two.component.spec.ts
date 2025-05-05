@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CredentialFormComponent } from './credential-form.component';
+import { PowersTwoComponent } from './powers-two.component';
 
-describe('CredentialFormComponent', () => {
-  let component: CredentialFormComponent;
-  let fixture: ComponentFixture<CredentialFormComponent>;
+describe('PowersTwoComponent', () => {
+  let component: PowersTwoComponent;
+  let fixture: ComponentFixture<PowersTwoComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CredentialFormComponent]
+      imports: [PowersTwoComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(CredentialFormComponent);
+    fixture = TestBed.createComponent(PowersTwoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

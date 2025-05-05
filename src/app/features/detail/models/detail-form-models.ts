@@ -1,0 +1,155 @@
+// --- Form Schemas ---
+
+export type FormFieldSchema = {
+    type: 'control' | 'group' | 'array';
+    display?: 'main' | 'side'; //should it be displayed in the main space or as a side card?
+    fields?: FormSchema; //for 'group'
+    itemSchema?: FormSchema; // for 'array'
+  };
+  
+  export type FormSchema = Record<string, FormFieldSchema>;
+  
+
+export const LearCredentialEmployeeFormSchema: FormSchema = {
+    issuer: {
+      type: 'group',
+      display: 'side',
+      fields: {
+        id: { type: 'control' },
+        organizationIdentifier: { type: 'control'},
+        organization: { type: 'control' },
+        country: { type: 'control' },
+        commonName: { type: 'control' },
+        emailAddress: { type: 'control' },
+        serialNumber: { type: 'control' }
+      },
+    },
+    mandatee: {
+      type: 'group',
+      display: 'main',
+      fields: {
+        id: { type: 'control' },
+        email: { type: 'control' },
+        firstName: { type: 'control' },
+        lastName: { type: 'control' },
+        mobile_phone: { type: 'control' },
+        nationality: { type: 'control' },
+      },
+    },
+    mandator: {
+      type: 'group',
+      display: 'side',
+      fields: {
+        commonName: { type: 'control' },
+        country: { type: 'control' },
+        emailAddress: { type: 'control' },
+        organization: { type: 'control' },
+        organizationIdentifier: { type: 'control' },
+        serialNumber: { type: 'control' },
+      },
+    },
+    power: {
+      type: 'array',
+      display: 'main', //template expects it to be main
+      itemSchema: {
+        id: { type: 'control' },
+        tmf_action: { type: 'control' },
+        tmf_domain: { type: 'control' },
+        tmf_function: { type: 'control' },
+        tmf_type: { type: 'control' },
+      },
+    },
+  };
+  
+  export const LearCredentialMachineFormSchema: FormSchema = {
+    issuer: {
+      type: 'group',
+      display: 'side',
+      fields: {
+        // id: { type: 'control' },
+        organizationIdentifier: { type: 'control'},
+        organization: { type: 'control' },
+        country: { type: 'control' },
+        commonName: { type: 'control' },
+        emailAddress: { type: 'control' },
+        serialNumber: { type: 'control' }
+      },
+    },
+    mandatee: {
+      type: 'group',
+      display: 'main',
+      fields: {
+        id: { type: 'control' },
+        serviceName: { type: 'control' },
+        serviceType: { type: 'control' },
+        version: { type: 'control' },
+        domain: { type: 'control' },
+        ipAddress: { type: 'control' },
+        description: { type: 'control' },
+        contact: {
+          type: 'group',
+          fields: {
+            email: { type: 'control' },
+            phone: { type: 'control' },
+          },
+        },
+      },
+    },
+    mandator: {
+      type: 'group',
+      display: 'side',
+      fields: {
+        commonName: { type: 'control' },
+        country: { type: 'control' },
+        emailAddress: { type: 'control' },
+        organization: { type: 'control' },
+        organizationIdentifier: { type: 'control' },
+        serialNumber: { type: 'control' },
+      },
+    },
+    power: {
+      type: 'array',
+      display: 'main', //template expects it to be main
+      itemSchema: {
+        id: { type: 'control' },
+        tmf_action: { type: 'control' },
+        tmf_domain: { type: 'control' },
+        tmf_function: { type: 'control' },
+        tmf_type: { type: 'control' },
+      },
+    },
+  };
+  
+  export const VerifiableCertificationFormSchema: FormSchema = {
+    issuer: {
+      type: 'group',
+      display: 'side',
+      fields: {
+        id: { type: 'control' },
+        commonName: { type: 'control' },
+        country: { type: 'control' },
+        organization: { type: 'control' },
+      },
+    },
+    company: {
+      type: 'group',
+      display: 'side',
+      fields: {
+        id: { type: 'control' },
+        commonName: { type: 'control' },
+        organization: { type: 'control' },
+        country: { type: 'control' },
+        email: { type: 'control' },
+        address: { type: 'control' },
+      },
+    },
+    product: {
+      type: 'group',
+      display: 'main',
+      fields: {
+        productId: { type: 'control' },
+        productName: { type: 'control' },
+        productVersion: { type: 'control' },
+      },
+    },
+  };
