@@ -65,17 +65,19 @@
                             }
                           </div>
 
-                        <!-- todo! -->
-                        <!-- @else {
-                          @for (childKey of formKeys(group); track childKey) {
-                            <mat-form-field appearance="fill">
-                              <mat-label>{{ childKey }}</mat-label>
-                              <input matInput [formControlName]="childKey" />
-                            </mat-form-field>
+                        }@else {
+                          @for (group of asFormArray(form.get(key)).controls; track $index) {
+                            <div [formGroupName]="$index">
+                              @for (childKey of formKeys(group); track childKey) {
+                                <mat-form-field appearance="fill">
+                                  <mat-label>{{ childKey }}</mat-label>
+                                  <input matInput [formControlName]="childKey" />
+                                </mat-form-field>
+                              }
+                            </div>
                           }
-                        } -->
-
-                    }
+                        }
+                        
                   </div>
                 }
 
