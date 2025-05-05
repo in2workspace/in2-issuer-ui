@@ -94,17 +94,13 @@ transition: transform 0.2s ease-in-out;
 
 .side-container h2{
   padding: 0px 16px 0px 16px;
-
-  //todo
-  // &.mandator-title{
-  //   padding-left:0px;
-  // }
 }
 
 .side-card {
   border-radius: 5px;
   background: $Light-Blue-Secondary;
   box-shadow: 4px 4px 5px #cacaca, -4px -4px 5px #f6f6f6;
+  height: 100%;
 
   h5 {
     font-size: 16px;
