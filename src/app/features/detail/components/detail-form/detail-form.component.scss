@@ -147,6 +147,9 @@ transition: transform 0.2s ease-in-out;
     mat-card{
       height: 100%;
     }
+    mat-card-content{
+      padding-top: 0px;
+    }
 
   }
 
