@@ -23,10 +23,7 @@ import { DialogWrapperService } from '../dialog/dialog-wrapper/dialog-wrapper.se
     imports: [NgIf, MatFormField, MatSelect, MatSelectTrigger, MatOption, MatButton, NgFor, NgTemplateOutlet, MatSlideToggle, FormsModule, MatMiniFabButton, MatIcon, AsyncPipe, TranslatePipe]
 })
 export class PowerComponent implements OnInit{
-  // set-once-and-don't-change properties
-  @Input() public isDisabled: boolean = false;
-  @Input() public viewMode: 'create' | 'detail' = 'create'; //currently isDisabled and viewMode are interchangeable
-  @Input() public power: TempPower[] = [];
+  // set-once-and-don't-change properties@Input() public power: TempPower[] = [];
   public organizationIdentifierIsIn2: boolean = false;
 
   //streams (form states)
@@ -50,7 +47,6 @@ export class PowerComponent implements OnInit{
   }
 
   public addPower(): void {
-    if (this.isDisabled) return;
     const selectedPower = this.formService.getPlainSelectedPower();
 
     if(this.isOptionDisabled(selectedPower)) return;
@@ -93,7 +89,7 @@ export class PowerComponent implements OnInit{
         break;
     }
 
-    this.formService.addPower(newPower, this.isDisabled);
+    this.formService.addPower(newPower);
     this.formService.setSelectedPowerName('');
   }
 

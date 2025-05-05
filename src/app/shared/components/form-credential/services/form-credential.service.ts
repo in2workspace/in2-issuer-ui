@@ -43,9 +43,7 @@ export class FormCredentialService {
     this.selectedPowerNameSubject.next(powerName);
   }
 
-  public addPower(newPower: TempPower, isDisabled: boolean): void {
-    if (isDisabled) return;
-
+  public addPower(newPower: TempPower): void {
     const addedPowers = structuredClone([...this.getPlainAddedPowers(), newPower]);
     this.setAddedPowers(addedPowers);
   }

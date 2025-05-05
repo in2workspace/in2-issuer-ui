@@ -50,6 +50,7 @@
                   <div [formArrayName]="key">
                     <h2>{{ key | addPrefix: 'credentialDetails.' | translate | capitalize }}</h2>
                 
+                    <!-- POWER -->
                     @if (key === 'power') {
                       <div class="powers-container">
                       @for (group of asFormArray(form.get(key)).controls; let i = $index; track i) {
@@ -70,6 +71,7 @@
                       }
                      </div>
                     }
+                    <!-- NON-POWER ARRAYS (currently there are none) -->
                     @else {
                       @for (group of asFormArray(form.get(key)).controls; let i = $index; track i) {
                         <div [formGroupName]="i">

@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { CredentialManagementComponent } from './credential-management.component';
-import { CredentialDetailComponent } from '../credential-detail/credential-detail.component';
+import { DetailFormComponent } from '../detail/components/detail-form/detail-form.component';
 
 export default [
   {
@@ -9,6 +9,6 @@ export default [
   },
   {
     path: 'details/:id',
-    component: CredentialDetailComponent,
+    component: DetailFormComponent,
   },
 ] as Routes;

@@ -1,4 +1,4 @@
-import { Component, DestroyRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, inject} from '@angular/core';
+import { Component, DestroyRef, Input, OnDestroy, OnInit, ViewChild, inject} from '@angular/core';
 import { FormGroupDirective, FormsModule } from '@angular/forms';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { Country, CountryService } from './services/country.service';
@@ -63,11 +63,7 @@ import { MatIcon } from '@angular/material/icon';
 })
 export class FormCredentialComponent implements OnInit, OnDestroy {
   @ViewChild('formDirective') public formDirective!: FormGroupDirective;
-  @Output() public sendReminder = new EventEmitter<void>();
-  @Output() public signCredential = new EventEmitter<void>();
-  @Input({ required: true }) public viewMode: 'create' | 'detail' = 'create';
   @Input() public asSigner: boolean = false;
-  @Input() public isDisabled: boolean = false;
   @Input() public title: string = '';
   @Input() public power: Power[] = [];
   @Input() public credentialStatus: string = '';
@@ -105,7 +101,7 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(mandator2 => {
         if (mandator2) {
-          if (this.viewMode === "create" && !this.asSigner) {
+          if (!this.asSigner) {
             this.mandator = {
               organizationIdentifier: mandator2.organizationIdentifier,
               organization: mandator2.organization,
@@ -118,9 +114,6 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
         }
       });
 
-    if (this.viewMode === 'detail') {
-      this.tempPowers = this.power.map(power => this.formService.convertToTempPower(power));
-    }
   }
 
   public openSubmitDialog() {
@@ -182,14 +175,6 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
     return this.router.navigate(['/organization/credentials']);
   }
 
-  public triggerSendReminder(): void {
-    this.sendReminder.emit();
-  }
-
-  public triggerSignCredential(): void {
-    this.signCredential.emit();
-  }
-
   public hasSelectedPower(): boolean {
     return this.formService.hasSelectedPower();
   }
@@ -197,15 +182,6 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
   public selectedPowersHaveFunction(): boolean {
     return this.formService.powersHaveFunction();
   }
-
-  public showReminderButton(): boolean {
-    return (this.viewMode === 'detail') && ((this.credentialStatus === 'WITHDRAWN') || (this.credentialStatus === 'DRAFT') || (this.credentialStatus === 'PEND_DOWNLOAD'));
-  }
-
-  public showSignCredentialButton(): boolean{
-    return (this.viewMode === 'detail') && (this.credentialStatus === 'PEND_SIGNATURE')
-  }
-
 
   public ngOnDestroy(): void {
     this.formService.reset();
