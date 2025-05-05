@@ -1,17 +1,12 @@
 import { Routes } from '@angular/router';
 import { AutoLoginPartialRoutesGuard } from 'angular-auth-oidc-client';
 import {basicGuard, settingsGuard} from './core/guards/accessLevel.guard'
-import { DetailFormComponent } from './features/detail/components/detail-form/detail-form.component';
+
 export const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'details' }, //todo
+  { path: '', pathMatch: 'full', redirectTo: 'home' }, //todo
   {
     path: 'home',
     loadChildren: () => import('./features/home/home.routes').then(m => m.default)
-  },
-  // todo
-  {
-    path: 'details/:id',
-    component: DetailFormComponent
   },
   {
     path: 'settings',
@@ -24,6 +19,14 @@ export const routes: Routes = [
       import(
         './features/credential-management/credential-management.routes'
         ).then((m) => m.default),
+    canActivate: [AutoLoginPartialRoutesGuard, basicGuard],
+  },
+  {
+    path: 'organization/credentials/details/:id',
+    loadChildren: () =>
+      import('./features/detail/components/detail-form/detail-form.component').then(
+        (m) => m.DetailFormComponent
+      ),
     canActivate: [AutoLoginPartialRoutesGuard, basicGuard],
   },
   {
