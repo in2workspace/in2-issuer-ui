@@ -131,7 +131,7 @@
     "remaining-time": "Time remaining:",
     "first-step":{
       "title": "Scan the QR code to log in and access the DOME Wallet.",
-      "test-purposes": "For tests purposes, access the"
+      "test-purposes": "For tests purposes, access the "
     },
     "second-step": {
       "title": "Scan the QR code to obtain the credential.",
