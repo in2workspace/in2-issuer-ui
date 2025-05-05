@@ -70,7 +70,10 @@ export class CredentialProcedureService {
     return this.http.get<LearCredentialDataDetail>(
       `${this.organizationProcedures}/${procedureId}/credential-decoded`
     ).pipe(
-      tap(res=>console.log('Obtained procedure: ' + res))
+      tap(res=>{
+        console.log('Obtained procedure: ');
+        console.log(res)
+      })
     );
     
   }
