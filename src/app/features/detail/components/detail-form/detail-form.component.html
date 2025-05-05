@@ -51,10 +51,11 @@
                     <h2>{{ key | addPrefix: 'credentialDetails.' | translate | capitalize }}</h2>
                 
                     @if (key === 'power') {
+                      <div class="powers-container">
                       @for (group of asFormArray(form.get(key)).controls; let i = $index; track i) {
-                        <div [formGroupName]="i" class="powers-container">
+                       
                           <p>{{ group.get('tmf_function')?.value }}</p>
-                          <div class="functions-container">
+                          <div [formGroupName]="i" class="functions-container">
                             <div class="toggles-container">
                               @for (action of getActionsForType(group.get('tmf_function')?.value); track action) {
                                 <mat-slide-toggle
@@ -66,8 +67,8 @@
                               }
                             </div>
                           </div>
-                        </div>
                       }
+                     </div>
                     }
                     @else {
                       @for (group of asFormArray(form.get(key)).controls; let i = $index; track i) {
