@@ -1,7 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Observable, of, throwError} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
+import {catchError, map, tap} from 'rxjs/operators';
 import {environment} from 'src/environments/environment';
 import {ProcedureRequest} from '../models/dto/procedure-request.dto';
 import {ProcedureResponse} from '../models/dto/procedure-response.dto';
@@ -66,16 +66,13 @@ export class CredentialProcedureService {
   }
 
   public getCredentialProcedureDetailsById(procedureId: string): Observable<LearCredentialDataDetail> {
-    switch (procedureId) {
-      case '1':
-        return of(mockCredentialEmployee);
-      case '2':
-        return of(mockCredentialMachine);
-      case '3':
-        return of(mockCredentialCertification);
-      default:
-        throw new Error(`Unknown mock procedureId: ${procedureId}`);
-    }
+    
+    return this.http.get<LearCredentialDataDetail>(
+      `${this.organizationProcedures}/${procedureId}/credential-decoded`
+    ).pipe(
+      tap(res=>console.log('Obtained procedure: ' + res))
+    );
+    
   }
 
   public createProcedure(procedureRequest: ProcedureRequest): Observable<void> {
