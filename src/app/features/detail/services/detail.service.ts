@@ -54,7 +54,7 @@ export class DetailService {
   }
 
   private loadForm(): void {
-    const credential = this.credentialData.credential.vc;
+    const credential = this.credentialData.credential;
     const type = credential.type[0] as CredentialType;
   
     const schema = getFormSchemaByType(type);

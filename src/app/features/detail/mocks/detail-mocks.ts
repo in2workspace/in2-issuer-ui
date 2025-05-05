@@ -4,13 +4,6 @@ export const mockCredentialEmployee: LearCredentialDataDetail = {
   procedure_id: 'mock-procedure-employee',
   credential_status: 'WITHDRAWN',
   credential: {
-    sub: 'subject-id-emp',
-    nbf: '2024-01-01T00:00:00Z',
-    iss: 'issuer-id',
-    exp: '2025-01-01T00:00:00Z',
-    iat: '2024-01-01T00:00:00Z',
-    jti: 'mock-jti-emp',
-    vc: {
       id: 'cred-emp',
       type: ['LEARCredentialEmployee'],
       description: 'Mock employee credential',
@@ -47,7 +40,6 @@ export const mockCredentialEmployee: LearCredentialDataDetail = {
       },
       validFrom: '2024-01-01',
       validUntil: '2025-01-01'
-    }
   }
 };
 
@@ -55,13 +47,6 @@ export const mockCredentialMachine: LearCredentialDataDetail = {
   procedure_id: 'mock-procedure-machine',
   credential_status: 'PEND_SIGNATURE',
   credential: {
-    sub: 'subject-id-mac',
-    nbf: '2024-01-01T00:00:00Z',
-    iss: 'issuer-id',
-    exp: '2025-01-01T00:00:00Z',
-    iat: '2024-01-01T00:00:00Z',
-    jti: 'mock-jti-mac',
-    vc: {
       id: 'cred-mac',
       type: ['LEARCredentialMachine'],
       description: 'Mock machine credential',
@@ -99,7 +84,6 @@ export const mockCredentialMachine: LearCredentialDataDetail = {
       },
       validFrom: '2024-01-01',
       validUntil: '2025-01-01'
-    }
   }
 };
 
@@ -107,13 +91,6 @@ export const mockCredentialCertification: LearCredentialDataDetail = {
   procedure_id: 'mock-procedure-cert',
   credential_status: 'PEND_DOWNLOAD',
   credential: {
-    sub: 'subject-id-cert',
-    nbf: '2024-01-01T00:00:00Z',
-    iss: 'issuer-id',
-    exp: '2025-01-01T00:00:00Z',
-    iat: '2024-01-01T00:00:00Z',
-    jti: 'mock-jti-cert',
-    vc: {
       id: 'cred-cert',
       type: ['VerfiableCertification'],
       issuer: {
@@ -158,6 +135,5 @@ export const mockCredentialCertification: LearCredentialDataDetail = {
         organizationIdentifier: 'SIGN-CERT',
         serialNumber: 'SN-CERT-123'
       }
-    }
   }
 };

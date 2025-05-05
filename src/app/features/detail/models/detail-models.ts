@@ -5,17 +5,7 @@ export type CredentialStatus = 'WITHDRAWN' | 'VALID' | 'EXPIRED' | 'PEND_DOWNLOA
 export interface LearCredentialDataDetail {
   procedure_id: string;
   credential_status: CredentialStatus;
-  credential: LearCredentialJwtPayload;
-}
-
-export interface LearCredentialJwtPayload {
-  sub: string | null;
-  nbf: string;
-  iss: string;
-  exp: string;
-  iat: string;
-  vc: LearCredential;
-  jti: string;
+  credential: LearCredential;
 }
 
 export type LearCredential =
