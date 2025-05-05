@@ -30,10 +30,10 @@ export interface CommonMandator {
 
 export interface Power {
   id: string;
-  tmf_action: TmfAction[];
-  tmf_domain: string;
-  tmf_function: TmfFunction;
-  tmf_type: string;
+  action: TmfAction[];
+  domain: string;
+  function: TmfFunction;
+  type: string;
 }
 
 

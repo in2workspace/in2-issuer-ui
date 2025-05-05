@@ -53,10 +53,10 @@ export const LearCredentialEmployeeFormSchema: FormSchema = {
       display: 'main', //template expects it to be main
       itemSchema: {
         id: { type: 'control' },
-        tmf_action: { type: 'control' },
-        tmf_domain: { type: 'control' },
-        tmf_function: { type: 'control' },
-        tmf_type: { type: 'control' },
+        action: { type: 'control' },
+        domain: { type: 'control' },
+        function: { type: 'control' },
+        type: { type: 'control' },
       },
     },
   };
@@ -112,10 +112,10 @@ export const LearCredentialEmployeeFormSchema: FormSchema = {
       display: 'main', //template expects it to be main
       itemSchema: {
         id: { type: 'control' },
-        tmf_action: { type: 'control' },
-        tmf_domain: { type: 'control' },
-        tmf_function: { type: 'control' },
-        tmf_type: { type: 'control' },
+        action: { type: 'control' },
+        domain: { type: 'control' },
+        function: { type: 'control' },
+        type: { type: 'control' },
       },
     },
   };
