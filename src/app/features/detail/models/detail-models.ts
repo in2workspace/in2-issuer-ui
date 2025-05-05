@@ -1,8 +1,10 @@
 export type CredentialType = 'LEARCredentialEmployee' | 'LEARCredentialMachine' | 'VerfiableCertification';
 
+export type CredentialStatus = 'WITHDRAWN' | 'VALID' | 'EXPIRED' | 'PEND_DOWNLOAD' | 'PEND_SIGNATURE' | 'DRAFT' | 'ISSUED';
+
 export interface LearCredentialDataDetail {
   procedure_id: string;
-  credential_status: string;
+  credential_status: CredentialStatus;
   credential: LearCredentialJwtPayload;
 }
 

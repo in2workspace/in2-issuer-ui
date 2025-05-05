@@ -2,9 +2,9 @@ import { MatCard, MatCardContent } from '@angular/material/card';
 import { AddPrefixPipe } from '../../../../shared/pipes/add-prefix.pipe';
 import { CapitalizePipe } from './../../../../shared/pipes/capitalize.pipe';
 import { DetailService } from './../../services/detail.service';
-import { PowerActionsMap, TmfAction} from './../../models/detail-models';
+import { CredentialStatus, PowerActionsMap, TmfAction} from './../../models/detail-models';
 import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { AbstractControl, FormArray, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { CommonModule } from '@angular/common';
@@ -14,24 +14,32 @@ import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FormSchema } from '../../models/detail-form-models';
 import { MatIcon } from '@angular/material/icon';
+import { MatButton } from '@angular/material/button';
+import { Observable } from 'rxjs';
+import { LoaderService } from 'src/app/core/services/loader.service';
 
 
 @Component({
   standalone: true,
-  imports: [AddPrefixPipe, CapitalizePipe, CommonModule, FormsModule, MatCard, MatCardContent, MatFormField, MatIcon, MatInput, MatLabel, MatSlideToggle, ReactiveFormsModule, TranslatePipe ],
+  imports: [AddPrefixPipe, CapitalizePipe, CommonModule, FormsModule, MatButton, MatCard, MatCardContent, MatFormField, MatIcon, MatInput, MatLabel, MatSlideToggle, ReactiveFormsModule, RouterLink, TranslatePipe ],
   selector: 'app-detail-from',
   templateUrl: './detail-form.component.html',
   styleUrl: './detail-form.component.scss'
 })
 export class DetailFormComponent implements OnInit {
   credentialId!: string;
+  credentialStatus!: CredentialStatus;
   form: FormGroup | undefined;
   formSchema!: FormSchema;
+  public isLoading$: Observable<boolean>;
 
-  private route = inject(ActivatedRoute);
-  private detailService = inject(DetailService);
+  private readonly detailService = inject(DetailService);
+  private readonly loader = inject(LoaderService);
+  private readonly route = inject(ActivatedRoute);
 
-  constructor() {}
+  constructor() {
+    this.isLoading$ = this.loader.isLoading$;
+  }
 
   ngOnInit(): void {
     this.getProcedureId();
@@ -50,11 +58,30 @@ export class DetailFormComponent implements OnInit {
   private initializeForm(): void {
     //todo return form
     this.loadCredentialDetailAndForm();
+    this.credentialStatus = this.detailService.credentialStatus;
     this.form = this.detailService.form;
     this.formSchema = this.detailService.formSchema;
   }
 
+  //SEND REMINDER
+  public openSendReminderDialog(){
+    this.detailService.openSendReminderDialog();
+  }
+
+  // SIGN
+  public openSignCredentialDialog(){
+    this.detailService.openSignCredentialDialog();
+  }
+
   //template functions
+  public showReminderButton(): boolean {
+    return (this.credentialStatus === 'WITHDRAWN') || (this.credentialStatus === 'DRAFT') || (this.credentialStatus === 'PEND_DOWNLOAD');
+  }
+
+  public showSignCredentialButton(): boolean{
+    return this.credentialStatus === 'PEND_SIGNATURE';
+  }
+
   formKeys(group: any): string[] {
     return Object.keys(group.controls);
   }

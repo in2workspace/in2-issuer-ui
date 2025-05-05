@@ -4,34 +4,10 @@
   display:block;
   max-width:100%;
 }
+
 ::ng-deep {
   .cdk-overlay-pane{
   width:auto !important;
-}
-
-.back-button{
-  background-color: transparent;
-  border: none;
-  padding: 0;
-  position: absolute;
-  top: 83px;
-  left: 12px;
-  color: inherit;
-  text-decoration: none;
-  cursor: pointer;
-  transition: transform 0.2s ease-in-out;
-
-  .back-icon{
-    display: block;
-    width: 40px;
-    height: 40px;
-    font-size: 40px;
-    fill: black;
-  }
-}
-.back-button:hover{
-transform: translateX(-3px);
-transition: transform 0.2s ease-in-out;
 }
 
 //disabled input
@@ -59,8 +35,31 @@ transition: transform 0.2s ease-in-out;
 //   }
 // }
 }
-
 //END ng-deep
+.back-button{
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  position: absolute;
+  top: 83px;
+  left: 12px;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+
+  .back-icon{
+    display: block;
+    width: 40px;
+    height: 40px;
+    font-size: 40px;
+    fill: black;
+  }
+}
+.back-button:hover{
+transform: translateX(-3px);
+transition: transform 0.2s ease-in-out;
+}
 
 .page-container{
   padding: 50px 16px 24px 16px;
@@ -221,10 +220,37 @@ transition: transform 0.2s ease-in-out;
     }
   }
 
+  // BUTTONS
+.buttons-container{
+  display:flex;
+  gap: 12px;
+  padding-top:22px;
+
+  .mat-mdc-raised-button[disabled], .mat-mdc-raised-button.mat-mdc-button-disabled.cancel-button{
+    background-color: rgba($Blue, 0.4);
+    color: $White;
+  }
+}
+
+
 
 
 @media (width < 480px){
   .mat-mdc-form-field{
     width:150px;
+  }
+}
+
+@media(width > 1150px){
+
+  .back-button{
+    top: 139px;
+    left: 23px;
+  }
+
+  .back-icon{
+    width: 40px;
+    height: 40px;
+    font-size: 40px;
   }
 }

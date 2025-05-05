@@ -2,7 +2,7 @@ import { LearCredentialDataDetail } from '../models/detail-models';
 
 export const mockCredentialEmployee: LearCredentialDataDetail = {
   procedure_id: 'mock-procedure-employee',
-  credential_status: 'active',
+  credential_status: 'WITHDRAWN',
   credential: {
     sub: 'subject-id-emp',
     nbf: '2024-01-01T00:00:00Z',
@@ -53,7 +53,7 @@ export const mockCredentialEmployee: LearCredentialDataDetail = {
 
 export const mockCredentialMachine: LearCredentialDataDetail = {
   procedure_id: 'mock-procedure-machine',
-  credential_status: 'active',
+  credential_status: 'PEND_SIGNATURE',
   credential: {
     sub: 'subject-id-mac',
     nbf: '2024-01-01T00:00:00Z',
@@ -105,7 +105,7 @@ export const mockCredentialMachine: LearCredentialDataDetail = {
 
 export const mockCredentialCertification: LearCredentialDataDetail = {
   procedure_id: 'mock-procedure-cert',
-  credential_status: 'active',
+  credential_status: 'PEND_DOWNLOAD',
   credential: {
     sub: 'subject-id-cert',
     nbf: '2024-01-01T00:00:00Z',
