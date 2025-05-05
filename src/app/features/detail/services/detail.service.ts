@@ -63,6 +63,8 @@ export class DetailService {
   
     this.form = buildFormFromSchema(this.fb, schema, data);
     this.form.disable();
+    console.log('Form has been loaded: ');
+    console.log(this.form);
   }
 
 

@@ -61,6 +61,8 @@ export class DetailFormComponent implements OnInit {
     this.credentialStatus = this.detailService.credentialStatus;
     this.form = this.detailService.form;
     this.formSchema = this.detailService.formSchema;
+    console.log('Form schema: ' + this.formSchema)
+    console.log('Credential status: ' + this.credentialStatus)
   }
 
   //SEND REMINDER
