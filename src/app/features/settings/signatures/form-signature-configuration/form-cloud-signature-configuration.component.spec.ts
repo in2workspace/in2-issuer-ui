@@ -42,7 +42,7 @@ describe('FormCloudSignatureConfigurationComponent (standalone)', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
       });
- 
+
 
   it('should create the component', () => {
     expect(component).toBeTruthy();
@@ -65,7 +65,7 @@ describe('FormCloudSignatureConfigurationComponent (standalone)', () => {
     expect(component.cloudProviderCredential.get('secret')?.value).toBe('');
   });
 
- 
+
 
   it('should mark form as touched', () => {
     const spy = jest.spyOn(component.cloudProviderCredential, 'markAllAsTouched');
@@ -83,6 +83,48 @@ describe('FormCloudSignatureConfigurationComponent (standalone)', () => {
     });
     expect(component.isValid()).toBe(true);
   });
+  describe('onProviderChange()', () => {
+    const TEST_PROVIDERS = [
+      { id: 'orig-id', requiresTOTP: false, name: 'Original' },
+      { id: 'new-id', requiresTOTP: true, name: 'NewProvider' }
+    ] as any[];
 
- 
+    beforeEach(() => {
+      // override the loaded providers so we control requiresTOTP
+      component.cloudProviders = TEST_PROVIDERS;
+      // ensure secret placeholder is set
+      component.cloudProviderCredential.get('secret')!.setValue(SECRET_INITIAL_VALUE);
+    });
+
+    it('should clear placeholder, keep requiresTOTP false when selecting the original provider', () => {
+      // mockDataCredential.id === 'orig-id'
+      component.onProviderChange('orig-id');
+
+      const secretCtrl = component.cloudProviderCredential.get('secret')!;
+      // clearOnFocus should have run
+      expect(secretCtrl.value).toBe('');
+      // because it's the same as original, requiresTOTP stays false
+      expect(component.requiresTOTP).toBe(false);
+      // validators should be cleared
+      secretCtrl.setValue('');
+      secretCtrl.updateValueAndValidity();
+      expect(secretCtrl.hasError('required')).toBe(false);
+    });
+
+    it('should clear placeholder, set requiresTOTP true and add required validator for new provider', () => {
+      component.onProviderChange('new-id');
+
+      const secretCtrl = component.cloudProviderCredential.get('secret')!;
+      // placeholder cleared
+      expect(secretCtrl.value).toBe('');
+      // new provider requires TOTP
+      expect(component.requiresTOTP).toBe(true);
+      // required validator was added
+      secretCtrl.setValue('');
+      secretCtrl.updateValueAndValidity();
+      expect(secretCtrl.hasError('required')).toBe(true);
+      // and no other errors
+      expect(Object.keys(secretCtrl.errors!)).toEqual(['required']);
+    });
+  });
 });
