@@ -2,17 +2,16 @@ import { MatCard, MatCardContent } from '@angular/material/card';
 import { AddPrefixPipe } from '../../../../shared/pipes/add-prefix.pipe';
 import { CapitalizePipe } from './../../../../shared/pipes/capitalize.pipe';
 import { DetailService } from './../../services/detail.service';
-import { CredentialStatus, PowerActionsMap, TmfAction} from './../../models/detail-models';
-import { Component, inject, OnInit } from '@angular/core';
+import { PowerActionsMap, TmfAction} from './../../models/detail-models';
+import { Component, computed, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { AbstractControl, FormArray, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormArray, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { CommonModule } from '@angular/common';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FormSchema } from '../../models/detail-form-models';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton } from '@angular/material/button';
 import { Observable } from 'rxjs';
@@ -22,32 +21,42 @@ import { LoaderService } from 'src/app/core/services/loader.service';
 @Component({
   standalone: true,
   imports: [AddPrefixPipe, CapitalizePipe, CommonModule, FormsModule, MatButton, MatCard, MatCardContent, MatFormField, MatIcon, MatInput, MatLabel, MatSlideToggle, ReactiveFormsModule, RouterLink, TranslatePipe ],
+  providers:[DetailService],
   selector: 'app-detail-from',
   templateUrl: './detail-form.component.html',
   styleUrl: './detail-form.component.scss'
 })
 export class DetailFormComponent implements OnInit {
-  credentialId!: string;
-  credentialStatus!: CredentialStatus;
-  form: FormGroup | undefined;
-  formSchema!: FormSchema;
   public isLoading$: Observable<boolean>;
-
+  
   private readonly detailService = inject(DetailService);
   private readonly loader = inject(LoaderService);
   private readonly route = inject(ActivatedRoute);
+
+  public credentialStatus = this.detailService.credentialStatus;
+  public form = this.detailService.form;
+  public formSchema = this.detailService.formSchema;
+
+  public showReminderButton = computed(()=>{
+    return (this.credentialStatus() === 'WITHDRAWN') || (this.credentialStatus() === 'DRAFT') || (this.credentialStatus() === 'PEND_DOWNLOAD');
+  })
+
+  public showSignCredentialButton = computed(()=>{
+    return this.credentialStatus() === 'PEND_SIGNATURE';
+  });
 
   constructor() {
     this.isLoading$ = this.loader.isLoading$;
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.getProcedureId();
     this.initializeForm();
   }
   
   private getProcedureId(): void {
-    this.detailService.credentialId = this.route.snapshot.paramMap.get('id')!;
+    const id = this.route.snapshot.paramMap.get('id')!;
+    this.detailService.setCredentialId(id);
   }
   
 
@@ -58,11 +67,6 @@ export class DetailFormComponent implements OnInit {
   private initializeForm(): void {
     //todo return form
     this.loadCredentialDetailAndForm();
-    this.credentialStatus = this.detailService.credentialStatus;
-    this.form = this.detailService.form;
-    this.formSchema = this.detailService.formSchema;
-    console.log('Form schema: ' + this.formSchema)
-    console.log('Credential status: ' + this.credentialStatus)
   }
 
   //SEND REMINDER
@@ -76,14 +80,6 @@ export class DetailFormComponent implements OnInit {
   }
 
   //template functions
-  public showReminderButton(): boolean {
-    return (this.credentialStatus === 'WITHDRAWN') || (this.credentialStatus === 'DRAFT') || (this.credentialStatus === 'PEND_DOWNLOAD');
-  }
-
-  public showSignCredentialButton(): boolean{
-    return this.credentialStatus === 'PEND_SIGNATURE';
-  }
-
   formKeys(group: any): string[] {
     return Object.keys(group.controls);
   }

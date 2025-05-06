@@ -3,27 +3,28 @@
 </button>
 <div class="page-container">
   <h1>{{ "title" | addPrefix: 'credentialDetails.' | translate | capitalize }}</h1>
-    @if (form) {
-      <form [formGroup]="form" class="details-container">
+
+    @if (form() && formSchema()) {
+      <form [formGroup]="form()!" class="details-container">
 
         <!-- MAIN CONTAINER -->
         <div class="main-container">
           <mat-card>
             <mat-card-content>
-          @for (key of formKeys(form); track key) {
-            @if (formSchema[key].display !== 'side') {
-              @switch (getControlType(form.get(key))) {
+          @for (key of formKeys(form()!); track key) {
+            @if (formSchema()![key]?.display !== 'side') {
+              @switch (getControlType(form()!.get(key))) {
 
                 @case ('group') {
                   <div [formGroupName]="key">
                     <h2>{{ key | addPrefix: 'credentialDetails.' | translate | capitalize }}</h2>
-                    @for (childKey of formKeys(form.get(key)); track childKey) {
-                      @switch (getControlType(form.get(key)!.get(childKey))) {
+                    @for (childKey of formKeys(form()!.get(key)); track childKey) {
+                      @switch (getControlType(form()!.get(key)!.get(childKey))) {
 
                         @case ('group') {
                           <div [formGroupName]="childKey">
                             <h3>{{ childKey | addPrefix: 'credentialDetails.' | translate | capitalize }}</h3>
-                            @for (grandChildKey of formKeys(form.get(key)!.get(childKey)); track grandChildKey) {
+                            @for (grandChildKey of formKeys(form()!.get(key)!.get(childKey)); track grandChildKey) {
                               <mat-form-field appearance="fill">
                                 <mat-label>{{ grandChildKey | addPrefix: 'credentialDetails.' | translate | capitalize }}</mat-label>
                                 <input matInput [formControlName]="grandChildKey" />
@@ -53,14 +54,14 @@
                     <!-- POWER -->
                     @if (key === 'power') {
                       <div class="powers-container">
-                      @for (group of asFormArray(form.get(key)).controls; let i = $index; track i) {
+                      @for (group of asFormArray(form()!.get(key)).controls; let i = $index; track i) {
                        
-                          <p>{{ group.get('tmf_function')?.value }}</p>
+                          <p>{{ group.get('function')?.value }}</p>
                           <div [formGroupName]="i" class="functions-container">
                             <div class="toggles-container">
-                              @for (action of getActionsForType(group.get('tmf_function')?.value); track action) {
+                              @for (action of getActionsForType(group.get('function')?.value); track action) {
                                 <mat-slide-toggle
-                                  [checked]="group.get('tmf_action')?.value.includes(action)"
+                                  [checked]="group.get('action')?.value.includes(action)"
                                   disabled
                                   color="primary">
                                   {{ action }}
@@ -73,7 +74,7 @@
                     }
                     <!-- NON-POWER ARRAYS (currently there are none) -->
                     @else {
-                      @for (group of asFormArray(form.get(key)).controls; let i = $index; track i) {
+                      @for (group of asFormArray(form()!.get(key)).controls; let i = $index; track i) {
                         <div [formGroupName]="i">
                           @for (childKey of formKeys(group); track childKey) {
                             <mat-form-field appearance="fill">
@@ -126,28 +127,28 @@
 
         <!-- SIDE CONTAINER (as plain text) -->
         <div class="side-container">
-          @for (key of formKeys(form); track key) {
-            @if (formSchema[key].display === 'side') {
-              @switch (getControlType(form.get(key))) {
+          @for (key of formKeys(form()); track key) {
+            @if (formSchema()![key].display === 'side') {
+              @switch (getControlType(form()!.get(key))) {
 
                 @case ('group') {
                   <div class="side-card">
                     <h2>{{ key | addPrefix: 'credentialDetails.' | translate | capitalize }}</h2>
                     <mat-card-content>
-                    @for (childKey of formKeys(form.get(key)); track childKey) {
-                      @switch (getControlType(form.get(key)!.get(childKey))) {
+                    @for (childKey of formKeys(form()!.get(key)); track childKey) {
+                      @switch (getControlType(form()!.get(key)!.get(childKey))) {
 
                         @case ('group') {
                             <h3>{{ childKey | addPrefix: 'credentialDetails.' | translate | capitalize }}</h3>
-                            @for (grandChildKey of formKeys(form.get(key)!.get(childKey)); track grandChildKey) {
+                            @for (grandChildKey of formKeys(form()!.get(key)!.get(childKey)); track grandChildKey) {
                               <h5>{{ grandChildKey | addPrefix: 'credentialDetails.' | translate | capitalize }}</h5>
-                              <p>{{ form.get(key)!.get(childKey)!.get(grandChildKey)!.value }}</p>
+                              <p>{{ form()!.get(key)!.get(childKey)!.get(grandChildKey)!.value }}</p>
                             }
                           }
                           
                           @case ('control') {
                             <h5>{{ childKey | addPrefix: 'credentialDetails.' | translate | capitalize }}</h5>
-                            <p>{{ form.get(key)!.get(childKey)!.value }}</p>
+                            <p>{{ form()!.get(key)!.get(childKey)!.value }}</p>
                           }
                           
                         }
@@ -159,7 +160,7 @@
                 @case ('array') {
                   <div class="side-card">
                     <h2>{{ key | addPrefix: 'credentialDetails.' | translate | capitalize }}</h2>
-                    @for (group of asFormArray(form.get(key)).controls; track $index) {
+                    @for (group of asFormArray(form()!.get(key)).controls; track $index) {
                       <mat-card-content>
                         @for (childKey of formKeys(group); track childKey) {
                           <h5>{{ childKey }}</h5>
