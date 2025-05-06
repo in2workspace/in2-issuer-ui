@@ -18,7 +18,7 @@ import {DISPLAYED_COLUMNS, SECRET_INITIAL_VALUE,SPECIAL_EDIT_FIELDS, SECRETS_FIE
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ComponentPortal } from '@angular/cdk/portal';
-import { DATA_CREDENTIAL, FormCloudSignatureConfigurationComponent, FORM_MODE } from './form-signature-configuration/form-cloud-signature-configuration.component'; 
+import { DATA_CREDENTIAL, FormCloudSignatureConfigurationComponent, FORM_MODE } from './form-signature-configuration/form-cloud-signature-configuration.component';
 import { ActivatedRoute } from '@angular/router';
 import { LoaderService } from 'src/app/core/services/loader.service';
 
@@ -37,11 +37,11 @@ export class SignaturesComponent  {
   enableRemoteSignature: boolean = false;
   signatureModes: string[] = Object.values(SignatureMode);
   displayedColumns: string[] = DISPLAYED_COLUMNS;
-  private readonly configurationService = inject(ConfigurationService); 
-  private readonly signatureConfigService = inject(SignatureConfigurationService); 
+  private readonly configurationService = inject(ConfigurationService);
+  private readonly signatureConfigService = inject(SignatureConfigurationService);
   private readonly dialog = inject(DialogWrapperService);
   private readonly translate = inject(TranslateService);
-  private route = inject(ActivatedRoute);
+  private readonly route = inject(ActivatedRoute);
   initialConfig: SignatureConfigPayload | null = null;
   private readonly loader = inject(LoaderService);
 
@@ -53,16 +53,16 @@ export class SignaturesComponent  {
 
   constructor(){
       const resolvedSignatureConfig  = this.route.snapshot.data['signatureData'];
-    
+
       const config = resolvedSignatureConfig ?.config;
       const credentials = resolvedSignatureConfig ?.credentialList;
-  
+
       if (config) {
         this.signatureMode = config.signatureMode;
         this.enableRemoteSignature = config.enableRemoteSignature;
         this.initialConfig = { ...config };
       }
-  
+
       this.signatureConfigDataSource.data = credentials ?? [];
   }
 
@@ -92,11 +92,11 @@ export class SignaturesComponent  {
 
   private createFormInjector(mode: FormMode, credential?: SignatureConfigurationResponse): Injector {
     const providers: StaticProvider[] = [{ provide: FORM_MODE, useValue: mode }];
-  
+
     if (credential && mode === 'edit') {
       providers.push({ provide: DATA_CREDENTIAL, useValue: credential });
     }
-  
+
     return Injector.create({
       providers,
       parent: this.viewContainerRef.injector
@@ -110,22 +110,22 @@ export class SignaturesComponent  {
       enableRemoteSignature: true,
     };
   }
-  
+
   private buildUpdatePayload(formValue: UpdateSignatureConfigurationRequest,signatureConfigInit: SignatureConfigurationResponse): Partial<UpdateSignatureConfigurationRequest> {
-    
+
     const entries: [keyof UpdateSignatureConfigurationRequest, string][] = [];
-  
+
     for (const key of Object.keys(formValue) as (keyof UpdateSignatureConfigurationRequest)[]) {
       const currentValue = formValue[key];
-  
+
       if (currentValue === SECRET_INITIAL_VALUE ||currentValue === '' || currentValue == null) continue;
-      
-  
+
+
       if (SECRETS_FIELDS.has(key) || SPECIAL_EDIT_FIELDS.has(key)) {
         entries.push([key, currentValue as string]);
         continue;
       }
-  
+
       if (key in signatureConfigInit) {
         const originalValue = signatureConfigInit[key as keyof SignatureConfigurationResponse];
         if (originalValue !== currentValue) {
@@ -133,31 +133,31 @@ export class SignaturesComponent  {
         }
       }
     }
-  
+
     return Object.fromEntries(entries) as Partial<UpdateSignatureConfigurationRequest>;
   }
-  
- 
+
+
   private handleCreate(formValue: any): Observable<any> {
     const payload = this.buildCreatePayload(formValue);
     return this.signatureConfigService.addCredentialConfiguration(payload);
   }
-  
+
   private handleEdit(formValue: any, credential: SignatureConfigurationResponse): Observable<any> {
     let payload = this.buildUpdatePayload(formValue, credential);
      //If you only wrote the reason but didn't edit anything, it means there are no changes.
-    if (!Object.keys(payload).length 
+    if (!Object.keys(payload).length
       || (Object.keys(payload).length === 1 && payload?.rationale)) {
       return of({ noChanges: true });
     }
     return this.signatureConfigService.updateConfiguration(credential.id, payload);
   }
-  
+
   private handleDelete(formValue: any, credential: SignatureConfigurationResponse): Observable<any> {
     const rationale = formValue?.rationale;
     return this.signatureConfigService.deleteSignatureConfiguration(credential.id, rationale);
   }
-  
+
 
   private getAsyncOperation(
     mode: FormMode,
@@ -167,29 +167,29 @@ export class SignaturesComponent  {
       switch (mode) {
         case 'create':
           return this.handleCreate(formValue);
-  
+
         case 'edit':
-          return credential 
+          return credential
             ? this.handleEdit(formValue, credential)
             : of(null);
-  
+
         case 'delete':
           return credential
             ? this.handleDelete(formValue, credential)
             : of(null);
-  
+
         default:
           return of(null);
       }
     };
   }
-  
-  
+
+
   openCredentialDialog(mode: FormMode, title: string, credential?: SignatureConfigurationResponse): void {
     const injector = this.createFormInjector(mode, credential);
-    
+
     const formPortal = new ComponentPortal(FormCloudSignatureConfigurationComponent, null, injector);
-  
+
     const dialogData: DialogData = {
       title,
       message: '',
@@ -199,20 +199,20 @@ export class SignaturesComponent  {
       confirmationLabel: this.translate.instant('dialog.save'),
       style: 'responsive-dialog'
     };
-  
+
     const validateForm = (formInst: any) => formInst.isValid();
     const getFormValue = (formInst: any) => formInst.getFormValue();
-  
+
     const asyncOperation = this.getAsyncOperation(mode, credential);
-  
+
     const dialogRef = this.dialog.openDialogWithForm(dialogData, validateForm, getFormValue, asyncOperation);
-  
+
     dialogRef.afterClosed().subscribe(() => {
       this.reloadCredentialList();
     });
   }
-  
-  
+
+
   reloadCredentialList(): void {
     //At the moment the cloud is fixed, which is the only one that can be edited.
     this.signatureConfigService.getAllConfiguration(SignatureMode.CLOUD).subscribe({
@@ -225,7 +225,7 @@ export class SignaturesComponent  {
       }
     });
   }
-  
+
 
   saveConfiguration() {
     if(!this.initialConfig){

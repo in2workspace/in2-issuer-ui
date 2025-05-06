@@ -27,7 +27,7 @@ export class DialogWrapperService {
   //similar to openDialog, but with a predefined error data
   //if a dialog is already open, it will update its data instead of opening a new one
   public openErrorInfoDialog(message: string, title?: string): MatDialogRef<DialogComponent, any>{
-    const errorDialogData: DialogData = { 
+    const errorDialogData: DialogData = {
       title: title ?? 'Error',
       message: message,
       confirmationType: 'none',
@@ -52,8 +52,8 @@ export class DialogWrapperService {
   //which will be immediately closed by the next callback of openDialogWithCallback if the error flow is cut.
   public openDialogWithCallback(dialogData: DialogData, callback: observableCallback, cancelCallback?: () => Observable<any>, disableClose?:'DISABLE_CLOSE'):  MatDialogRef<DialogComponent, any>{
     const dialogRef = this.dialog.open(
-      DialogComponent, 
-      { 
+      DialogComponent,
+      {
         data: { ...dialogData },
         autoFocus: false,
         disableClose: disableClose === 'DISABLE_CLOSE'
@@ -66,13 +66,13 @@ export class DialogWrapperService {
       confirmObservable = dialogRef.afterClosed();
     }else if(dialogData.confirmationType === 'async'){
       confirmObservable = dialogRef.componentInstance.afterConfirm$()
-        .pipe(tap(() => { 
+        .pipe(tap(() => {
           const loadingData = dialogData.loadingData;
           if(loadingData){
             dialogRef.componentInstance.updateData(loadingData);
           }
           dialogRef.disableClose=true;
-          this.loader.updateIsLoading(true); 
+          this.loader.updateIsLoading(true);
         }));
     }else{
       return dialogRef;
@@ -85,7 +85,7 @@ export class DialogWrapperService {
         })
       )
       .subscribe({
-        next: () => { 
+        next: () => {
           if(dialogRef?.close){
             dialogRef.close();
           }
@@ -93,7 +93,7 @@ export class DialogWrapperService {
         error: err => {
           console.error(err);
         },
-        complete: () => { 
+        complete: () => {
           if(dialogRef?.close){
             dialogRef.close();
           }
@@ -105,10 +105,10 @@ export class DialogWrapperService {
 
       if(cancelCallback){
         dialogRef.afterClosed().pipe(
-          take(1), 
+          take(1),
           filter(val => val === false),
           switchMap(cancelCallback)).subscribe({
-          next: () => { 
+          next: () => {
             console.info('Cancel callback completed');
           },
           error: err => {
@@ -124,15 +124,15 @@ export class DialogWrapperService {
   }
 
   public openDialogWithForm<TFormValue>(
-    dialogData: DialogData,                               
-    validateForm: (formInstance: any) => boolean,         
-    getFormValue: (formInstance: any) => TFormValue,     
+    dialogData: DialogData,
+    validateForm: (formInstance: any) => boolean,
+    getFormValue: (formInstance: any) => TFormValue,
     asyncOperation: (formValue: TFormValue) => Observable<any>
   ): MatDialogRef<DialogComponent, any> {
 
     const dialogRef = this.dialog.open(
-      DialogComponent, 
-      { 
+      DialogComponent,
+      {
         data: { ...dialogData },
         autoFocus: false,
         disableClose: true
@@ -155,12 +155,12 @@ export class DialogWrapperService {
       const formValue = getFormValue(formInstance);
       asyncOperation(formValue).subscribe({
         next: (res) => {
-          if (res && res.noChanges) {
+          if (res?.noChanges) {
             //Another logic not yet established could be implemented.
             console.info('There are no changes to update.');
           }
           dialogRef.close();
-          this.loader.updateIsLoading(false);    
+          this.loader.updateIsLoading(false);
         },
         error: (err) => {
           console.error('Error executing asyncOperation', err);
@@ -170,7 +170,7 @@ export class DialogWrapperService {
     });
     return dialogRef;
   }
- 
+
   private executeCallbackOnCondition(callback: observableCallback, condition: boolean): Observable<any> {
     if(condition){
       return callback();
