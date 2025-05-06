@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
 @Injectable({ providedIn: 'root' })
 export class ConfigurationRepository {
   private readonly http = inject(HttpClient);
-  private readonly configurationUrl = environment.base_url+API_PATH.CONFIGURATION;
+  private readonly configurationUrl = environment.server_url+API_PATH.CONFIGURATION;
 
   saveConfig(payload: SignatureConfigPayload): Observable<void> {
     return this.http.post<void>(this.configurationUrl, payload);
@@ -18,7 +18,7 @@ export class ConfigurationRepository {
   }
 
   updateConfiguration(payload: Partial<SignatureConfigPayload>): Observable<void> {
-    return this.http.patch<void>(this.configurationUrl, payload); 
+    return this.http.patch<void>(this.configurationUrl, payload);
   }
 
 

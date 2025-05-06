@@ -7,9 +7,9 @@ import { environment } from 'src/environments/environment';
 @Injectable({ providedIn: 'root' })
 export class ProviderRepository {
   private readonly http = inject(HttpClient);
-  private readonly configurationUrl = environment.base_url+API_PATH.CLOUD_PROVIDER;
+  private readonly configurationUrl = environment.server_url+API_PATH.CLOUD_PROVIDER;
 
-  
+
 
   getAllCloudProvider(): Observable<CloudProvider[]> {
     return this.http.get<CloudProvider[]>(this.configurationUrl);

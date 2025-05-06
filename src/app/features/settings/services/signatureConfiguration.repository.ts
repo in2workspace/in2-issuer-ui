@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
 @Injectable({ providedIn: 'root' })
 export class SignatureConfigurationRepository {
   private readonly http = inject(HttpClient);
-  private readonly configurationUrl = environment.base_url+API_PATH.SIGNATURE_CONFIG;
+  private readonly configurationUrl = environment.server_url+API_PATH.SIGNATURE_CONFIG;
 
   saveSignatureConfiguration(payload: SignatureConfigurationRequest): Observable<void> {
     return this.http.post<void>(this.configurationUrl, payload);
@@ -24,13 +24,13 @@ export class SignatureConfigurationRepository {
   }
 
   updateSignatureConfiguration(id:string, payload: Partial<SignatureConfigurationRequest>): Observable<void> {
-    return this.http.patch<void>(this.configurationUrl+`/${id}`, payload); 
+    return this.http.patch<void>(this.configurationUrl+`/${id}`, payload);
   }
 
  deleteSignatureConfiguration(id: string, rationale:string): Observable<void> {
     const params = new HttpParams().set('rationale', rationale);
-    return this.http.delete<void>(this.configurationUrl+`/${id}`, { params }); 
-    
+    return this.http.delete<void>(this.configurationUrl+`/${id}`, { params });
+
   }
 
   addCredentialConfiguration(config: SignatureConfigurationRequest): Observable<void> {
