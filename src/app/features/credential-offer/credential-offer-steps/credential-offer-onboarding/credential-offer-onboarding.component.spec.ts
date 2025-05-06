@@ -3,6 +3,7 @@ import { CredentialOfferOnboardingComponent } from './credential-offer-onboardin
 import { TranslateModule } from '@ngx-translate/core';
 import { QRCodeModule } from 'angularx-qrcode';
 import { environment } from 'src/environments/environment';
+import {API} from "../../../../core/constants/api.constants";
 
 describe('CredentialOfferOnboardingComponent', () => {
   let component: CredentialOfferOnboardingComponent;
@@ -31,35 +32,23 @@ describe('CredentialOfferOnboardingComponent', () => {
 
     const fixture = TestBed.createComponent(CredentialOfferOnboardingComponent);
     const testComponent = fixture.componentInstance;
-    
+
     expect(testComponent.walletUrl).toBe('https://wallet.dome-marketplace-prd.org/');
 
     environment.wallet_url = originalWalletUrl;
   });
 
   it('should initialize walletTestUrl with the value from the environment', () => {
-    const expectedTestUrl = environment.wallet_url_test;
+    const expectedTestUrl = API.WALLET_URL_TEST;
     expect(component.walletTestUrl).toBe(expectedTestUrl);
   });
 
-  it('should initialize walletTestUrl with default URL if environment.wallet_url_test is undefined', () => {
-    const originalWalletTestUrl = environment.wallet_url_test;
-    environment.wallet_url_test = undefined as any;
-
-    const fixture = TestBed.createComponent(CredentialOfferOnboardingComponent);
-    const testComponent = fixture.componentInstance;
-    
-    expect(testComponent.walletTestUrl).toBe('https://wallet.dome-marketplace-prd.org/');
-
-    environment.wallet_url_test = originalWalletTestUrl;
-  });
-
-  it('should get profile', () => {
-    expect(component.profile).toBe(environment.profile);
+  it('should get showWalletSameDeviceUrlTest', () => {
+    expect(component.showWalletSameDeviceUrlTest).toBe(API.SHOW_WALLET_URL_TEST);
   });
 
   it('should initialize walletUsersGuideUrl with the correct value from the environment', () => {
-    const expectedGuideUrl = environment.knowledge.base_url + "books/dome-digital-wallet-user-guide";
+    const expectedGuideUrl = environment.knowledge_base_url + "/books/dome-digital-wallet-user-guide";
     expect(component.walletUsersGuideUrl).toBe(expectedGuideUrl);
   });
 

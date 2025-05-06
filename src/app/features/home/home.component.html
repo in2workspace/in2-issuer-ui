@@ -6,14 +6,14 @@
           <a href="/">
             <img
               class="logo"
-              src="../../../assets/logos/logo-dome-issuer-reduced.png"
+              [src]="logoSrc"
               alt="DOME Logo"
             />
           </a>
         </div>
         <ul class="navbar-nav">
           <li class="nav-item">
-            <a class="nav-link" [href]="knowledgebase_url" target="_blank" rel="noopener noreferrer" tabindex="0">Docs</a>
+            <a class="nav-link" [href]="knowledge_base_url" target="_blank" rel="noopener noreferrer" tabindex="0">Docs</a>
           </li>
         </ul>
       </nav>
@@ -23,9 +23,9 @@
       <div class="cover-content">
         <h1>{{ "home.title" | translate }}</h1>
         <div class="scroll-indicator">
-          <a class="btn btn-primary" [href]="knowledgebase_url" target="_blank" rel="noopener noreferrer" tabindex="0">
+          <a class="btn btn-primary" [href]="knowledge_base_url" target="_blank" rel="noopener noreferrer" tabindex="0">
             {{ "home.learn-more" | translate }}
-            <img src="../../../assets/icon/fletxa_dreta.png" alt="arrow">
+            <img src="../../../assets/icons/arrow-right.png" alt="arrow">
           </a>
           <p class="scroller">{{ "home.scroll" | translate }}</p>
           <a class="btn btn-link" (click)="navigateToSection('about-section')">
@@ -72,7 +72,7 @@
       </p>
       <ul>
         <li [innerHTML]="'home.intro-first' | translate">
-          
+
         </li>
         <li [innerHTML]="'home.intro-second' | translate">
         </li>
@@ -99,7 +99,7 @@
   <section class="content-section wallet-section">
     <div class="wallet-info-container">
       <div class="wallet-info-qr">
-        <img class="wallet-logo" src="../../../assets/icon/wallet.png" alt="wallet">
+        <img class="wallet-logo" src="../../../assets/icons/wallet.png" alt="wallet">
         <h2>{{ "home.obtain-wallet-title" | translate }}</h2>
         <p>{{ "home.obtain-wallet-intro" | translate }}</p>
         <p>{{ "home.obtain-wallet-detail" | translate }}</p>
@@ -111,7 +111,7 @@
       </div>
     </div>
   </section>
-  
+
   <footer class="main-footer">
     <span>
       <p>
@@ -126,9 +126,9 @@
     </span>
     <span>
       <a href="https://github.com/evidenceledger/domeissuer" target="_blank" rel="noopener noreferrer" tabindex="0">
-        <img class="footer-logo" src="assets/icon/github.png" alt="GitHub">
+        <img class="footer-logo" src="assets/icons/github.png" alt="GitHub">
       </a>
     </span>
   </footer>
-  
+
 </div>
