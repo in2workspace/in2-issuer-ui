@@ -128,7 +128,7 @@
         <!-- SIDE CONTAINER (as plain text) -->
         <div class="side-container">
           @for (key of formKeys(form()); track key) {
-            @if (formSchema()![key].display === 'side') {
+            @if (formSchema()![key].display === 'side' && !(credentialStatus() === 'DRAFT' && key === 'issuer')) {
               @switch (getControlType(form()!.get(key))) {
 
                 @case ('group') {

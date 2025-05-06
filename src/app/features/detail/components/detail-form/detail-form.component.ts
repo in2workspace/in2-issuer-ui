@@ -4,7 +4,7 @@ import { CapitalizePipe } from './../../../../shared/pipes/capitalize.pipe';
 import { DetailService } from './../../services/detail.service';
 import { Component, computed, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { AbstractControl, FormArray, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormArray, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { CommonModule } from '@angular/common';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
@@ -101,6 +101,14 @@ export class DetailFormComponent implements OnInit {
   
   getActionsForFunction(tmfFunction: TmfFunction): TmfAction[] {
     return PowerActionsMap[tmfFunction] || [];
+  }
+
+  hasIssuer(): boolean {
+    const form = this.form();
+    if (!form) return false;
+  
+    const issuerGroup = form.get('issuer');
+    return !!(issuerGroup instanceof FormGroup && issuerGroup.get('id'));
   }
   
 
