@@ -29,7 +29,7 @@ export const mockCredentialEmployee: LearCredentialDataDetail = {
             organization: 'Org Mandator', organizationIdentifier: 'ORG-MAN-EMP', serialNumber: 'SN-EMP'
           },
           power: [
-            { id: 'p1', action: ['Execute'], domain: 'DOME', function: 'OnBoarding', type: 'Domain' },
+            { id: 'p1', action: ['Execute'], domain: 'DOME', function: 'Onboarding', type: 'Domain' },
             { id: 'p1', action: ['Update'], domain: 'DOME', function: 'ProductOffering', type: 'Domain' },
           ],
           signer: {
@@ -74,7 +74,7 @@ export const mockCredentialMachine: LearCredentialDataDetail = {
             organization: 'Org Mandator MAC', organizationIdentifier: 'ORG-MAN-MAC', serialNumber: 'SN-MAC'
           },
           power: [
-            { id: 'p2', action: ['Execute'], domain: 'infra', function: 'OnBoarding', type: 'perm' }
+            { id: 'p2', action: ['Execute'], domain: 'infra', function: 'Onboarding', type: 'perm' }
           ],
           signer: {
             commonName: 'Signer MAC', country: 'DE', emailAddress: 'signer@mac.com',

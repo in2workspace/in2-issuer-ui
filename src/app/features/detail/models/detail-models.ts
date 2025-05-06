@@ -30,12 +30,12 @@
 
 
 // export const PowerActionsMap: Record<TmfFunction, TmfAction[]> = {
-//   OnBoarding: ['Execute'],
+//   Onboarding: ['Execute'],
 //   ProductOffering: ['Create', 'Update', 'Delete'],
 //   Certification: ['Upload', 'Attest']
 // };
 
-// export type TmfFunction = 'OnBoarding' | 'ProductOffering' | 'Certification';
+// export type TmfFunction = 'Onboarding' | 'ProductOffering' | 'Certification';
 // export type TmfAction = 'Execute' | 'Create' | 'Update' | 'Delete' | 'Upload' | 'Attest'
 
 
