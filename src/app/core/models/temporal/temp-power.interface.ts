@@ -1,7 +1,9 @@
+import { TmfAction, TmfFunction } from "../entity/lear-credential-employee.entity";
+
 export interface TempPower {
-  action: string | string[];
+  action: TmfAction | TmfAction[] | '';
   domain: string;
-  function: string;
+  function: TmfFunction;
   type: string;
   execute: boolean;
   create: boolean;

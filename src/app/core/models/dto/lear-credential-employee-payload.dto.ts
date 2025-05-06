@@ -1,7 +1,7 @@
-import { Mandatee, Mandator, Power } from "../entity/lear-credential-employee.entity";
+import { EmployeeMandatee, EmployeeMandator, Power } from "../entity/lear-credential-employee.entity";
 
 export interface LearCredentialEmployeePayload {
-  mandator: Mandator;
-  mandatee: Mandatee;
+  mandator: EmployeeMandator;
+  mandatee: EmployeeMandatee;
   power: Power[];
 }

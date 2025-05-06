@@ -1,6 +1,6 @@
-import {LearCredentialEmployeePayload } from "./lear-credential-employee-payload.dto";
+import { LearCredentialEmployeePayload } from "./lear-credential-employee-payload.dto";
 
-export interface ProcedureRequest {
+export interface EmployeeProcedureRequest {
     schema: string,
     format: string,
     payload: LearCredentialEmployeePayload,

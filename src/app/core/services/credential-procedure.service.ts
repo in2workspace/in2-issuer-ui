@@ -1,20 +1,17 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {Observable, of, throwError} from 'rxjs';
-import {catchError, map, tap} from 'rxjs/operators';
+import {Observable, throwError} from 'rxjs';
+import {catchError, map } from 'rxjs/operators';
 import {environment} from 'src/environments/environment';
-import {ProcedureRequest} from '../models/dto/procedure-request.dto';
 import {ProcedureResponse} from '../models/dto/procedure-response.dto';
-import {LearCredentialEmployeeDataDetail} from '../models/dto/lear-credential-employee-data-detail.dto';
 import {CredentialOfferResponse} from '../models/dto/credential-offer-response';
-import {LEARCredentialEmployeeDataNormalizer} from '../models/entity/lear-credential-employee-data-normalizer';
-import {LEARCredentialEmployee} from '../models/entity/lear-credential-employee.entity';
+import {LEARCredential, LEARCredentialDataDetail, RawLEARCredentialDataDetail} from '../models/entity/lear-credential-employee.entity';
 import {DialogWrapperService} from "../../shared/components/dialog/dialog-wrapper/dialog-wrapper.service";
 import {TranslateService} from "@ngx-translate/core";
 import {Router} from "@angular/router";
 import {API} from "../constants/api.constants";
-import { mockCredentialCertification, mockCredentialEmployee, mockCredentialMachine } from 'src/app/features/detail/mocks/detail-mocks';
-import { LearCredentialDataDetail } from 'src/app/features/detail/models/detail-models';
+import { LEARCredentialDataNormalizer } from '../models/entity/lear-credential-employee-data-normalizer';
+import { EmployeeProcedureRequest } from '../models/dto/procedure-request.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +25,7 @@ export class CredentialProcedureService {
   private readonly signCredentialUrl = `${environment.server_url}${API.SIGN_CREDENTIAL_PATH}`;
 
   private readonly http = inject(HttpClient);
-  private readonly normalizer = new LEARCredentialEmployeeDataNormalizer();
+  private readonly normalizer = new LEARCredentialDataNormalizer();
   private readonly dialog = inject(DialogWrapperService);
   private readonly translate = inject(TranslateService);
   private readonly router = inject(Router);
@@ -39,46 +36,33 @@ export class CredentialProcedureService {
     );
   }
 
-  public getCredentialProcedureById(procedureId: string): Observable<LearCredentialEmployeeDataDetail> {
-    return this.http.get<LearCredentialEmployeeDataDetail>(
+  public getCredentialProcedureById(procedureId: string): Observable<LEARCredentialDataDetail> {
+    return this.http.get<RawLEARCredentialDataDetail>(
       `${this.organizationProcedures}/${procedureId}/credential-decoded`
     ).pipe(
-      map(learCredentialEmployeeDataDetail => {
-        const { credential } = learCredentialEmployeeDataDetail;
+      map(response => {
+        const { credential } = response;
         // If vc exists, we normalize it, otherwise we assume that credential is already of the expected type
-        const credentialData = credential.vc
+        const credentialData = ('vc' in credential
           ? credential.vc
-          : (credential as unknown as LEARCredentialEmployee);
+          : credential) as LEARCredential;
 
         // Normalize the part which is of type LEARCredentialEmployee
         const normalizedCredential = this.normalizer.normalizeLearCredential(credentialData);
 
         return {
-          ...learCredentialEmployeeDataDetail,
+          ...response,
           credential: {
             ...credential,
             vc: normalizedCredential
           }
-        } as LearCredentialEmployeeDataDetail;
+        } as LEARCredentialDataDetail;
       }),
       catchError(this.handleError)
     );
   }
 
-  public getCredentialProcedureDetailsById(procedureId: string): Observable<LearCredentialDataDetail> {
-    
-    return this.http.get<LearCredentialDataDetail>(
-      `${this.organizationProcedures}/${procedureId}/credential-decoded`
-    ).pipe(
-      tap(res=>{
-        console.log('Obtained procedure: ');
-        console.log(res)
-      })
-    );
-    
-  }
-
-  public createProcedure(procedureRequest: ProcedureRequest): Observable<void> {
+  public createProcedure(procedureRequest: EmployeeProcedureRequest): Observable<void> {
     return this.http.post<void>(this.saveCredential, procedureRequest).pipe(
       catchError(this.handleError)
     );

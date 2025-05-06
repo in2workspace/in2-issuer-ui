@@ -1,7 +1,7 @@
-import { Mandatee, Power, LEARCredentialEmployee } from './lear-credential-employee.entity';
+import { Power, LEARCredential, EmployeeMandatee } from './lear-credential-employee.entity';
 
 // Interfaces for the raw JSON of Mandatee and Power
-interface RawMandatee {
+interface RawEmployeeMandatee {
   firstName?: string;
   first_name?: string;
   lastName?: string;
@@ -21,38 +21,42 @@ interface RawPower {
   tmf_type?: string;
 }
 
-export class LEARCredentialEmployeeDataNormalizer {
+export class LEARCredentialDataNormalizer {
 
   /**
    * Normalizes the complete LearCredentialEmployeeDataDetail object.
    * It applies normalization to the mandatee object and each element of the power array.
    */
-  public normalizeLearCredential(data: LEARCredentialEmployee): LEARCredentialEmployee {
-    // Create a copy to avoid modifying the original object
+  public normalizeLearCredential(data: LEARCredential): LEARCredential {
+    // Clone the data to avoid mutating the original object
     const normalizedData = { ...data };
-
-    if (normalizedData.credentialSubject.mandate) {
-
+  
+    const credentialTypes = normalizedData.type;
+    const isEmployee = credentialTypes.includes('LEARCredentialEmployee');
+    const isMachine = credentialTypes.includes('LEARCredentialMachine');
+  
+    if ((isEmployee || isMachine) && 'mandate' in normalizedData.credentialSubject) {
       const mandate = normalizedData.credentialSubject.mandate;
-
-      if (mandate.mandatee) {
-        // Apply normalization on the mandatee object
-        mandate.mandatee = this.normalizeMandatee(mandate.mandatee);
+  
+      if (isEmployee && mandate.mandatee) {
+        mandate.mandatee = this.normalizeMandatee(mandate.mandatee as RawEmployeeMandatee);
       }
-
-      if (mandate.power && Array.isArray(mandate.power)) {
-        // Normalize each power object in the array
+  
+      if (Array.isArray(mandate.power)) {
         mandate.power = mandate.power.map(p => this.normalizePower(p));
       }
     }
+  
     return normalizedData;
   }
+  
+  
 
   /**
  * Normalizes the mandatee object by unifying "firstName"/"first_name" and "lastName"/"last_name" keys.
  */
-private normalizeMandatee(data: RawMandatee): Mandatee {
-  return <Mandatee>{
+private normalizeMandatee(data: RawEmployeeMandatee): EmployeeMandatee {
+  return <EmployeeMandatee>{
     firstName: data.firstName ?? data.first_name,
     lastName: data.lastName ?? data.last_name,
     email: data.email,

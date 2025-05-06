@@ -1,5 +1,5 @@
 import { FormCredentialService } from '../form-credential/services/form-credential.service';
-import { Component, Input, OnInit, inject, DestroyRef } from '@angular/core';
+import { Component, OnInit, inject, DestroyRef } from '@angular/core';
 import { AuthService } from "../../../core/services/auth.service";
 import { MatSelectChange, MatSelect, MatSelectTrigger } from '@angular/material/select';
 import { DialogData } from '../dialog/dialog.component';
@@ -14,6 +14,7 @@ import { MatOption } from '@angular/material/core';
 import { MatFormField } from '@angular/material/form-field';
 import { NgIf, NgFor, NgTemplateOutlet, AsyncPipe } from '@angular/common';
 import { DialogWrapperService } from '../dialog/dialog-wrapper/dialog-wrapper.service';
+import { TmfFunction } from 'src/app/core/models/entity/lear-credential-employee.entity';
 
 @Component({
     selector: 'app-power',
@@ -47,7 +48,7 @@ export class PowerComponent implements OnInit{
   }
 
   public addPower(): void {
-    const selectedPower = this.formService.getPlainSelectedPower();
+    const selectedPower = this.formService.getPlainSelectedPower() as TmfFunction;
 
     if(this.isOptionDisabled(selectedPower)) return;
 

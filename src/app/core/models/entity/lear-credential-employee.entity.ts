@@ -1,65 +1,289 @@
-export interface LEARCredentialEmployeeJwtPayload {
+export interface RawLEARCredentialDataDetail {
+  procedure_id: string;
+  credential_status: string;
+  credential: LEARCredentialJwtPayload|LEARCredential;
+}
+
+export interface LEARCredentialDataDetail {
+  procedure_id: string;
+  credential_status: CredentialStatus;
+  credential: LEARCredentialJwtPayload;
+}
+
+export type CredentialStatus = 'WITHDRAWN' | 'VALID' | 'EXPIRED' | 'PEND_DOWNLOAD' | 'PEND_SIGNATURE' | 'DRAFT' | 'ISSUED';
+
+export interface LEARCredentialJwtPayload {
   sub: string | null;
   nbf: string;
   iss: string;
   exp: string;
   iat: string;
-  vc: LEARCredentialEmployee;
+  vc: LEARCredential;
   jti: string;
 }
 
-export interface LEARCredentialEmployee {
-  id: string;
-  type: string[];
-  credentialSubject: CredentialSubject;
-  expirationDate: string;
-  issuanceDate: string;
-  issuer: Issuer;
-  validFrom: string;
-}
+export type CredentialType = 'LEARCredentialEmployee' | 'LEARCredentialMachine' | 'VerfiableCertification';
 
-export interface CredentialSubject {
-  mandate: Mandate;
-}
+export type LEARCredential =
+  | LEARCredentialEmployee
+  | LEARCredentialMachine
+  | VerifiableCertification;
 
-export interface Mandate {
-  id: string;
-  life_span: LifeSpan;
-  mandatee: Mandatee;
-  mandator: Mandator;
-  signer: Signer;
-  power: Power[];
-}
-
+// --- Common Types ---
 export interface LifeSpan {
-  end_date_time: string;
-  start_date_time: string;
+  start: string;
+  end: string;
 }
 
-export interface Mandatee {
-  firstName: string;
-  lastName: string;
-  email: string;
-  nationality: string;
+export interface CommonMandator {
+  commonName: string;
+  country: string;
+  emailAddress: string;
+  organization: string;
+  organizationIdentifier: string;
+  serialNumber: string;
 }
 
-export interface OrganizationDetails {
+export interface Power {
+  id?: string;
+  action: TmfAction[] | TmfAction;
+  domain: string;
+  function: TmfFunction;
+  type: string;
+}
+
+export const PowerActionsMap: Record<MappedTmfFunction, TmfAction[]> = {
+  Onboarding: ['Execute'],
+  ProductOffering: ['Create', 'Update', 'Delete'],
+  Certification: ['Upload', 'Attest']
+};
+
+type MappedTmfFunction = Exclude<TmfFunction, 'CredentialIssuer'>;
+export type TmfFunction = 'Onboarding' | 'ProductOffering' | 'Certification' | 'CredentialIssuer';
+export type TmfAction = 'Execute' | 'Create' | 'Update' | 'Delete' | 'Upload' | 'Attest' | 'Configure'
+
+
+export interface CommonSigner {
+  commonName: string;
+  country: string;
+  emailAddress: string;
+  organization: string;
+  organizationIdentifier: string;
+  serialNumber: string;
+}
+
+export interface CommonIssuer {
+  id?: string;
   organizationIdentifier: string;
   organization: string;
+  country: string;
   commonName: string;
   emailAddress: string;
   serialNumber: string;
+}
+
+// --- Employee ---
+export interface LEARCredentialEmployee {
+  id: string;
+  type: CredentialType[];
+  description: string;
+  credentialSubject: {
+    mandate: {
+      id: string;
+      life_span: LifeSpan;
+      mandatee: EmployeeMandatee;
+      mandator: EmployeeMandator;
+      power: Power[];
+      signer: EmployeeSigner;
+    };
+  };
+  issuer: EmployeeIssuer;
+  validFrom: string;
+  validUntil: string;
+  issuanceDate?: string;
+  expirationDate?: string;
+}
+
+export interface EmployeeMandatee {
+  id?: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  mobile_phone?: string;
+  nationality: string;
+};
+export interface EmployeeMandator extends CommonMandator {}
+export interface EmployeeSigner extends CommonSigner {}
+export interface EmployeeIssuer extends CommonIssuer {}
+
+// --- Machine ---
+export interface LEARCredentialMachine {
+  id: string;
+  type: CredentialType[];
+  description: string;
+  credentialSubject: {
+    mandate: {
+      id: string;
+      life_span: LifeSpan;
+      mandatee: MachineMandatee;
+      mandator: MachineMandator;
+      power: Power[];
+      signer: MachineSigner;
+    };
+  };
+  issuer: MachineIssuer;
+  validFrom: string;
+  validUntil: string;
+}
+
+export interface MachineMandatee {
+  id: string;
+  serviceName: string;
+  serviceType: string;
+  version: string;
+  domain: string;
+  ipAddress: string;
+  description: string;
+  contact: {
+    email: string;
+    phone: string;
+  };
+};
+export interface MachineMandator extends CommonMandator {}
+export interface MachineSigner extends CommonSigner {}
+export interface MachineIssuer extends CommonIssuer {}
+
+// --- Certification ---
+export interface VerifiableCertification {
+  id: string;
+  type: CredentialType[];
+  issuer: CertificationIssuer;
+  credentialSubject: {
+    company: {
+      address: string;
+      commonName: string;
+      country: string;
+      email: string;
+      id: string;
+      organization: string;
+    };
+    compliance: {
+      id: string;
+      hash: string;
+      scope: string;
+      standard: string;
+    }[];
+    product: {
+      productId: string;
+      productName: string;
+      productVersion: string;
+    };
+  };
+  validFrom: string;
+  atester: Atester;
+  validUntil: string;
+  signer: CertificationSigner;
+}
+
+export interface CertificationIssuer {
+  commonName: string;
+  country: string;
+  id: string;
+  organization: string;
+}
+
+export interface CertificationSigner {
+  commonName: string;
+  country: string;
+  emailAddress: string;
+  organization: string;
+  organizationIdentifier: string;
+  serialNumber: string;
+}
+
+export interface Atester {
+  id: string;
+  organization: string;
+  organizationIdentifier: string;
+  firstName: string;
+  lastName: string;
   country: string;
 }
-export interface Issuer extends OrganizationDetails {}
 
-export interface Mandator extends OrganizationDetails {}
+//todo move to form models?
+export type LearCredentialEmployeeFormData = {
+  issuer: EmployeeIssuer;
+  mandatee: LEARCredentialEmployee['credentialSubject']['mandate']['mandatee'];
+  mandator: EmployeeMandator;
+  power: Power[];
+};
 
-export interface Signer extends OrganizationDetails {}
+export type LearCredentialMachineFormData = {
+  issuer: MachineIssuer;
+  mandatee: LEARCredentialMachine['credentialSubject']['mandate']['mandatee'];
+  mandator: MachineMandator;
+  power: Power[];
+};
 
-export interface Power {
-  action: string | string[];
-  domain: string;
-  function: string;
-  type: string;
-}
+export type VerifiableCertificationFormData = {
+  issuer: CertificationIssuer;
+  company: VerifiableCertification['credentialSubject']['company'];
+  product: VerifiableCertification['credentialSubject']['product'];
+};
+
+export type FormDataByType = {
+  LEARCredentialEmployee: LearCredentialEmployeeFormData;
+  LEARCredentialMachine: LearCredentialMachineFormData;
+  VerfiableCertification: VerifiableCertificationFormData;
+};
+
+export type CredentialFormData<T extends CredentialType = CredentialType> = FormDataByType[T];
+
+
+// export interface LEARCredential {
+//   id: string;
+//   type: CredentialType[];
+//   credentialSubject: CredentialSubject;
+//   expirationDate: string;
+//   issuanceDate: string;
+//   issuer: Issuer;
+//   validFrom: string;
+// }
+// export interface CredentialSubject {
+//   mandate: Mandate;
+// }
+
+// export interface Mandate {
+//   id: string;
+//   life_span: LifeSpan;
+//   mandatee: Mandatee;
+//   mandator: Mandator;
+//   signer: Signer;
+//   power: Power[];
+// }
+
+// export interface LifeSpan {
+//   end_date_time: string;
+//   start_date_time: string;
+// }
+
+// export interface Mandatee {
+//   firstName: string;
+//   lastName: string;
+//   email: string;
+//   nationality: string;
+// }
+
+
+// export interface Issuer extends OrganizationDetails {}
+
+// export interface Mandator extends OrganizationDetails {}
+
+// export interface Signer extends OrganizationDetails {}
+
+// export interface Power {
+//   action: string | string[];
+//   domain: string;
+//   function: string;
+//   type: string;
+// }

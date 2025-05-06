@@ -2,7 +2,6 @@ import { MatCard, MatCardContent } from '@angular/material/card';
 import { AddPrefixPipe } from '../../../../shared/pipes/add-prefix.pipe';
 import { CapitalizePipe } from './../../../../shared/pipes/capitalize.pipe';
 import { DetailService } from './../../services/detail.service';
-import { PowerActionsMap, TmfAction} from './../../models/detail-models';
 import { Component, computed, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { AbstractControl, FormArray, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -16,6 +15,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatButton } from '@angular/material/button';
 import { Observable } from 'rxjs';
 import { LoaderService } from 'src/app/core/services/loader.service';
+import { PowerActionsMap, TmfAction, TmfFunction } from 'src/app/core/models/entity/lear-credential-employee.entity';
 
 
 @Component({
@@ -99,8 +99,8 @@ export class DetailFormComponent implements OnInit {
   }
   
   
-  getActionsForType(type: string): string[] {
-    return PowerActionsMap[type as TmfAction] || [];
+  getActionsForFunction(tmfFunction: TmfFunction): TmfAction[] {
+    return PowerActionsMap[tmfFunction] || [];
   }
   
 

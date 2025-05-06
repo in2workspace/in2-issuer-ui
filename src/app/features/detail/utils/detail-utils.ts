@@ -1,6 +1,6 @@
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { FormSchema, LearCredentialEmployeeFormSchema, LearCredentialMachineFormSchema, VerifiableCertificationFormSchema } from '../models/detail-form-models';
-import { CredentialType, FormDataByType, LearCredential, LearCredentialEmployee, LearCredentialMachine, VerifiableCertification } from '../models/detail-models';
+import { CredentialType, FormDataByType, LEARCredential, LEARCredentialEmployee, LEARCredentialMachine, VerifiableCertification } from 'src/app/core/models/entity/lear-credential-employee.entity';
 
 export const FormSchemaByType: Record<CredentialType, FormSchema> = {
     LEARCredentialEmployee: LearCredentialEmployeeFormSchema,
@@ -45,9 +45,9 @@ export function buildFormFromSchema(
   return fb.group(group);
 }
 
-const FormDataExtractorByType: Record<CredentialType, (credential: LearCredential) => any> = {
+const FormDataExtractorByType: Record<CredentialType, (credential: LEARCredential) => any> = {
     LEARCredentialEmployee: (credential) => {
-      const c = credential as LearCredentialEmployee;
+      const c = credential as LEARCredentialEmployee;
       return {
         issuer: c.issuer,
         mandatee: c.credentialSubject.mandate.mandatee,
@@ -57,7 +57,7 @@ const FormDataExtractorByType: Record<CredentialType, (credential: LearCredentia
     },
   
     LEARCredentialMachine: (credential) => {
-      const c = credential as LearCredentialMachine;
+      const c = credential as LEARCredentialMachine;
       return {
         issuer: c.issuer,
         mandatee: c.credentialSubject.mandate.mandatee,
@@ -78,7 +78,7 @@ const FormDataExtractorByType: Record<CredentialType, (credential: LearCredentia
   
   
   export function getFormDataByType<T extends CredentialType>(
-    credential: LearCredential & { type: [T] }
+    credential: LEARCredential & { type: [T] }
   ): FormDataByType[T] {
     const type = credential.type[0] as T;
     const extractor = FormDataExtractorByType[type];
@@ -90,8 +90,8 @@ const FormDataExtractorByType: Record<CredentialType, (credential: LearCredentia
   
   
   export function typeCast<T extends CredentialType>(
-    credential: LearCredential,
+    credential: LEARCredential,
     type: T
-  ): LearCredential & { type: [T] } {
-    return credential as LearCredential & { type: [T] };
+  ): LEARCredential & { type: [T] } {
+    return credential as LEARCredential & { type: [T] };
   }

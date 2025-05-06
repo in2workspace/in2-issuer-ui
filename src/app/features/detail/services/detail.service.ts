@@ -1,5 +1,4 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { CredentialStatus, CredentialType, LearCredentialDataDetail } from '../models/detail-models';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { EMPTY, from, Observable, Observer, switchMap, take, tap } from 'rxjs';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
@@ -9,12 +8,13 @@ import { DialogWrapperService } from 'src/app/shared/components/dialog/dialog-wr
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { DialogData } from 'src/app/shared/components/dialog/dialog.component';
+import { CredentialStatus, CredentialType, LEARCredentialDataDetail } from 'src/app/core/models/entity/lear-credential-employee.entity';
 
 @Injectable()
 export class DetailService {
   credentialId = signal<string>('');
   credentialStatus = signal<CredentialStatus | undefined>(undefined);
-  credentialData = signal<LearCredentialDataDetail | undefined>(undefined);
+  credentialDataDetail = signal<LEARCredentialDataDetail | undefined>(undefined);
   form = signal<FormGroup | undefined>(undefined);
   formSchema = signal<FormSchema | undefined>(undefined);
 
@@ -35,16 +35,19 @@ export class DetailService {
       .subscribe(this.loadFormObserver);
   }
 
-  public loadCredentialDetail(): Observable<LearCredentialDataDetail> {
+  public loadCredentialDetail(): Observable<LEARCredentialDataDetail> {
     return this.credentialProcedureService
-      .getCredentialProcedureDetailsById(this.credentialId())
-      .pipe(take(1));
+      .getCredentialProcedureById(this.credentialId())
+      .pipe(
+        take(1),
+      tap(data=>{
+        this.credentialDataDetail.set(data);
+        this.credentialStatus.set(data.credential_status);
+      }));
   }
 
-  private loadFormObserver: Observer<LearCredentialDataDetail> = {
-    next: (data: LearCredentialDataDetail) => {
-      this.credentialData.set(data);
-      this.credentialStatus.set(data.credential_status);
+  private loadFormObserver: Observer<LEARCredentialDataDetail> = {
+    next: () => {
       this.loadForm();
     },
     error: (err: any) => {
@@ -54,10 +57,13 @@ export class DetailService {
   }
 
   private loadForm(): void {
-    const data = this.credentialData();
-    if (!data) return;
+    const data = this.credentialDataDetail();
+    if (!data){
+      console.error('No credential data to load the form.');
+      return;
+    }
 
-    const credential = data.credential;
+    const credential = data.credential.vc;
     const type = credential.type[0] as CredentialType;
 
     const schema = getFormSchemaByType(type);
