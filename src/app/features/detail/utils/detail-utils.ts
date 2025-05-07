@@ -78,20 +78,12 @@ const FormDataExtractorByType: Record<CredentialType, (credential: LEARCredentia
   
   
   export function getFormDataByType<T extends CredentialType>(
-    credential: LEARCredential & { type: [T] }
+    credential: LEARCredential,
+    type: T
   ): FormDataByType[T] {
-    const type = credential.type[0] as T;
     const extractor = FormDataExtractorByType[type];
     if (!extractor) {
       throw new Error(`Unsupported data extractor for type: ${type}`);
     }
     return extractor(credential) as FormDataByType[T];
-  }
-  
-  
-  export function typeCast<T extends CredentialType>(
-    credential: LEARCredential,
-    type: T
-  ): LEARCredential & { type: [T] } {
-    return credential as LEARCredential & { type: [T] };
   }

@@ -2,7 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { EMPTY, from, Observable, Observer, switchMap, take, tap } from 'rxjs';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
-import { buildFormFromSchema, FormSchemaByType, getFormDataByType, getFormSchemaByType, typeCast } from '../utils/detail-utils';
+import { buildFormFromSchema, FormSchemaByType, getFormDataByType, getFormSchemaByType } from '../utils/detail-utils';
 import { FormSchema } from '../models/detail-form-models';
 import { DialogWrapperService } from 'src/app/shared/components/dialog/dialog-wrapper/dialog-wrapper.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -72,7 +72,7 @@ export class DetailService {
     }
 
     const schema = getFormSchemaByType(type);
-    const formData = getFormDataByType(typeCast(credential, type));
+    const formData = getFormDataByType(credential, type);
     const builtForm = buildFormFromSchema(this.fb, schema, formData);
     builtForm.disable();
 
