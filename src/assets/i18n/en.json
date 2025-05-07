@@ -112,8 +112,8 @@
     "productName": "product name",
     "productVersion": "product version",
     "company": "company",
-    "product": "product"
-
+    "product": "product",
+    "compliance": "compliance"
   },
   "credentialOffer": {
     "first-label": "Log in to Wallet",
