@@ -9,7 +9,7 @@ export type CredentialDetailsFormFieldSchema = {
   
 export type CredentialDetailsFormSchema = Record<string, CredentialDetailsFormFieldSchema>;
   
-
+//todo model de cada form schema?
 export const LearCredentialEmployeeDetailsFormSchema: CredentialDetailsFormSchema = {
     mandatee: {
       type: 'group',
@@ -135,7 +135,7 @@ export const LearCredentialEmployeeDetailsFormSchema: CredentialDetailsFormSchem
     },
     company: {
       type: 'group',
-      display: 'side',
+      display: 'main',
       fields: {
         id: { type: 'control' },
         commonName: { type: 'control' },
@@ -152,6 +152,16 @@ export const LearCredentialEmployeeDetailsFormSchema: CredentialDetailsFormSchem
         productId: { type: 'control' },
         productName: { type: 'control' },
         productVersion: { type: 'control' },
+      },
+    },
+    compliance: {
+      type: 'group',
+      display: 'main',
+      fields: {
+        id: { type: 'control' },
+        hash: { type: 'control' },
+        scope: { type: 'control' },
+        standard: { type: 'control' },
       },
     },
   };

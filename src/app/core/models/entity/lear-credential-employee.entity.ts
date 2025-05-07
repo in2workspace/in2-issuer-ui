@@ -4,7 +4,7 @@ export interface RawLEARCredentialDataDetail {
   credential: LEARCredentialJwtPayload|LEARCredential;
 }
 
-export interface LEARCredentialDataDetail {
+export interface LEARCredentialDataDetails {
   procedure_id: string;
   credential_status: CredentialStatus;
   credential: LEARCredentialJwtPayload;

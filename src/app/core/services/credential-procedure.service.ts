@@ -5,7 +5,7 @@ import {catchError, map } from 'rxjs/operators';
 import {environment} from 'src/environments/environment';
 import {ProcedureResponse} from '../models/dto/procedure-response.dto';
 import {CredentialOfferResponse} from '../models/dto/credential-offer-response';
-import {LEARCredential, LEARCredentialDataDetail, RawLEARCredentialDataDetail} from '../models/entity/lear-credential-employee.entity';
+import {LEARCredential, LEARCredentialDataDetails, RawLEARCredentialDataDetail} from '../models/entity/lear-credential-employee.entity';
 import {DialogWrapperService} from "../../shared/components/dialog/dialog-wrapper/dialog-wrapper.service";
 import {TranslateService} from "@ngx-translate/core";
 import {Router} from "@angular/router";
@@ -36,7 +36,7 @@ export class CredentialProcedureService {
     );
   }
 
-  public getCredentialProcedureById(procedureId: string): Observable<LEARCredentialDataDetail> {
+  public getCredentialProcedureById(procedureId: string): Observable<LEARCredentialDataDetails> {
     return this.http.get<RawLEARCredentialDataDetail>(
       `${this.organizationProcedures}/${procedureId}/credential-decoded`
     ).pipe(
@@ -56,7 +56,7 @@ export class CredentialProcedureService {
             ...credential,
             vc: normalizedCredential
           }
-        } as LEARCredentialDataDetail;
+        } as LEARCredentialDataDetails;
       }),
       catchError(this.handleError)
     );

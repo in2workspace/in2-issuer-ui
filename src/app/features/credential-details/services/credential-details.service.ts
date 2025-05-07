@@ -7,14 +7,14 @@ import { DialogWrapperService } from 'src/app/shared/components/dialog/dialog-wr
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { DialogData } from 'src/app/shared/components/dialog/dialog.component';
-import { CredentialStatus, CredentialType, LEARCredentialDataDetail } from 'src/app/core/models/entity/lear-credential-employee.entity';
+import { CredentialStatus, CredentialType, LEARCredentialDataDetails } from 'src/app/core/models/entity/lear-credential-employee.entity';
 import { CredentialDetailsFormSchema } from 'src/app/core/models/entity/lear-credential-details-schemas';
 
 @Injectable() //provided in component
 export class CredentialDetailsService {
   public credentialId = signal<string>('');
   public credentialStatus = signal<CredentialStatus | undefined>(undefined);
-  public credentialDataDetail = signal<LEARCredentialDataDetail | undefined>(undefined);
+  public credentialDataDetail = signal<LEARCredentialDataDetails | undefined>(undefined);
   public credentialDetailsForm = signal<FormGroup | undefined>(undefined);
   public formSchema = signal<CredentialDetailsFormSchema | undefined>(undefined);
 
@@ -29,11 +29,11 @@ export class CredentialDetailsService {
   }
 
   public loadCredentialDetailAndForm(): void {  
-    this.loadCredentialDetail()
+    this.loadCredentialDetails()
       .subscribe(this.loadFormObserver);
   }
 
-  public loadCredentialDetail(): Observable<LEARCredentialDataDetail> {
+  public loadCredentialDetails(): Observable<LEARCredentialDataDetails> {
     return this.credentialProcedureService
       .getCredentialProcedureById(this.credentialId())
       .pipe(
@@ -44,7 +44,7 @@ export class CredentialDetailsService {
       }));
   }
 
-  private loadFormObserver: Observer<LEARCredentialDataDetail> = {
+  private loadFormObserver: Observer<LEARCredentialDataDetails> = {
     next: () => {
       this.loadForm();
     },
