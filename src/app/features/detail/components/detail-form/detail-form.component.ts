@@ -100,6 +100,11 @@ export class DetailFormComponent implements OnInit {
   
   
   getActionsForFunction(tmfFunction: TmfFunction): TmfAction[] {
+    console.log('getting actions for function ' + tmfFunction);
+    console.log('powersactionsmap')
+    console.log(PowerActionsMap)
+    console.log('returned functions')
+    console.log(PowerActionsMap[tmfFunction] || [])
     return PowerActionsMap[tmfFunction] || [];
   }
 
