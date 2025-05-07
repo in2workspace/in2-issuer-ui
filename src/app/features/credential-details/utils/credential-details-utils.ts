@@ -1,6 +1,6 @@
 import { CredentialDetailsFormSchema, LearCredentialEmployeeDetailsFormSchema, LearCredentialMachineDetailsFormSchema, VerifiableCertificationDetailsFormSchema } from '../../../core/models/entity/lear-credential-details-schemas';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
-import { CredentialFormData, CredentialType, LEARCredential, LEARCredentialEmployee, LEARCredentialMachine, VerifiableCertification } from 'src/app/core/models/entity/lear-credential-employee.entity';
+import { CredentialFormData, CredentialType, LEARCredential, LEARCredentialEmployee, LEARCredentialMachine, PowerActionsMap, TmfAction, TmfFunction, VerifiableCertification } from 'src/app/core/models/entity/lear-credential-employee.entity';
 
 export const FormDataExtractorByType: Record<CredentialType, (credential: LEARCredential) => any> = {
   LEARCredentialEmployee: (credential) => {
@@ -96,4 +96,13 @@ export function getFormDataByType<T extends CredentialType>(
     throw new Error(`Unsupported data extractor for type: ${type}`);
   }
   return extractor(credential) as CredentialFormData;
+}
+
+export function getActionsByFunction(tmfFunction: TmfFunction): TmfAction[]{
+      console.log('getting actions for function ' + tmfFunction);
+      console.log('powersactionsmap')
+      console.log(PowerActionsMap)
+      console.log('returned functions')
+      console.log(PowerActionsMap[tmfFunction] || [])
+      return PowerActionsMap[tmfFunction] || [];
 }

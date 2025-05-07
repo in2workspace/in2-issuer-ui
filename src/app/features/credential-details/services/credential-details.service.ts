@@ -12,11 +12,11 @@ import { CredentialDetailsFormSchema } from 'src/app/core/models/entity/lear-cre
 
 @Injectable() //provided in component
 export class CredentialDetailsService {
-  public credentialId = signal<string>('');
-  public credentialStatus = signal<CredentialStatus | undefined>(undefined);
   public credentialDetailsData = signal<LEARCredentialDataDetails | undefined>(undefined);
   public credentialDetailsForm = signal<FormGroup | undefined>(undefined);
   public credentialDetailsFormSchema = signal<CredentialDetailsFormSchema | undefined>(undefined);
+  public procedureId = signal<string>('');
+  public credentialStatus = signal<CredentialStatus | undefined>(undefined);
 
   private readonly credentialProcedureService = inject(CredentialProcedureService);
   private readonly dialog = inject(DialogWrapperService);
@@ -24,8 +24,8 @@ export class CredentialDetailsService {
   private readonly router = inject(Router);
   private readonly translate = inject(TranslateService);
 
-  public setCredentialId(id: string) {
-    this.credentialId.set(id);
+  public setProcedureId(id: string) {
+    this.procedureId.set(id);
   }
 
   public loadCredentialDetailAndForm(): void {  
@@ -35,7 +35,7 @@ export class CredentialDetailsService {
 
   public loadCredentialDetails(): Observable<LEARCredentialDataDetails> {
     return this.credentialProcedureService
-      .getCredentialProcedureById(this.credentialId())
+      .getCredentialProcedureById(this.procedureId())
       .pipe(
         take(1),
       tap(data=>{
@@ -126,17 +126,17 @@ export class CredentialDetailsService {
   }
 
   private executeCredentialAction(
-    action: (credentialId: string) => Observable<void>,
+    action: (procedureId: string) => Observable<void>,
     titleKey: string,
     messageKey: string
   ): Observable<boolean> {
-    const credentialId = this.credentialId;
-    if (!credentialId) {
-      console.error('No credential id.');
+    const procedureId = this.procedureId;
+    if (!procedureId) {
+      console.error('No procedure id.');
       return EMPTY;
     }
   
-    return action(credentialId()).pipe(
+    return action(procedureId()).pipe(
       switchMap(() => {
         const dialogData: DialogData = {
           title: this.translate.instant(titleKey),
@@ -157,7 +157,7 @@ export class CredentialDetailsService {
 
   public sendReminder(): Observable<boolean> {
     return this.executeCredentialAction(
-      (credentialId) => this.credentialProcedureService.sendReminder(credentialId),
+      (procedureId) => this.credentialProcedureService.sendReminder(procedureId),
       "credentialDetail.sendReminderSuccess.title",
       "credentialDetail.sendReminderSuccess.message"
     );
@@ -165,7 +165,7 @@ export class CredentialDetailsService {
   
   public signCredential(): Observable<boolean> {
     return this.executeCredentialAction(
-      (credentialId) => this.credentialProcedureService.signCredential(credentialId),
+      (procedureId) => this.credentialProcedureService.signCredential(procedureId),
       "credentialDetail.signCredentialSuccess.title",
       "credentialDetail.signCredentialSuccess.message"
     );

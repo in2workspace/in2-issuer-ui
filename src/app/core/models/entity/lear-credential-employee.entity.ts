@@ -56,7 +56,7 @@ export const PowerActionsMap: Record<MappedTmfFunction, TmfAction[]> = {
   Onboarding: ['Execute'],
   ProductOffering: ['Create', 'Update', 'Delete'],
   Certification: ['Upload', 'Attest'],
-  Login: ['oidc_m2m']
+  Login: ['oidc_m2m'] //todo remove?
 };
 
 type MappedTmfFunction = Exclude<TmfFunction, 'CredentialIssuer'>;
