@@ -56,7 +56,7 @@ export function buildFormFromSchema(
   const group: Record<string, any> = {};
 
   for (const key in schema) {
-    //don't show Issuer if not present
+    //don't show Issuer if empty
     if (
       key === 'issuer' &&
       schema[key].type === 'group' &&
