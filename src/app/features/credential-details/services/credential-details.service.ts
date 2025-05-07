@@ -14,9 +14,9 @@ import { CredentialDetailsFormSchema } from 'src/app/core/models/entity/lear-cre
 export class CredentialDetailsService {
   public credentialId = signal<string>('');
   public credentialStatus = signal<CredentialStatus | undefined>(undefined);
-  public credentialDataDetail = signal<LEARCredentialDataDetails | undefined>(undefined);
+  public credentialDetailsData = signal<LEARCredentialDataDetails | undefined>(undefined);
   public credentialDetailsForm = signal<FormGroup | undefined>(undefined);
-  public formSchema = signal<CredentialDetailsFormSchema | undefined>(undefined);
+  public credentialDetailsFormSchema = signal<CredentialDetailsFormSchema | undefined>(undefined);
 
   private readonly credentialProcedureService = inject(CredentialProcedureService);
   private readonly dialog = inject(DialogWrapperService);
@@ -39,7 +39,7 @@ export class CredentialDetailsService {
       .pipe(
         take(1),
       tap(data=>{
-        this.credentialDataDetail.set(data);
+        this.credentialDetailsData.set(data);
         this.credentialStatus.set(data.credential_status);
       }));
   }
@@ -55,7 +55,7 @@ export class CredentialDetailsService {
   }
 
   private loadForm(): void {
-    const data = this.credentialDataDetail();
+    const data = this.credentialDetailsData();
     if (!data){
       console.error('No credential data to load the form.');
       return;
@@ -83,7 +83,7 @@ export class CredentialDetailsService {
     const builtForm = buildFormFromSchema(this.fb, schema, formData);
     builtForm.disable();
 
-    this.formSchema.set(schema);
+    this.credentialDetailsFormSchema.set(schema);
     this.credentialDetailsForm.set(builtForm);
 
     console.log('Form has been loaded:');

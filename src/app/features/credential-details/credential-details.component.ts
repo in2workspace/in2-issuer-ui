@@ -10,7 +10,6 @@ import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton } from '@angular/material/button';
-import { Observable } from 'rxjs';
 import { LoaderService } from 'src/app/core/services/loader.service';
 import { PowerActionsMap, TmfAction, TmfFunction } from 'src/app/core/models/entity/lear-credential-employee.entity';
 import { CapitalizePipe } from 'src/app/shared/pipes/capitalize.pipe';
@@ -27,15 +26,15 @@ import { CredentialDetailsService } from './services/credential-details.service'
   styleUrl: './credential-details.component.scss'
 })
 export class CredentialDetailsComponent implements OnInit {
-  public isLoading$: Observable<boolean>;
   
-  private readonly detailService = inject(CredentialDetailsService);
+  private readonly detailsService = inject(CredentialDetailsService);
   private readonly loader = inject(LoaderService);
   private readonly route = inject(ActivatedRoute);
 
-  public credentialStatus = this.detailService.credentialStatus;
-  public form = this.detailService.credentialDetailsForm;
-  public formSchema = this.detailService.formSchema;
+  public credentialStatus = this.detailsService.credentialStatus;
+  public credentialDetailsForm = this.detailsService.credentialDetailsForm;
+  public credentialDetailsFormSchema = this.detailsService.credentialDetailsFormSchema;
+  public isLoading$ = this.loader.isLoading$;
 
   public showReminderButton = computed(()=>{
     return (this.credentialStatus() === 'WITHDRAWN') || (this.credentialStatus() === 'DRAFT') || (this.credentialStatus() === 'PEND_DOWNLOAD');
@@ -45,10 +44,6 @@ export class CredentialDetailsComponent implements OnInit {
     return this.credentialStatus() === 'PEND_SIGNATURE';
   });
 
-  constructor() {
-    this.isLoading$ = this.loader.isLoading$;
-  }
-
   public ngOnInit(): void {
     this.getProcedureId();
     this.initializeForm();
@@ -56,27 +51,26 @@ export class CredentialDetailsComponent implements OnInit {
   
   private getProcedureId(): void {
     const id = this.route.snapshot.paramMap.get('id')!;
-    this.detailService.setCredentialId(id);
+    this.detailsService.setCredentialId(id);
   }
   
 
   private loadCredentialDetailAndForm(): void {
-    this.detailService.loadCredentialDetailAndForm();
+    this.detailsService.loadCredentialDetailAndForm();
   }
 
   private initializeForm(): void {
-    //todo return form
     this.loadCredentialDetailAndForm();
   }
 
   //SEND REMINDER
   public openSendReminderDialog(){
-    this.detailService.openSendReminderDialog();
+    this.detailsService.openSendReminderDialog();
   }
 
   // SIGN
   public openSignCredentialDialog(){
-    this.detailService.openSignCredentialDialog();
+    this.detailsService.openSignCredentialDialog();
   }
 
   //template functions
