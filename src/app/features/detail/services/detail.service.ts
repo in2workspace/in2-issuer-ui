@@ -70,9 +70,14 @@ export class DetailService {
     if (!type) {
       throw new Error(`No supported credential type found in: ${credentialTypes.join(', ')}`);
     }
-
+    console.log('type')
+    console.log(type)
     const schema = getFormSchemaByType(type);
+    console.log('Schema: ');
+    console.log(schema);
     const formData = getFormDataByType(credential, type);
+    console.log('form data');
+    console.log(formData)
     const builtForm = buildFormFromSchema(this.fb, schema, formData);
     builtForm.disable();
 

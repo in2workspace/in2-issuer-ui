@@ -55,12 +55,13 @@ export interface Power {
 export const PowerActionsMap: Record<MappedTmfFunction, TmfAction[]> = {
   Onboarding: ['Execute'],
   ProductOffering: ['Create', 'Update', 'Delete'],
-  Certification: ['Upload', 'Attest']
+  Certification: ['Upload', 'Attest'],
+  Login: ['oidc_m2m']
 };
 
 type MappedTmfFunction = Exclude<TmfFunction, 'CredentialIssuer'>;
-export type TmfFunction = 'Onboarding' | 'ProductOffering' | 'Certification' | 'CredentialIssuer';
-export type TmfAction = 'Execute' | 'Create' | 'Update' | 'Delete' | 'Upload' | 'Attest' | 'Configure'
+export type TmfFunction = 'Onboarding' | 'ProductOffering' | 'Certification' | 'CredentialIssuer' | 'Login';
+export type TmfAction = 'Execute' | 'Create' | 'Update' | 'Delete' | 'Upload' | 'Attest' | 'Configure' | 'oidc_m2m'
 
 
 export interface CommonSigner {
