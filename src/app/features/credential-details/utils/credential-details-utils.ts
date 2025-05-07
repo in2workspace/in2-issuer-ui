@@ -28,7 +28,8 @@ export const FormDataExtractorByType: Record<CredentialType, (credential: LEARCr
     return {
       issuer: c.issuer,
       company: c.credentialSubject.company,
-      product: c.credentialSubject.product
+      product: c.credentialSubject.product,
+      compliance: c.credentialSubject.compliance
     };
   }
 };

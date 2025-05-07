@@ -113,7 +113,10 @@
     "productVersion": "product version",
     "company": "company",
     "product": "product",
-    "compliance": "compliance"
+    "compliance": "compliance",
+    "hash": "hash",
+    "scope": "scope",
+    "standard": "standard"
   },
   "credentialOffer": {
     "first-label": "Log in to Wallet",
