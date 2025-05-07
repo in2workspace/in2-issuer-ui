@@ -22,10 +22,10 @@ export const routes: Routes = [
     canActivate: [AutoLoginPartialRoutesGuard, basicGuard],
   },
   {
-    path: 'organization/credentials/details/:id',
+    path: 'organization/credentials/details',
     loadChildren: () =>
-      import('./features/credential-details/credential-details.component').then(
-        (m) => m.CredentialDetailsComponent
+      import('./features/credential-details/credential-details.routes').then(
+        (m) => m.default
       ),
     canActivate: [AutoLoginPartialRoutesGuard, basicGuard],
   },
