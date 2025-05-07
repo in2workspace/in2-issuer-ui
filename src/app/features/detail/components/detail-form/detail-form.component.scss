@@ -111,9 +111,6 @@ transition: transform 0.2s ease-in-out;
   p{
     margin-top:0px;
   }
-  h2{
-    margin-top:0.8rem;
-  }
 
   mat-card {
     width: 100%;
@@ -128,6 +125,8 @@ transition: transform 0.2s ease-in-out;
   }
 
 }
+
+
 
 // MEDIA QUERIES
 @media(width > 768px){
