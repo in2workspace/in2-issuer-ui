@@ -39,7 +39,7 @@ export class LEARCredentialDataNormalizer {
       const mandate = normalizedData.credentialSubject.mandate;
   
       if (isEmployee && mandate.mandatee) {
-        mandate.mandatee = this.normalizeMandatee(mandate.mandatee as RawEmployeeMandatee);
+        mandate.mandatee = this.normalizeEmployeeMandatee(mandate.mandatee as RawEmployeeMandatee);
       }
   
       if (Array.isArray(mandate.power)) {
@@ -55,7 +55,7 @@ export class LEARCredentialDataNormalizer {
   /**
  * Normalizes the mandatee object by unifying "firstName"/"first_name" and "lastName"/"last_name" keys.
  */
-private normalizeMandatee(data: RawEmployeeMandatee): EmployeeMandatee {
+private normalizeEmployeeMandatee(data: RawEmployeeMandatee): EmployeeMandatee {
   return <EmployeeMandatee>{
     firstName: data.firstName ?? data.first_name,
     lastName: data.lastName ?? data.last_name,
