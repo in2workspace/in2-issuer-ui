@@ -9,7 +9,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { AuthModule } from 'angular-auth-oidc-client';
 import { Mandatee, Mandator, Power, Signer } from "../../../../core/models/entity/lear-credential-employee.entity";
-import { TempPower } from "../../../../core/models/temporal/temp-power.interface";
+import { TempPower } from "../../../../core/models/temp/temp-power.interface";
 import { Country } from './country.service';
 import { provideHttpClient } from '@angular/common/http';
 

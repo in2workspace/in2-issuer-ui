@@ -24,8 +24,8 @@ export const routes: Routes = [
   {
     path: 'organization/credentials/details/:id',
     loadChildren: () =>
-      import('./features/detail/components/detail-form/detail-form.component').then(
-        (m) => m.DetailFormComponent
+      import('./features/credential-details/credential-details.component').then(
+        (m) => m.CredentialDetailsComponent
       ),
     canActivate: [AutoLoginPartialRoutesGuard, basicGuard],
   },

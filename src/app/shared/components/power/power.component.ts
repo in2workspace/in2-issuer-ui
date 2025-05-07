@@ -4,7 +4,7 @@ import { AuthService } from "../../../core/services/auth.service";
 import { MatSelectChange, MatSelect, MatSelectTrigger } from '@angular/material/select';
 import { DialogData } from '../dialog/dialog.component';
 import { EMPTY, Observable } from 'rxjs';
-import { TempPower } from 'src/app/core/models/temporal/temp-power.interface';
+import { TempPower } from 'src/app/core/models/temp/temp-power.interface';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MatIcon } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';

@@ -1,9 +1,16 @@
-import { LearCredentialDataDetail } from '../models/detail-models';
+import { LEARCredentialDataDetail } from "../models/entity/lear-credential-employee.entity";
 
-export const mockCredentialEmployee: LearCredentialDataDetail = {
+export const mockCredentialEmployee: LEARCredentialDataDetail = {
   procedure_id: 'mock-procedure-employee',
   credential_status: 'WITHDRAWN',
   credential: {
+    sub: null,
+    nbf: '1714675200',
+    iss: 'issuer-emp',
+    exp: '1735689600',
+    iat: '1714675200',
+    jti: 'jti-emp-123',
+    vc: {
       id: 'cred-emp',
       type: ['LEARCredentialEmployee'],
       description: 'Mock employee credential',
@@ -21,32 +28,52 @@ export const mockCredentialEmployee: LearCredentialDataDetail = {
           id: 'mandate-emp',
           life_span: { start: '2024-01-01', end: '2025-01-01' },
           mandatee: {
-            id: 'emp-1', email: 'emp@example.com', firstName: 'Emp', lastName: 'Loyee',
-            mobile_phone: '+34000000000', nationality: 'ES'
+            id: 'emp-1',
+            email: 'emp@example.com',
+            firstName: 'Emp',
+            lastName: 'Loyee',
+            mobile_phone: '+34000000000',
+            nationality: 'ES'
           },
           mandator: {
-            commonName: 'Mandator EMP', country: 'ES', emailAddress: 'mandator@emp.com',
-            organization: 'Org Mandator', organizationIdentifier: 'ORG-MAN-EMP', serialNumber: 'SN-EMP'
+            commonName: 'Mandator EMP',
+            country: 'ES',
+            emailAddress: 'mandator@emp.com',
+            organization: 'Org Mandator',
+            organizationIdentifier: 'ORG-MAN-EMP',
+            serialNumber: 'SN-EMP'
           },
           power: [
             { id: 'p1', action: ['Execute'], domain: 'DOME', function: 'Onboarding', type: 'Domain' },
-            { id: 'p1', action: ['Update'], domain: 'DOME', function: 'ProductOffering', type: 'Domain' },
+            { id: 'p2', action: ['Update'], domain: 'DOME', function: 'ProductOffering', type: 'Domain' },
           ],
           signer: {
-            commonName: 'Signer EMP', country: 'ES', emailAddress: 'signer@emp.com',
-            organization: 'SignerOrg', organizationIdentifier: 'SIGN-EMP', serialNumber: 'SN-SIGN-EMP'
+            commonName: 'Signer EMP',
+            country: 'ES',
+            emailAddress: 'signer@emp.com',
+            organization: 'SignerOrg',
+            organizationIdentifier: 'SIGN-EMP',
+            serialNumber: 'SN-SIGN-EMP'
           }
         }
       },
       validFrom: '2024-01-01',
-      validUntil: '2025-01-01'
+      validUntil: '2025-01-01',
+    }
   }
 };
 
-export const mockCredentialMachine: LearCredentialDataDetail = {
+export const mockCredentialMachine: LEARCredentialDataDetail = {
   procedure_id: 'mock-procedure-machine',
   credential_status: 'PEND_SIGNATURE',
   credential: {
+    sub: null,
+    nbf: '1714675200',
+    iss: 'issuer-mac',
+    exp: '1735689600',
+    iat: '1714675200',
+    jti: 'jti-mac-123',
+    vc: {
       id: 'cred-mac',
       type: ['LEARCredentialMachine'],
       description: 'Mock machine credential',
@@ -64,33 +91,56 @@ export const mockCredentialMachine: LearCredentialDataDetail = {
           id: 'mandate-mac',
           life_span: { start: '2024-01-01', end: '2025-01-01' },
           mandatee: {
-            id: 'machine-1', serviceName: 'Service X', serviceType: 'API',
-            version: '1.0', domain: 'cloud', ipAddress: '192.168.0.1',
+            id: 'machine-1',
+            serviceName: 'Service X',
+            serviceType: 'API',
+            version: '1.0',
+            domain: 'cloud',
+            ipAddress: '192.168.0.1',
             description: 'Main processing unit',
-            contact: { email: 'contact@machine.com', phone: '+34999999999' }
+            contact: {
+              email: 'contact@machine.com',
+              phone: '+34999999999'
+            }
           },
           mandator: {
-            commonName: 'Mandator MAC', country: 'DE', emailAddress: 'mandator@mac.com',
-            organization: 'Org Mandator MAC', organizationIdentifier: 'ORG-MAN-MAC', serialNumber: 'SN-MAC'
+            commonName: 'Mandator MAC',
+            country: 'DE',
+            emailAddress: 'mandator@mac.com',
+            organization: 'Org Mandator MAC',
+            organizationIdentifier: 'ORG-MAN-MAC',
+            serialNumber: 'SN-MAC'
           },
           power: [
             { id: 'p2', action: ['Execute'], domain: 'infra', function: 'Onboarding', type: 'perm' }
           ],
           signer: {
-            commonName: 'Signer MAC', country: 'DE', emailAddress: 'signer@mac.com',
-            organization: 'SignerOrgMac', organizationIdentifier: 'SIGN-MAC', serialNumber: 'SN-SIGN-MAC'
+            commonName: 'Signer MAC',
+            country: 'DE',
+            emailAddress: 'signer@mac.com',
+            organization: 'SignerOrgMac',
+            organizationIdentifier: 'SIGN-MAC',
+            serialNumber: 'SN-SIGN-MAC'
           }
         }
       },
       validFrom: '2024-01-01',
       validUntil: '2025-01-01'
+    }
   }
 };
 
-export const mockCredentialCertification: LearCredentialDataDetail = {
+export const mockCredentialCertification: LEARCredentialDataDetail = {
   procedure_id: 'mock-procedure-cert',
   credential_status: 'PEND_DOWNLOAD',
   credential: {
+    sub: null,
+    nbf: '1714675200',
+    iss: 'issuer-cert',
+    exp: '1735689600',
+    iat: '1714675200',
+    jti: 'jti-cert-123',
+    vc: {
       id: 'cred-cert',
       type: ['VerifiableCertification'],
       issuer: {
@@ -109,7 +159,12 @@ export const mockCredentialCertification: LearCredentialDataDetail = {
           address: '123 Rue Example'
         },
         compliance: [
-          { id: 'comp1', hash: 'abc123', scope: 'full', standard: 'ISO9001' }
+          {
+            id: 'comp1',
+            hash: 'abc123',
+            scope: 'full',
+            standard: 'ISO9001'
+          }
         ],
         product: {
           productId: 'prod-1',
@@ -135,5 +190,6 @@ export const mockCredentialCertification: LearCredentialDataDetail = {
         organizationIdentifier: 'SIGN-CERT',
         serialNumber: 'SN-CERT-123'
       }
+    }
   }
 };

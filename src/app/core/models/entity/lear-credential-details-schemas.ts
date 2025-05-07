@@ -1,16 +1,16 @@
 // --- Form Schemas ---
 
-export type FormFieldSchema = {
+export type CredentialDetailsFormFieldSchema = {
     type: 'control' | 'group' | 'array';
     display?: 'main' | 'side'; //should it be displayed in the main space or as a side card?
-    fields?: FormSchema; //for 'group'
-    itemSchema?: FormSchema; // for 'array'
+    fields?: CredentialDetailsFormSchema; //for 'group'
+    itemSchema?: CredentialDetailsFormSchema; // for 'array'
   };
   
-  export type FormSchema = Record<string, FormFieldSchema>;
+export type CredentialDetailsFormSchema = Record<string, CredentialDetailsFormFieldSchema>;
   
 
-export const LearCredentialEmployeeFormSchema: FormSchema = {
+export const LearCredentialEmployeeDetailsFormSchema: CredentialDetailsFormSchema = {
     mandatee: {
       type: 'group',
       display: 'main',
@@ -62,7 +62,7 @@ export const LearCredentialEmployeeFormSchema: FormSchema = {
   };
   
   //todo decidir camps i ordre
-  export const LearCredentialMachineFormSchema: FormSchema = {
+  export const LearCredentialMachineDetailsFormSchema: CredentialDetailsFormSchema = {
     mandatee: {
       type: 'group',
       display: 'main',
@@ -122,7 +122,7 @@ export const LearCredentialEmployeeFormSchema: FormSchema = {
   };
   
   //todo decidir camps i ordre (--compliance)
-  export const VerifiableCertificationFormSchema: FormSchema = {
+  export const VerifiableCertificationDetailsFormSchema: CredentialDetailsFormSchema = {
     issuer: {
       type: 'group',
       display: 'side',

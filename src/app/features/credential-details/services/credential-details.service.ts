@@ -2,29 +2,27 @@ import { inject, Injectable, signal } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { EMPTY, from, Observable, Observer, switchMap, take, tap } from 'rxjs';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
-import { buildFormFromSchema, FormSchemaByType, getFormDataByType, getFormSchemaByType } from '../utils/detail-utils';
-import { FormSchema } from '../models/detail-form-models';
+import { buildFormFromSchema, FormSchemaByType, getFormDataByType, getFormSchemaByType } from '../utils/credential-details-utils';
 import { DialogWrapperService } from 'src/app/shared/components/dialog/dialog-wrapper/dialog-wrapper.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { DialogData } from 'src/app/shared/components/dialog/dialog.component';
 import { CredentialStatus, CredentialType, LEARCredentialDataDetail } from 'src/app/core/models/entity/lear-credential-employee.entity';
+import { CredentialDetailsFormSchema } from 'src/app/core/models/entity/lear-credential-details-schemas';
 
-@Injectable()
-export class DetailService {
-  credentialId = signal<string>('');
-  credentialStatus = signal<CredentialStatus | undefined>(undefined);
-  credentialDataDetail = signal<LEARCredentialDataDetail | undefined>(undefined);
-  form = signal<FormGroup | undefined>(undefined);
-  formSchema = signal<FormSchema | undefined>(undefined);
+@Injectable() //provided in component
+export class CredentialDetailsService {
+  public credentialId = signal<string>('');
+  public credentialStatus = signal<CredentialStatus | undefined>(undefined);
+  public credentialDataDetail = signal<LEARCredentialDataDetail | undefined>(undefined);
+  public credentialDetailsForm = signal<FormGroup | undefined>(undefined);
+  public formSchema = signal<CredentialDetailsFormSchema | undefined>(undefined);
 
   private readonly credentialProcedureService = inject(CredentialProcedureService);
   private readonly dialog = inject(DialogWrapperService);
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly translate = inject(TranslateService);
-
-  constructor() {}
 
   public setCredentialId(id: string) {
     this.credentialId.set(id);
@@ -86,10 +84,10 @@ export class DetailService {
     builtForm.disable();
 
     this.formSchema.set(schema);
-    this.form.set(builtForm);
+    this.credentialDetailsForm.set(builtForm);
 
     console.log('Form has been loaded:');
-    console.log(this.form());
+    console.log(this.credentialDetailsForm());
   }
 
 

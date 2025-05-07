@@ -1,10 +1,7 @@
 import { MatCard, MatCardContent } from '@angular/material/card';
-import { AddPrefixPipe } from '../../../../shared/pipes/add-prefix.pipe';
-import { CapitalizePipe } from './../../../../shared/pipes/capitalize.pipe';
-import { DetailService } from './../../services/detail.service';
 import { Component, computed, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { AbstractControl, FormArray, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormArray, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { CommonModule } from '@angular/common';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
@@ -16,25 +13,28 @@ import { MatButton } from '@angular/material/button';
 import { Observable } from 'rxjs';
 import { LoaderService } from 'src/app/core/services/loader.service';
 import { PowerActionsMap, TmfAction, TmfFunction } from 'src/app/core/models/entity/lear-credential-employee.entity';
+import { CapitalizePipe } from 'src/app/shared/pipes/capitalize.pipe';
+import { AddPrefixPipe } from 'src/app/shared/pipes/add-prefix.pipe';
+import { CredentialDetailsService } from './services/credential-details.service';
 
 
 @Component({
   standalone: true,
   imports: [AddPrefixPipe, CapitalizePipe, CommonModule, FormsModule, MatButton, MatCard, MatCardContent, MatFormField, MatIcon, MatInput, MatLabel, MatSlideToggle, ReactiveFormsModule, RouterLink, TranslatePipe ],
-  providers:[DetailService],
+  providers:[CredentialDetailsService],
   selector: 'app-detail-from',
-  templateUrl: './detail-form.component.html',
-  styleUrl: './detail-form.component.scss'
+  templateUrl: './credential-details.component.html',
+  styleUrl: './credential-details.component.scss'
 })
-export class DetailFormComponent implements OnInit {
+export class CredentialDetailsComponent implements OnInit {
   public isLoading$: Observable<boolean>;
   
-  private readonly detailService = inject(DetailService);
+  private readonly detailService = inject(CredentialDetailsService);
   private readonly loader = inject(LoaderService);
   private readonly route = inject(ActivatedRoute);
 
   public credentialStatus = this.detailService.credentialStatus;
-  public form = this.detailService.form;
+  public form = this.detailService.credentialDetailsForm;
   public formSchema = this.detailService.formSchema;
 
   public showReminderButton = computed(()=>{

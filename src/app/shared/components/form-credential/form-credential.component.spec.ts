@@ -14,7 +14,7 @@ import { MaxLengthDirective } from '../../directives/validators/max-length-direc
 import { CustomEmailValidatorDirective } from '../../directives/validators/custom-email-validator.directive';
 import { UnicodeValidatorDirective } from '../../directives/validators/unicode-validator.directive';
 import { OrganizationNameValidatorDirective } from '../../directives/validators/organization-name.validator.directive';
-import { TempPower } from 'src/app/core/models/temporal/temp-power.interface';
+import { TempPower } from 'src/app/core/models/temp/temp-power.interface';
 import { Power } from 'src/app/core/models/entity/lear-credential-employee.entity';
 import { BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import { DialogWrapperService } from '../dialog/dialog-wrapper/dialog-wrapper.service';

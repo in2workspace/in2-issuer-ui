@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { catchError } from 'rxjs/operators';
 import { EmployeeMandatee, EmployeeMandator, Power, TmfAction } from "../../../../core/models/entity/lear-credential-employee.entity";
 import { Observable, BehaviorSubject } from 'rxjs';
-import { TempPower } from 'src/app/core/models/temporal/temp-power.interface';
+import { TempPower } from 'src/app/core/models/temp/temp-power.interface';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { Country } from './country.service';
 import { EmployeeProcedureRequest } from 'src/app/core/models/dto/procedure-request.dto';

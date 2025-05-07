@@ -1,18 +1,17 @@
+import { CredentialDetailsComponent } from './credential-details.component';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DetailFormComponent } from './detail-form.component';
-
 describe('DetailFormComponent', () => {
-  let component: DetailFormComponent;
-  let fixture: ComponentFixture<DetailFormComponent>;
+  let component: CredentialDetailsComponent;
+  let fixture: ComponentFixture<CredentialDetailsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DetailFormComponent]
+      imports: [CredentialDetailsComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(DetailFormComponent);
+    fixture = TestBed.createComponent(CredentialDetailsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

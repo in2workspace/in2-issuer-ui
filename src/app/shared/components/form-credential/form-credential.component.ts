@@ -6,7 +6,7 @@ import { FormCredentialService } from './services/form-credential.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { MatOption } from '@angular/material/core';
-import { TempPower } from "../../../core/models/temporal/temp-power.interface";
+import { TempPower } from "../../../core/models/temp/temp-power.interface";
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { from, Observable, of, switchMap, tap } from 'rxjs';
 import { CommonIssuer, EmployeeMandatee, Power } from 'src/app/core/models/entity/lear-credential-employee.entity';
