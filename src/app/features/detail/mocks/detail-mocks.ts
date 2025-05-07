@@ -92,7 +92,7 @@ export const mockCredentialCertification: LearCredentialDataDetail = {
   credential_status: 'PEND_DOWNLOAD',
   credential: {
       id: 'cred-cert',
-      type: ['VerfiableCertification'],
+      type: ['VerifiableCertification'],
       issuer: {
         id: 'issuer-cert',
         commonName: 'Cert Issuer',

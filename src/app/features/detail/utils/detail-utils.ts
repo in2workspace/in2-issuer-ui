@@ -5,7 +5,7 @@ import { CredentialType, FormDataByType, LEARCredential, LEARCredentialEmployee,
 export const FormSchemaByType: Record<CredentialType, FormSchema> = {
     LEARCredentialEmployee: LearCredentialEmployeeFormSchema,
     LEARCredentialMachine: LearCredentialMachineFormSchema,
-    VerfiableCertification: VerifiableCertificationFormSchema
+    VerifiableCertification: VerifiableCertificationFormSchema
   };
   
   export function getFormSchemaByType(type: CredentialType): FormSchema {
@@ -66,7 +66,7 @@ const FormDataExtractorByType: Record<CredentialType, (credential: LEARCredentia
       };
     },
   
-    VerfiableCertification: (credential) => {
+    VerifiableCertification: (credential) => {
       const c = credential as VerifiableCertification;
       return {
         issuer: c.issuer,

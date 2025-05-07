@@ -22,7 +22,7 @@ export interface LEARCredentialJwtPayload {
   jti: string;
 }
 
-export type CredentialType = 'LEARCredentialEmployee' | 'LEARCredentialMachine' | 'VerfiableCertification';
+export type CredentialType = 'LEARCredentialEmployee' | 'LEARCredentialMachine' | 'VerifiableCertification';
 
 export type LEARCredential =
   | LEARCredentialEmployee
@@ -234,7 +234,7 @@ export type VerifiableCertificationFormData = {
 export type FormDataByType = {
   LEARCredentialEmployee: LearCredentialEmployeeFormData;
   LEARCredentialMachine: LearCredentialMachineFormData;
-  VerfiableCertification: VerifiableCertificationFormData;
+  VerifiableCertification: VerifiableCertificationFormData;
 };
 
 export type CredentialFormData<T extends CredentialType = CredentialType> = FormDataByType[T];

@@ -208,7 +208,7 @@
 // export type FormDataByType = {
 //   LEARCredentialEmployee: LearCredentialEmployeeFormData;
 //   LEARCredentialMachine: LearCredentialMachineFormData;
-//   VerfiableCertification: VerifiableCertificationFormData;
+//   VerifiableCertification: VerifiableCertificationFormData;
 // };
 
 // export type CredentialFormData<T extends CredentialType = CredentialType> = FormDataByType[T];
