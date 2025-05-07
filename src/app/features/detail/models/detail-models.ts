@@ -155,7 +155,7 @@
 //     };
 //   };
 //   validFrom: string;
-//   atester: Atester;
+//   attester: Attester;
 //   validUntil: string;
 //   signer: CertificationSigner;
 // }
@@ -176,7 +176,7 @@
 //   serialNumber: string;
 // }
 
-// export interface Atester {
+// export interface Attester {
 //   id: string;
 //   organization: string;
 //   organizationIdentifier: string;

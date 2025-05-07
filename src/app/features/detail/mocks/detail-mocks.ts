@@ -117,7 +117,7 @@ export const mockCredentialCertification: LearCredentialDataDetail = {
           productVersion: '2.3'
         }
       },
-      atester: {
+      attester: {
         id: 'tester-1',
         organization: 'AuditCo',
         organizationIdentifier: 'AUD123',

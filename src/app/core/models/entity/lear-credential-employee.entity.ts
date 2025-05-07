@@ -181,7 +181,7 @@ export interface VerifiableCertification {
     };
   };
   validFrom: string;
-  atester: Atester;
+  attester: Attester;
   validUntil: string;
   signer: CertificationSigner;
 }
@@ -202,7 +202,7 @@ export interface CertificationSigner {
   serialNumber: string;
 }
 
-export interface Atester {
+export interface Attester {
   id: string;
   organization: string;
   organizationIdentifier: string;
