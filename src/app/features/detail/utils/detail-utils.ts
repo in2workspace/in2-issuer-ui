@@ -1,6 +1,6 @@
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { FormSchema, LearCredentialEmployeeFormSchema, LearCredentialMachineFormSchema, VerifiableCertificationFormSchema } from '../models/detail-form-models';
-import { CredentialType, FormDataByType, LEARCredential, LEARCredentialEmployee, LEARCredentialMachine, VerifiableCertification } from 'src/app/core/models/entity/lear-credential-employee.entity';
+import { CredentialFormData, CredentialType, FormDataByType, LEARCredential, LEARCredentialEmployee, LEARCredentialMachine, VerifiableCertification } from 'src/app/core/models/entity/lear-credential-employee.entity';
 
 export const FormSchemaByType: Record<CredentialType, FormSchema> = {
     LEARCredentialEmployee: LearCredentialEmployeeFormSchema,
@@ -24,6 +24,15 @@ export function buildFormFromSchema(
   const group: Record<string, any> = {};
 
   for (const key in schema) {
+    //don't show Issuer if not present
+    if (
+      key === 'issuer' &&
+      schema[key].type === 'group' &&
+      (!data?.issuer?.id || data.issuer.id === '')
+    ) {
+      continue;
+    }
+
     const field = schema[key];
 
     if (field.type === 'control') {
@@ -80,12 +89,12 @@ const FormDataExtractorByType: Record<CredentialType, (credential: LEARCredentia
   export function getFormDataByType<T extends CredentialType>(
     credential: LEARCredential,
     type: T
-  ): FormDataByType[T] {
+  ): CredentialFormData {
     console.log('data extractor; credential:' +  credential)
     console.log('data extractor; type:' +  type)
     const extractor = FormDataExtractorByType[type];
     if (!extractor) {
       throw new Error(`Unsupported data extractor for type: ${type}`);
     }
-    return extractor(credential) as FormDataByType[T];
+    return extractor(credential) as CredentialFormData;
   }

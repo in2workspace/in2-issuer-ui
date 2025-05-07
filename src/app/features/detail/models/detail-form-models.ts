@@ -61,6 +61,7 @@ export const LearCredentialEmployeeFormSchema: FormSchema = {
     },
   };
   
+  //todo decidir camps i ordre
   export const LearCredentialMachineFormSchema: FormSchema = {
     mandatee: {
       type: 'group',
@@ -120,6 +121,7 @@ export const LearCredentialEmployeeFormSchema: FormSchema = {
     },
   };
   
+  //todo decidir camps i ordre (--compliance)
   export const VerifiableCertificationFormSchema: FormSchema = {
     issuer: {
       type: 'group',
