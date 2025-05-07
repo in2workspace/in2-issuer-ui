@@ -107,14 +107,6 @@ export class DetailFormComponent implements OnInit {
     console.log(PowerActionsMap[tmfFunction] || [])
     return PowerActionsMap[tmfFunction] || [];
   }
-
-  hasIssuer(): boolean {
-    const form = this.form();
-    if (!form) return false;
-  
-    const issuerGroup = form.get('issuer');
-    return !!(issuerGroup instanceof FormGroup && issuerGroup.get('id'));
-  }
   
 
 }
