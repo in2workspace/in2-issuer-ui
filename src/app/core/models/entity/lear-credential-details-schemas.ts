@@ -155,9 +155,9 @@ export const LearCredentialEmployeeDetailsFormSchema: CredentialDetailsFormSchem
       },
     },
     compliance: {
-      type: 'group',
+      type: 'array',
       display: 'main',
-      fields: {
+      itemSchema: {
         id: { type: 'control' },
         hash: { type: 'control' },
         scope: { type: 'control' },
