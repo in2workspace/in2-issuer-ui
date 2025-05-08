@@ -39,13 +39,20 @@ export class CredentialDetailsComponent implements OnInit {
   public credentialDetailsFormSchema$ = this.detailsService.credentialDetailsFormSchema$;
   public isLoading$ = this.loader.isLoading$;
 
-  public showReminderButton$ = computed(()=>{
-    return (this.credentialStatus$() === 'WITHDRAWN') || (this.credentialStatus$() === 'DRAFT') || (this.credentialStatus$() === 'PEND_DOWNLOAD') 
-    && this.credentialType$() === 'LEARCredentialEmployee';
-  })
+  public showReminderButton$ = computed(() => {
+    return (
+      (
+        this.credentialStatus$() === 'WITHDRAWN' ||
+        this.credentialStatus$() === 'DRAFT' ||
+        this.credentialStatus$() === 'PEND_DOWNLOAD'
+      ) &&
+      this.credentialType$() === 'LEARCredentialEmployee'
+    );
+  });
 
   public showSignCredentialButton$ = computed(()=>{
-    return (this.credentialStatus$() === 'PEND_SIGNATURE') && this.credentialType$() === 'LEARCredentialEmployee' && this.credentialType$() === 'VerifiableCertification';
+    return (this.credentialStatus$() === 'PEND_SIGNATURE') && 
+    (this.credentialType$() === 'LEARCredentialEmployee' || this.credentialType$() === 'VerifiableCertification');
   });
 
   public ngOnInit(): void {
