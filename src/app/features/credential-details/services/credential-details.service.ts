@@ -70,7 +70,7 @@ export class CredentialDetailsService {
     const credentialValidFrom = credential.validFrom;
     this.credentialValidFrom$.set(credentialValidFrom);
 
-    const credentialValidUntil = credential.validFrom;
+    const credentialValidUntil = credential.validUntil;
     this.credentialValidUntil$.set(credentialValidUntil);
 
     const credentialTypes = credential.type as string[];
