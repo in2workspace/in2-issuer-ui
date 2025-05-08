@@ -32,17 +32,18 @@ export class CredentialDetailsComponent implements OnInit {
   private readonly loader = inject(LoaderService);
   private readonly route = inject(ActivatedRoute);
 
-  public credentialStatus = this.detailsService.credentialStatus;
-  public credentialDetailsForm = this.detailsService.credentialDetailsForm;
-  public credentialDetailsFormSchema = this.detailsService.credentialDetailsFormSchema;
+  public credentialType$ = this.detailsService.credentialType$;
+  public credentialStatus$ = this.detailsService.credentialStatus$;
+  public credentialDetailsForm$ = this.detailsService.credentialDetailsForm$;
+  public credentialDetailsFormSchema$ = this.detailsService.credentialDetailsFormSchema$;
   public isLoading$ = this.loader.isLoading$;
 
-  public showReminderButton = computed(()=>{
-    return (this.credentialStatus() === 'WITHDRAWN') || (this.credentialStatus() === 'DRAFT') || (this.credentialStatus() === 'PEND_DOWNLOAD');
+  public showReminderButton$ = computed(()=>{
+    return (this.credentialStatus$() === 'WITHDRAWN') || (this.credentialStatus$() === 'DRAFT') || (this.credentialStatus$() === 'PEND_DOWNLOAD');
   })
 
-  public showSignCredentialButton = computed(()=>{
-    return this.credentialStatus() === 'PEND_SIGNATURE';
+  public showSignCredentialButton$ = computed(()=>{
+    return this.credentialStatus$() === 'PEND_SIGNATURE';
   });
 
   public ngOnInit(): void {
@@ -56,13 +57,13 @@ export class CredentialDetailsComponent implements OnInit {
   }
   
 
-  private loadCredentialDetailAndForm(): void {
-    this.detailsService.loadCredentialDetailAndForm();
+  private loadCredentialDetailsAndForm(): void {
+    this.detailsService.loadCredentialDetailsAndForm();
   }
 
   //async function
   private initializeForm(): void {
-    this.loadCredentialDetailAndForm();
+    this.loadCredentialDetailsAndForm();
   }
 
   //SEND REMINDER

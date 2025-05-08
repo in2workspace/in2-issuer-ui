@@ -12,11 +12,12 @@ import { CredentialDetailsFormSchema } from 'src/app/core/models/entity/lear-cre
 
 @Injectable() //provided in component
 export class CredentialDetailsService {
-  public credentialDetailsData = signal<LEARCredentialDataDetails | undefined>(undefined);
-  public credentialDetailsForm = signal<FormGroup | undefined>(undefined);
-  public credentialDetailsFormSchema = signal<CredentialDetailsFormSchema | undefined>(undefined);
-  public procedureId = signal<string>('');
-  public credentialStatus = signal<CredentialStatus | undefined>(undefined);
+  public credentialType$ = signal<CredentialType | undefined>(undefined);
+  public credentialDetailsData$ = signal<LEARCredentialDataDetails | undefined>(undefined);
+  public credentialDetailsForm$ = signal<FormGroup | undefined>(undefined);
+  public credentialDetailsFormSchema$ = signal<CredentialDetailsFormSchema | undefined>(undefined);
+  public procedureId$ = signal<string>('');
+  public credentialStatus$ = signal<CredentialStatus | undefined>(undefined);
 
   private readonly credentialProcedureService = inject(CredentialProcedureService);
   private readonly dialog = inject(DialogWrapperService);
@@ -25,22 +26,22 @@ export class CredentialDetailsService {
   private readonly translate = inject(TranslateService);
 
   public setProcedureId(id: string) {
-    this.procedureId.set(id);
+    this.procedureId$.set(id);
   }
 
-  public loadCredentialDetailAndForm(): void {  
+  public loadCredentialDetailsAndForm(): void {  
     this.loadCredentialDetails()
       .subscribe(this.loadFormObserver);
   }
 
   public loadCredentialDetails(): Observable<LEARCredentialDataDetails> {
     return this.credentialProcedureService
-      .getCredentialProcedureById(this.procedureId())
+      .getCredentialProcedureById(this.procedureId$())
       .pipe(
         take(1),
       tap(data=>{
-        this.credentialDetailsData.set(data);
-        this.credentialStatus.set(data.credential_status);
+        this.credentialDetailsData$.set(data);
+        this.credentialStatus$.set(data.credential_status);
       }));
   }
 
@@ -55,7 +56,7 @@ export class CredentialDetailsService {
   }
 
   private loadForm(): void {
-    const data = this.credentialDetailsData();
+    const data = this.credentialDetailsData$();
     if (!data){
       console.error('No credential data to load the form.');
       return;
@@ -70,6 +71,7 @@ export class CredentialDetailsService {
     }
     console.log('type')
     console.log(type);
+    this.credentialType$.set(type);
     
     const schema = getFormSchemaByType(type);
     console.log('Schema: ');
@@ -83,11 +85,11 @@ export class CredentialDetailsService {
     const builtForm = buildFormFromSchema(this.fb, schema, formData);
     builtForm.disable();
 
-    this.credentialDetailsFormSchema.set(schema);
-    this.credentialDetailsForm.set(builtForm);
+    this.credentialDetailsFormSchema$.set(schema);
+    this.credentialDetailsForm$.set(builtForm);
 
     console.log('Form has been loaded:');
-    console.log(this.credentialDetailsForm());
+    console.log(this.credentialDetailsForm$());
   }
 
 
@@ -130,7 +132,7 @@ export class CredentialDetailsService {
     titleKey: string,
     messageKey: string
   ): Observable<boolean> {
-    const procedureId = this.procedureId;
+    const procedureId = this.procedureId$;
     if (!procedureId) {
       console.error('No procedure id.');
       return EMPTY;
