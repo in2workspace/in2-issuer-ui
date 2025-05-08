@@ -1,6 +1,6 @@
-import { LEARCredentialDataDetail } from "../models/entity/lear-credential-employee.entity";
+import { LEARCredentialDataDetails } from "../models/entity/lear-credential-employee.entity";
 
-export const mockCredentialEmployee: LEARCredentialDataDetail = {
+export const mockCredentialEmployee: LEARCredentialDataDetails = {
   procedure_id: 'mock-procedure-employee',
   credential_status: 'WITHDRAWN',
   credential: {
@@ -63,7 +63,7 @@ export const mockCredentialEmployee: LEARCredentialDataDetail = {
   }
 };
 
-export const mockCredentialMachine: LEARCredentialDataDetail = {
+export const mockCredentialMachine: LEARCredentialDataDetails = {
   procedure_id: 'mock-procedure-machine',
   credential_status: 'PEND_SIGNATURE',
   credential: {
@@ -130,7 +130,7 @@ export const mockCredentialMachine: LEARCredentialDataDetail = {
   }
 };
 
-export const mockCredentialCertification: LEARCredentialDataDetail = {
+export const mockCredentialCertification: LEARCredentialDataDetails = {
   procedure_id: 'mock-procedure-cert',
   credential_status: 'PEND_DOWNLOAD',
   credential: {
