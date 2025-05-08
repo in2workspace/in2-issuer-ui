@@ -57,8 +57,8 @@ export const mockCredentialEmployee: LEARCredentialDataDetails = {
           }
         }
       },
-      validFrom: '2024-01-01',
-      validUntil: '2025-01-01',
+      validFrom: '2023-08-22T00:00:00Z',
+      validUntil: '2024-01-01T08:00:00.000Z',
     }
   }
 };
@@ -164,6 +164,12 @@ export const mockCredentialCertification: LEARCredentialDataDetails = {
             hash: 'abc123',
             scope: 'full',
             standard: 'ISO9001'
+          },
+          {
+            id: 'comp2',
+            hash: 'fdsafda',
+            scope: 'fullaaa',
+            standard: 'ISO666666'
           }
         ],
         product: {

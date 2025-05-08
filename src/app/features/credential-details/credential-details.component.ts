@@ -32,6 +32,9 @@ export class CredentialDetailsComponent implements OnInit {
   private readonly loader = inject(LoaderService);
   private readonly route = inject(ActivatedRoute);
 
+
+  public credentialValidFrom$ = this.detailsService.credentialValidFrom$;
+  public credentialValidUntil$ = this.detailsService.credentialValidUntil$;
   public credentialType$ = this.detailsService.credentialType$;
   public credentialStatus$ = this.detailsService.credentialStatus$;
   public credentialDetailsForm$ = this.detailsService.credentialDetailsForm$;

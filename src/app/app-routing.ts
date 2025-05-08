@@ -9,6 +9,7 @@ export const routes: Routes = [
     path: 'home',
     loadChildren: () => import('./features/home/home.routes').then(m => m.default)
   },
+  //todo remove
   {
     path: 'details/:id',
     component: CredentialDetailsComponent
@@ -18,6 +19,7 @@ export const routes: Routes = [
     loadChildren: () => import('./features/settings/settings.routes').then(m => m.default),
     canActivate: [AutoLoginPartialRoutesGuard, settingsGuard],
   },
+  //todo use children
   {
     path: 'organization/credentials',
     loadChildren: () =>

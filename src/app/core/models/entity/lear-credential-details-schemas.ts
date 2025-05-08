@@ -133,6 +133,18 @@ export const LearCredentialEmployeeDetailsFormSchema: CredentialDetailsFormSchem
         organization: { type: 'control' },
       },
     },
+    attester: {
+      type: 'group',
+      display: 'side',
+      fields: {
+        id: { type: 'control' },
+        firstName: { type: 'control' },
+        lastName: { type: 'control' },
+        country: { type: 'control' },
+        organization: { type: 'control' },
+        organizationIdentifier: { type: 'control' },
+      }
+    },
     company: {
       type: 'group',
       display: 'main',
@@ -155,13 +167,8 @@ export const LearCredentialEmployeeDetailsFormSchema: CredentialDetailsFormSchem
       },
     },
     compliance: {
-      type: 'array',
+      type: 'group',
       display: 'main',
-      itemSchema: {
-        id: { type: 'control' },
-        hash: { type: 'control' },
-        scope: { type: 'control' },
-        standard: { type: 'control' },
-      },
+      fields: {} //it is dynamically buiolt in buildFormFromSchema
     },
   };

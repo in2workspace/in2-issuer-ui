@@ -230,6 +230,7 @@ export type VerifiableCertificationFormData = {
   issuer: CertificationIssuer;
   company: VerifiableCertification['credentialSubject']['company'];
   product: VerifiableCertification['credentialSubject']['product'];
+  attester: VerifiableCertification['attester'];
 };
 
 export type FormDataByType = {

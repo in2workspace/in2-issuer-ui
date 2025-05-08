@@ -2,6 +2,14 @@ import { CredentialDetailsFormSchema, LearCredentialEmployeeDetailsFormSchema, L
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { CredentialFormData, CredentialType, LEARCredential, LEARCredentialEmployee, LEARCredentialMachine, PowerActionsMap, TmfAction, TmfFunction, VerifiableCertification } from 'src/app/core/models/entity/lear-credential-employee.entity';
 
+type ComplianceEntry = {
+  id: string;
+  hash: string;
+  scope: string;
+};
+
+type ComplianceMap = Record<string, ComplianceEntry>;
+
 export const FormDataExtractorByType: Record<CredentialType, (credential: LEARCredential) => any> = {
   LEARCredentialEmployee: (credential) => {
     const c = credential as LEARCredentialEmployee;
@@ -25,11 +33,22 @@ export const FormDataExtractorByType: Record<CredentialType, (credential: LEARCr
 
   VerifiableCertification: (credential) => {
     const c = credential as VerifiableCertification;
+  
+    const complianceEntries: ComplianceMap = c.credentialSubject.compliance.reduce(
+      (acc, item) => {
+        const { standard, ...rest } = item;
+        acc[standard] = rest;
+        return acc;
+      },
+      {} as ComplianceMap
+    );
+  
     return {
       issuer: c.issuer,
+      attester: c.attester,
       company: c.credentialSubject.company,
       product: c.credentialSubject.product,
-      compliance: c.credentialSubject.compliance
+      compliance: complianceEntries,
     };
   }
 };
@@ -67,7 +86,22 @@ export function buildFormFromSchema(
 
     const field = schema[key];
 
-    if (field.type === 'control') {
+    if (key === 'compliance' && field.type === 'group') {
+      const complianceGroup: Record<string, FormGroup> = {};
+      const complianceData = data?.[key] ?? {};
+    
+      for (const standard in complianceData) {
+        complianceGroup[standard] = fb.group({
+          id: new FormControl(complianceData[standard].id),
+          hash: new FormControl(complianceData[standard].hash),
+          scope: new FormControl(complianceData[standard].scope),
+        });
+      }
+    
+      group[key] = fb.group(complianceGroup);
+    }
+
+    else if (field.type === 'control') {
       group[key] = new FormControl(data?.[key] ?? null);
     }
 

@@ -12,6 +12,8 @@ import { CredentialDetailsFormSchema } from 'src/app/core/models/entity/lear-cre
 
 @Injectable() //provided in component
 export class CredentialDetailsService {
+  public credentialValidFrom$ = signal('');
+  public credentialValidUntil$ = signal('');
   public credentialType$ = signal<CredentialType | undefined>(undefined);
   public credentialDetailsData$ = signal<LEARCredentialDataDetails | undefined>(undefined);
   public credentialDetailsForm$ = signal<FormGroup | undefined>(undefined);
@@ -63,6 +65,14 @@ export class CredentialDetailsService {
     }
 
     const credential = data.credential.vc;
+
+
+    const credentialValidFrom = credential.validFrom;
+    this.credentialValidFrom$.set(credentialValidFrom);
+
+    const credentialValidUntil = credential.validFrom;
+    this.credentialValidUntil$.set(credentialValidUntil);
+
     const credentialTypes = credential.type as string[];
     const type = credentialTypes.find((t): t is CredentialType => t in FormSchemaByType);
 
