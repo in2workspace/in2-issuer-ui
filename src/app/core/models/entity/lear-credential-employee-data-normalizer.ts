@@ -1,4 +1,4 @@
-import { LEARCredential, EmployeeMandatee, Power } from './lear-credential-employee.entity';
+import { LEARCredential, EmployeeMandatee, Power, VerifiableCertification, Attester } from './lear-credential-employee.entity';
 
 // Interfaces for the raw JSON of Mandatee and Power
 interface RawEmployeeMandatee {
@@ -21,6 +21,10 @@ interface RawPower {
   tmf_type?: string;
 }
 
+export interface RawVerifiableCertification extends VerifiableCertification{
+  atester?: Attester;
+}
+
 export class LEARCredentialDataNormalizer {
 
   /**
@@ -34,6 +38,8 @@ export class LEARCredentialDataNormalizer {
     const credentialTypes = normalizedData.type;
     const isEmployee = credentialTypes.includes('LEARCredentialEmployee');
     const isMachine = credentialTypes.includes('LEARCredentialMachine');
+    const isVerifiableCertification = credentialTypes.includes('VerifiableCertification');
+
   
     if ((isEmployee || isMachine) && 'mandate' in normalizedData.credentialSubject) {
       const mandate = normalizedData.credentialSubject.mandate;
@@ -44,6 +50,13 @@ export class LEARCredentialDataNormalizer {
   
       if (Array.isArray(mandate.power)) {
         mandate.power = mandate.power.map(p => this.normalizePower(p));
+      }
+    }
+    if (isVerifiableCertification && 'atester' in normalizedData) {
+      const rawData = normalizedData as RawVerifiableCertification;
+      if (rawData.atester) {
+        rawData.attester = rawData.atester;
+        delete rawData.atester;
       }
     }
   
