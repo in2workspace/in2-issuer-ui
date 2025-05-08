@@ -38,19 +38,18 @@ export const LearCredentialEmployeeDetailsFormSchema: CredentialDetailsFormSchem
       type: 'group',
       display: 'side',
       fields: {
-        id: { type: 'control' },
-        organizationIdentifier: { type: 'control'},
-        organization: { type: 'control' },
-        country: { type: 'control' },
         commonName: { type: 'control' },
         emailAddress: { type: 'control' },
-        serialNumber: { type: 'control' }
+        serialNumber: { type: 'control' },
+        organization: { type: 'control' },
+        organizationIdentifier: { type: 'control'},
+        country: { type: 'control' },
       },
     },
     power: {
       type: 'group',
       display: 'main',
-      //will be set dynamically
+      //content will be set dynamically
     },
   };
   
@@ -81,11 +80,11 @@ export const LearCredentialEmployeeDetailsFormSchema: CredentialDetailsFormSchem
       display: 'side',
       fields: {
         commonName: { type: 'control' },
-        country: { type: 'control' },
         emailAddress: { type: 'control' },
+        serialNumber: { type: 'control' },
         organization: { type: 'control' },
         organizationIdentifier: { type: 'control' },
-        serialNumber: { type: 'control' },
+        country: { type: 'control' },
       },
     },
     issuer: {
@@ -93,12 +92,12 @@ export const LearCredentialEmployeeDetailsFormSchema: CredentialDetailsFormSchem
       display: 'side',
       fields: {
         // id: { type: 'control' },
-        organizationIdentifier: { type: 'control'},
-        organization: { type: 'control' },
-        country: { type: 'control' },
         commonName: { type: 'control' },
         emailAddress: { type: 'control' },
-        serialNumber: { type: 'control' }
+        serialNumber: { type: 'control' },
+        organization: { type: 'control' },
+        organizationIdentifier: { type: 'control'},
+        country: { type: 'control' },
       },
     },
     power: {
@@ -114,10 +113,9 @@ export const LearCredentialEmployeeDetailsFormSchema: CredentialDetailsFormSchem
       type: 'group',
       display: 'side',
       fields: {
-        id: { type: 'control' },
         commonName: { type: 'control' },
-        country: { type: 'control' },
         organization: { type: 'control' },
+        country: { type: 'control' },
       },
     },
     attester: {
@@ -127,9 +125,9 @@ export const LearCredentialEmployeeDetailsFormSchema: CredentialDetailsFormSchem
         id: { type: 'control' },
         firstName: { type: 'control' },
         lastName: { type: 'control' },
-        country: { type: 'control' },
         organization: { type: 'control' },
         organizationIdentifier: { type: 'control' },
+        country: { type: 'control' },
       }
     },
     company: {
