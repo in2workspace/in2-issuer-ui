@@ -1,0 +1,25 @@
+// STATUS STYLES
+.status-ellipse {
+    padding: 5px 10px;
+    display: inline-block;
+    min-width: 100px;
+    border-radius: 15px;
+    color: white;
+    text-align: center;
+  }
+  
+  .status-default {
+    background-color: rgb(101, 101, 101);
+  }
+  
+  .status-valid {
+    background-color: #4caf50;
+  }
+  
+  .status-expired {
+    background-color: #f44336; 
+  }
+  
+  .status-draft {
+    background-color: #ff9800;
+  }

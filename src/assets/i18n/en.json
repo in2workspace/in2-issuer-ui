@@ -61,28 +61,13 @@
     "email": "Email",
     "nationality": "Nationality"
   },
-  "credentialDetail": {
-    "credentialDetails": "Credential details",
-    "textinformation": "A new DOME credential has been issued for you with the following information",
-    "sendReminderConfirm": {
-      "title": "Send Reminder",
-      "message": "Are you sure you want to send a reminder for this credential offer?"
-    },
-    "sendReminderSuccess": {
-      "title": "Reminder sent successfully",
-      "message": "The credential offer reminder was sent successfully."
-    },
-    "signCredentialConfirm": {
-      "title": "Sign Credential",
-      "message": "Are you sure you want to sign this credential?"
-    },
-    "signCredentialSuccess": {
-      "title": "Credential signed",
-      "message": "The credential was signed successfully."
-    }
-  },
   "credentialDetails": {
     "title": "Credential details",
+    "general": "Basic info",
+    "type" : "type",
+    "status": "status",
+    "valid_from": "valid from",
+    "valid_until": "valid until",
     "issuer": "issuer",
     "mandatee": "mandatee",
     "mandator": "mandator",
@@ -117,7 +102,23 @@
     "compliance": "compliance",
     "hash": "hash",
     "scope": "scope",
-    "standard": "standard"
+    "standard": "standard",
+    "sendReminderConfirm": {
+      "title": "Send Reminder",
+      "message": "Are you sure you want to send a reminder for this credential offer?"
+    },
+    "sendReminderSuccess": {
+      "title": "Reminder sent successfully",
+      "message": "The credential offer reminder was sent successfully."
+    },
+    "signCredentialConfirm": {
+      "title": "Sign Credential",
+      "message": "Are you sure you want to sign this credential?"
+    },
+    "signCredentialSuccess": {
+      "title": "Credential signed",
+      "message": "The credential was signed successfully."
+    }
   },
   "credentialOffer": {
     "first-label": "Log in to Wallet",

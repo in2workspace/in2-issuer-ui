@@ -61,26 +61,65 @@
     "email": "Adreça de correu",
     "nationality": "Nacionalitat"
   },
-  "credentialDetail": {
-    "credentialDetail": "Detall de la credencial",
-    "textinformation": "S'ha emès una nova credencial DOME per a vostè amb la següent informació",
+  "credentialDetails": {
+    "title": "Detalls de la credencial",
+    "general": "Informació bàsica",
+    "type" : "tipus",
+    "status": "estatus",
+    "valid_from": "vàlid des de",
+    "valid_until": "vàlid fins",
+    "issuer": "emissor",
+    "mandatee": "mandatari",
+    "mandator": "mandant",
+    "power": "poder",
+    "id": "id",
+    "organizationIdentifier": "número de NIF de l'empresa",
+    "country": "país",
+    "organization": "nom de l'empresa",
+    "commonName": "nom",
+    "emailAddress": "correu electrònic",
+    "email": "correu electrònic",
+    "serialNumber": "número del document d'identitat",
+    "firstName": "nom",
+    "lastName": "cognom",
+    "mobile_phone": "telèfon mòbil",
+    "nationality": "nacionalitat",
+    "serviceName": "nom del servei",
+    "serviceType": "tipus de servei",
+    "version": "versió",
+    "domain": "domini",
+    "ipAddress": "adreça IP",
+    "description": "descripció",
+    "contact": "informació de contacte",
+    "phone": "telèfon",
+    "address": "adreça",
+    "productId": "id del producte",
+    "productName": "nom del producte",
+    "productVersion": "versió del producte",
+    "attester": "entitat verificadora",
+    "company": "empresa",
+    "product": "producte",
+    "compliance": "compliment",
+    "hash": "hash",
+    "scope": "abast",
+    "standard": "estàndard",
     "sendReminderConfirm": {
       "title": "Enviar recordatori",
-      "message": "Estàs segur que vols enviar un recordatori d'aquesta oferta de credencial?"
+      "message": "Estàs segur que vols enviar un recordatori per aquesta oferta de credencial?"
     },
     "sendReminderSuccess": {
-      "title": "Recordatori enviat amb èxit",
-      "message": "El recordatori ha estat enviat amb èxit."
+      "title": "Recordatori enviat correctament",
+      "message": "El recordatori de l'oferta de credencial s'ha enviat correctament."
     },
     "signCredentialConfirm": {
-      "title": "Firmar Credencial",
+      "title": "Signar credencial",
       "message": "Estàs segur que vols signar aquesta credencial?"
     },
     "signCredentialSuccess": {
-      "title": "Credential firmada",
-      "message": "La credencial ha estat firmada amb èxit."
+      "title": "Credencial signada",
+      "message": "La credencial s'ha signat correctament."
     }
-  },
+  },  
   "credentialOffer": {
     "first-label": "Iniciar sessió al Wallet",
     "second-label": "Obtenir Credencial",

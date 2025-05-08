@@ -107,8 +107,8 @@ export class CredentialDetailsService {
   public openSendReminderDialog(): void {
   
     const dialogData: DialogData = {
-      title: this.translate.instant("credentialDetail.sendReminderConfirm.title"),
-      message: this.translate.instant("credentialDetail.sendReminderConfirm.message"),
+      title: this.translate.instant("credentialDetails.sendReminderConfirm.title"),
+      message: this.translate.instant("credentialDetails.sendReminderConfirm.message"),
       confirmationType: 'async',
       status: 'default'
     };
@@ -124,8 +124,8 @@ export class CredentialDetailsService {
   public openSignCredentialDialog(): void {
 
     const dialogData: DialogData = {
-      title: this.translate.instant("credentialDetail.signCredentialConfirm.title"),
-      message: this.translate.instant("credentialDetail.signCredentialConfirm.message"),
+      title: this.translate.instant("credentialDetails.signCredentialConfirm.title"),
+      message: this.translate.instant("credentialDetails.signCredentialConfirm.message"),
       confirmationType: 'async',
       status: 'default'
     };
@@ -170,16 +170,16 @@ export class CredentialDetailsService {
   public sendReminder(): Observable<boolean> {
     return this.executeCredentialAction(
       (procedureId) => this.credentialProcedureService.sendReminder(procedureId),
-      "credentialDetail.sendReminderSuccess.title",
-      "credentialDetail.sendReminderSuccess.message"
+      "credentialDetails.sendReminderSuccess.title",
+      "credentialDetails.sendReminderSuccess.message"
     );
   }
   
   public signCredential(): Observable<boolean> {
     return this.executeCredentialAction(
       (procedureId) => this.credentialProcedureService.signCredential(procedureId),
-      "credentialDetail.signCredentialSuccess.title",
-      "credentialDetail.signCredentialSuccess.message"
+      "credentialDetails.signCredentialSuccess.title",
+      "credentialDetails.signCredentialSuccess.message"
     );
   }
 }

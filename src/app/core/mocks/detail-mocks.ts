@@ -2,7 +2,7 @@ import { LEARCredentialDataDetails } from "../models/entity/lear-credential-empl
 
 export const mockCredentialEmployee: LEARCredentialDataDetails = {
   procedure_id: 'mock-procedure-employee',
-  credential_status: 'WITHDRAWN',
+  credential_status: 'DRAFT',
   credential: {
     sub: null,
     nbf: '1714675200',
