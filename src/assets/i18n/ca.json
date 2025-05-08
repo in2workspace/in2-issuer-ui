@@ -63,7 +63,7 @@
   },
   "credentialDetails": {
     "title": "Detalls de la credencial",
-    "general": "Informació bàsica",
+    "basic_info": "Informació bàsica",
     "type" : "tipus",
     "status": "estatus",
     "valid_from": "vàlid des de",

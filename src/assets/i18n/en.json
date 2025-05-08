@@ -63,7 +63,7 @@
   },
   "credentialDetails": {
     "title": "Credential details",
-    "general": "Basic info",
+    "basic_info": "Basic info",
     "type" : "type",
     "status": "status",
     "valid_from": "valid from",
