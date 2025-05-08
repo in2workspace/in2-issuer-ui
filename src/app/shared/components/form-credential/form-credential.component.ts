@@ -9,7 +9,7 @@ import { MatOption } from '@angular/material/core';
 import { TempPower } from "../../../core/models/temp/temp-power.interface";
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { from, Observable, of, switchMap, tap } from 'rxjs';
-import { CommonIssuer, EmployeeMandatee, Power } from 'src/app/core/models/entity/lear-credential-employee.entity';
+import { CommonIssuer, EmployeeMandatee, StrictPower } from 'src/app/core/models/entity/lear-credential-employee.entity';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButton } from '@angular/material/button';
 import { PowerComponent } from '../power/power.component';
@@ -65,7 +65,7 @@ export class FormCredentialComponent implements OnInit, OnDestroy {
   @ViewChild('formDirective') public formDirective!: FormGroupDirective;
   @Input() public asSigner: boolean = false;
   @Input() public title: string = '';
-  @Input() public power: Power[] = [];
+  @Input() public power: StrictPower[] = [];
   @Input() public credentialStatus: string = '';
   @Input() public issuer: CommonIssuer = this.initializeOrganizationDetails();
   @Input() public credential: EmployeeMandatee = this.initializeCredential();

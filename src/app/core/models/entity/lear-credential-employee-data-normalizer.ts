@@ -1,4 +1,4 @@
-import { Power, LEARCredential, EmployeeMandatee } from './lear-credential-employee.entity';
+import { LEARCredential, EmployeeMandatee, Power } from './lear-credential-employee.entity';
 
 // Interfaces for the raw JSON of Mandatee and Power
 interface RawEmployeeMandatee {

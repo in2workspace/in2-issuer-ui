@@ -1,10 +1,9 @@
 // --- Form Schemas ---
 
 export type CredentialDetailsFormFieldSchema = {
-    type: 'control' | 'group' | 'array';
+    type: 'control' | 'group';
     display?: 'main' | 'side'; //should it be displayed in the main space or as a side card?
     fields?: CredentialDetailsFormSchema; //for 'group'
-    itemSchema?: CredentialDetailsFormSchema; // for 'array'
   };
   
 export type CredentialDetailsFormSchema = Record<string, CredentialDetailsFormFieldSchema>;
@@ -49,15 +48,9 @@ export const LearCredentialEmployeeDetailsFormSchema: CredentialDetailsFormSchem
       },
     },
     power: {
-      type: 'array',
-      display: 'main', //template expects it to be main
-      itemSchema: {
-        // id: { type: 'control' },
-        action: { type: 'control' },
-        domain: { type: 'control' },
-        function: { type: 'control' },
-        type: { type: 'control' },
-      },
+      type: 'group',
+      display: 'main',
+      //will be set dynamically
     },
   };
   
@@ -109,15 +102,9 @@ export const LearCredentialEmployeeDetailsFormSchema: CredentialDetailsFormSchem
       },
     },
     power: {
-      type: 'array',
-      display: 'main', //template expects it to be main
-      itemSchema: {
-        id: { type: 'control' },
-        action: { type: 'control' },
-        domain: { type: 'control' },
-        function: { type: 'control' },
-        type: { type: 'control' },
-      },
+      type: 'group',
+      display: 'main',
+      //will be set dynamically
     },
   };
   

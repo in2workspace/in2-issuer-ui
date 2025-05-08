@@ -11,11 +11,9 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton } from '@angular/material/button';
 import { LoaderService } from 'src/app/core/services/loader.service';
-import { TmfAction, TmfFunction } from 'src/app/core/models/entity/lear-credential-employee.entity';
 import { CapitalizePipe } from 'src/app/shared/pipes/capitalize.pipe';
 import { AddPrefixPipe } from 'src/app/shared/pipes/add-prefix.pipe';
 import { CredentialDetailsService } from './services/credential-details.service';
-import { getActionsByFunction } from './utils/credential-details-utils';
 
 
 @Component({
@@ -96,11 +94,6 @@ export class CredentialDetailsComponent implements OnInit {
 
   public asFormArray(control: AbstractControl | null): FormArray {
     return control as FormArray;
-  }
-  
-  
-  public getActionsByFunction(tmfFunction: TmfFunction): TmfAction[] {
-    return getActionsByFunction(tmfFunction);
   }
   
 

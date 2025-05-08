@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { catchError } from 'rxjs/operators';
-import { EmployeeMandatee, EmployeeMandator, Power, TmfAction } from "../../../../core/models/entity/lear-credential-employee.entity";
+import { EmployeeMandatee, EmployeeMandator, StrictPower, TmfAction } from "../../../../core/models/entity/lear-credential-employee.entity";
 import { Observable, BehaviorSubject } from 'rxjs';
 import { TempPower } from 'src/app/core/models/temp/temp-power.interface';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
@@ -97,7 +97,7 @@ export class FormCredentialService {
     }
 
     //Prepare powers
-    const power: Power[] = addedPowers.map(option => {
+    const power: StrictPower[] = addedPowers.map(option => {
       return this.checkFunction(option);
     });
 
@@ -121,7 +121,7 @@ export class FormCredentialService {
     );
   }
 
-  public convertToTempPower(power: Power): TempPower {
+  public convertToTempPower(power: StrictPower): TempPower {
     const action = Array.isArray(power.action) ? power.action : [power.action];
     return {
       action: power.action,
@@ -137,7 +137,7 @@ export class FormCredentialService {
     };
   }
 
-  public checkFunction(option: TempPower): Power {
+  public checkFunction(option: TempPower): StrictPower {
     if (option.function === 'Onboarding' && option.execute) {
       return {
         action: 'Execute',

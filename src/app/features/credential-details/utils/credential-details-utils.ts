@@ -1,6 +1,6 @@
 import { CredentialDetailsFormSchema, LearCredentialEmployeeDetailsFormSchema, LearCredentialMachineDetailsFormSchema, VerifiableCertificationDetailsFormSchema } from '../../../core/models/entity/lear-credential-details-schemas';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
-import { CredentialFormData, CredentialType, LEARCredential, LEARCredentialEmployee, LEARCredentialMachine, PowerActionsMap, TmfAction, TmfFunction, VerifiableCertification } from 'src/app/core/models/entity/lear-credential-employee.entity';
+import { CredentialFormData, CredentialType, Power, LEARCredential, LEARCredentialEmployee, LEARCredentialMachine, VerifiableCertification } from 'src/app/core/models/entity/lear-credential-employee.entity';
 
 type ComplianceEntry = {
   id: string;
@@ -17,7 +17,7 @@ export const FormDataExtractorByType: Record<CredentialType, (credential: LEARCr
       issuer: c.issuer,
       mandatee: c.credentialSubject.mandate.mandatee,
       mandator: c.credentialSubject.mandate.mandator,
-      power: c.credentialSubject.mandate.power
+      power: mapPowerArrayByFunction(c.credentialSubject.mandate.power)
     };
   },
 
@@ -27,7 +27,7 @@ export const FormDataExtractorByType: Record<CredentialType, (credential: LEARCr
       issuer: c.issuer,
       mandatee: c.credentialSubject.mandate.mandatee,
       mandator: c.credentialSubject.mandate.mandator,
-      power: c.credentialSubject.mandate.power
+      power: mapPowerArrayByFunction(c.credentialSubject.mandate.power)
     };
   },
 
@@ -101,6 +101,24 @@ export function buildFormFromSchema(
       group[key] = fb.group(complianceGroup);
     }
 
+    else if (key === 'power' && field.type === 'group') {
+      const powerData = data?.[key] ?? {};
+      const powerGroup: Record<string, FormGroup> = {};
+    
+      for (const func in powerData) {
+        const actions = powerData[func];
+        const actionGroup: Record<string, FormControl> = {};
+    
+        for (const action in actions) {
+          actionGroup[action] = new FormControl(true); // toggle activat
+        }
+    
+        powerGroup[func] = fb.group(actionGroup);
+      }
+    
+      group[key] = fb.group(powerGroup);
+    }
+
     else if (field.type === 'control') {
       group[key] = new FormControl(data?.[key] ?? null);
     }
@@ -109,12 +127,6 @@ export function buildFormFromSchema(
       group[key] = buildFormFromSchema(fb, field.fields!, data?.[key]);
     }
 
-    else if (field.type === 'array') {
-      const items = (data?.[key] ?? []) as any[];
-      group[key] = fb.array(
-        items.map(item => buildFormFromSchema(fb, field.itemSchema!, item))
-      );
-    }
   }
 
   return fb.group(group);
@@ -133,11 +145,18 @@ export function getFormDataByType<T extends CredentialType>(
   return extractor(credential) as CredentialFormData;
 }
 
-export function getActionsByFunction(tmfFunction: TmfFunction): TmfAction[]{
-      console.log('getting actions for function ' + tmfFunction);
-      console.log('powersactionsmap')
-      console.log(PowerActionsMap)
-      console.log('returned functions')
-      console.log(PowerActionsMap[tmfFunction] || [])
-      return PowerActionsMap[tmfFunction] || [];
+function mapPowerArrayByFunction(power: Power[]): Record<string, Record<string, true>> {
+  const grouped: Record<string, Record<string, true>> = {};
+
+  for (const entry of power) {
+    const actions = Array.isArray(entry.action) ? entry.action : [entry.action];
+    const func = entry.function;
+
+    if (!grouped[func]) grouped[func] = {};
+    for (const action of actions) {
+      grouped[func][action] = true;
+    }
+  }
+
+  return grouped;
 }

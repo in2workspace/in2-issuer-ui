@@ -42,7 +42,7 @@ export class CredentialProcedureService {
     //   `${this.organizationProcedures}/${procedureId}/credential-decoded`
     // )
     //todo
-    return of(mockCredentialCertification)
+    return of(mockCredentialEmployee)
     .pipe(
       map(response => {
         const { credential } = response;

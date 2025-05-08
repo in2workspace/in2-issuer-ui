@@ -3,7 +3,7 @@ import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { UserDataAuthenticationResponse } from "../models/dto/user-data-authentication-response.dto";
-import { EmployeeMandator, LEARCredentialEmployee, Power, TmfAction, TmfFunction } from "../models/entity/lear-credential-employee.entity";
+import { Power, EmployeeMandator, LEARCredentialEmployee } from "../models/entity/lear-credential-employee.entity";
 import { RoleType } from '../models/enums/auth-rol-type.enum';
 import { LEARCredentialDataNormalizer } from '../models/entity/lear-credential-employee-data-normalizer';
 
@@ -105,7 +105,7 @@ export class AuthService {
     this.userPowers = this.extractUserPowers(learCredential);
   }
 
-  public hasPower(tmfFunction: TmfFunction, tmfAction: TmfAction): boolean {
+  public hasPower(tmfFunction: string, tmfAction: string): boolean {
     return this.userPowers.some((power: Power) => {
       if (power.function === tmfFunction) {
         const action = power.action;

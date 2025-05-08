@@ -1,7 +1,7 @@
 import { TmfAction, TmfFunction } from "../entity/lear-credential-employee.entity";
 
 export interface TempPower {
-  action: TmfAction | TmfAction[] | '';
+  action: string | TmfAction[] | '';
   domain: string;
   function: TmfFunction;
   type: string;

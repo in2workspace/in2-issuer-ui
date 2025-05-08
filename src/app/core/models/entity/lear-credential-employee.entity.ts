@@ -44,7 +44,7 @@ export interface CommonMandator {
   serialNumber: string;
 }
 
-export interface Power {
+export interface StrictPower {
   id?: string;
   action: TmfAction[] | TmfAction;
   domain: string;
@@ -52,14 +52,16 @@ export interface Power {
   type: string;
 }
 
-export const PowerActionsMap: Record<MappedTmfFunction, TmfAction[]> = {
-  Onboarding: ['Execute'],
-  ProductOffering: ['Create', 'Update', 'Delete'],
-  Certification: ['Upload', 'Attest'],
-  Login: ['oidc_m2m'] //todo remove?
-};
+//less strict version, admits any function and action
+export interface Power {
+  id?: string;
+  action: string[] | string;
+  domain: string;
+  function: string;
+  type: string;
+}
 
-type MappedTmfFunction = Exclude<TmfFunction, 'CredentialIssuer'>;
+
 export type TmfFunction = 'Onboarding' | 'ProductOffering' | 'Certification' | 'CredentialIssuer' | 'Login';
 export type TmfAction = 'Execute' | 'Create' | 'Update' | 'Delete' | 'Upload' | 'Attest' | 'Configure' | 'oidc_m2m'
 
