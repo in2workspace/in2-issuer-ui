@@ -1,6 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {Observable, of, throwError} from 'rxjs';
+import {Observable, throwError} from 'rxjs';
 import {catchError, map } from 'rxjs/operators';
 import {environment} from 'src/environments/environment';
 import {ProcedureResponse} from '../models/dto/procedure-response.dto';
@@ -12,7 +12,6 @@ import {Router} from "@angular/router";
 import {API} from "../constants/api.constants";
 import { LEARCredentialDataNormalizer } from '../models/entity/lear-credential-employee-data-normalizer';
 import { EmployeeProcedureRequest } from '../models/dto/procedure-request.dto';
-import { mockCredentialCertification, mockCredentialEmployee, mockCredentialMachine } from '../mocks/detail-mocks';
 
 @Injectable({
   providedIn: 'root'
@@ -38,11 +37,9 @@ export class CredentialProcedureService {
   }
 
   public getCredentialProcedureById(procedureId: string): Observable<LEARCredentialDataDetails> {
-    // return this.http.get<RawLEARCredentialDataDetail>(
-    //   `${this.organizationProcedures}/${procedureId}/credential-decoded`
-    // )
-    //todo
-    return of(mockCredentialEmployee)
+    return this.http.get<RawLEARCredentialDataDetail>(
+      `${this.organizationProcedures}/${procedureId}/credential-decoded`
+    )
     .pipe(
       map(response => {
         const { credential } = response;
