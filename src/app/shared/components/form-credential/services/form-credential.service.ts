@@ -121,22 +121,6 @@ export class FormCredentialService {
     );
   }
 
-  public convertToTempPower(power: StrictPower): TempPower {
-    const action = Array.isArray(power.action) ? power.action : [power.action];
-    return {
-      action: power.action,
-      domain: power.domain,
-      function: power.function,
-      type: power.type,
-      execute: action.includes('Execute'),
-      create: action.includes('Create'),
-      update: action.includes('Update'),
-      delete: action.includes('Delete'),
-      upload: action.includes('Upload'),
-      attest: action.includes('Attest')
-    };
-  }
-
   public checkFunction(option: TempPower): StrictPower {
     if (option.function === 'Onboarding' && option.execute) {
       return {
