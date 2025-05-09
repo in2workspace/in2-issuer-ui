@@ -26,10 +26,10 @@ module.exports = {
     testPathIgnorePatterns: [
       '/node_modules/',
       '/dist/',
-      '/src/app/core/mocks/',
-      '/src/app/app',
-      '/src/app/core/',
-      '/src/app/features/(?!credential-details)',
-      '/src/app/shared/',
+      // '/src/app/core/mocks/',
+      // '/src/app/app',
+      // '/src/app/core/',
+      // '/src/app/features/(?!credential-details)',
+      // '/src/app/shared/',
     ]
    };
