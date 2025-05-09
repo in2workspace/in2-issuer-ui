@@ -8,7 +8,7 @@ export type CredentialDetailsFormFieldSchema = {
   
 export type CredentialDetailsFormSchema = Record<string, CredentialDetailsFormFieldSchema>;
   
-//todo model de cada form schema?
+
 export const LearCredentialEmployeeDetailsFormSchema: CredentialDetailsFormSchema = {
     mandatee: {
       type: 'group',
@@ -53,7 +53,6 @@ export const LearCredentialEmployeeDetailsFormSchema: CredentialDetailsFormSchem
     },
   };
   
-  //todo decidir camps i ordre
   export const LearCredentialMachineDetailsFormSchema: CredentialDetailsFormSchema = {
     mandatee: {
       type: 'group',
@@ -107,7 +106,6 @@ export const LearCredentialEmployeeDetailsFormSchema: CredentialDetailsFormSchem
     },
   };
   
-  //todo decidir camps i ordre (--compliance)
   export const VerifiableCertificationDetailsFormSchema: CredentialDetailsFormSchema = {
     issuer: {
       type: 'group',
