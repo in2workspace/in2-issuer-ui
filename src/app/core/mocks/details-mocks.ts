@@ -1,4 +1,4 @@
-import { LEARCredentialDataDetails } from "../models/entity/lear-credential-employee.entity";
+import { LEARCredentialDataDetails } from "../models/entity/lear-credential";
 
 export const mockCredentialEmployee: LEARCredentialDataDetails = {
   procedure_id: 'mock-procedure-employee',

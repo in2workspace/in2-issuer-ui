@@ -11,7 +11,7 @@ import { AuthModule } from 'angular-auth-oidc-client';
 import { TempPower } from "../../../../core/models/temp/temp-power.interface";
 import { Country } from './country.service';
 import { provideHttpClient } from '@angular/common/http';
-import { EmployeeMandatee, EmployeeMandator, EmployeeSigner, StrictPower, TmfAction } from 'src/app/core/models/entity/lear-credential-employee.entity';
+import { EmployeeMandatee, EmployeeMandator, EmployeeSigner, StrictPower, TmfAction } from 'src/app/core/models/entity/lear-credential';
 
 (globalThis as any).structuredClone = (obj: any) => JSON.parse(JSON.stringify(obj));
 

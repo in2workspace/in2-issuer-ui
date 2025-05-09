@@ -9,9 +9,9 @@ import { CredentialProcedureService } from 'src/app/core/services/credential-pro
 import { HttpClient } from '@angular/common/http';
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
-import { mockCredentialEmployee } from 'src/app/core/mocks/detail-mocks';
+import { mockCredentialEmployee } from 'src/app/core/mocks/details-mocks';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { CredentialStatus, CredentialType } from 'src/app/core/models/entity/lear-credential-employee.entity';
+import { CredentialStatus, CredentialType } from 'src/app/core/models/entity/lear-credential';
 
 describe('CredentialDetailsComponent', () => {
   let component: CredentialDetailsComponent;

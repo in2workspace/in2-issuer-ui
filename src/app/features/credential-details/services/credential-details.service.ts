@@ -7,7 +7,7 @@ import { DialogWrapperService } from 'src/app/shared/components/dialog/dialog-wr
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { DialogData } from 'src/app/shared/components/dialog/dialog.component';
-import { CredentialStatus, CredentialType, LEARCredentialDataDetails } from 'src/app/core/models/entity/lear-credential-employee.entity';
+import { CredentialStatus, CredentialType, LEARCredentialDataDetails } from 'src/app/core/models/entity/lear-credential';
 import { CredentialDetailsFormSchema } from 'src/app/core/models/entity/lear-credential-details-schemas';
 
 @Injectable() //provided in component

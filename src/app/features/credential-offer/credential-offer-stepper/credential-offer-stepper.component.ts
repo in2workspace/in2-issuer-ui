@@ -14,7 +14,7 @@ import { CredentialProcedureService } from 'src/app/core/services/credential-pro
 import { HttpErrorResponse } from '@angular/common/http';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
-import { CredentialOfferResponse } from 'src/app/core/models/dto/credential-offer-response';
+import { CredentialOfferResponse } from 'src/app/core/models/dto/credential-offer-response.dto';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AsyncPipe } from '@angular/common';
 import { TemplatePortal } from '@angular/cdk/portal';

@@ -4,14 +4,15 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { environment} from 'src/environments/environment';
 import { ProcedureResponse } from '../models/dto/procedure-response.dto';
-import { CredentialOfferResponse } from '../models/dto/credential-offer-response';
-import { LEARCredentialDataDetails, RawLEARCredentialDataDetail } from '../models/entity/lear-credential-employee.entity';
+import { CredentialOfferResponse } from '../models/dto/credential-offer-response.dto';
+import { LEARCredentialDataDetails } from '../models/entity/lear-credential';
 import { DialogWrapperService } from "../../shared/components/dialog/dialog-wrapper/dialog-wrapper.service";
 import { TranslateService } from "@ngx-translate/core";
 import { Router } from "@angular/router";
 import { API } from "../constants/api.constants";
 import { LEARCredentialDataNormalizer } from '../models/entity/lear-credential-employee-data-normalizer';
 import { EmployeeProcedureRequest } from '../models/dto/procedure-request.dto';
+import { LEARCredentialDataDetailsResponse } from '../models/dto/lear-credential-data-details-response.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -37,7 +38,7 @@ export class CredentialProcedureService {
   }
 
   public getCredentialProcedureById(procedureId: string): Observable<LEARCredentialDataDetails> {
-    return this.http.get<RawLEARCredentialDataDetail>(
+    return this.http.get<LEARCredentialDataDetailsResponse>(
       `${this.organizationProcedures}/${procedureId}/credential-decoded`
     )
     .pipe(

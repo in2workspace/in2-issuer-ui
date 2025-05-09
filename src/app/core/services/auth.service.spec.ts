@@ -3,7 +3,7 @@ import { of } from 'rxjs';
 import { AuthService } from './auth.service';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { UserDataAuthenticationResponse } from '../models/dto/user-data-authentication-response.dto';
-import { LEARCredentialEmployee } from '../models/entity/lear-credential-employee.entity';
+import { LEARCredentialEmployee } from '../models/entity/lear-credential';
 import { RoleType } from '../models/enums/auth-rol-type.enum';
 import { LEARCredentialDataNormalizer } from '../models/entity/lear-credential-employee-data-normalizer';
 

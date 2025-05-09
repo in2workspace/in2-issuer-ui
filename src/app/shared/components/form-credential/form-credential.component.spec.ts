@@ -15,7 +15,7 @@ import { CustomEmailValidatorDirective } from '../../directives/validators/custo
 import { UnicodeValidatorDirective } from '../../directives/validators/unicode-validator.directive';
 import { OrganizationNameValidatorDirective } from '../../directives/validators/organization-name.validator.directive';
 import { TempPower } from 'src/app/core/models/temp/temp-power.interface';
-import { Power } from 'src/app/core/models/entity/lear-credential-employee.entity';
+import { Power } from 'src/app/core/models/entity/lear-credential';
 import { BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import { DialogWrapperService } from '../dialog/dialog-wrapper/dialog-wrapper.service';
 import { DialogData } from '../dialog/dialog.component';

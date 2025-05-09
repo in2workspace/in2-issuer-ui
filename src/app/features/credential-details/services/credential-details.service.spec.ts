@@ -7,7 +7,7 @@ import { CredentialProcedureService } from 'src/app/core/services/credential-pro
 import { DialogWrapperService } from 'src/app/shared/components/dialog/dialog-wrapper/dialog-wrapper.service';
 import { of } from 'rxjs';
 import { DialogData } from 'src/app/shared/components/dialog/dialog.component';
-import { CredentialFormData, LEARCredentialDataDetails } from 'src/app/core/models/entity/lear-credential-employee.entity';
+import { CredentialFormData, LEARCredentialDataDetails } from 'src/app/core/models/entity/lear-credential';
 import * as utils from '../utils/credential-details-utils';
 
 describe('CredentialDetailsService', () => {

@@ -11,7 +11,7 @@ import {DialogWrapperService} from "../../shared/components/dialog/dialog-wrappe
 import {TranslateService} from "@ngx-translate/core";
 import {Router} from "@angular/router";
 import {API} from "../constants/api.constants";
-import { LEARCredentialDataDetails } from '../models/entity/lear-credential-employee.entity';
+import { LEARCredentialDataDetails } from '../models/entity/lear-credential';
 import { EmployeeProcedureRequest } from '../models/dto/procedure-request.dto';
 
 const notFoundErrorResp = new HttpErrorResponse({

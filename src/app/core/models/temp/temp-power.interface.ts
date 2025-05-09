@@ -1,4 +1,4 @@
-import { TmfAction, TmfFunction } from "../entity/lear-credential-employee.entity";
+import { TmfAction, TmfFunction } from "../entity/lear-credential";
 
 export interface TempPower {
   action: TmfAction | TmfAction[] | '';

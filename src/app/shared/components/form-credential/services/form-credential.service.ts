@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { catchError } from 'rxjs/operators';
-import { EmployeeMandatee, EmployeeMandator, StrictPower, TmfAction } from "../../../../core/models/entity/lear-credential-employee.entity";
+import { EmployeeMandatee, EmployeeMandator, StrictPower, TmfAction } from "../../../../core/models/entity/lear-credential";
 import { Observable, BehaviorSubject } from 'rxjs';
 import { TempPower } from 'src/app/core/models/temp/temp-power.interface';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';

@@ -3,7 +3,7 @@ import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { UserDataAuthenticationResponse } from "../models/dto/user-data-authentication-response.dto";
-import { Power, EmployeeMandator, LEARCredentialEmployee } from "../models/entity/lear-credential-employee.entity";
+import { Power, EmployeeMandator, LEARCredentialEmployee } from "../models/entity/lear-credential";
 import { RoleType } from '../models/enums/auth-rol-type.enum';
 import { LEARCredentialDataNormalizer } from '../models/entity/lear-credential-employee-data-normalizer';
 

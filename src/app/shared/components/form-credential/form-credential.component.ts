@@ -9,7 +9,7 @@ import { MatOption } from '@angular/material/core';
 import { TempPower } from "../../../core/models/temp/temp-power.interface";
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { from, Observable, of, switchMap, tap } from 'rxjs';
-import { CommonIssuer, EmployeeMandatee, StrictPower } from 'src/app/core/models/entity/lear-credential-employee.entity';
+import { CommonIssuer, EmployeeMandatee, StrictPower } from 'src/app/core/models/entity/lear-credential';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButton } from '@angular/material/button';
 import { PowerComponent } from '../power/power.component';

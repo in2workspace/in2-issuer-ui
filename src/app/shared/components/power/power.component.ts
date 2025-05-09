@@ -14,7 +14,7 @@ import { MatOption } from '@angular/material/core';
 import { MatFormField } from '@angular/material/form-field';
 import { NgIf, NgFor, NgTemplateOutlet, AsyncPipe } from '@angular/common';
 import { DialogWrapperService } from '../dialog/dialog-wrapper/dialog-wrapper.service';
-import { TmfFunction } from 'src/app/core/models/entity/lear-credential-employee.entity';
+import { TmfFunction } from 'src/app/core/models/entity/lear-credential';
 
 @Component({
     selector: 'app-power',

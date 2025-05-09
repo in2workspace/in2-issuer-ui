@@ -1,9 +1,3 @@
-export interface RawLEARCredentialDataDetail {
-  procedure_id: string;
-  credential_status: string;
-  credential: LEARCredentialJwtPayload|LEARCredential;
-}
-
 export interface LEARCredentialDataDetails {
   procedure_id: string;
   credential_status: CredentialStatus;
@@ -235,10 +229,10 @@ export type VerifiableCertificationFormData = {
   attester: VerifiableCertification['attester'];
 };
 
-export type FormDataByType = {
+export type CredentialFormDataByType = {
   LEARCredentialEmployee: LearCredentialEmployeeFormData;
   LEARCredentialMachine: LearCredentialMachineFormData;
   VerifiableCertification: VerifiableCertificationFormData;
 };
 
-export type CredentialFormData<T extends CredentialType = CredentialType> = FormDataByType[T];
+export type CredentialFormData<T extends CredentialType = CredentialType> = CredentialFormDataByType[T];

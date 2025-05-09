@@ -1,6 +1,6 @@
 import { CredentialDetailsFormFieldSchema, CredentialDetailsFormSchema, LearCredentialEmployeeDetailsFormSchema, LearCredentialMachineDetailsFormSchema, VerifiableCertificationDetailsFormSchema } from '../../../core/models/entity/lear-credential-details-schemas';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
-import { CredentialFormData, CredentialType, Power, LEARCredential, LEARCredentialEmployee, LEARCredentialMachine, VerifiableCertification } from 'src/app/core/models/entity/lear-credential-employee.entity';
+import { CredentialFormData, CredentialType, Power, LEARCredential, LEARCredentialEmployee, LEARCredentialMachine, VerifiableCertification } from 'src/app/core/models/entity/lear-credential';
 
 type ComplianceEntry = {
   id: string;
