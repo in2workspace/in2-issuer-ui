@@ -1,15 +1,15 @@
-import {inject, Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {Observable, throwError} from 'rxjs';
-import {catchError, map } from 'rxjs/operators';
-import {environment} from 'src/environments/environment';
-import {ProcedureResponse} from '../models/dto/procedure-response.dto';
-import {CredentialOfferResponse} from '../models/dto/credential-offer-response';
-import {LEARCredential, LEARCredentialDataDetails, RawLEARCredentialDataDetail} from '../models/entity/lear-credential-employee.entity';
-import {DialogWrapperService} from "../../shared/components/dialog/dialog-wrapper/dialog-wrapper.service";
-import {TranslateService} from "@ngx-translate/core";
-import {Router} from "@angular/router";
-import {API} from "../constants/api.constants";
+import { inject, Injectable } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { environment} from 'src/environments/environment';
+import { ProcedureResponse } from '../models/dto/procedure-response.dto';
+import { CredentialOfferResponse } from '../models/dto/credential-offer-response';
+import { LEARCredentialDataDetails, RawLEARCredentialDataDetail } from '../models/entity/lear-credential-employee.entity';
+import { DialogWrapperService } from "../../shared/components/dialog/dialog-wrapper/dialog-wrapper.service";
+import { TranslateService } from "@ngx-translate/core";
+import { Router } from "@angular/router";
+import { API } from "../constants/api.constants";
 import { LEARCredentialDataNormalizer } from '../models/entity/lear-credential-employee-data-normalizer';
 import { EmployeeProcedureRequest } from '../models/dto/procedure-request.dto';
 
