@@ -142,13 +142,13 @@ export class CredentialDetailsService {
     titleKey: string,
     messageKey: string
   ): Observable<boolean> {
-    const procedureId = this.procedureId$;
+    const procedureId = this.procedureId$();
     if (!procedureId) {
       console.error('No procedure id.');
       return EMPTY;
     }
   
-    return action(procedureId()).pipe(
+    return action(procedureId).pipe(
       switchMap(() => {
         const dialogData: DialogData = {
           title: this.translate.instant(titleKey),
