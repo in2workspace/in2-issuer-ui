@@ -8,20 +8,20 @@ import { MatTableModule } from '@angular/material/table';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { AuthModule } from 'angular-auth-oidc-client';
-import { Mandatee, Mandator, Power, Signer } from "../../../../core/models/entity/lear-credential-employee.entity";
 import { TempPower } from "../../../../core/models/temp/temp-power.interface";
 import { Country } from './country.service';
 import { provideHttpClient } from '@angular/common/http';
+import { EmployeeMandatee, EmployeeMandator, EmployeeSigner, StrictPower, TmfAction } from 'src/app/core/models/entity/lear-credential-employee.entity';
 
 (globalThis as any).structuredClone = (obj: any) => JSON.parse(JSON.stringify(obj));
 
 describe('FormCredentialService', () => {
   let service: FormCredentialService;
   let credentialProcedureService: any;
-  let mockCredential: Mandatee;
+  let mockCredential: EmployeeMandatee;
   let mockMandateeSelectedCountry: Country;
-  let mockMandator: Mandator;
-  let mockSigner: Signer;
+  let mockMandator: EmployeeMandator;
+  let mockSigner: EmployeeSigner;
   let mockTempPower: TempPower;
   let mockAddedOptions: TempPower[];
 
@@ -150,36 +150,27 @@ describe('FormCredentialService', () => {
     })
   });
 
-  it('should add a new power if not disabled', () => {
+  it('should add a new power', () => {
     const existingPowers: TempPower[] = [
-      { ...mockTempPower, function: 'ExistingPower' }
+      { ...mockTempPower, function: 'Onboarding' }
     ];
-    const newPower: TempPower = { ...mockTempPower, function: 'NewPower' };
+    const newPower: TempPower = { ...mockTempPower, function: 'ProductOffering' };
     jest.spyOn(service, 'getPlainAddedPowers').mockReturnValue(existingPowers);
     const setAddedPowersSpy = jest.spyOn(service, 'setAddedPowers');
 
-    service.addPower(newPower, false);
+    service.addPower(newPower);
 
     expect(setAddedPowersSpy).toHaveBeenCalledWith([...existingPowers, newPower]);
   });
 
-  it('should not add a new power if disabled', () => {
-    const newPower: TempPower = { ...mockTempPower, function: 'NewPower' };
-    const setAddedPowersSpy = jest.spyOn(service, 'setAddedPowers');
-
-    service.addPower(newPower, true);
-
-    expect(setAddedPowersSpy).not.toHaveBeenCalled();
-  });
-
   it('should remove the specified power from added powers', () => {
     const existingPowers: TempPower[] = [
-      { ...mockTempPower, function: 'Power1' },
-      { ...mockTempPower, function: 'Power2' },
-      { ...mockTempPower, function: 'Power3' },
+      { ...mockTempPower, function: 'Onboarding' },
+      { ...mockTempPower, function: 'ProductOffering' },
+      { ...mockTempPower, function: 'Certification' },
     ];
 
-    const powerToRemove = 'Power2';
+    const powerToRemove = 'ProductOffering';
     jest.spyOn(service, 'getPlainAddedPowers').mockReturnValue(existingPowers);
     const setAddedPowersSpy = jest.spyOn(service, 'setAddedPowers');
 
@@ -193,8 +184,8 @@ describe('FormCredentialService', () => {
 
   it('should not modify added powers if the specified power is not found', () => {
     const existingPowers: TempPower[] = [
-      { ...mockTempPower, function: 'Power1' },
-      { ...mockTempPower, function: 'Power3' },
+      { ...mockTempPower, function: 'Onboarding' },
+      { ...mockTempPower, function: 'Certification' },
     ];
 
     const powerToRemove = 'Power2'; // Not in the list
@@ -216,28 +207,8 @@ describe('FormCredentialService', () => {
     expect(setSelectedPowerNameSpy).toHaveBeenCalledWith('');
   });
 
-  it('should convert Power to TempPower correctly', () => {
-    const power: Power = {
-      action: ['Execute', 'Create'],
-      domain: 'domain',
-      function: 'function',
-      type: 'type',
-    };
-
-    const tempPower: TempPower = service.convertToTempPower(power);
-
-    expect(tempPower.action).toEqual(['Execute', 'Create']);
-    expect(tempPower.domain).toBe('domain');
-    expect(tempPower.function).toBe('function');
-    expect(tempPower.type).toBe('type');
-    expect(tempPower.execute).toBeTruthy();
-    expect(tempPower.create).toBeTruthy();
-    expect(tempPower.update).toBeFalsy();
-    expect(tempPower.delete).toBeFalsy();
-  });
-
   it('should reset the form correctly', () => {
-    const credential: Mandatee = service.resetForm();
+    const credential: EmployeeMandatee = service.resetForm();
 
     expect(credential.firstName).toBe('');
     expect(credential.lastName).toBe('');
@@ -313,39 +284,38 @@ it('should handle error when submitCredential fails', (done) => {
   });
 });
 
-  it('should map addedOptions to Power objects correctly',() => {
+it('should map addedOptions to Power objects correctly', () => {
+  const expectedPower: StrictPower = {
+    action: 'Execute',
+    domain: 'expectedDomain',
+    function: 'Onboarding',
+    type: 'expectedType'
+  };
 
-    const expectedPower = {
-      action:'expectedAction',
-      domain: 'expectedDomain',
-      function: 'expectedFn',
-      type: 'expectedType',
-      execute: true,
-    };
+  const checkTmfSpy = jest.spyOn(service, 'checkFunction').mockReturnValue(expectedPower);
+  credentialProcedureService.createProcedure.mockReturnValue(of({}));
 
-    const checkTmfSpy = jest.spyOn(service, 'checkFunction').mockReturnValue(expectedPower);
-    credentialProcedureService.createProcedure.mockReturnValue(of({}));
+  service.submitCredential(
+    mockCredential,
+    undefined,
+    mockAddedOptions,
+    mockMandator,
+    'lastName',
+    credentialProcedureService
+  );
 
-    service.submitCredential(
-      mockCredential,
-      undefined,
-      mockAddedOptions,
-      mockMandator,
-      'lastName',
-      credentialProcedureService
-    );
+  expect(credentialProcedureService.createProcedure).toHaveBeenCalled();
+  expect(checkTmfSpy).toHaveBeenCalled();
 
-   expect(credentialProcedureService.createProcedure).toHaveBeenCalled();
-    expect(checkTmfSpy).toHaveBeenCalled();
-
-    expect(credentialProcedureService.createProcedure).toHaveBeenCalledWith(
-      expect.objectContaining({
-        payload: expect.objectContaining({
-          power: [expectedPower, expectedPower]
-        })
+  expect(credentialProcedureService.createProcedure).toHaveBeenCalledWith(
+    expect.objectContaining({
+      payload: expect.objectContaining({
+        power: [expectedPower, expectedPower]
       })
-    );
-  });
+    })
+  );
+});
+
 
   it('should add "Upload" to action if option.upload is true', () => {
     const option: TempPower = {
@@ -423,57 +393,64 @@ it('should handle error when submitCredential fails', (done) => {
     expect(result).toEqual([]);
   });
 
-  it('should add the correct actions based on TempPower properties', () => {
-    const tempPower: TempPower = {
-      ...mockTempPower,
-      action: '',
-      upload: true,
-    };
-    const action = ['InitialAction'];
+it('should add the correct actions based on TempPower properties', () => {
+  const tempPower: TempPower = {
+    ...mockTempPower,
+    upload: true,
+    attest: false
+  };
+  const action: TmfAction[] = ['Delete'];
 
-    const result = isCertification(tempPower, action);
+  const result = isCertification(tempPower, action);
 
-    expect(result).toEqual(['InitialAction', 'Upload']);
-  });
+  expect(result).toEqual(['Delete', 'Upload']);
+});
 
-  it('should return action unchanged for isCertification if no TempPower properties are true', () => {
-    const tempPower: TempPower = {
-      ...mockTempPower,
-      action: ''
-    };
-    const action = ['InitialAction'];
 
-    const result = isCertification(tempPower, action);
+it('should return action unchanged for isCertification if no TempPower properties are true', () => {
+  const tempPower: TempPower = {
+    ...mockTempPower,
+    upload: false,
+    attest: false
+  };
+  const action: TmfAction[] = ['Execute'];
 
-    expect(result).toEqual(['InitialAction']);
-  });
+  const result = isCertification(tempPower, action);
 
-  it('should add the correct actions based on TempPower properties for create, update, and delete', () => {
-    const tempPower: TempPower = {
-      ...mockTempPower,
-      action: '',
-      create: true,
-      update: true,
-      delete: true,
-    };
-    const action = ['InitialAction'];
+  expect(result).toEqual(['Execute']);
+});
 
-    const result = isProductOffering(tempPower, action);
 
-    expect(result).toEqual(['InitialAction', 'Create', 'Update', 'Delete']);
-  });
+it('should add the correct actions based on TempPower properties for create, update, and delete', () => {
+  const tempPower: TempPower = {
+    ...mockTempPower,
+    create: true,
+    update: true,
+    delete: true
+  };
+  const action: TmfAction[] = ['Execute'];
 
-  it('should return action unchanged for isProductOffering if create, update, and delete are false', () => {
-    const tempPower: TempPower = {
-      ...mockTempPower,
-      action: ''
-    };
-    const action = ['InitialAction'];
+  const result = isProductOffering(tempPower, action);
 
-    const result = isProductOffering(tempPower, action);
+  expect(result).toEqual(['Execute', 'Create', 'Update', 'Delete']);
+});
 
-    expect(result).toEqual(['InitialAction']);
-  });
+
+it('should return action unchanged for isProductOffering if create, update, and delete are false', () => {
+  const tempPower: TempPower = {
+    ...mockTempPower,
+    create: false,
+    update: false,
+    delete: false
+  };
+  const action: TmfAction[] = ['Create'];
+
+  const result = isProductOffering(tempPower, action);
+
+  expect(result).toEqual(['Create']);
+});
+
+
 
   it('should return the correct object when function is Onboarding', () => {
     const tempPower: TempPower = {
@@ -495,25 +472,30 @@ it('should handle error when submitCredential fails', (done) => {
     });
   });
 
-  it('should call isCertification and return the correct object when function is Certification', () => {
-    const tempPower: TempPower = {
-      ...mockTempPower,
-      action: '',
-      domain: 'domain2',
-      function: 'Certification',
-      type: 'type2',
-      upload: true
-    };
+it('should call isCertification and return the correct object when function is Certification', () => {
+  const tempPower: TempPower = {
+    ...mockTempPower,
+    domain: 'domain2',
+    function: 'Certification',
+    type: 'type2',
+    upload: true,
+    attest: false,
+    execute: false,
+    create: false,
+    update: false,
+    delete: false
+  };
 
-    const result = service.checkFunction(tempPower);
+  const result = service.checkFunction(tempPower);
 
-    expect(result).toEqual({
-      action: ['Upload'],
-      domain: 'domain2',
-      function: 'Certification',
-      type: 'type2'
-    });
+  expect(result).toEqual({
+    action: ['Upload'],
+    domain: 'domain2',
+    function: 'Certification',
+    type: 'type2'
   });
+});
+
 
   it('should call isProductOffering and return the correct object when function is ProductOffering', () => {
     const tempPower: TempPower = {
@@ -536,33 +518,39 @@ it('should handle error when submitCredential fails', (done) => {
     });
   });
 
-  it('should return the correct object when function does not match any case', () => {
-    const tempPower: TempPower = {
-      ...mockTempPower,
-      action: '',
-      domain: 'domain4',
-      function: 'UnknownFunction',
-      type: 'type4'
-    };
+it('should return the correct object when function does not match any case', () => {
+  const tempPower: TempPower = {
+    ...mockTempPower,
+    domain: 'domain4',
+    function: 'Login', // <- no té cap cas al switch
+    type: 'type4',
+    execute: false,
+    create: false,
+    update: false,
+    delete: false,
+    upload: false,
+    attest: false
+  };
 
-    const result = service.checkFunction(tempPower);
+  const result = service.checkFunction(tempPower);
 
-    expect(result).toEqual({
-      action: [],
-      domain: 'domain4',
-      function: 'UnknownFunction',
-      type: 'type4'
-    });
+  expect(result).toEqual({
+    action: [],
+    domain: 'domain4',
+    function: 'Login',
+    type: 'type4'
   });
+});
+
 
   it('should return true if the power is added', () => {
     // Mock data
     const existingPowers: TempPower[] = [
-      { ...mockTempPower, function: 'Power1' },
-      { ...mockTempPower, function: 'Power2' },
+      { ...mockTempPower, function: 'Onboarding' },
+      { ...mockTempPower, function: 'Certification' },
     ];
 
-    const powerToCheck = 'Power2';
+    const powerToCheck = 'Certification'; // Power to check
 
     // Mock getPlainAddedPowers to return existing powers
     jest.spyOn(service, 'getPlainAddedPowers').mockReturnValue(existingPowers);
@@ -576,10 +564,10 @@ it('should handle error when submitCredential fails', (done) => {
 
   it('should return false if the power is not added', () => {
     const existingPowers: TempPower[] = [
-      { ...mockTempPower, function: 'Power1' },
-      { ...mockTempPower, function: 'Power3' },
+      { ...mockTempPower, function: 'Onboarding' },
+      { ...mockTempPower, function: 'Certification' },
     ];
-    const powerToCheck = 'Power2'; // Not in the list
+    const powerToCheck = 'ProductOffering'; // Not in the list
     jest.spyOn(service, 'getPlainAddedPowers').mockReturnValue(existingPowers);
     const result = service.checkIfPowerIsAdded(powerToCheck);
 

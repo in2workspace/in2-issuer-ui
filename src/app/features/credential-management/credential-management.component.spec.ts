@@ -356,24 +356,6 @@ it('should navigate to /organization/credentials/details/:id if credential type 
   expect(router.navigate).toHaveBeenCalledWith(['/organization/credentials/details', '123']);
 });
 
-it('should not navigate and log a warning if credential type is not LEAR_CREDENTIAL_EMPLOYEE', () => {
-  const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
-  const credentialProcedure = { 
-    credential_procedure: { 
-      credential_type: 'OTHER_CREDENTIAL', 
-      procedure_id: '123' 
-    } 
-  } as CredentialProcedure;
-
-  component.navigateToCredentialDetails(credentialProcedure);
-  expect(router.navigate).not.toHaveBeenCalled();
-  expect(consoleWarnSpy).toHaveBeenCalledWith(
-    'Navigation prevented: Unsupported credential type "OTHER_CREDENTIAL".'
-  );
-
-  consoleWarnSpy.mockRestore();
-});
-
 it('should toggle searchBar and reset filters when closed', () => {
   component.dataSource.paginator = { firstPage: jest.fn() } as unknown as MatPaginator;
   

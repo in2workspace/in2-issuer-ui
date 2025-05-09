@@ -92,14 +92,7 @@ describe('PowerComponent', () => {
     expect(component.organizationIdentifierIsIn2).toBe(true);
   });
 
-  it('should not add power if is disabled', ()=>{
-    component.isDisabled = true;
-    component.addPower();
-    expect(mockFormService.addPower).not.toHaveBeenCalled();
-  });
-
   it('should not add "Onboarding" option if organizationIdentifierIsIn2 is false', () => {
-    component.isDisabled = false;
     mockAuthService.hasIn2OrganizationIdentifier.mockReturnValue(false);
     mockFormService.getPlainSelectedPower.mockReturnValue('Onboarding');
 
@@ -111,7 +104,6 @@ describe('PowerComponent', () => {
 
   it('should add "Onboarding" option if organizationIdentifierIsIn2 is true', () => {
     mockAuthService.hasIn2OrganizationIdentifier.mockReturnValue(true);
-    component.isDisabled = false;
     mockFormService.getPlainSelectedPower.mockReturnValue('Onboarding');
 
     component.ngOnInit();
@@ -129,7 +121,7 @@ describe('PowerComponent', () => {
         delete: false,
         upload: false,
         attest: false
-      }, false);
+      });
 
 
     expect(mockFormService.setSelectedPowerName).toHaveBeenCalledWith('');
@@ -137,7 +129,6 @@ describe('PowerComponent', () => {
 
   it('should add "Certification" option if organizationIdentifierIsIn2 is true', () => {
     mockAuthService.hasIn2OrganizationIdentifier.mockReturnValue(true);
-    component.isDisabled = false;
     mockFormService.getPlainSelectedPower.mockReturnValue('Certification');
 
     component.ngOnInit();
@@ -155,26 +146,13 @@ describe('PowerComponent', () => {
         delete: false,
         upload: false,
         attest: false,
-      },
-      false
+      }
     );
 
     expect(mockFormService.setSelectedPowerName).toHaveBeenCalledWith('');
   });
 
-  it('should not add an option if component is disabled (detail view)', () => {
-    component.isDisabled = true;
-    mockAuthService.hasIn2OrganizationIdentifier.mockReturnValue(true);
-    mockFormService.getPlainSelectedPower.mockReturnValue('Certification');
-
-    component.ngOnInit();
-    component.addPower();
-
-    expect(mockFormService.addPower).not.toHaveBeenCalled();
-  });
-
   it('should not add an option if it already exists', () => {
-    component.isDisabled = false;
     mockFormService.getPlainSelectedPower.mockReturnValue('Certification');
 
     component.ngOnInit();
@@ -192,15 +170,13 @@ describe('PowerComponent', () => {
         delete: false,
         upload: false,
         attest: false,
-      },
-      false
+      }
     );
 
     expect(mockFormService.setSelectedPowerName).toHaveBeenCalledWith('');
   });
 
   it('should not add an option if it already exists', () => {
-    component.isDisabled = false;
     mockFormService.getPlainSelectedPower.mockReturnValue('TestOption');
     mockFormService.checkIfPowerIsAdded.mockReturnValue(true);
 

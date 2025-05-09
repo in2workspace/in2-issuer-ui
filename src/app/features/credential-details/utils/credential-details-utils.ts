@@ -145,7 +145,7 @@ export function getFormDataByType<T extends CredentialType>(
   return extractor(credential) as CredentialFormData;
 }
 
-function mapPowerArrayByFunction(power: Power[]): Record<string, Record<string, true>> {
+export function mapPowerArrayByFunction(power: Power[]): Record<string, Record<string, true>> {
   const grouped: Record<string, Record<string, true>> = {};
 
   for (const entry of power) {

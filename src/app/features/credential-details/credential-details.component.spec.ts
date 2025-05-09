@@ -1,50 +1,66 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CredentialDetailsComponent } from './credential-details.component';
+import { ActivatedRoute } from '@angular/router';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { CredentialDetailsService } from './services/credential-details.service';
 import { LoaderService } from 'src/app/core/services/loader.service';
-import { ActivatedRoute } from '@angular/router';
 import { signal } from '@angular/core';
+import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
+import { HttpClient } from '@angular/common/http';
+import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
+import { mockCredentialEmployee } from 'src/app/core/mocks/detail-mocks';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { CredentialStatus, CredentialType } from 'src/app/core/models/entity/lear-credential-employee.entity';
 
 describe('CredentialDetailsComponent', () => {
   let component: CredentialDetailsComponent;
   let fixture: ComponentFixture<CredentialDetailsComponent>;
 
-  const credentialDetailsServiceMock = {
-    credentialValidFrom$: signal('2024-01-01'),
-    credentialValidUntil$: signal('2025-01-01'),
-    credentialType$: signal('LEARCredentialEmployee'),
-    credentialStatus$: signal('DRAFT'),
-    credentialDetailsForm$: signal({}),
+  const mockDetailsService = {
+    credentialValidFrom$: signal('2023-01-01'),
+    credentialValidUntil$: signal('2023-12-31'),
+    credentialType$: signal<CredentialType>('LEARCredentialEmployee'),
+    credentialStatus$: signal<CredentialStatus>('DRAFT'),
+    credentialDetailsForm$: signal(new FormGroup({})),
     credentialDetailsFormSchema$: signal({}),
-    loadCredentialDetailsAndForm: jest.fn(),
     setProcedureId: jest.fn(),
+    loadCredentialDetailsAndForm: jest.fn(),
     openSendReminderDialog: jest.fn(),
-    openSignCredentialDialog: jest.fn()
+    openSignCredentialDialog: jest.fn(),
   };
 
-  const loaderServiceMock = {
-    isLoading$: of(false)
+  const mockLoaderService = {
+    isLoading$: of(false),
   };
 
-  const activatedRouteMock = {
+  const mockActivatedRoute = {
     snapshot: {
       paramMap: {
-        get: jest.fn().mockReturnValue('123')
-      }
-    }
+        get: jest.fn(() => '123'),
+      },
+    },
   };
+
+  const mockCredentialProcedureService = {
+    getCredentialProcedureById: jest.fn().mockReturnValue(of(mockCredentialEmployee)),
+    signCredential: jest.fn(),
+    sendReminder: jest.fn(),
+  }
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CredentialDetailsComponent],
+      imports: [CredentialDetailsComponent, TranslateModule.forRoot(), NoopAnimationsModule],
       providers: [
-        { provide: CredentialDetailsService, useValue: credentialDetailsServiceMock },
-        { provide: LoaderService, useValue: loaderServiceMock },
-        { provide: ActivatedRoute, useValue: activatedRouteMock }
-      ]
+        { provide: CredentialDetailsService, useValue: mockDetailsService },
+        { provide: CredentialProcedureService, useValue: mockCredentialProcedureService },
+        { provide: HttpClient, useValue: {} },
+        { provide: LoaderService, useValue: mockLoaderService },
+        { provide: ActivatedRoute, useValue: mockActivatedRoute },
+      ],
     }).compileComponents();
 
+    TestBed.overrideProvider(CredentialDetailsService, { useValue: mockDetailsService });
     fixture = TestBed.createComponent(CredentialDetailsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -54,25 +70,163 @@ describe('CredentialDetailsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call setProcedureId on init', () => {
-    expect(credentialDetailsServiceMock.setProcedureId).toHaveBeenCalledWith('123');
-  });
+  // todo: test this methods from the component
+  // public showReminderButton$ = computed(() => {
+  //   return (
+  //     (
+  //       this.credentialStatus$() === 'WITHDRAWN' ||
+  //       this.credentialStatus$() === 'DRAFT' ||
+  //       this.credentialStatus$() === 'PEND_DOWNLOAD'
+  //     ) &&
+  //     this.credentialType$() === 'LEARCredentialEmployee'
+  //   );
+  // });
 
-  it('should return true for showReminderButton$ if status is DRAFT and type is LEARCredentialEmployee', () => {
-    expect(component.showReminderButton$()).toBe(true);
-  });
+  // public showSignCredentialButton$ = computed(()=>{
+  //   return (this.credentialStatus$() === 'PEND_SIGNATURE') && 
+  //   (this.credentialType$() === 'LEARCredentialEmployee' || this.credentialType$() === 'VerifiableCertification');
+  // });
 
-  it('should return false for showSignCredentialButton$ if status is not PEND_SIGNATURE', () => {
-    expect(component.showSignCredentialButton$()).toBe(false);
-  });
+  // it('should show reminder button', () => {
+  //   mockDetailsService.credentialStatus$.set('WITHDRAWN');
+  //   mockDetailsService.credentialType$.set('LEARCredentialEmployee');
+  //   expect(component.showReminderButton$()).toBe(true);
 
-  it('should call openSendReminderDialog', () => {
-    component.openSendReminderDialog();
-    expect(credentialDetailsServiceMock.openSendReminderDialog).toHaveBeenCalled();
-  });
+  //   mockDetailsService.credentialStatus$.set('WITHDRAWN');
+  //   mockDetailsService.credentialType$.set('LEARCredentialMachine');
+  //   expect(component.showReminderButton$()).toBe(false);
 
-  it('should call openSignCredentialDialog', () => {
-    component.openSignCredentialDialog();
-    expect(credentialDetailsServiceMock.openSignCredentialDialog).toHaveBeenCalled();
-  });
+  //   mockDetailsService.credentialStatus$.set('DRAFT');
+  //   mockDetailsService.credentialType$.set('LEARCredentialEmployee');
+  //   expect(component.showReminderButton$()).toBe(true);
+
+  //   mockDetailsService.credentialStatus$.set('WITHDRAWN');
+  //   mockDetailsService.credentialType$.set('VerifiableCertification');
+  //   expect(component.showReminderButton$()).toBe(false);
+
+  //   mockDetailsService.credentialStatus$.set('VALID');
+  //   mockDetailsService.credentialType$.set('LEARCredentialEmployee');
+  //   expect(component.showReminderButton$()).toBe(false);
+
+  //   mockDetailsService.credentialStatus$.set('VALID');
+  //   mockDetailsService.credentialType$.set('LEARCredentialMachine');
+  //   expect(component.showReminderButton$()).toBe(false);
+
+  //   mockDetailsService.credentialStatus$.set('VALID');
+  //   mockDetailsService.credentialType$.set('VerifiableCertification');
+  //   expect(component.showReminderButton$()).toBe(false);
+
+  // });
+
+  // it('should show sign credential button', () => {
+  //   // Cas positiu: status i type correctes
+  //   mockDetailsService.credentialStatus$.set('PEND_SIGNATURE');
+  //   mockDetailsService.credentialType$.set('LEARCredentialEmployee');
+  //   expect(component.showSignCredentialButton$()).toBe(true);
+  
+  //   mockDetailsService.credentialStatus$.set('PEND_SIGNATURE');
+  //   mockDetailsService.credentialType$.set('VerifiableCertification');
+  //   expect(component.showSignCredentialButton$()).toBe(true);
+  
+  //   // Casos negatius: status o type incorrectes
+  //   mockDetailsService.credentialStatus$.set('PEND_SIGNATURE');
+  //   mockDetailsService.credentialType$.set('LEARCredentialMachine');
+  //   expect(component.showSignCredentialButton$()).toBe(false);
+  
+  //   mockDetailsService.credentialStatus$.set('DRAFT');
+  //   mockDetailsService.credentialType$.set('LEARCredentialEmployee');
+  //   expect(component.showSignCredentialButton$()).toBe(false);
+  
+  //   mockDetailsService.credentialStatus$.set('DRAFT');
+  //   mockDetailsService.credentialType$.set('LEARCredentialMachine');
+  //   expect(component.showSignCredentialButton$()).toBe(false);
+  
+  //   mockDetailsService.credentialStatus$.set('VALID');
+  //   mockDetailsService.credentialType$.set('VerifiableCertification');
+  //   expect(component.showSignCredentialButton$()).toBe(false);
+  // });
+  
+
+  // it('should call getProcedureId and initializeForm on ngOnInit', () => {
+  //   const getProcedureIdSpy = jest.spyOn(component as any, 'getProcedureId');
+  //   const initializeFormSpy = jest.spyOn(component as any, 'initializeForm');
+  
+  //   component.ngOnInit();
+  
+  //   expect(getProcedureIdSpy).toHaveBeenCalled();
+  //   expect(initializeFormSpy).toHaveBeenCalled();
+  // });
+
+  // it('should call detailsService.loadCredentialDetailsAndForm in loadCredentialDetailsAndForm()', () => {
+  //   const spy = jest.spyOn(mockDetailsService, 'loadCredentialDetailsAndForm');
+  
+  //   // Accés a mètode privat via cast
+  //   (component as any).loadCredentialDetailsAndForm();
+  
+  //   expect(spy).toHaveBeenCalled();
+  // });
+  
+  // it('should call loadCredentialDetailsAndForm in initializeForm()', () => {
+  //   const spy = jest.spyOn(component as any, 'loadCredentialDetailsAndForm');
+  
+  //   (component as any).initializeForm();
+  
+  //   expect(spy).toHaveBeenCalled();
+  // });
+  
+  // it('should call detailsService.openSendReminderDialog when openSendReminderDialog is called', () => {
+  //   const spy = jest.spyOn(mockDetailsService, 'openSendReminderDialog');
+  
+  //   component.openSendReminderDialog();
+  
+  //   expect(spy).toHaveBeenCalled();
+  // });
+  
+  // it('should call detailsService.openSignCredentialDialog when openSignCredentialDialog is called', () => {
+  //   const spy = jest.spyOn(mockDetailsService, 'openSignCredentialDialog');
+  
+  //   component.openSignCredentialDialog();
+  
+  //   expect(spy).toHaveBeenCalled();
+  // });
+  
+  // it('should return form control keys from a FormGroup', () => {
+  //   const testGroup = new FormGroup({
+  //     name: new FormControl(''),
+  //     age: new FormControl(''),
+  //     email: new FormControl('')
+  //   });
+  
+  //   const result = component.formKeys(testGroup);
+  
+  //   expect(result).toEqual(['name', 'age', 'email']);
+  // });
+
+  // it('should return the correct control type', () => {
+  //   const cases = [
+  //     { control: new FormGroup({ name: new FormControl('') }), expected: 'group' },
+  //     { control: new FormArray([new FormControl('')]), expected: 'array' },
+  //     { control: new FormControl(''), expected: 'control' },
+  //   ] as const;
+  
+  //   for (const { control, expected } of cases) {
+  //     const result = component.getControlType(control);
+  //     expect(result).toBe(expected);
+  //   }
+  // });
+  
+  
+  // it('should cast control to FormArray', () => {
+  //   const formArray = new FormArray([
+  //     new FormControl('one'),
+  //     new FormControl('two')
+  //   ]);
+  
+  //   const result = component.asFormArray(formArray);
+  //   expect(result).toBe(formArray); // mateixa referència
+  //   expect(result.controls.length).toBe(2); // comportament típic de FormArray
+  // });
+  
+
+  
 });

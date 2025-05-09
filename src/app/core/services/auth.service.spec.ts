@@ -3,9 +3,9 @@ import { of } from 'rxjs';
 import { AuthService } from './auth.service';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { UserDataAuthenticationResponse } from '../models/dto/user-data-authentication-response.dto';
-import { LEARCredentialEmployeeDataNormalizer } from '../models/entity/lear-credential-employee-data-normalizer';
 import { LEARCredentialEmployee } from '../models/entity/lear-credential-employee.entity';
 import { RoleType } from '../models/enums/auth-rol-type.enum';
+import { LEARCredentialDataNormalizer } from '../models/entity/lear-credential-employee-data-normalizer';
 
 /**
  * A few mock objects to reduce repetition.
@@ -14,12 +14,13 @@ import { RoleType } from '../models/enums/auth-rol-type.enum';
 const mockCredentialEmployee: LEARCredentialEmployee = {
   id: 'some-id',
   type: ['VerifiableCredential', 'LEARCredentialEmployee'],
+  description: 'Test credential',
   credentialSubject: {
     mandate: {
       id: 'mandate-id',
       life_span: {
-        start_date_time: '2024-01-01T00:00:00Z',
-        end_date_time: '2024-12-31T23:59:59Z'
+        start: '2024-01-01T00:00:00Z',
+        end: '2024-12-31T23:59:59Z'
       },
       signer: {
         organizationIdentifier: 'SIGNER123',
@@ -53,8 +54,6 @@ const mockCredentialEmployee: LEARCredentialEmployee = {
       ]
     }
   },
-  expirationDate: '2024-12-31T23:59:59Z',
-  issuanceDate: '2024-01-01T00:00:00Z',
   issuer: {
     organizationIdentifier: 'ORG123',
     organization: 'Test Organization',
@@ -63,8 +62,12 @@ const mockCredentialEmployee: LEARCredentialEmployee = {
     serialNumber: '123456',
     country: 'Testland'
   },
-  validFrom: '2024-01-01T00:00:00Z'
+  validFrom: '2024-01-01T00:00:00Z',
+  validUntil: '2024-12-31T23:59:59Z',
+  issuanceDate: '2024-01-01T00:00:00Z',
+  expirationDate: '2024-12-31T23:59:59Z'
 };
+
 
 
 const mockUserDataWithVC: UserDataAuthenticationResponse = {
@@ -144,7 +147,7 @@ describe('AuthService', () => {
       authorize: jest.fn(),
       logoffAndRevokeTokens: jest.fn()
     };
-    jest.spyOn(LEARCredentialEmployeeDataNormalizer.prototype, 'normalizeLearCredential')
+    jest.spyOn(LEARCredentialDataNormalizer.prototype, 'normalizeLearCredential')
     .mockImplementation((data) => data);
 
     
@@ -394,7 +397,7 @@ describe('AuthService', () => {
     extractVcSpy.mockReturnValue(mockCredentialEmployee);
 
     (service as any).handleUserAuthentication(mockUserDataWithVC);
-    expect(LEARCredentialEmployeeDataNormalizer.prototype.normalizeLearCredential).toHaveBeenCalled();
+    expect(LEARCredentialDataNormalizer.prototype.normalizeLearCredential).toHaveBeenCalled();
     expect(handleVCLoginSpy).toHaveBeenCalled();
     expect(service.roleType()).toBe(RoleType.LEAR);
   });
