@@ -44,9 +44,9 @@ export class CredentialProcedureService {
       map(response => {
         const { credential } = response;
         // If vc exists, we normalize it, otherwise we assume that credential is already of the expected type
-        const credentialData = ('vc' in credential
+        const credentialData = 'vc' in credential
           ? credential.vc
-          : credential) as LEARCredential;
+          : credential;
 
         // Normalize the part which is of type LEARCredentialEmployee
         const normalizedCredential = this.normalizer.normalizeLearCredential(credentialData);

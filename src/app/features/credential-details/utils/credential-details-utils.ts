@@ -1,4 +1,4 @@
-import { CredentialDetailsFormSchema, LearCredentialEmployeeDetailsFormSchema, LearCredentialMachineDetailsFormSchema, VerifiableCertificationDetailsFormSchema } from '../../../core/models/entity/lear-credential-details-schemas';
+import { CredentialDetailsFormFieldSchema, CredentialDetailsFormSchema, LearCredentialEmployeeDetailsFormSchema, LearCredentialMachineDetailsFormSchema, VerifiableCertificationDetailsFormSchema } from '../../../core/models/entity/lear-credential-details-schemas';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { CredentialFormData, CredentialType, Power, LEARCredential, LEARCredentialEmployee, LEARCredentialMachine, VerifiableCertification } from 'src/app/core/models/entity/lear-credential-employee.entity';
 
@@ -67,70 +67,78 @@ export const FormSchemaByType: Record<CredentialType, CredentialDetailsFormSchem
     return schema;
   }
 
-export function buildFormFromSchema(
-  fb: FormBuilder,
-  schema: CredentialDetailsFormSchema,
-  data: any
-): FormGroup {
-  const group: Record<string, any> = {};
-
-  for (const key in schema) {
-    //don't show Issuer if empty
-    if (
-      key === 'issuer' &&
-      schema[key].type === 'group' &&
-      (!data?.issuer?.id || data.issuer.id === '')
-    ) {
-      continue;
-    }
-
-    const field = schema[key];
-
-    if (key === 'compliance' && field.type === 'group') {
-      const complianceGroup: Record<string, FormGroup> = {};
-      const complianceData = data?.[key] ?? {};
-    
-      for (const standard in complianceData) {
-        complianceGroup[standard] = fb.group({
-          id: new FormControl(complianceData[standard].id),
-          hash: new FormControl(complianceData[standard].hash),
-          scope: new FormControl(complianceData[standard].scope),
-        });
+  export function buildFormFromSchema(
+    fb: FormBuilder,
+    schema: CredentialDetailsFormSchema,
+    data: any
+  ): FormGroup {
+    const group: Record<string, any> = {};
+  
+    for (const key in schema) {
+      const field = schema[key];
+  
+      if (shouldSkipIssuer(key, field, data)) continue;
+  
+      if (isComplianceGroup(key, field)) {
+        group[key] = buildComplianceGroup(fb, data?.[key]);
+      } else if (isPowerGroup(key, field)) {
+        group[key] = buildPowerGroup(fb, data?.[key]);
+      } else if (field.type === 'control') {
+        group[key] = new FormControl(data?.[key] ?? null);
+      } else if (field.type === 'group') {
+        group[key] = buildFormFromSchema(fb, field.fields!, data?.[key]);
       }
-    
-      group[key] = fb.group(complianceGroup);
     }
-
-    else if (key === 'power' && field.type === 'group') {
-      const powerData = data?.[key] ?? {};
-      const powerGroup: Record<string, FormGroup> = {};
-    
-      for (const func in powerData) {
-        const actions = powerData[func];
-        const actionGroup: Record<string, FormControl> = {};
-    
-        for (const action in actions) {
-          actionGroup[action] = new FormControl(true); // toggle activat
-        }
-    
-        powerGroup[func] = fb.group(actionGroup);
-      }
-    
-      group[key] = fb.group(powerGroup);
-    }
-
-    else if (field.type === 'control') {
-      group[key] = new FormControl(data?.[key] ?? null);
-    }
-
-    else if (field.type === 'group') {
-      group[key] = buildFormFromSchema(fb, field.fields!, data?.[key]);
-    }
-
+  
+    return fb.group(group);
   }
-
-  return fb.group(group);
-}  
+  
+  export function shouldSkipIssuer(key: string, field: CredentialDetailsFormFieldSchema, data: any): boolean {
+    return (
+      key === 'issuer' &&
+      field.type === 'group' &&
+      (!data?.issuer?.id || data.issuer.id === '')
+    );
+  }
+  
+  export function isComplianceGroup(key: string, field: CredentialDetailsFormFieldSchema): boolean {
+    return key === 'compliance' && field.type === 'group';
+  }
+  
+  export function isPowerGroup(key: string, field: CredentialDetailsFormFieldSchema): boolean {
+    return key === 'power' && field.type === 'group';
+  }
+  
+  export function buildComplianceGroup(fb: FormBuilder, complianceData: any): FormGroup {
+    const group: Record<string, FormGroup> = {};
+  
+    for (const standard in complianceData ?? {}) {
+      const item = complianceData[standard];
+      group[standard] = fb.group({
+        id: new FormControl(item.id),
+        hash: new FormControl(item.hash),
+        scope: new FormControl(item.scope),
+      });
+    }
+  
+    return fb.group(group);
+  }
+  
+  export function buildPowerGroup(fb: FormBuilder, powerData: any): FormGroup {
+    const group: Record<string, FormGroup> = {};
+  
+    for (const func in powerData ?? {}) {
+      const actionGroup: Record<string, FormControl> = {};
+  
+      for (const action in powerData[func]) {
+        actionGroup[action] = new FormControl(true);
+      }
+  
+      group[func] = fb.group(actionGroup);
+    }
+  
+    return fb.group(group);
+  }
   
 export function getFormDataByType<T extends CredentialType>(
   credential: LEARCredential,

@@ -47,7 +47,7 @@ export class CredentialDetailsService {
       }));
   }
 
-  private loadFormObserver: Observer<LEARCredentialDataDetails> = {
+  private readonly loadFormObserver: Observer<LEARCredentialDataDetails> = {
     next: () => {
       this.loadForm();
     },

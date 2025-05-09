@@ -1,4 +1,4 @@
-import { getFormSchemaByType, mapPowerArrayByFunction } from './credential-details-utils';
+import { getFormSchemaByType, mapPowerArrayByFunction, shouldSkipIssuer } from './credential-details-utils';
 import { CredentialType } from 'src/app/core/models/entity/lear-credential-employee.entity';
 import { LearCredentialEmployeeDetailsFormSchema, LearCredentialMachineDetailsFormSchema, VerifiableCertificationDetailsFormSchema } from 'src/app/core/models/entity/lear-credential-details-schemas';
 import { Power } from 'src/app/core/models/entity/lear-credential-employee.entity';
@@ -377,4 +377,19 @@ describe('buildFormFromSchema', () => {
   });
 });
 
-  
+describe('shouldSkipIssuer', () => {
+  it('should return true when key is issuer, type is group and id is empty', () => {
+    const result = shouldSkipIssuer('issuer', { type: 'group' }, { issuer: { id: '' } });
+    expect(result).toBe(true);
+  });
+
+  it('should return false for non-issuer key', () => {
+    const result = shouldSkipIssuer('mandator', { type: 'group' }, { issuer: { id: '' } });
+    expect(result).toBe(false);
+  });
+
+  it('should return false if id is present', () => {
+    const result = shouldSkipIssuer('issuer', { type: 'group' }, { issuer: { id: '123' } });
+    expect(result).toBe(false);
+  });
+});

@@ -214,7 +214,6 @@ export interface Attester {
   country: string;
 }
 
-//todo move to form models?
 export type LearCredentialEmployeeFormData = {
   issuer: EmployeeIssuer;
   mandatee: LEARCredentialEmployee['credentialSubject']['mandate']['mandatee'];

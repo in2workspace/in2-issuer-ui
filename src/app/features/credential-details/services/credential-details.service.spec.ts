@@ -29,7 +29,7 @@ describe('CredentialDetailsService', () => {
   };
 
   beforeEach(() => {
-    jest.clearAllMocks(); // ✅ assegura mocks nets per cada test
+    jest.clearAllMocks();
 
     Object.defineProperty(window, 'location', {
       value: {
@@ -59,9 +59,8 @@ describe('CredentialDetailsService', () => {
   });
 
   it('should subscribe to loadCredentialDetails and call loadFormObserver.next', () => {
-    const mockData = {} as any; // no importa el contingut aquí
+    const mockData = {} as any;
   
-    // Espiem i forcem l'observable retornat
     const loadCredentialDetailsSpy = jest
       .spyOn(service, 'loadCredentialDetails')
       .mockReturnValue(of(mockData));
@@ -78,7 +77,7 @@ describe('CredentialDetailsService', () => {
     const mockProcedureId = 'test-id';
     const mockData: LEARCredentialDataDetails = {
       credential_status: 'VALID',
-      credential: { vc: {} as any } // simplificació
+      credential: { vc: {} as any }
     } as LEARCredentialDataDetails;
   
     service.procedureId$.set(mockProcedureId);
@@ -88,10 +87,8 @@ describe('CredentialDetailsService', () => {
       .mockReturnValue(of(mockData));
   
     service.loadCredentialDetails().subscribe(result => {
-      // ✅ Comprovem que retorna les dades correctes
       expect(result).toBe(mockData);
   
-      // ✅ Comprovem que els signals han estat actualitzats
       expect(service.credentialDetailsData$()).toBe(mockData);
       expect(service.credentialStatus$()).toBe('VALID');
   
@@ -100,7 +97,6 @@ describe('CredentialDetailsService', () => {
   });
   
   it('should load form and update signals', () => {
-    // 1. Preparem dades simulades
     const mockCredential = {
       validFrom: '2023-01-01',
       validUntil: '2023-12-31',
@@ -115,18 +111,14 @@ describe('CredentialDetailsService', () => {
     const mockFormData = { name: 'John' } as unknown as CredentialFormData;
     const mockFormGroup = new FormBuilder().group({ name: [''] });
   
-    // 2. Configurem signals
     service.credentialDetailsData$.set(mockData);
   
-    // 3. Mock dels helpers
     jest.spyOn(utils, 'getFormSchemaByType').mockReturnValue(mockSchema);
     jest.spyOn(utils, 'getFormDataByType').mockReturnValue(mockFormData);
     jest.spyOn(utils, 'buildFormFromSchema').mockReturnValue(mockFormGroup);
   
-    // 4. Executem
     (service as any).loadForm();
   
-    // 5. Comprovem que els signals s'han actualitzat correctament
     expect(service.credentialValidFrom$()).toBe('2023-01-01');
     expect(service.credentialValidUntil$()).toBe('2023-12-31');
     expect(service.credentialType$()).toBe('LEARCredentialEmployee');
@@ -199,12 +191,11 @@ describe('CredentialDetailsService', () => {
   });
 
   it('should send reminder, open success dialog, navigate, and reload page', fakeAsync(() => {
-    // Donem un procedureId al signal
     service.procedureId$.set('123');
   
     const sendReminderMock = jest
       .spyOn(mockCredentialProcedureService, 'sendReminder')
-      .mockReturnValue(of(undefined)); // `undefined` perquè no retorna res, però compleix
+      .mockReturnValue(of(undefined));
   
     const dialogRefMock = {
       afterClosed: jest.fn().mockReturnValue(of(true)),
@@ -233,11 +224,10 @@ describe('CredentialDetailsService', () => {
   }));
 
   it('should return EMPTY and log error if procedureId is missing in executeCredentialAction', () => {
-    // 👇 assegurem que el valor del signal és falsy
     service.procedureId$.set('');
   
     const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-    const actionMock = jest.fn(); // No s'ha de cridar mai
+    const actionMock = jest.fn();
   
     const result = (service as any).executeCredentialAction(
       actionMock,
