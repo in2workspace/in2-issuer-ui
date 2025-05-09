@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { AutoLoginPartialRoutesGuard } from 'angular-auth-oidc-client';
-import {basicGuard, settingsGuard} from './core/guards/accessLevel.guard'
-import { CredentialDetailsComponent } from './features/credential-details/credential-details.component';
+import {basicGuard, settingsGuard} from './core/guards/accessLevel.guard';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'home' },
@@ -14,38 +13,27 @@ export const routes: Routes = [
     loadChildren: () => import('./features/settings/settings.routes').then(m => m.default),
     canActivate: [AutoLoginPartialRoutesGuard, settingsGuard],
   },
-  //todo use children
   {
     path: 'organization/credentials',
-    loadChildren: () =>
-      import(
-        './features/credential-management/credential-management.routes'
-        ).then((m) => m.default),
     canActivate: [AutoLoginPartialRoutesGuard, basicGuard],
-  },
-  {
-    path: 'organization/credentials/details',
-    loadChildren: () =>
-      import('./features/credential-details/credential-details.routes').then(
-        (m) => m.default
-      ),
-    canActivate: [AutoLoginPartialRoutesGuard, basicGuard],
-  },
-  {
-    path: 'organization/credentials/create',
-    loadChildren: () =>
-      import('./features/credential-issuance/credential-issuance.routes').then(
-        (m) => m.default
-      ),
-    canActivate: [AutoLoginPartialRoutesGuard, basicGuard],
-  },
-  {
-    path: 'organization/credentials/create2/:id',
-    loadChildren: () =>
-      import('./features/credential-issuance/credential-issuance.routes').then(
-        (m) => m.default
-      ),
-    canActivate: [AutoLoginPartialRoutesGuard, basicGuard],
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('./features/credential-management/credential-management.routes').then(m => m.default),
+      },
+      {
+        path: 'details',
+        loadChildren: () => import('./features/credential-details/credential-details.routes').then(m => m.default),
+      },
+      {
+        path: 'create',
+        loadChildren: () => import('./features/credential-issuance/credential-issuance.routes').then(m => m.default),
+      },
+      {
+        path: 'create2/:id',
+        loadChildren: () => import('./features/credential-issuance/credential-issuance.routes').then(m => m.default),
+      },
+    ],
   },
   {
     path: 'credential-offer',

@@ -1,10 +1,12 @@
 import { AutoLoginPartialRoutesGuard } from 'angular-auth-oidc-client';
-import { routes } from "./app-routing";
-import {basicGuard, settingsGuard} from './core/guards/accessLevel.guard'
+import { routes } from './app-routing';
+import { basicGuard, settingsGuard } from './core/guards/accessLevel.guard';
 
 describe('App Routes', () => {
   it('should contain a default redirect to home', () => {
-    const defaultRoute = routes.find((route) => route.path === '' && route.redirectTo === 'home');
+    const defaultRoute = routes.find(
+      (route) => route.path === '' && route.redirectTo === 'home'
+    );
     expect(defaultRoute).toBeTruthy();
     expect(defaultRoute?.pathMatch).toBe('full');
   });
@@ -15,42 +17,6 @@ describe('App Routes', () => {
     expect(typeof homeRoute?.loadChildren).toBe('function');
   });
 
-  it('should define lazy loading for credential details with guards', async () => {
-    const credDetailsRoute = routes.find(
-      (route) => route.path === 'organization/credentials/details'
-    );
-  
-    expect(credDetailsRoute).toBeTruthy();
-    expect(typeof credDetailsRoute?.loadChildren).toBe('function');
-    expect(credDetailsRoute?.canActivate).toContain(AutoLoginPartialRoutesGuard);
-    expect(credDetailsRoute?.canActivate).toContain(basicGuard);
-  
-    const module = await credDetailsRoute!.loadChildren!();
-    expect(module).toBeDefined();
-  });
-  
-
-  it('should define lazy loading for credential management with guards', () => {
-    const orgCredRoute = routes.find((route) => route.path === 'organization/credentials');
-    expect(orgCredRoute).toBeTruthy();
-    expect(orgCredRoute?.loadChildren).toBeDefined();
-    expect(orgCredRoute?.canActivate).toContain(AutoLoginPartialRoutesGuard);
-    expect(orgCredRoute?.canActivate).toContain(basicGuard);
-  });
-
-  it('should define lazy loading for credential issuance with guards', () => {
-    const createCredRoute = routes.find((route) => route.path === 'organization/credentials/create');
-    expect(createCredRoute).toBeTruthy();
-    expect(createCredRoute?.loadChildren).toBeDefined();
-    expect(createCredRoute?.canActivate).toContain(AutoLoginPartialRoutesGuard);
-    expect(createCredRoute?.canActivate).toContain(basicGuard);
-  });
-
-  it('should define a lazy loading route for credential-offer', () => {
-    const createCredRoute = routes.find((route) => route.path === 'credential-offer');
-    expect(createCredRoute).toBeTruthy();
-    expect(createCredRoute?.loadChildren).toBeDefined();
-  });
   it('should define lazy loading for settings with guards', () => {
     const settingsRoute = routes.find((route) => route.path === 'settings');
     expect(settingsRoute).toBeTruthy();
@@ -58,11 +24,54 @@ describe('App Routes', () => {
     expect(settingsRoute?.canActivate).toContain(AutoLoginPartialRoutesGuard);
     expect(settingsRoute?.canActivate).toContain(settingsGuard);
   });
+
+  it('should define lazy loading for credential-offer', () => {
+    const credOfferRoute = routes.find((route) => route.path === 'credential-offer');
+    expect(credOfferRoute).toBeTruthy();
+    expect(credOfferRoute?.loadChildren).toBeDefined();
+  });
+
+  it('should define organization/credentials parent route with guards', () => {
+    const parentRoute = routes.find((route) => route.path === 'organization/credentials');
+    expect(parentRoute).toBeTruthy();
+    expect(parentRoute?.canActivate).toContain(AutoLoginPartialRoutesGuard);
+    expect(parentRoute?.canActivate).toContain(basicGuard);
+    expect(Array.isArray(parentRoute?.children)).toBe(true);
+  });
+
+  it('should define lazy loading for credential management', () => {
+    const parentRoute = routes.find((route) => route.path === 'organization/credentials');
+    const credManagementRoute = parentRoute?.children?.find((r) => r.path === '');
+    expect(credManagementRoute).toBeTruthy();
+    expect(typeof credManagementRoute?.loadChildren).toBe('function');
+  });
+
+  it('should define lazy loading for credential details', async () => {
+    const parentRoute = routes.find((route) => route.path === 'organization/credentials');
+    const credDetailsRoute = parentRoute?.children?.find((r) => r.path === 'details');
+    expect(credDetailsRoute).toBeTruthy();
+    expect(typeof credDetailsRoute?.loadChildren).toBe('function');
+    const module = await credDetailsRoute!.loadChildren!();
+    expect(module).toBeDefined();
+  });
+
+  it('should define lazy loading for credential creation', () => {
+    const parentRoute = routes.find((route) => route.path === 'organization/credentials');
+    const credCreateRoute = parentRoute?.children?.find((r) => r.path === 'create');
+    expect(credCreateRoute).toBeTruthy();
+    expect(typeof credCreateRoute?.loadChildren).toBe('function');
+  });
+
+  it('should define lazy loading for credential creation with id', () => {
+    const parentRoute = routes.find((route) => route.path === 'organization/credentials');
+    const credCreate2Route = parentRoute?.children?.find((r) => r.path === 'create2/:id');
+    expect(credCreate2Route).toBeTruthy();
+    expect(typeof credCreate2Route?.loadChildren).toBe('function');
+  });
+
   it('should redirect wildcard (**) to home', () => {
     const wildcardRoute = routes.find((route) => route.path === '**');
     expect(wildcardRoute).toBeTruthy();
     expect(wildcardRoute?.redirectTo).toBe('home');
   });
-
-
 });
