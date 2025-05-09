@@ -70,162 +70,145 @@ describe('CredentialDetailsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // todo: test this methods from the component
-  // public showReminderButton$ = computed(() => {
-  //   return (
-  //     (
-  //       this.credentialStatus$() === 'WITHDRAWN' ||
-  //       this.credentialStatus$() === 'DRAFT' ||
-  //       this.credentialStatus$() === 'PEND_DOWNLOAD'
-  //     ) &&
-  //     this.credentialType$() === 'LEARCredentialEmployee'
-  //   );
-  // });
+  it('should show reminder button', () => {
+    mockDetailsService.credentialStatus$.set('WITHDRAWN');
+    mockDetailsService.credentialType$.set('LEARCredentialEmployee');
+    expect(component.showReminderButton$()).toBe(true);
 
-  // public showSignCredentialButton$ = computed(()=>{
-  //   return (this.credentialStatus$() === 'PEND_SIGNATURE') && 
-  //   (this.credentialType$() === 'LEARCredentialEmployee' || this.credentialType$() === 'VerifiableCertification');
-  // });
+    mockDetailsService.credentialStatus$.set('WITHDRAWN');
+    mockDetailsService.credentialType$.set('LEARCredentialMachine');
+    expect(component.showReminderButton$()).toBe(false);
 
-  // it('should show reminder button', () => {
-  //   mockDetailsService.credentialStatus$.set('WITHDRAWN');
-  //   mockDetailsService.credentialType$.set('LEARCredentialEmployee');
-  //   expect(component.showReminderButton$()).toBe(true);
+    mockDetailsService.credentialStatus$.set('DRAFT');
+    mockDetailsService.credentialType$.set('LEARCredentialEmployee');
+    expect(component.showReminderButton$()).toBe(true);
 
-  //   mockDetailsService.credentialStatus$.set('WITHDRAWN');
-  //   mockDetailsService.credentialType$.set('LEARCredentialMachine');
-  //   expect(component.showReminderButton$()).toBe(false);
+    mockDetailsService.credentialStatus$.set('WITHDRAWN');
+    mockDetailsService.credentialType$.set('VerifiableCertification');
+    expect(component.showReminderButton$()).toBe(false);
 
-  //   mockDetailsService.credentialStatus$.set('DRAFT');
-  //   mockDetailsService.credentialType$.set('LEARCredentialEmployee');
-  //   expect(component.showReminderButton$()).toBe(true);
+    mockDetailsService.credentialStatus$.set('VALID');
+    mockDetailsService.credentialType$.set('LEARCredentialEmployee');
+    expect(component.showReminderButton$()).toBe(false);
 
-  //   mockDetailsService.credentialStatus$.set('WITHDRAWN');
-  //   mockDetailsService.credentialType$.set('VerifiableCertification');
-  //   expect(component.showReminderButton$()).toBe(false);
+    mockDetailsService.credentialStatus$.set('VALID');
+    mockDetailsService.credentialType$.set('LEARCredentialMachine');
+    expect(component.showReminderButton$()).toBe(false);
 
-  //   mockDetailsService.credentialStatus$.set('VALID');
-  //   mockDetailsService.credentialType$.set('LEARCredentialEmployee');
-  //   expect(component.showReminderButton$()).toBe(false);
+    mockDetailsService.credentialStatus$.set('VALID');
+    mockDetailsService.credentialType$.set('VerifiableCertification');
+    expect(component.showReminderButton$()).toBe(false);
 
-  //   mockDetailsService.credentialStatus$.set('VALID');
-  //   mockDetailsService.credentialType$.set('LEARCredentialMachine');
-  //   expect(component.showReminderButton$()).toBe(false);
+  });
 
-  //   mockDetailsService.credentialStatus$.set('VALID');
-  //   mockDetailsService.credentialType$.set('VerifiableCertification');
-  //   expect(component.showReminderButton$()).toBe(false);
-
-  // });
-
-  // it('should show sign credential button', () => {
-  //   // Cas positiu: status i type correctes
-  //   mockDetailsService.credentialStatus$.set('PEND_SIGNATURE');
-  //   mockDetailsService.credentialType$.set('LEARCredentialEmployee');
-  //   expect(component.showSignCredentialButton$()).toBe(true);
+  it('should show sign credential button', () => {
+    // Cas positiu: status i type correctes
+    mockDetailsService.credentialStatus$.set('PEND_SIGNATURE');
+    mockDetailsService.credentialType$.set('LEARCredentialEmployee');
+    expect(component.showSignCredentialButton$()).toBe(true);
   
-  //   mockDetailsService.credentialStatus$.set('PEND_SIGNATURE');
-  //   mockDetailsService.credentialType$.set('VerifiableCertification');
-  //   expect(component.showSignCredentialButton$()).toBe(true);
+    mockDetailsService.credentialStatus$.set('PEND_SIGNATURE');
+    mockDetailsService.credentialType$.set('VerifiableCertification');
+    expect(component.showSignCredentialButton$()).toBe(true);
   
-  //   // Casos negatius: status o type incorrectes
-  //   mockDetailsService.credentialStatus$.set('PEND_SIGNATURE');
-  //   mockDetailsService.credentialType$.set('LEARCredentialMachine');
-  //   expect(component.showSignCredentialButton$()).toBe(false);
+    // Casos negatius: status o type incorrectes
+    mockDetailsService.credentialStatus$.set('PEND_SIGNATURE');
+    mockDetailsService.credentialType$.set('LEARCredentialMachine');
+    expect(component.showSignCredentialButton$()).toBe(false);
   
-  //   mockDetailsService.credentialStatus$.set('DRAFT');
-  //   mockDetailsService.credentialType$.set('LEARCredentialEmployee');
-  //   expect(component.showSignCredentialButton$()).toBe(false);
+    mockDetailsService.credentialStatus$.set('DRAFT');
+    mockDetailsService.credentialType$.set('LEARCredentialEmployee');
+    expect(component.showSignCredentialButton$()).toBe(false);
   
-  //   mockDetailsService.credentialStatus$.set('DRAFT');
-  //   mockDetailsService.credentialType$.set('LEARCredentialMachine');
-  //   expect(component.showSignCredentialButton$()).toBe(false);
+    mockDetailsService.credentialStatus$.set('DRAFT');
+    mockDetailsService.credentialType$.set('LEARCredentialMachine');
+    expect(component.showSignCredentialButton$()).toBe(false);
   
-  //   mockDetailsService.credentialStatus$.set('VALID');
-  //   mockDetailsService.credentialType$.set('VerifiableCertification');
-  //   expect(component.showSignCredentialButton$()).toBe(false);
-  // });
+    mockDetailsService.credentialStatus$.set('VALID');
+    mockDetailsService.credentialType$.set('VerifiableCertification');
+    expect(component.showSignCredentialButton$()).toBe(false);
+  });
   
 
-  // it('should call getProcedureId and initializeForm on ngOnInit', () => {
-  //   const getProcedureIdSpy = jest.spyOn(component as any, 'getProcedureId');
-  //   const initializeFormSpy = jest.spyOn(component as any, 'initializeForm');
+  it('should call getProcedureId and initializeForm on ngOnInit', () => {
+    const getProcedureIdSpy = jest.spyOn(component as any, 'getProcedureId');
+    const initializeFormSpy = jest.spyOn(component as any, 'initializeForm');
   
-  //   component.ngOnInit();
+    component.ngOnInit();
   
-  //   expect(getProcedureIdSpy).toHaveBeenCalled();
-  //   expect(initializeFormSpy).toHaveBeenCalled();
-  // });
+    expect(getProcedureIdSpy).toHaveBeenCalled();
+    expect(initializeFormSpy).toHaveBeenCalled();
+  });
 
-  // it('should call detailsService.loadCredentialDetailsAndForm in loadCredentialDetailsAndForm()', () => {
-  //   const spy = jest.spyOn(mockDetailsService, 'loadCredentialDetailsAndForm');
+  it('should call detailsService.loadCredentialDetailsAndForm in loadCredentialDetailsAndForm()', () => {
+    const spy = jest.spyOn(mockDetailsService, 'loadCredentialDetailsAndForm');
   
-  //   // Accés a mètode privat via cast
-  //   (component as any).loadCredentialDetailsAndForm();
+    // Accés a mètode privat via cast
+    (component as any).loadCredentialDetailsAndForm();
   
-  //   expect(spy).toHaveBeenCalled();
-  // });
+    expect(spy).toHaveBeenCalled();
+  });
   
-  // it('should call loadCredentialDetailsAndForm in initializeForm()', () => {
-  //   const spy = jest.spyOn(component as any, 'loadCredentialDetailsAndForm');
+  it('should call loadCredentialDetailsAndForm in initializeForm()', () => {
+    const spy = jest.spyOn(component as any, 'loadCredentialDetailsAndForm');
   
-  //   (component as any).initializeForm();
+    (component as any).initializeForm();
   
-  //   expect(spy).toHaveBeenCalled();
-  // });
+    expect(spy).toHaveBeenCalled();
+  });
   
-  // it('should call detailsService.openSendReminderDialog when openSendReminderDialog is called', () => {
-  //   const spy = jest.spyOn(mockDetailsService, 'openSendReminderDialog');
+  it('should call detailsService.openSendReminderDialog when openSendReminderDialog is called', () => {
+    const spy = jest.spyOn(mockDetailsService, 'openSendReminderDialog');
   
-  //   component.openSendReminderDialog();
+    component.openSendReminderDialog();
   
-  //   expect(spy).toHaveBeenCalled();
-  // });
+    expect(spy).toHaveBeenCalled();
+  });
   
-  // it('should call detailsService.openSignCredentialDialog when openSignCredentialDialog is called', () => {
-  //   const spy = jest.spyOn(mockDetailsService, 'openSignCredentialDialog');
+  it('should call detailsService.openSignCredentialDialog when openSignCredentialDialog is called', () => {
+    const spy = jest.spyOn(mockDetailsService, 'openSignCredentialDialog');
   
-  //   component.openSignCredentialDialog();
+    component.openSignCredentialDialog();
   
-  //   expect(spy).toHaveBeenCalled();
-  // });
+    expect(spy).toHaveBeenCalled();
+  });
   
-  // it('should return form control keys from a FormGroup', () => {
-  //   const testGroup = new FormGroup({
-  //     name: new FormControl(''),
-  //     age: new FormControl(''),
-  //     email: new FormControl('')
-  //   });
+  it('should return form control keys from a FormGroup', () => {
+    const testGroup = new FormGroup({
+      name: new FormControl(''),
+      age: new FormControl(''),
+      email: new FormControl('')
+    });
   
-  //   const result = component.formKeys(testGroup);
+    const result = component.formKeys(testGroup);
   
-  //   expect(result).toEqual(['name', 'age', 'email']);
-  // });
+    expect(result).toEqual(['name', 'age', 'email']);
+  });
 
-  // it('should return the correct control type', () => {
-  //   const cases = [
-  //     { control: new FormGroup({ name: new FormControl('') }), expected: 'group' },
-  //     { control: new FormArray([new FormControl('')]), expected: 'array' },
-  //     { control: new FormControl(''), expected: 'control' },
-  //   ] as const;
+  it('should return the correct control type', () => {
+    const cases = [
+      { control: new FormGroup({ name: new FormControl('') }), expected: 'group' },
+      { control: new FormArray([new FormControl('')]), expected: 'array' },
+      { control: new FormControl(''), expected: 'control' },
+    ] as const;
   
-  //   for (const { control, expected } of cases) {
-  //     const result = component.getControlType(control);
-  //     expect(result).toBe(expected);
-  //   }
-  // });
+    for (const { control, expected } of cases) {
+      const result = component.getControlType(control);
+      expect(result).toBe(expected);
+    }
+  });
   
   
-  // it('should cast control to FormArray', () => {
-  //   const formArray = new FormArray([
-  //     new FormControl('one'),
-  //     new FormControl('two')
-  //   ]);
+  it('should cast control to FormArray', () => {
+    const formArray = new FormArray([
+      new FormControl('one'),
+      new FormControl('two')
+    ]);
   
-  //   const result = component.asFormArray(formArray);
-  //   expect(result).toBe(formArray); // mateixa referència
-  //   expect(result.controls.length).toBe(2); // comportament típic de FormArray
-  // });
+    const result = component.asFormArray(formArray);
+    expect(result).toBe(formArray); // mateixa referència
+    expect(result.controls.length).toBe(2); // comportament típic de FormArray
+  });
   
 
   
