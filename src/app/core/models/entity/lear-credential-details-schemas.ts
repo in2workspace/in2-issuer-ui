@@ -86,15 +86,6 @@ export const LearCredentialEmployeeDetailsFormSchema: CredentialDetailsFormSchem
   };
   
   export const VerifiableCertificationDetailsFormSchema: CredentialDetailsFormSchema = {
-    issuer: {
-      type: 'group',
-      display: 'side',
-      fields: {
-        commonName: { type: 'control' },
-        organization: { type: 'control' },
-        country: { type: 'control' },
-      },
-    },
     attester: {
       type: 'group',
       display: 'side',
@@ -106,6 +97,15 @@ export const LearCredentialEmployeeDetailsFormSchema: CredentialDetailsFormSchem
         organizationIdentifier: { type: 'control' },
         country: { type: 'control' },
       }
+    },
+    issuer: {
+      type: 'group',
+      display: 'side',
+      fields: {
+        commonName: { type: 'control' },
+        organization: { type: 'control' },
+        country: { type: 'control' },
+      },
     },
     company: {
       type: 'group',
