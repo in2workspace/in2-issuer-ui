@@ -50,8 +50,8 @@ export class NavbarComponent implements OnInit {
       });
   }
 
-  public isCredentialIssuerAndConfigure():boolean{
-    if(this.authService.hasPower('CredentialIssuer','Configure')) return true
+  public isCredentialIssuerAndConfigure():boolean {
+    if(this.authService.hasPower('CredentialIssuer', 'Configure')) return true;
     return false;
   }
 

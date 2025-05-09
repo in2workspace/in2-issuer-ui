@@ -3,9 +3,9 @@ import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { UserDataAuthenticationResponse } from "../models/dto/user-data-authentication-response.dto";
-import {LEARCredentialEmployee, Mandator, Power} from "../models/entity/lear-credential-employee.entity";
-import { LEARCredentialEmployeeDataNormalizer } from '../models/entity/lear-credential-employee-data-normalizer';
+import { Power, EmployeeMandator, LEARCredentialEmployee } from "../models/entity/lear-credential";
 import { RoleType } from '../models/enums/auth-rol-type.enum';
+import { LEARCredentialDataNormalizer } from '../models/entity/lear-credential-employee-data-normalizer';
 
 @Injectable({
   providedIn: 'root'
@@ -15,10 +15,10 @@ export class AuthService {
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
   private readonly userDataSubject = new BehaviorSubject<UserDataAuthenticationResponse |null>(null);
   private readonly tokenSubject = new BehaviorSubject<string>('');
-  private readonly mandatorSubject = new BehaviorSubject<Mandator | null>(null);
+  private readonly mandatorSubject = new BehaviorSubject<EmployeeMandator | null>(null);
   private readonly emailSubject = new BehaviorSubject<string>('');
   private readonly nameSubject = new BehaviorSubject<string>('');
-  private readonly normalizer = new LEARCredentialEmployeeDataNormalizer();
+  private readonly normalizer = new LEARCredentialDataNormalizer();
   public readonly roleType: WritableSignal<RoleType> = signal(RoleType.LEAR);
 
 
@@ -52,7 +52,7 @@ export class AuthService {
      //Future work: when accessing with certificate update signal role LER and  handleCertificateLogin
       try{
         const learCredential = this.extractVCFromUserData(userData);
-        const normalizedCredential = this.normalizer.normalizeLearCredential(learCredential);
+        const normalizedCredential = this.normalizer.normalizeLearCredential(learCredential) as LEARCredentialEmployee;
         this.handleVCLogin(normalizedCredential);
       } 
       catch(error){
@@ -74,7 +74,7 @@ export class AuthService {
     this.nameSubject.next(certData.commonName);
   }
 
-  private extractDataFromCertificate(userData: UserDataAuthenticationResponse): Mandator {
+  private extractDataFromCertificate(userData: UserDataAuthenticationResponse): EmployeeMandator {
     return {
         organizationIdentifier: userData.organizationIdentifier,
         organization: userData.organization,
@@ -83,7 +83,7 @@ export class AuthService {
         serialNumber: userData?.serial_number ?? '',
         country: userData.country
       }
-  };
+  }
 
   private handleVCLogin(learCredential: LEARCredentialEmployee): void {
     const mandator = {
@@ -124,7 +124,7 @@ export class AuthService {
     return false
   }
 
-  public getMandator(): Observable<Mandator | null> {
+  public getMandator(): Observable<EmployeeMandator | null> {
     return this.mandatorSubject.asObservable();
   }
 
@@ -144,7 +144,7 @@ export class AuthService {
           const learCredential = this.extractVCFromUserData(userData);
 
           if(learCredential!=null){
-            const normalizedCredential = this.normalizer.normalizeLearCredential(learCredential);
+            const normalizedCredential = this.normalizer.normalizeLearCredential(learCredential) as LEARCredentialEmployee;
             this.userPowers = this.extractUserPowers(normalizedCredential);
             const hasOnboardingPower = this.hasPower('Onboarding','Execute');
             if (!hasOnboardingPower) {

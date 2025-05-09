@@ -14,16 +14,16 @@ import { MaxLengthDirective } from '../../directives/validators/max-length-direc
 import { CustomEmailValidatorDirective } from '../../directives/validators/custom-email-validator.directive';
 import { UnicodeValidatorDirective } from '../../directives/validators/unicode-validator.directive';
 import { OrganizationNameValidatorDirective } from '../../directives/validators/organization-name.validator.directive';
-import { TempPower } from 'src/app/core/models/temporal/temp-power.interface';
-import { Power } from 'src/app/core/models/entity/lear-credential-employee.entity';
+import { TempPower } from 'src/app/core/models/temp/temp-power.interface';
+import { Power } from 'src/app/core/models/entity/lear-credential';
 import { BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import { DialogWrapperService } from '../dialog/dialog-wrapper/dialog-wrapper.service';
 import { DialogData } from '../dialog/dialog.component';
 
 const mockTempPower: TempPower = {
-  action: 'action1',
+  action: 'Execute',
   domain: 'domain1',
-  function: 'function1',
+  function: 'Onboarding',
   type: 'type1',
   execute: true,
   create: false,
@@ -219,7 +219,6 @@ describe('FormCredentialComponent', () => {
 
     jest.spyOn(mockAuthService, 'hasIn2OrganizationIdentifier').mockReturnValue(false);
     jest.spyOn(mockAuthService, 'getMandator').mockReturnValue(of(mockMandator));
-    component.viewMode='create';
 
     component.ngOnInit();
     fixture.detectChanges();
@@ -248,26 +247,6 @@ describe('FormCredentialComponent', () => {
 
   });
 
-  it('should map power to tempPowers if viewMode is "detail"', () => {
-    component.viewMode = 'detail';
-    component.power = mockPowers;
-
-    mockFormCredentialService.convertToTempPower.mockReturnValue(mockTempPower);
-    component.ngOnInit();
-
-    expect(component.tempPowers).toEqual([mockTempPower, mockTempPower]);
-    expect(mockFormCredentialService.convertToTempPower).toHaveBeenCalledTimes(2);
-  });
-
-  it('should not map power to tempPowers if viewMode is not "detail"', () => {
-    component.viewMode = 'create';
-    component.power = mockPowers;
-
-    component.ngOnInit();
-
-    expect(component.tempPowers).toEqual([]);
-    expect(mockFormCredentialService.convertToTempPower).not.toHaveBeenCalled();
-  });
 
   it('should check if there is selected power', ()=>{
     component.hasSelectedPower();
@@ -277,69 +256,6 @@ describe('FormCredentialComponent', () => {
   it('should check if selected powers have function', ()=>{
     component.selectedPowersHaveFunction();
     expect(mockFormCredentialService.powersHaveFunction).toHaveBeenCalled();
-  });
-
-  it('should check if sendReminder should be shown according to VC status', ()=>{
-    component.viewMode = 'create';
-    component.credentialStatus = 'WITHDRAWN';
-    let showBtn = component.showReminderButton();
-    expect(showBtn).toBe(false);
-
-    component.viewMode = 'detail';
-    showBtn = component.showReminderButton();
-    expect(showBtn).toBe(true);
-
-    component.credentialStatus = 'PEND_DOWNLOAD';
-    showBtn = component.showReminderButton();
-    expect(showBtn).toBe(true);
-
-    component.credentialStatus = 'DRAFT';
-    showBtn = component.showReminderButton();
-    expect(showBtn).toBe(true);
-
-    component.credentialStatus = 'VALID';
-    showBtn = component.showReminderButton();
-    expect(showBtn).toBe(false);
-
-  });
-
-  it('should check if signCredential should be shown according to VC status', ()=>{
-    component.viewMode = 'create';
-    component.credentialStatus = 'WITHDRAWN';
-    let showBtn = component.showSignCredentialButton();
-    expect(showBtn).toBe(false);
-
-    component.viewMode = 'detail';
-    showBtn = component.showSignCredentialButton();
-    expect(showBtn).toBe(false);
-
-    component.credentialStatus = 'PEND_DOWNLOAD';
-    showBtn = component.showSignCredentialButton();
-    expect(showBtn).toBe(false);
-
-    component.credentialStatus = 'DRAFT';
-    showBtn = component.showSignCredentialButton();
-    expect(showBtn).toBe(false);
-
-    component.credentialStatus = 'VALID';
-    showBtn = component.showSignCredentialButton();
-    expect(showBtn).toBe(false);
-
-    component.credentialStatus = 'PEND_SIGNATURE';
-    showBtn = component.showSignCredentialButton();
-    expect(showBtn).toBe(true);
-  });
-
-  it('should emit sendReminder event when triggerSendReminder is called', () => {
-    const spy = jest.spyOn(component.sendReminder, 'emit');
-    component.triggerSendReminder();
-    expect(spy).toHaveBeenCalled();
-  });
-
-  it('should emit signCredential event when triggerSignCredential is called', () => {
-    const spy = jest.spyOn(component.signCredential, 'emit');
-    component.triggerSignCredential();
-    expect(spy).toHaveBeenCalled();
   });
 
   it('should open submit dialog and call submitCredential', () => {

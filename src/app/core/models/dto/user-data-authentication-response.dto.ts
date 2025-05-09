@@ -1,4 +1,4 @@
-import { LEARCredentialEmployee } from "../entity/lear-credential-employee.entity";
+import { LEARCredentialEmployee } from "../entity/lear-credential";
 import {RoleType } from '../enums/auth-rol-type.enum'
 export interface UserDataAuthenticationResponse {
   sub: string;

@@ -1,7 +1,7 @@
-import { Mandatee, Power, LEARCredentialEmployee } from './lear-credential-employee.entity';
+import { LEARCredential, EmployeeMandatee, Power, VerifiableCertification, Attester } from './lear-credential';
 
 // Interfaces for the raw JSON of Mandatee and Power
-interface RawMandatee {
+interface RawEmployeeMandatee {
   firstName?: string;
   first_name?: string;
   lastName?: string;
@@ -21,38 +21,55 @@ interface RawPower {
   tmf_type?: string;
 }
 
-export class LEARCredentialEmployeeDataNormalizer {
+export interface RawVerifiableCertification extends VerifiableCertification{
+  atester?: Attester;
+}
+
+export class LEARCredentialDataNormalizer {
 
   /**
    * Normalizes the complete LearCredentialEmployeeDataDetail object.
    * It applies normalization to the mandatee object and each element of the power array.
    */
-  public normalizeLearCredential(data: LEARCredentialEmployee): LEARCredentialEmployee {
-    // Create a copy to avoid modifying the original object
+  public normalizeLearCredential(data: LEARCredential): LEARCredential {
+    // Clone the data to avoid mutating the original object
     const normalizedData = { ...data };
+  
+    const credentialTypes = normalizedData.type;
+    const isEmployee = credentialTypes.includes('LEARCredentialEmployee');
+    const isMachine = credentialTypes.includes('LEARCredentialMachine');
+    const isVerifiableCertification = credentialTypes.includes('VerifiableCertification');
 
-    if (normalizedData.credentialSubject.mandate) {
-
+  
+    if ((isEmployee || isMachine) && 'mandate' in normalizedData.credentialSubject) {
       const mandate = normalizedData.credentialSubject.mandate;
-
-      if (mandate.mandatee) {
-        // Apply normalization on the mandatee object
-        mandate.mandatee = this.normalizeMandatee(mandate.mandatee);
+  
+      if (isEmployee && mandate.mandatee) {
+        mandate.mandatee = this.normalizeEmployeeMandatee(mandate.mandatee as RawEmployeeMandatee);
       }
-
-      if (mandate.power && Array.isArray(mandate.power)) {
-        // Normalize each power object in the array
+  
+      if (Array.isArray(mandate.power)) {
         mandate.power = mandate.power.map(p => this.normalizePower(p));
       }
     }
+    if (isVerifiableCertification && 'atester' in normalizedData) {
+      const rawData = normalizedData as RawVerifiableCertification;
+      if (rawData.atester) {
+        rawData.attester = rawData.atester;
+        delete rawData.atester;
+      }
+    }
+  
     return normalizedData;
   }
+  
+  
 
   /**
  * Normalizes the mandatee object by unifying "firstName"/"first_name" and "lastName"/"last_name" keys.
  */
-private normalizeMandatee(data: RawMandatee): Mandatee {
-  return <Mandatee>{
+private normalizeEmployeeMandatee(data: RawEmployeeMandatee): EmployeeMandatee {
+  return <EmployeeMandatee>{
     firstName: data.firstName ?? data.first_name,
     lastName: data.lastName ?? data.last_name,
     email: data.email,
