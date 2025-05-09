@@ -15,6 +15,16 @@ describe('App Routes', () => {
     expect(typeof homeRoute?.loadChildren).toBe('function');
   });
 
+  it('should define lazy loading for credential details with guards', () => {
+    const credDetailsRoute = routes.find(
+      (route) => route.path === 'organization/credentials/details'
+    );
+    expect(credDetailsRoute).toBeTruthy();
+    expect(typeof credDetailsRoute?.loadChildren).toBe('function');
+    expect(credDetailsRoute?.canActivate).toContain(AutoLoginPartialRoutesGuard);
+    expect(credDetailsRoute?.canActivate).toContain(basicGuard);
+  });
+
   it('should define lazy loading for credential management with guards', () => {
     const orgCredRoute = routes.find((route) => route.path === 'organization/credentials');
     expect(orgCredRoute).toBeTruthy();
