@@ -8,43 +8,37 @@ export type CredentialDetailsFormFieldSchema = {
   
 export type CredentialDetailsFormSchema = Record<string, CredentialDetailsFormFieldSchema>;
   
+const commonMandatorFields: CredentialDetailsFormSchema = {
+  commonName: { type: 'control' },
+  emailAddress: { type: 'control' },
+  serialNumber: { type: 'control' },
+  organization: { type: 'control' },
+  organizationIdentifier: { type: 'control' },
+  country: { type: 'control' },
+};
+
+const commonIssuerFields: CredentialDetailsFormSchema = { ...commonMandatorFields };
 
 export const LearCredentialEmployeeDetailsFormSchema: CredentialDetailsFormSchema = {
     mandatee: {
       type: 'group',
       display: 'main',
       fields: {
-        // id: { type: 'control' },
         firstName: { type: 'control' },
         lastName: { type: 'control' },
         email: { type: 'control' },
-        // mobile_phone: { type: 'control' },
         nationality: { type: 'control' },
       },
     },
     mandator: {
       type: 'group',
       display: 'side',
-      fields: {
-        commonName: { type: 'control' },
-        emailAddress: { type: 'control' },
-        serialNumber: { type: 'control' },
-        organization: { type: 'control' },
-        organizationIdentifier: { type: 'control' },
-        country: { type: 'control' },
-      },
+      fields: commonMandatorFields,
     },
     issuer: {
       type: 'group',
       display: 'side',
-      fields: {
-        commonName: { type: 'control' },
-        emailAddress: { type: 'control' },
-        serialNumber: { type: 'control' },
-        organization: { type: 'control' },
-        organizationIdentifier: { type: 'control'},
-        country: { type: 'control' },
-      },
+      fields: commonIssuerFields,
     },
     power: {
       type: 'group',
@@ -77,32 +71,17 @@ export const LearCredentialEmployeeDetailsFormSchema: CredentialDetailsFormSchem
     mandator: {
       type: 'group',
       display: 'side',
-      fields: {
-        commonName: { type: 'control' },
-        emailAddress: { type: 'control' },
-        serialNumber: { type: 'control' },
-        organization: { type: 'control' },
-        organizationIdentifier: { type: 'control' },
-        country: { type: 'control' },
-      },
+      fields: commonMandatorFields,
     },
     issuer: {
       type: 'group',
       display: 'side',
-      fields: {
-        // id: { type: 'control' },
-        commonName: { type: 'control' },
-        emailAddress: { type: 'control' },
-        serialNumber: { type: 'control' },
-        organization: { type: 'control' },
-        organizationIdentifier: { type: 'control'},
-        country: { type: 'control' },
-      },
+      fields: commonIssuerFields,
     },
     power: {
       type: 'group',
       display: 'main',
-      //will be set dynamically
+      //content will be set dynamically
     },
   };
   
@@ -152,6 +131,6 @@ export const LearCredentialEmployeeDetailsFormSchema: CredentialDetailsFormSchem
     compliance: {
       type: 'group',
       display: 'main',
-      fields: {} //it is dynamically buiolt in buildFormFromSchema
+      fields: {} //content will be set dynamically
     },
   };
