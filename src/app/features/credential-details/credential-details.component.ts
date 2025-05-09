@@ -30,14 +30,13 @@ export class CredentialDetailsComponent implements OnInit {
   private readonly loader = inject(LoaderService);
   private readonly route = inject(ActivatedRoute);
 
-
+  //signals
   public credentialValidFrom$ = this.detailsService.credentialValidFrom$;
   public credentialValidUntil$ = this.detailsService.credentialValidUntil$;
   public credentialType$ = this.detailsService.credentialType$;
   public credentialStatus$ = this.detailsService.credentialStatus$;
   public credentialDetailsForm$ = this.detailsService.credentialDetailsForm$;
   public credentialDetailsFormSchema$ = this.detailsService.credentialDetailsFormSchema$;
-  public isLoading$ = this.loader.isLoading$;
 
   public showReminderButton$ = computed(() => {
     return (
@@ -55,6 +54,9 @@ export class CredentialDetailsComponent implements OnInit {
     (this.credentialType$() === 'LEARCredentialEmployee' || this.credentialType$() === 'VerifiableCertification');
   });
 
+    //observables
+    public isLoading$ = this.loader.isLoading$;
+
   public ngOnInit(): void {
     this.getProcedureId();
     this.initializeForm();
@@ -70,7 +72,6 @@ export class CredentialDetailsComponent implements OnInit {
     this.detailsService.loadCredentialDetailsAndForm();
   }
 
-  //async function
   private initializeForm(): void {
     this.loadCredentialDetailsAndForm();
   }
@@ -85,7 +86,7 @@ export class CredentialDetailsComponent implements OnInit {
     this.detailsService.openSignCredentialDialog();
   }
 
-  //template functions
+  //TEMPLATE FUNCTIONS
   public formKeys(group: any): string[] {
     return Object.keys(group.controls);
   }
