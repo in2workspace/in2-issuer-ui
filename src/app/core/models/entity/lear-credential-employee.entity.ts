@@ -22,7 +22,8 @@ export interface LEARCredentialJwtPayload {
   jti: string;
 }
 
-export type CredentialType = 'LEARCredentialEmployee' | 'LEARCredentialMachine' | 'VerifiableCertification';
+export type CredentialType =   'LEARCredentialEmployee' | 'LEARCredentialMachine' | 'VerifiableCertification';
+export type WideCredentialType =  'VerifiableCredential' | 'LEARCredentialEmployee' | 'LEARCredentialMachine' | 'VerifiableCertification';
 
 export type LEARCredential =
   | LEARCredentialEmployee
@@ -88,7 +89,7 @@ export interface CommonIssuer {
 // --- Employee ---
 export interface LEARCredentialEmployee {
   id: string;
-  type: CredentialType[];
+  type: WideCredentialType[];
   description: string;
   credentialSubject: {
     mandate: {
@@ -122,7 +123,7 @@ export interface EmployeeIssuer extends CommonIssuer {}
 // --- Machine ---
 export interface LEARCredentialMachine {
   id: string;
-  type: CredentialType[];
+  type: WideCredentialType[];
   description: string;
   credentialSubject: {
     mandate: {
@@ -159,7 +160,7 @@ export interface MachineIssuer extends CommonIssuer {}
 // --- Certification ---
 export interface VerifiableCertification {
   id: string;
-  type: CredentialType[];
+  type: WideCredentialType[];
   issuer: CertificationIssuer;
   credentialSubject: {
     company: {
