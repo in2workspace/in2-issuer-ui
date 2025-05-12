@@ -14,7 +14,11 @@ import { map, take } from "rxjs/operators";
 })
 export class CredentialIssuanceComponent {
   public readonly route = inject(ActivatedRoute);
-  public asSigner$ : Observable<boolean> = this.route.paramMap.pipe(
-    take(1),
-    map(params => !!params.get('id')))
+
+  public asSigner$: Observable<boolean> = this.route.url.pipe(
+    map(segments => {
+      const lastSegment = segments[segments.length - 1]?.path;
+      return lastSegment === 'create-as-signer';
+    })
+  );
 }

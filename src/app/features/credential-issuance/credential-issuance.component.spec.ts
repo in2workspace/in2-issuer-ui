@@ -33,7 +33,7 @@ describe('CredentialIssuanceComponent', () => {
   };
 
   const mockActivatedRoute = {
-    paramMap: of(convertToParamMap({ id: '123' }))
+    url: of([{ path: 'create-as-signer' }])
   };
 
   beforeEach(async () => {
@@ -77,16 +77,9 @@ describe('CredentialIssuanceComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should set "asSigner$" to true when param "id" is present', fakeAsync(() => {
-    let asSignerValue: boolean | undefined;
-    component.asSigner$.subscribe(value => (asSignerValue = value));
-    tick();
-    expect(asSignerValue).toBeTruthy();
-  }));
-
-  it('should set "asSigner$" to false when param "id" is not present', fakeAsync(() => {
-    const mockActivatedRoute = TestBed.inject(ActivatedRoute);
-    (mockActivatedRoute as any).paramMap = of(convertToParamMap({}));
+  it('should set "asSigner$" to true when last path segment is "create-as-signer"', fakeAsync(() => {
+    const mockActivatedRoute = TestBed.inject(ActivatedRoute) as any;
+    mockActivatedRoute.url = of([{ path: 'create-as-signer' }]);
   
     fixture = TestBed.createComponent(CredentialIssuanceComponent);
     component = fixture.componentInstance;
@@ -95,8 +88,23 @@ describe('CredentialIssuanceComponent', () => {
     let asSignerValue: boolean | undefined;
     component.asSigner$.subscribe(value => (asSignerValue = value));
     tick();
-    expect(asSignerValue).toBeFalsy();
+    expect(asSignerValue).toBe(true);
   }));
+
+  it('should set "asSigner$" to false when last path segment is not "create-as-signer"', fakeAsync(() => {
+    const mockActivatedRoute = TestBed.inject(ActivatedRoute) as any;
+    mockActivatedRoute.url = of([{ path: 'create' }]);
+  
+    fixture = TestBed.createComponent(CredentialIssuanceComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  
+    let asSignerValue: boolean | undefined;
+    component.asSigner$.subscribe(value => (asSignerValue = value));
+    tick();
+    expect(asSignerValue).toBe(false);
+  }));
+  
   
 
 });

@@ -62,11 +62,11 @@ describe('App Routes', () => {
     expect(typeof credCreateRoute?.loadChildren).toBe('function');
   });
 
-  it('should define lazy loading for credential creation with id', () => {
+  it('should define lazy loading for credential creation as signer', () => {
     const parentRoute = routes.find((route) => route.path === 'organization/credentials');
-    const credCreate2Route = parentRoute?.children?.find((r) => r.path === 'create2/:id');
-    expect(credCreate2Route).toBeTruthy();
-    expect(typeof credCreate2Route?.loadChildren).toBe('function');
+    const credCreateAsSignerRoute = parentRoute?.children?.find((r) => r.path === 'create-as-signer');
+    expect(credCreateAsSignerRoute).toBeTruthy();
+    expect(typeof credCreateAsSignerRoute?.loadChildren).toBe('function');
   });
 
   it('should redirect wildcard (**) to home', () => {
