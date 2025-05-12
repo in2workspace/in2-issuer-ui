@@ -20,7 +20,7 @@ import { CredentialDetailsService } from './services/credential-details.service'
   standalone: true,
   imports: [AddPrefixPipe, CapitalizePipe, CommonModule, FormsModule, MatButton, MatCard, MatCardContent, MatFormField, MatIcon, MatInput, MatLabel, MatSlideToggle, ReactiveFormsModule, RouterLink, TranslatePipe ],
   providers:[CredentialDetailsService],
-  selector: 'app-detail-from',
+  selector: 'app-credential-details',
   templateUrl: './credential-details.component.html',
   styleUrl: './credential-details.component.scss'
 })
