@@ -4,7 +4,6 @@
   addedPowers:addedPowers$|async
   } as vm">
   <h2 class="title">{{ "power.power" | translate }}</h2>
-  @if (viewMode === 'create'){
     <div class="power">
       <div class="domain-function">
         <h3 class="domain-title first-col">{{ "power.domain" | translate }}</h3>
@@ -15,7 +14,6 @@
         <mat-form-field appearance="fill" class="mat-select-power">
           <mat-select
             [value]="vm.selectedPower"
-            [disabled]="isDisabled"
             (selectionChange)="onHandleSelectChange($event)"
           >
             <mat-select-trigger>
@@ -42,7 +40,7 @@
         <button
           mat-raised-button
           color="primary"
-          [disabled]="isDisabled || vm.selectedPower === '' "
+          [disabled]="vm.selectedPower === '' "
           (click)="addPower()"
           type="button"
         >
@@ -50,16 +48,13 @@
         </button>
       </div>
     </div>
-  }
-  @if (viewMode === 'create' || viewMode === 'detail'){
     <div class="powers-container">
-      @for (option of (viewMode === 'create' ? vm.addedPowers : power); track option.function; let i = $index) {
+      @for (option of (vm.addedPowers); track option.function; let i = $index) {
         <p>{{ option.function }}</p>
         <!-- Use ng-template to render the repeated toggle logic -->
         <ng-container *ngTemplateOutlet="toggleTemplate; context: { option: option, i: i }"></ng-container>
       }
     </div>
-  }
 </ng-container>
 
 <!-- Define a template for the toggle section -->
@@ -67,37 +62,36 @@
   <div class="functions-container">
     @if (option.function === 'Certification' && organizationIdentifierIsIn2) {
       <div class="toggles-container">
-        <mat-slide-toggle [(ngModel)]="option.upload" name="upload-{{ i }}" [disabled]="isDisabled" color="primary">
+        <mat-slide-toggle [(ngModel)]="option.upload" name="upload-{{ i }}" color="primary">
           {{ "power.upload" | translate }}
         </mat-slide-toggle>
-        <mat-slide-toggle [(ngModel)]="option.attest" name="attest-{{ i }}" [disabled]="isDisabled" color="primary">
+        <mat-slide-toggle [(ngModel)]="option.attest" name="attest-{{ i }}" color="primary">
           {{ "power.attest" | translate }}
         </mat-slide-toggle>
       </div>
     }
     @if (option.function === 'ProductOffering') {
       <div class="toggles-container">
-        <mat-slide-toggle [(ngModel)]="option.create" name="create-{{ i }}" [disabled]="isDisabled" color="primary">
+        <mat-slide-toggle [(ngModel)]="option.create" name="create-{{ i }}" color="primary">
           {{ "power.create" | translate }}
         </mat-slide-toggle>
-        <mat-slide-toggle [(ngModel)]="option.update" name="update-{{ i }}" [disabled]="isDisabled" color="primary">
+        <mat-slide-toggle [(ngModel)]="option.update" name="update-{{ i }}" color="primary">
           {{ "power.update" | translate }}
         </mat-slide-toggle>
-        <mat-slide-toggle [(ngModel)]="option.delete" name="delete-{{ i }}" [disabled]="isDisabled" color="primary">
+        <mat-slide-toggle [(ngModel)]="option.delete" name="delete-{{ i }}" color="primary">
           {{ "power.delete" | translate }}
         </mat-slide-toggle>
       </div>
     }
     @if (option.function === 'Onboarding' && organizationIdentifierIsIn2) {
       <div class="toggles-container">
-        <mat-slide-toggle [(ngModel)]="option.execute" name="execute-{{ i }}" [disabled]="isDisabled" color="primary">
+        <mat-slide-toggle [(ngModel)]="option.execute" name="execute-{{ i }}" color="primary">
           {{ "power.execute" | translate }}
         </mat-slide-toggle>
       </div>
     }
   </div>
   <button
-    [style.visibility]=" isDisabled ? 'hidden' : 'visible'"
     type="button"
     mat-mini-fab class="small-icon-button delete-power"
     color="warn"

@@ -4,6 +4,7 @@ import { AuthService } from '../services/auth.service';
 import { TranslateService } from '@ngx-translate/core';
 import { DialogWrapperService } from 'src/app/shared/components/dialog/dialog-wrapper/dialog-wrapper.service';
 import { Observable, of, switchMap, take, map } from 'rxjs';
+import { TmfAction, TmfFunction } from '../models/entity/lear-credential';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class PoliciesService {
   private readonly dialog = inject(DialogWrapperService);
   private readonly translate = inject(TranslateService);
 
-  private executePolicy(tmfFunction: string, action: string, redirectUrl: string, authFlag: boolean = false): Observable<boolean> {
+  private executePolicy(tmfFunction: TmfFunction, action: TmfAction, redirectUrl: string, authFlag: boolean = false): Observable<boolean> {
     if (this.authService.hasPower(tmfFunction, action)) {
       return of(true); 
     } else {

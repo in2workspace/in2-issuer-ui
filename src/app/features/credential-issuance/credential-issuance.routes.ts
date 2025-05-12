@@ -6,9 +6,5 @@ export default [
   {
     path: '',
     component: CredentialIssuanceComponent,
-  },
-  {
-    path: ':id',
-    component: CredentialIssuanceComponent,
-  },
+  }
 ] as Routes;

@@ -1,6 +1,7 @@
 @use '@angular/material' as mat;
 @use './variables';
 @import './ng-material/ng-index.scss';
+@import './status.scss';
 
 @import url("https://fonts.googleapis.com/css2?family=Blinker:wght@400;600&display=swap");
 
@@ -75,3 +76,4 @@ p{
 .dense-1 {
   @include mat.all-component-densities(-3);
 }
+

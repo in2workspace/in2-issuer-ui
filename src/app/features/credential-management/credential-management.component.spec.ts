@@ -325,16 +325,16 @@ it('should navigate to /organization/credentials/create in navigateToCreateCrede
   expect(router.navigate).toHaveBeenCalledWith(['/organization/credentials/create']);
 });
 
-it('should navigate to /organization/credentials/create2 with "admin" if isValidOrganizationIdentifier is true', () => {
+it('should navigate to /organization/credentials/create-as-signer if isValidOrganizationIdentifier is true', () => {
   component.isValidOrganizationIdentifier = true;
   component.navigateToCreateCredentialAsSigner();
-  expect(router.navigate).toHaveBeenCalledWith(['/organization/credentials/create2', 'admin']);
+  expect(router.navigate).toHaveBeenCalledWith(['/organization/credentials/create-as-signer']);
 });
 
-it('should navigate to /organization/credentials/create2 with an empty string if isValidOrganizationIdentifier is false', () => {
+it('should navigate to /organization/credentials/create if isValidOrganizationIdentifier is false', () => {
   component.isValidOrganizationIdentifier = false;
   component.navigateToCreateCredentialAsSigner();
-  expect(router.navigate).toHaveBeenCalledWith(['/organization/credentials/create2', '']);
+  expect(router.navigate).toHaveBeenCalledWith(['/organization/credentials/create']);
 });
 
 it('should call navigateToCredentialDetails on onRowClick', () => {
@@ -354,24 +354,6 @@ it('should navigate to /organization/credentials/details/:id if credential type 
 
   component.navigateToCredentialDetails(credentialProcedure);
   expect(router.navigate).toHaveBeenCalledWith(['/organization/credentials/details', '123']);
-});
-
-it('should not navigate and log a warning if credential type is not LEAR_CREDENTIAL_EMPLOYEE', () => {
-  const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
-  const credentialProcedure = { 
-    credential_procedure: { 
-      credential_type: 'OTHER_CREDENTIAL', 
-      procedure_id: '123' 
-    } 
-  } as CredentialProcedure;
-
-  component.navigateToCredentialDetails(credentialProcedure);
-  expect(router.navigate).not.toHaveBeenCalled();
-  expect(consoleWarnSpy).toHaveBeenCalledWith(
-    'Navigation prevented: Unsupported credential type "OTHER_CREDENTIAL".'
-  );
-
-  consoleWarnSpy.mockRestore();
 });
 
 it('should toggle searchBar and reset filters when closed', () => {

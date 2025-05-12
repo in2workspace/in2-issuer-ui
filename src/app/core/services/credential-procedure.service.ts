@@ -1,18 +1,18 @@
-import {inject, Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {Observable, throwError} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
-import {environment} from 'src/environments/environment';
-import {ProcedureRequest} from '../models/dto/procedure-request.dto';
-import {ProcedureResponse} from '../models/dto/procedure-response.dto';
-import {LearCredentialEmployeeDataDetail} from '../models/dto/lear-credential-employee-data-detail.dto';
-import {CredentialOfferResponse} from '../models/dto/credential-offer-response';
-import {LEARCredentialEmployeeDataNormalizer} from '../models/entity/lear-credential-employee-data-normalizer';
-import {LEARCredentialEmployee} from '../models/entity/lear-credential-employee.entity';
-import {DialogWrapperService} from "../../shared/components/dialog/dialog-wrapper/dialog-wrapper.service";
-import {TranslateService} from "@ngx-translate/core";
-import {Router} from "@angular/router";
-import {API} from "../constants/api.constants";
+import { inject, Injectable } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { environment} from 'src/environments/environment';
+import { ProcedureResponse } from '../models/dto/procedure-response.dto';
+import { CredentialOfferResponse } from '../models/dto/credential-offer-response.dto';
+import { LEARCredentialDataDetails } from '../models/entity/lear-credential';
+import { DialogWrapperService } from "../../shared/components/dialog/dialog-wrapper/dialog-wrapper.service";
+import { TranslateService } from "@ngx-translate/core";
+import { Router } from "@angular/router";
+import { API } from "../constants/api.constants";
+import { LEARCredentialDataNormalizer } from '../models/entity/lear-credential-employee-data-normalizer';
+import { EmployeeProcedureRequest } from '../models/dto/procedure-request.dto';
+import { LEARCredentialDataDetailsResponse } from '../models/dto/lear-credential-data-details-response.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +26,7 @@ export class CredentialProcedureService {
   private readonly signCredentialUrl = `${environment.server_url}${API.SIGN_CREDENTIAL_PATH}`;
 
   private readonly http = inject(HttpClient);
-  private readonly normalizer = new LEARCredentialEmployeeDataNormalizer();
+  private readonly normalizer = new LEARCredentialDataNormalizer();
   private readonly dialog = inject(DialogWrapperService);
   private readonly translate = inject(TranslateService);
   private readonly router = inject(Router);
@@ -37,33 +37,34 @@ export class CredentialProcedureService {
     );
   }
 
-  public getCredentialProcedureById(procedureId: string): Observable<LearCredentialEmployeeDataDetail> {
-    return this.http.get<LearCredentialEmployeeDataDetail>(
+  public getCredentialProcedureById(procedureId: string): Observable<LEARCredentialDataDetails> {
+    return this.http.get<LEARCredentialDataDetailsResponse>(
       `${this.organizationProcedures}/${procedureId}/credential-decoded`
-    ).pipe(
-      map(learCredentialEmployeeDataDetail => {
-        const { credential } = learCredentialEmployeeDataDetail;
+    )
+    .pipe(
+      map(response => {
+        const { credential } = response;
         // If vc exists, we normalize it, otherwise we assume that credential is already of the expected type
-        const credentialData = credential.vc
+        const credentialData = 'vc' in credential
           ? credential.vc
-          : (credential as unknown as LEARCredentialEmployee);
+          : credential;
 
         // Normalize the part which is of type LEARCredentialEmployee
         const normalizedCredential = this.normalizer.normalizeLearCredential(credentialData);
 
         return {
-          ...learCredentialEmployeeDataDetail,
+          ...response,
           credential: {
             ...credential,
             vc: normalizedCredential
           }
-        } as LearCredentialEmployeeDataDetail;
+        } as LEARCredentialDataDetails;
       }),
       catchError(this.handleError)
     );
   }
 
-  public createProcedure(procedureRequest: ProcedureRequest): Observable<void> {
+  public createProcedure(procedureRequest: EmployeeProcedureRequest): Observable<void> {
     return this.http.post<void>(this.saveCredential, procedureRequest).pipe(
       catchError(this.handleError)
     );
@@ -116,8 +117,7 @@ export class CredentialProcedureService {
     if (error.status === 503 && errorDetail.trim() === 'Error during communication with the mail server') {
       const errorMessage = this.translate.instant('error.serverMailError.message');
       const errorTitle = this.translate.instant('error.serverMailError.title');
-      console.log('Translated errorMessage:', errorMessage);
-      console.log('Translated errorTitle:', errorTitle);
+
       this.dialog.openErrorInfoDialog(errorMessage, errorTitle);
       this.redirectToDashboard();
       return throwError(() => new Error(errorMessage));

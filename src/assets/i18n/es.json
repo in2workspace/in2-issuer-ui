@@ -61,24 +61,63 @@
     "email": "Dirección de correo",
     "nationality": "Nacionalidad"
   },
-  "credentialDetail": {
-    "credentialDetail": "Detalle de la credencial",
-    "textinformation": "Se ha emitido una nueva credencial DOME para usted con la siguiente información",
+"credentialDetails": {
+    "title": "Detalles de la credencial",
+    "basic_info": "Información básica",
+    "type" : "tipo",
+    "status": "estatus",
+    "valid_from": "válido desde",
+    "valid_until": "válido hasta",
+    "issuer": "emisor",
+    "mandatee": "mandatario",
+    "mandator": "mandante",
+    "power": "poder",
+    "id": "id",
+    "organizationIdentifier": "número de NIF de la empresa",
+    "country": "país",
+    "organization": "nombre de la empresa",
+    "commonName": "nombre",
+    "emailAddress": "correo electrónico",
+    "email": "correo electrónico",
+    "serialNumber": "número del documento de identidad",
+    "firstName": "nombre",
+    "lastName": "apellido",
+    "mobile_phone": "teléfono móvil",
+    "nationality": "nacionalidad",
+    "serviceName": "nombre del servicio",
+    "serviceType": "tipo de servicio",
+    "version": "versión",
+    "domain": "dominio",
+    "ipAddress": "dirección IP",
+    "description": "descripción",
+    "contact": "información de contacto",
+    "phone": "teléfono",
+    "address": "dirección",
+    "productId": "id del producto",
+    "productName": "nombre del producto",
+    "productVersion": "versión del producto",
+    "attester": "entidad certificadora",
+    "company": "empresa",
+    "product": "producto",
+    "compliance": "cumplimiento",
+    "hash": "hash",
+    "scope": "alcance",
+    "standard": "estándar",
     "sendReminderConfirm": {
       "title": "Enviar recordatorio",
-      "message": "Está seguro de enviar un recordatorio de esta oferta de credencial?"
+      "message": "¿Estás seguro de que deseas enviar un recordatorio para esta oferta de credencial?"
     },
     "sendReminderSuccess": {
-      "title": "Recordatorio enviado con éxito",
-      "message": "El recordatorio ha sido enviado con éxito."
+      "title": "Recordatorio enviado correctamente",
+      "message": "El recordatorio de la oferta de credencial se envió correctamente."
     },
     "signCredentialConfirm": {
       "title": "Firmar credencial",
-      "message": "Está seguro de firmar esta credencial?"
+      "message": "¿Estás seguro de que deseas firmar esta credencial?"
     },
     "signCredentialSuccess": {
       "title": "Credencial firmada",
-      "message": "La credencial ha sido firmada con éxito."
+      "message": "La credencial se firmó correctamente."
     }
   },
   "credentialOffer": {
