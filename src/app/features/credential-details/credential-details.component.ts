@@ -1,7 +1,7 @@
 import { MatCard, MatCardContent } from '@angular/material/card';
 import { Component, computed, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { AbstractControl, FormArray, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormArray, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { CommonModule } from '@angular/common';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
@@ -87,15 +87,15 @@ export class CredentialDetailsComponent implements OnInit {
   }
 
   //TEMPLATE FUNCTIONS
-  public formKeys(group: any): string[] {
-    return Object.keys(group.controls);
+  public formKeys(group: AbstractControl | null | undefined): string[] {
+    if (group instanceof FormGroup) {
+      return Object.keys(group.controls);
+    }
+    return [];
   }
   
-  public getControlType(control: any): 'group' | 'array' | 'control' {
-    if (control.controls && control.getRawValue) {
-      if (Array.isArray(control.controls)) {
-        return 'array';
-      }
+  public getControlType(control: AbstractControl | null | undefined): 'group' | 'control' {
+    if (control instanceof FormGroup) {
       return 'group';
     }
     return 'control';
