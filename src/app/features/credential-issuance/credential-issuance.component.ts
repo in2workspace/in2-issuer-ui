@@ -18,6 +18,7 @@ export class CredentialIssuanceComponent {
   public asSigner$: Observable<boolean> = this.route.url.pipe(
     map(segments => {
       const lastSegment = segments[segments.length - 1]?.path;
+      console.log('lastSegment = ' + lastSegment)
       return lastSegment === 'create-as-signer';
     })
   );
