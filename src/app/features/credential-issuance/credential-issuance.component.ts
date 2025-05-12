@@ -4,7 +4,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { FormCredentialComponent } from '../../shared/components/form-credential/form-credential.component';
-import { map, take } from "rxjs/operators";
+import { map } from "rxjs/operators";
 
 @Component({
     selector: 'app-credential-issuance-admin',

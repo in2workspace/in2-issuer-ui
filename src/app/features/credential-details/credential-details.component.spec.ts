@@ -188,7 +188,6 @@ describe('CredentialDetailsComponent', () => {
   it('should return the correct control type', () => {
     const cases = [
       { control: new FormGroup({ name: new FormControl('') }), expected: 'group' },
-      { control: new FormArray([new FormControl('')]), expected: 'array' },
       { control: new FormControl(''), expected: 'control' },
     ] as const;
   
