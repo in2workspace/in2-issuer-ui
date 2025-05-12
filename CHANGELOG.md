@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.12.0](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.12..0)
 ### Changed
 - Adapt details page to 3 credential types (LEARCredentialEmployee, LEARCredentialMachine and VerifiableCertification)
+- Add "basic information" in details page (credential type, validity, valid-from, valid-until)
+- Change route to create procedure as signer from "create2/admin" to "create-as-signer"
 
 ## [1.11.0](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.11.0)
 ### Changed
