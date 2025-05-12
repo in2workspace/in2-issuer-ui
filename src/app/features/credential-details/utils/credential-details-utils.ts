@@ -144,8 +144,6 @@ export function getFormDataByType<T extends CredentialType>(
   credential: LEARCredential,
   type: T
 ): CredentialFormData {
-  console.log('data extractor; credential:' +  credential)
-  console.log('data extractor; type:' +  type)
   const extractor = FormDataExtractorByType[type];
   if (!extractor) {
     throw new Error(`Unsupported data extractor for type: ${type}`);
