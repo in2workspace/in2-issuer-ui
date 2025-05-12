@@ -79,17 +79,12 @@ export class CredentialDetailsService {
     if (!type) {
       throw new Error(`No supported credential type found in: ${credentialTypes.join(', ')}`);
     }
-    console.log('type')
-    console.log(type);
+
     this.credentialType$.set(type);
     
     const schema = getFormSchemaByType(type);
-    console.log('Schema: ');
-    console.log(schema);
 
     const formData = getFormDataByType(credential, type);
-    console.log('form data');
-    console.log(formData);
 
   
     const builtForm = buildFormFromSchema(this.fb, schema, formData);
@@ -98,8 +93,6 @@ export class CredentialDetailsService {
     this.credentialDetailsFormSchema$.set(schema);
     this.credentialDetailsForm$.set(builtForm);
 
-    console.log('Form has been loaded:');
-    console.log(this.credentialDetailsForm$());
   }
 
 
