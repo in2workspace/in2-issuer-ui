@@ -332,6 +332,10 @@ export class CredentialOfferStepperComponent implements OnInit{
     .pipe(
       takeUntilDestroyed(this.destroyRef),
       catchError(error => {
+        console.log('Get offer by transaction code');
+        console.log(error);
+        console.log('error.error');
+        console.log(error.error);
           const errorStatus = error?.status || error?.error?.status || 0;
           let errorMessage = this.translate.instant("error.credentialOffer.unexpected");
           
@@ -339,12 +343,10 @@ export class CredentialOfferStepperComponent implements OnInit{
             //when credential is downloaded or expired
             errorMessage = this.translate.instant("error.credentialOffer.expired");
           }
-          console.log('Get offer by transaction code');
           console.log('Error status: ' + errorStatus);
           console.log('Error message: ' + errorMessage);
           console.log(errorMessage);
           console.log('error');
-          console.log(error);
           this.dialog.openErrorInfoDialog(errorMessage);
           this.redirectToHome();
           
