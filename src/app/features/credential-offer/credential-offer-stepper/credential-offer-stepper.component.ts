@@ -338,6 +338,12 @@ export class CredentialOfferStepperComponent implements OnInit{
             //when credential is downloaded or expired
             errorMessage = this.translate.instant("error.credentialOffer.expired");
           }
+          console.log('Get offer by transaction code');
+          console.log('Error status: ' + errorStatus);
+          console.log('Error message: ' + errorMessage);
+          console.log(errorMessage);
+          console.log('error');
+          console.log(error);
           this.dialog.openErrorInfoDialog(errorMessage);
           this.redirectToHome();
           
@@ -347,6 +353,7 @@ export class CredentialOfferStepperComponent implements OnInit{
   }
 
   public getCredentialOfferByCTransactionCode(cCode:string): Observable<CredentialOfferResponse> {
+    console.log('Get offer by C - transaction code');
     if (!cCode) {
       console.error("No c-transaction code was found, can't refresh QR.");
       const message = this.translate.instant("error.credentialOffer.invalid-url");
