@@ -85,14 +85,16 @@ export class CredentialProcedureService {
   public getCredentialOfferByTransactionCode(transactionCode: string): Observable<CredentialOfferResponse> {
     console.info('Getting credential offer by transaction code: ' + transactionCode);
     return this.http.get<CredentialOfferResponse>(`${this.credentialOfferUrl}/transaction-code/${transactionCode}`).pipe(
-      catchError(this.handleError)
+      catchError(this.handleError),
+      catchError(this.handleCredentialOfferError)
     );
   }
 
   public getCredentialOfferByCTransactionCode(cTransactionCode: string): Observable<CredentialOfferResponse> {
     console.info('Refreshing QR code: getting credential offer by c-transaction code: ' + cTransactionCode);
     return this.http.get<CredentialOfferResponse>(`${this.credentialOfferUrl}/c-transaction-code/${cTransactionCode}`).pipe(
-      catchError(this.handleError)
+      catchError(this.handleError),
+      catchError(this.handleCredentialOfferError)
     );
   }
 
@@ -130,5 +132,24 @@ export class CredentialProcedureService {
       return throwError(() => error);
     }
   }
+
+  private readonly handleCredentialOfferError = (error: HttpErrorResponse): Observable<never> => {
+    const errorStatus = error?.status || error?.error?.status || 0;
+    let errorMessage = this.translate.instant("error.credentialOffer.unexpected");
+  
+    if (errorStatus === 404) {
+      errorMessage = this.translate.instant("error.credentialOffer.expired");
+    } else if (errorStatus === 409) {
+      errorMessage = this.translate.instant("error.credentialOffer.completed");
+    }
+  
+    this.dialog.openErrorInfoDialog(errorMessage);
+    setTimeout(()=>{
+      this.router.navigate(['/home']);
+    }, 0);
+    
+    return throwError(() => error);
+  };
+  
 
 }

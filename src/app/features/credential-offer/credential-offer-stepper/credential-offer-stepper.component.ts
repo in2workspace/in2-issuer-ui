@@ -251,7 +251,6 @@ export class CredentialOfferStepperComponent implements OnInit{
   //END EXPIRATION TIME STREAMS
 
   public ngOnInit(): void {
-    console.log('init stepper')
     this.getInitUrlParams$$.next();
     
     merge(
@@ -331,32 +330,10 @@ export class CredentialOfferStepperComponent implements OnInit{
     return this.credentialProcedureService.getCredentialOfferByTransactionCode(transactionCode)
     .pipe(
       takeUntilDestroyed(this.destroyRef),
-      catchError(error => {
-        console.log('Get offer by transaction code');
-        console.log(error);
-        console.log('error.error');
-        console.log(error.error);
-          const errorStatus = error?.status || error?.error?.status || 0;
-          let errorMessage = this.translate.instant("error.credentialOffer.unexpected");
-          
-          if (errorStatus === 404 || errorStatus === 409) {
-            //when credential is downloaded or expired
-            errorMessage = this.translate.instant("error.credentialOffer.expired");
-          }
-          console.log('Error status: ' + errorStatus);
-          console.log('Error message: ' + errorMessage);
-          console.log(errorMessage);
-          console.log('error');
-          this.dialog.openErrorInfoDialog(errorMessage);
-          this.redirectToHome();
-          
-          return throwError(()=>error);
-      })
     )
   }
 
   public getCredentialOfferByCTransactionCode(cCode:string): Observable<CredentialOfferResponse> {
-    console.log('Get offer by C - transaction code');
     if (!cCode) {
       console.error("No c-transaction code was found, can't refresh QR.");
       const message = this.translate.instant("error.credentialOffer.invalid-url");
@@ -368,28 +345,6 @@ export class CredentialOfferStepperComponent implements OnInit{
     return this.credentialProcedureService.getCredentialOfferByCTransactionCode(cCode)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
-        catchError((error: HttpErrorResponse) => {
-          const errorStatus = error?.status || error?.error?.status || 0;
-          let errorMessage = this.translate.instant("error.credentialOffer.unexpected");
-          
-          switch (errorStatus) {
-            case 404://when credential is downloaded or expired
-              errorMessage = this.translate.instant("error.credentialOffer.expired");
-              break;
-            case 409: //when credential is completed and user clicks 'back' and 'next'
-              errorMessage = 'The credential has already been obtained.';
-              break;
-          }
-          console.log('Error status: ' + errorStatus);
-          console.log('Error message: ' + errorMessage);
-          console.log(errorMessage);
-          console.log('error');
-          console.log(error);
-          this.dialog.openErrorInfoDialog(errorMessage);
-          this.redirectToHome();
-          
-          return throwError(()=>error);
-        })
       )
   }
 
