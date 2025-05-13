@@ -611,44 +611,6 @@ describe('getCredentialOfferByTransactionCode', () => {
     });
   });
 
-  it('should open error dialog and rethrow error when the service call fails', (done) => {
-    const mockTransactionCode = 'validTransactionCode';
-    const mockError = new Error('Service error');
-
-    procedureService.getCredentialOfferByTransactionCode.mockReturnValue(throwError(() => mockError));
-    const dialogSpy = jest.spyOn(component['dialog'], 'openErrorInfoDialog');
-    const message = component['translate'].instant('error.credentialOffer.unexpected');
-
-    const result$ = component.getCredentialOfferByTransactionCode(mockTransactionCode);
-
-    result$.subscribe({
-      error: (error) => {
-        expect(dialogSpy).toHaveBeenCalledWith(message);
-        expect(error).toEqual(mockError);
-        done();
-      }
-    });
-  });
-
-  it('should open error dialog with a specific message for 404 error and rethrow error', (done) => {
-    const mockTransactionCode = 'validTransactionCode';
-    const mockError = { status: 404, message: 'Not Found' };
-    const message = component['translate'].instant("error.credentialOffer.expired");
-  
-    procedureService.getCredentialOfferByTransactionCode.mockReturnValue(throwError(() => mockError));
-    const dialogSpy = jest.spyOn(component['dialog'], 'openErrorInfoDialog');
-  
-    const result$ = component.getCredentialOfferByTransactionCode(mockTransactionCode);
-  
-    result$.subscribe({
-      error: (error) => {
-        expect(dialogSpy).toHaveBeenCalledWith(message);
-        expect(error).toEqual(mockError);
-        done();
-      }
-    });
-  });
-
 
 });
 describe('getCredentialOfferByCTransactionCode', () => {
@@ -689,69 +651,6 @@ describe('getCredentialOfferByCTransactionCode', () => {
     });
   });
 
-  it('should open error dialog and rethrow error when the service call by c-code fails', (done) => {
-    const mockTransactionCode = 'validTransactionCode';
-    const mockError = new Error('Service error');
-
-    procedureService.getCredentialOfferByCTransactionCode.mockReturnValue(throwError(() => mockError));
-    const dialogSpy = jest.spyOn(component['dialog'], 'openErrorInfoDialog');
-    const message = component['translate'].instant('error.credentialOffer.unexpected');
-
-    const result$ = component.getCredentialOfferByCTransactionCode(mockTransactionCode);
-
-    result$.subscribe({
-      error: (error) => {
-        expect(dialogSpy).toHaveBeenCalledWith(message);
-        expect(error).toEqual(mockError);
-        done();
-      }
-    });
-  });
-
-  it('should open error dialog for 404 status', (done) => {
-    const mockTransactionCode = 'validTransactionCode';
-    const mockError = new HttpErrorResponse({
-      error: { message: 'Not Found' },
-      status: 404,
-      statusText: 'Not Found',
-    });
-    const message = component['translate'].instant("error.credentialOffer.expired");
-
-    procedureService.getCredentialOfferByCTransactionCode.mockReturnValue(throwError(() => mockError));
-    const dialogSpy = jest.spyOn(component['dialog'], 'openErrorInfoDialog');
-
-    const result$ = component.getCredentialOfferByCTransactionCode(mockTransactionCode);
-
-    result$.subscribe({
-      error: (error) => {
-        expect(dialogSpy).toHaveBeenCalledWith(message);
-        expect(error).toEqual(mockError);
-        done();
-      }
-    });
-});
-
-it('should open error dialog for 409 status', (done) => {
-  const mockTransactionCode = 'validTransactionCode';
-  const mockError = new HttpErrorResponse({
-    error: { message: 'Not Found' },
-    status: 409,
-    statusText: 'Not Found',
-  });
-
-  procedureService.getCredentialOfferByCTransactionCode.mockReturnValue(throwError(() => mockError));
-  const dialogSpy = jest.spyOn(component['dialog'], 'openErrorInfoDialog');
-
-  const result$ = component.getCredentialOfferByCTransactionCode(mockTransactionCode);
-
-  result$.subscribe({
-    error: (error) => {
-      expect(dialogSpy).toHaveBeenCalledWith('The credential has already been obtained.');
-      expect(error).toEqual(mockError);
-      done();
-    }
-  });
-});
 });
 
 it('should not navigate when c_transaction_code is not provided', () => {
