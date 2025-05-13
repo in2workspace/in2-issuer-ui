@@ -339,7 +339,7 @@ export class CredentialOfferStepperComponent implements OnInit{
           const errorStatus = error?.status || error?.error?.status || 0;
           let errorMessage = this.translate.instant("error.credentialOffer.unexpected");
           
-          if (errorStatus === 404) {
+          if (errorStatus === 404 || errorStatus === 409) {
             //when credential is downloaded or expired
             errorMessage = this.translate.instant("error.credentialOffer.expired");
           }

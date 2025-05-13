@@ -113,7 +113,7 @@ export class CredentialProcedureService {
     }
 
     console.log('handleError -> status:', error.status, 'errorDetail:', errorDetail);
-
+    // this 503 error handling is specific to credential-procedure endpoints
     if (error.status === 503 && errorDetail.trim() === 'Error during communication with the mail server') {
       const errorMessage = this.translate.instant('error.serverMailError.message');
       const errorTitle = this.translate.instant('error.serverMailError.title');
