@@ -213,7 +213,8 @@
     "credentialOffer": {
       "invalid-url": "Unexpected error: invalid URL, can't get credential offer.",
       "unexpected": "An unexpected error occurred. Please try again later or contact your company's Legal Representative to get a new credential.",
-      "expired": "This credential offer is invalid. It may have expired or been replaced by a new one. If a new offer was sent, please check your email. If it has expired, contact your company's Legal Representative to request a new credential offer."
+      "not-found": "This credential offer is invalid. It may have expired or been replaced by a new one. If a new offer was sent, please check your email. If it has expired, contact your company's Legal Representative to request a new credential offer.",
+      "conflict": "The credential offer is invalid. A new offer may have been sent, or the credential may have already been downloaded."
     },
     "serverMailError": {
       "title": "Mail server error",

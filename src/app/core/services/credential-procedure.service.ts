@@ -138,9 +138,9 @@ export class CredentialProcedureService {
     let errorMessage = this.translate.instant("error.credentialOffer.unexpected");
   
     if (errorStatus === 404) {
-      errorMessage = this.translate.instant("error.credentialOffer.expired");
+      errorMessage = this.translate.instant("error.credentialOffer.not-found");
     } else if (errorStatus === 409) {
-      errorMessage = this.translate.instant("error.credentialOffer.completed");
+      errorMessage = this.translate.instant("error.credentialOffer.conflict");
     }
   
     this.dialog.openErrorInfoDialog(errorMessage);

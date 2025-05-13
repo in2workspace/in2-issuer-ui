@@ -193,7 +193,7 @@ export class CredentialOfferStepperComponent implements OnInit{
     );
     
     const cancelCallback = () => {
-      this.redirectToHomeAndShowErrorDialog("error.credentialOffer.expired");
+      this.redirectToHomeAndShowErrorDialog("error.credentialOffer.not-found");
       return EMPTY;
     };
 
@@ -244,7 +244,7 @@ export class CredentialOfferStepperComponent implements OnInit{
     filter(time => time === -1),
     tap(()=>{
       this.redirectToHome();
-      this.dialog.openErrorInfoDialog(this.translate.instant("error.credentialOffer.expired"));
+      this.dialog.openErrorInfoDialog(this.translate.instant("error.credentialOffer.not-found"));
     })
   );
 

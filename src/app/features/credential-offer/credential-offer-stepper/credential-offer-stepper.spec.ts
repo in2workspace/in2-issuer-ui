@@ -691,7 +691,7 @@ it('should navigate when c_transaction_code is provided', () => {
   it('should navigate to home and open VC-expired popup', ()=>{
     const redirectSpy = jest.spyOn(component, 'redirectToHome');
     const dialogOpenSpy = jest.spyOn(component['dialog'], 'openErrorInfoDialog');
-    const message = component['translate'].instant("error.credentialOffer.expired");
+    const message = component['translate'].instant("error.credentialOffer.not-found");
 
     component.redirectToHomeAndShowErrorDialog(message);
 
@@ -768,7 +768,7 @@ it('should navigate when c_transaction_code is provided', () => {
       openDialogSpy.mockReturnValue(fakeDialogRef as any);
     
       component['openRefreshPopupEffect'].subscribe(() => {
-        expect(redirectSpy).toHaveBeenCalledWith("error.credentialOffer.expired");
+        expect(redirectSpy).toHaveBeenCalledWith("error.credentialOffer.not-found");
       });
     
       tick();

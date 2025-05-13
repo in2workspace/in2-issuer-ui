@@ -386,8 +386,8 @@ describe('get credential offer by c-code', () => {
   
       service['handleCredentialOfferError'](error).subscribe({
         error: err => {
-          expect(translateSpy.instant).toHaveBeenCalledWith('error.credentialOffer.expired');
-          expect(dialogSpy.openErrorInfoDialog).toHaveBeenCalledWith('error.credentialOffer.expired');
+          expect(translateSpy.instant).toHaveBeenCalledWith('error.credentialOffer.not-found');
+          expect(dialogSpy.openErrorInfoDialog).toHaveBeenCalledWith('error.credentialOffer.not-found');
           expect(spy).toHaveBeenCalled();
           expect(err).toBe(error);
         }
