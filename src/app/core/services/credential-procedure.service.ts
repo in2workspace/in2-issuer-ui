@@ -134,7 +134,7 @@ export class CredentialProcedureService {
   }
 
   private readonly handleCredentialOfferError = (error: HttpErrorResponse): Observable<never> => {
-    const errorStatus = error?.status || error?.error?.status || 0;
+    const errorStatus = error?.status ?? error?.error?.status ?? 0;
     let errorMessage = this.translate.instant("error.credentialOffer.unexpected");
   
     if (errorStatus === 404) {
