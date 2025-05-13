@@ -30,11 +30,6 @@ export class ServeErrorInterceptor implements HttpInterceptor {
   }
 
   private getServerErrorMessage(error: HttpErrorResponse): string {
-    console.log('getServerErrorMessage')
-    console.log('error')
-    console.log(error)
-    console.log('error.status')
-    console.log(error.status)
     switch (error.status) {
       case 404:
         return 'error.not_found';
