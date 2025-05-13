@@ -379,4 +379,48 @@ describe('get credential offer by c-code', () => {
     );
   });
 
+  describe('handleCredentialOfferError', () => {
+    it('should show expired message and redirect on 404 error', () => {
+      const error = new HttpErrorResponse({ status: 404, error: {} });
+      const spy = jest.spyOn(service as any, 'redirectToDashboard');
+  
+      service['handleCredentialOfferError'](error).subscribe({
+        error: err => {
+          expect(translateSpy.instant).toHaveBeenCalledWith('error.credentialOffer.expired');
+          expect(dialogSpy.openErrorInfoDialog).toHaveBeenCalledWith('error.credentialOffer.expired');
+          expect(spy).toHaveBeenCalled();
+          expect(err).toBe(error);
+        }
+      });
+    });
+  
+    it('should show specific message and redirect on 409 error', () => {
+      const error = new HttpErrorResponse({ status: 409, error: {} });
+      const spy = jest.spyOn(service as any, 'redirectToDashboard');
+  
+      service['handleCredentialOfferError'](error).subscribe({
+        error: err => {
+          expect(dialogSpy.openErrorInfoDialog).toHaveBeenCalledWith('The credential has already been obtained.');
+          expect(spy).toHaveBeenCalled();
+          expect(err).toBe(error);
+        }
+      });
+    });
+  
+    it('should show unexpected message and redirect on other errors', () => {
+      const error = new HttpErrorResponse({ status: 500, error: {} });
+      const spy = jest.spyOn(service as any, 'redirectToDashboard');
+  
+      service['handleCredentialOfferError'](error).subscribe({
+        error: err => {
+          expect(translateSpy.instant).toHaveBeenCalledWith('error.credentialOffer.unexpected');
+          expect(dialogSpy.openErrorInfoDialog).toHaveBeenCalledWith('error.credentialOffer.unexpected');
+          expect(spy).toHaveBeenCalled();
+          expect(err).toBe(error);
+        }
+      });
+    });
+  });
+  
+
 });
