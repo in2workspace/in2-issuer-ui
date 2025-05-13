@@ -120,14 +120,14 @@ export class CredentialProcedureService {
 
       this.dialog.openErrorInfoDialog(errorMessage, errorTitle);
       this.redirectToDashboard();
-      return throwError(() => new Error(errorMessage));
+      return throwError(() => error);
     } else if (error.error instanceof ErrorEvent) {
       console.error(`Client-side error: ${errorDetail}`);
-      return throwError(() => new Error(`Client-side error: ${errorDetail}`));
+      return throwError(() => error);
     } else {
       const defaultErrorMessage = `Server-side error: ${error.status} ${errorDetail}`;
       console.error('Error response body:', defaultErrorMessage);
-      return throwError(() => new Error(defaultErrorMessage));
+      return throwError(() => error);
     }
   }
 
