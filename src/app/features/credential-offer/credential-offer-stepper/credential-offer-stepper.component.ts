@@ -251,6 +251,7 @@ export class CredentialOfferStepperComponent implements OnInit{
   //END EXPIRATION TIME STREAMS
 
   public ngOnInit(): void {
+    console.log('init stepper')
     this.getInitUrlParams$$.next();
     
     merge(
