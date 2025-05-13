@@ -370,6 +370,11 @@ export class CredentialOfferStepperComponent implements OnInit{
               errorMessage = 'The credential has already been obtained.';
               break;
           }
+          console.log('Error status: ' + errorStatus);
+          console.log('Error message: ' + errorMessage);
+          console.log(errorMessage);
+          console.log('error');
+          console.log(error);
           this.dialog.openErrorInfoDialog(errorMessage);
           this.redirectToHome();
           
