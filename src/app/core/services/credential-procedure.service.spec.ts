@@ -421,6 +421,41 @@ describe('get credential offer by c-code', () => {
       });
     });
   });
+
+  describe('getCredentialOfferByTransactionCode', () => {
+    it('should propagate error returned by handleCredentialOfferError', () => {
+      const transactionCode = 'test-code';
+      const error = new HttpErrorResponse({ status: 404, error: {} });
+  
+      service.getCredentialOfferByTransactionCode(transactionCode).subscribe({
+        next: () => fail('Expected error'),
+        error: err => {
+          expect(err).toBe(error);
+        }
+      });
+  
+      const req = httpMock.expectOne(`${credentialOfferUrl}/transaction-code/${transactionCode}`);
+      req.flush({}, error);
+    });
+  });
+  
+  describe('getCredentialOfferByCTransactionCode', () => {
+    it('should propagate error returned by handleCredentialOfferError', () => {
+      const cTransactionCode = 'test-code';
+      const error = new HttpErrorResponse({ status: 409, error: {} });
+  
+      service.getCredentialOfferByCTransactionCode(cTransactionCode).subscribe({
+        next: () => fail('Expected error'),
+        error: err => {
+          expect(err).toBe(error);
+        }
+      });
+  
+      const req = httpMock.expectOne(`${credentialOfferUrl}/c-transaction-code/${cTransactionCode}`);
+      req.flush({}, error);
+    });
+  });
+  
   
 
 });
