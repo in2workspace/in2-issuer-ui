@@ -400,7 +400,7 @@ describe('get credential offer by c-code', () => {
   
       service['handleCredentialOfferError'](error).subscribe({
         error: err => {
-          expect(dialogSpy.openErrorInfoDialog).toHaveBeenCalledWith('The credential has already been obtained.');
+          expect(dialogSpy.openErrorInfoDialog).toHaveBeenCalledWith('error.credentialOffer.conflict');
           expect(spy).toHaveBeenCalled();
           expect(err).toBe(error);
         }
