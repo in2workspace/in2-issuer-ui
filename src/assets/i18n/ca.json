@@ -214,7 +214,8 @@
       "credentialOffer": {
         "invalid-url": "URL no vàlida. No es pot obtenir l'oferta de credencial.",
         "unexpected": "S'ha produït un error inesperat. Torna-ho a intentar més tard o posa't en contacte amb el Representant Legal de la teva empresa per obtenir una nova credencial.",
-        "expired": "Aquesta oferta de credencial no és vàlida. És possible que hagi caducat o que hagi estat substituïda per una nova. Si s'ha enviat una nova oferta, revisi el seu correu electrònic. Si ha caducat, posi's en contacte amb el representant legal de la seva empresa per sol·licitar una nova oferta de credencial."
+        "not-found": "Aquesta oferta de credencial no és vàlida. Pot ser que ja s'hagi descarregat, hagi caducat o hagi estat reemplaçada per una de nova. Si has rebut una nova oferta, consulta el teu correu electrònic. Si ha caducat o no pots trobar-ne cap de vàlida, contacta amb el Representant Legal de la teva empresa per sol·licitar-ne una de nova.",
+        "conflict": "L'oferta de credencial no és vàlida. Pot ser que ja s'hagi descarregat o hagi estat reemplaçada per una de nova. Si has rebut una nova oferta, consulta el teu correu electrònic."
       },
       "serverMailError": {
         "title": "Error del servidor de correu",

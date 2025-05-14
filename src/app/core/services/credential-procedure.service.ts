@@ -85,14 +85,16 @@ export class CredentialProcedureService {
   public getCredentialOfferByTransactionCode(transactionCode: string): Observable<CredentialOfferResponse> {
     console.info('Getting credential offer by transaction code: ' + transactionCode);
     return this.http.get<CredentialOfferResponse>(`${this.credentialOfferUrl}/transaction-code/${transactionCode}`).pipe(
-      catchError(this.handleError)
+      catchError(this.handleError),
+      catchError(this.handleCredentialOfferError)
     );
   }
 
   public getCredentialOfferByCTransactionCode(cTransactionCode: string): Observable<CredentialOfferResponse> {
     console.info('Refreshing QR code: getting credential offer by c-transaction code: ' + cTransactionCode);
     return this.http.get<CredentialOfferResponse>(`${this.credentialOfferUrl}/c-transaction-code/${cTransactionCode}`).pipe(
-      catchError(this.handleError)
+      catchError(this.handleError),
+      catchError(this.handleCredentialOfferError)
     );
   }
 
@@ -113,22 +115,41 @@ export class CredentialProcedureService {
     }
 
     console.log('handleError -> status:', error.status, 'errorDetail:', errorDetail);
-
+    // this 503 error handling is specific to credential-procedure endpoints
     if (error.status === 503 && errorDetail.trim() === 'Error during communication with the mail server') {
       const errorMessage = this.translate.instant('error.serverMailError.message');
       const errorTitle = this.translate.instant('error.serverMailError.title');
 
       this.dialog.openErrorInfoDialog(errorMessage, errorTitle);
       this.redirectToDashboard();
-      return throwError(() => new Error(errorMessage));
+      return throwError(() => error);
     } else if (error.error instanceof ErrorEvent) {
       console.error(`Client-side error: ${errorDetail}`);
-      return throwError(() => new Error(`Client-side error: ${errorDetail}`));
+      return throwError(() => error);
     } else {
       const defaultErrorMessage = `Server-side error: ${error.status} ${errorDetail}`;
       console.error('Error response body:', defaultErrorMessage);
-      return throwError(() => new Error(defaultErrorMessage));
+      return throwError(() => error);
     }
   }
+
+  private readonly handleCredentialOfferError = (error: HttpErrorResponse): Observable<never> => {
+    const errorStatus = error?.status ?? error?.error?.status ?? 0;
+    let errorMessage = this.translate.instant("error.credentialOffer.unexpected");
+  
+    if (errorStatus === 404) {
+      errorMessage = this.translate.instant("error.credentialOffer.not-found");
+    } else if (errorStatus === 409) {
+      errorMessage = this.translate.instant("error.credentialOffer.conflict");
+    }
+  
+    this.dialog.openErrorInfoDialog(errorMessage);
+    setTimeout(()=>{
+      this.router.navigate(['/home']);
+    }, 0);
+    
+    return throwError(() => error);
+  };
+  
 
 }

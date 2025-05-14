@@ -193,7 +193,7 @@ export class CredentialOfferStepperComponent implements OnInit{
     );
     
     const cancelCallback = () => {
-      this.redirectToHomeAndShowErrorDialog("error.credentialOffer.expired");
+      this.redirectToHomeAndShowErrorDialog("error.credentialOffer.not-found");
       return EMPTY;
     };
 
@@ -244,7 +244,7 @@ export class CredentialOfferStepperComponent implements OnInit{
     filter(time => time === -1),
     tap(()=>{
       this.redirectToHome();
-      this.dialog.openErrorInfoDialog(this.translate.instant("error.credentialOffer.expired"));
+      this.dialog.openErrorInfoDialog(this.translate.instant("error.credentialOffer.not-found"));
     })
   );
 
@@ -330,19 +330,6 @@ export class CredentialOfferStepperComponent implements OnInit{
     return this.credentialProcedureService.getCredentialOfferByTransactionCode(transactionCode)
     .pipe(
       takeUntilDestroyed(this.destroyRef),
-      catchError(error => {
-          const errorStatus = error?.status || error?.error?.status || 0;
-          let errorMessage = this.translate.instant("error.credentialOffer.unexpected");
-          
-          if (errorStatus === 404) {
-            //when credential is downloaded or expired
-            errorMessage = this.translate.instant("error.credentialOffer.expired");
-          }
-          this.dialog.openErrorInfoDialog(errorMessage);
-          this.redirectToHome();
-          
-          return throwError(()=>error);
-      })
     )
   }
 
@@ -358,23 +345,6 @@ export class CredentialOfferStepperComponent implements OnInit{
     return this.credentialProcedureService.getCredentialOfferByCTransactionCode(cCode)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
-        catchError((error: HttpErrorResponse) => {
-          const errorStatus = error?.status || error?.error?.status || 0;
-          let errorMessage = this.translate.instant("error.credentialOffer.unexpected");
-          
-          switch (errorStatus) {
-            case 404://when credential is downloaded or expired
-              errorMessage = this.translate.instant("error.credentialOffer.expired");
-              break;
-            case 409: //when credential is completed and user clicks 'back' and 'next'
-              errorMessage = 'The credential has already been obtained.';
-              break;
-          }
-          this.dialog.openErrorInfoDialog(errorMessage);
-          this.redirectToHome();
-          
-          return throwError(()=>error);
-        })
       )
   }
 
