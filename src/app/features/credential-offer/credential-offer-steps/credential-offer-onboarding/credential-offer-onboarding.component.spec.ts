@@ -33,7 +33,7 @@ describe('CredentialOfferOnboardingComponent', () => {
     const fixture = TestBed.createComponent(CredentialOfferOnboardingComponent);
     const testComponent = fixture.componentInstance;
 
-    expect(testComponent.walletUrl).toBe('https://wallet.dome-marketplace-prd.org/');
+    expect(testComponent.walletUrl).toBe('https://wallet.dome-marketplace.eu/');
 
     environment.wallet_url = originalWalletUrl;
   });

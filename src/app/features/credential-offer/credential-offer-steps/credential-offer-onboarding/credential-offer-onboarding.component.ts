@@ -16,7 +16,7 @@ export class CredentialOfferOnboardingComponent{
   public qrColor = "#2d58a7";
   public walletUsersGuideUrl = environment.knowledge_base_url + KNOWLEDGEBASE_PATH.WALLET;
 
-  public walletUrl = environment.wallet_url || 'https://wallet.dome-marketplace-prd.org/';
-  public walletTestUrl = API.WALLET_URL_TEST || 'https://wallet.dome-marketplace-prd.org/';
+  public walletUrl = environment.wallet_url || 'https://wallet.dome-marketplace.eu/';
+  public walletTestUrl = API.WALLET_URL_TEST || 'https://wallet.dome-marketplace.eu/';
   public readonly showWalletSameDeviceUrlTest =  API.SHOW_WALLET_URL_TEST;
 }
