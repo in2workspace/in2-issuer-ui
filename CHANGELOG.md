@@ -4,17 +4,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.13.0](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.13.0)
+### Added
+- Implementation of configure signature.
+
+## [1.12.2](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.12.2)
+### Fixed
+- Changed default wallet URLs to ".eu"
+
+## [1.12.1](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.12.1)
+### Fixed
+- Fixed error dialog messages for credential offer stepper.
+
+
 ## [1.12.0](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.12.0)
+### Changed
+- Adapt details page to 3 credential types (LEARCredentialEmployee, LEARCredentialMachine and VerifiableCertification)
+- Add "basic information" in details page (credential type, validity, valid-from, valid-until)
+- Change route to create procedure as signer from "create2/admin" to "create-as-signer"
+
+## [1.11.0](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.11.0)
 ### Changed
 - Refactored and renamed some environment variables
 - Renamed some directories and files
 - Moved some environment variables to application constants to remove unnecessary complexity
 ### Added
 - Added some minor fixes
-
-## [1.11.0](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.11.0)
-### Added
-- Implementation of configure signature.
 
 ## [1.10.3](https://github.com/in2workspace/in2-issuer-ui/releases/tag/v1.10.3)
 ### Modify

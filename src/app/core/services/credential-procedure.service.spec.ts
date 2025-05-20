@@ -3,14 +3,16 @@ import {HttpTestingController, provideHttpClientTesting} from '@angular/common/h
 import {CredentialProcedureService} from './credential-procedure.service';
 import {environment} from 'src/environments/environment';
 import {HttpErrorResponse, provideHttpClient} from '@angular/common/http';
-import {ProcedureRequest} from '../models/dto/procedure-request.dto';
+
 import {ProcedureResponse} from "../models/dto/procedure-response.dto";
-import {LearCredentialEmployeeDataDetail} from "../models/dto/lear-credential-employee-data-detail.dto";
+
 import {throwError} from 'rxjs';
 import {DialogWrapperService} from "../../shared/components/dialog/dialog-wrapper/dialog-wrapper.service";
 import {TranslateService} from "@ngx-translate/core";
 import {Router} from "@angular/router";
 import {API} from "../constants/api.constants";
+import { LEARCredentialDataDetails } from '../models/entity/lear-credential';
+import { EmployeeProcedureRequest } from '../models/dto/procedure-request.dto';
 
 const notFoundErrorResp = new HttpErrorResponse({
   error: '404 error',
@@ -95,8 +97,8 @@ describe('CredentialProcedureService', () => {
 
   it('should fetch credential procedure by id successfully', () => {
     const procedureId = '1';
-    const mockData: LearCredentialEmployeeDataDetail =
-      { procedure_id: '1', credential_status: 'completed', credential: { mandatee: {}, mandator: {}, power: [] } as any }
+    const mockData: LEARCredentialDataDetails =
+      { procedure_id: '1', credential_status: 'VALID', credential: { mandatee: {}, mandator: {}, power: [] } as any }
     ;
 
     service.getCredentialProcedureById(procedureId).subscribe(data => {
@@ -123,7 +125,7 @@ describe('CredentialProcedureService', () => {
   });
 
   it('should save credential procedure successfully', () => {
-    const IssuanceRequestMock:ProcedureRequest = {
+    const IssuanceRequestMock:EmployeeProcedureRequest = {
       schema: "LEARCredentialEmployee",
       format: "jwt_vc_json",
       payload: {
@@ -153,7 +155,7 @@ describe('CredentialProcedureService', () => {
   });
 
   it('should handle error when saving credential procedure', () => {
-    const IssuanceRequestMock:ProcedureRequest = {
+    const IssuanceRequestMock:EmployeeProcedureRequest = {
       schema: "LEARCredentialEmployee",
       format: "jwt_vc_json",
       payload: {
@@ -286,26 +288,7 @@ describe('CredentialProcedureService', () => {
     req.flush(invalidJSONResponse);
   });
 
-    it('should handle error when getCredentialOfferByTransactionCode fails', (done) => {
-      const transactionCode = 'invalid-code';
-      const errorResponse = new HttpErrorResponse({
-        error: { message: 'Not Found' },
-        status: 404,
-        statusText: 'Not Found'
-      });
 
-      jest.spyOn(service['http'], 'get').mockReturnValue(throwError(() => errorResponse));
-
-      service.getCredentialOfferByTransactionCode(transactionCode).subscribe({
-        next: () => {
-          fail('Expected an error, but got a success response');
-        },
-        error: (err: Error) => {
-          expect(err.message).toContain('Server-side error: 404 Not Found');
-          done();
-        }
-      });
-    });
   });
 
 describe('get credential offer by c-code', () => {
@@ -395,5 +378,84 @@ describe('get credential offer by c-code', () => {
       errorResponse
     );
   });
+
+  describe('handleCredentialOfferError', () => {
+    it('should show expired message and redirect on 404 error', () => {
+      const error = new HttpErrorResponse({ status: 404, error: {} });
+      const spy = jest.spyOn(service as any, 'redirectToDashboard');
+  
+      service['handleCredentialOfferError'](error).subscribe({
+        error: err => {
+          expect(translateSpy.instant).toHaveBeenCalledWith('error.credentialOffer.not-found');
+          expect(dialogSpy.openErrorInfoDialog).toHaveBeenCalledWith('error.credentialOffer.not-found');
+          expect(spy).toHaveBeenCalled();
+          expect(err).toBe(error);
+        }
+      });
+    });
+  
+    it('should show specific message and redirect on 409 error', () => {
+      const error = new HttpErrorResponse({ status: 409, error: {} });
+      const spy = jest.spyOn(service as any, 'redirectToDashboard');
+  
+      service['handleCredentialOfferError'](error).subscribe({
+        error: err => {
+          expect(dialogSpy.openErrorInfoDialog).toHaveBeenCalledWith('error.credentialOffer.conflict');
+          expect(spy).toHaveBeenCalled();
+          expect(err).toBe(error);
+        }
+      });
+    });
+  
+    it('should show unexpected message and redirect on other errors', () => {
+      const error = new HttpErrorResponse({ status: 500, error: {} });
+      const spy = jest.spyOn(service as any, 'redirectToDashboard');
+  
+      service['handleCredentialOfferError'](error).subscribe({
+        error: err => {
+          expect(translateSpy.instant).toHaveBeenCalledWith('error.credentialOffer.unexpected');
+          expect(dialogSpy.openErrorInfoDialog).toHaveBeenCalledWith('error.credentialOffer.unexpected');
+          expect(spy).toHaveBeenCalled();
+          expect(err).toBe(error);
+        }
+      });
+    });
+  });
+
+  describe('getCredentialOfferByTransactionCode', () => {
+    it('should propagate error returned by handleCredentialOfferError', () => {
+      const transactionCode = 'test-code';
+      const error = new HttpErrorResponse({ status: 404, error: {} });
+  
+      service.getCredentialOfferByTransactionCode(transactionCode).subscribe({
+        next: () => fail('Expected error'),
+        error: err => {
+          expect(err).toBe(error);
+        }
+      });
+  
+      const req = httpMock.expectOne(`${credentialOfferUrl}/transaction-code/${transactionCode}`);
+      req.flush({}, error);
+    });
+  });
+  
+  describe('getCredentialOfferByCTransactionCode', () => {
+    it('should propagate error returned by handleCredentialOfferError', () => {
+      const cTransactionCode = 'test-code';
+      const error = new HttpErrorResponse({ status: 409, error: {} });
+  
+      service.getCredentialOfferByCTransactionCode(cTransactionCode).subscribe({
+        next: () => fail('Expected error'),
+        error: err => {
+          expect(err).toBe(error);
+        }
+      });
+  
+      const req = httpMock.expectOne(`${credentialOfferUrl}/c-transaction-code/${cTransactionCode}`);
+      req.flush({}, error);
+    });
+  });
+  
+  
 
 });

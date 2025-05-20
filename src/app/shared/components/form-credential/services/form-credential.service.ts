@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { ProcedureRequest } from 'src/app/core/models/dto/procedure-request.dto';
 import { catchError } from 'rxjs/operators';
-import { Mandatee, Mandator, Power } from "../../../../core/models/entity/lear-credential-employee.entity";
+import { EmployeeMandatee, EmployeeMandator, StrictPower, TmfAction } from "../../../../core/models/entity/lear-credential";
 import { Observable, BehaviorSubject } from 'rxjs';
-import { TempPower } from 'src/app/core/models/temporal/temp-power.interface';
+import { TempPower } from 'src/app/core/models/temp/temp-power.interface';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { Country } from './country.service';
+import { EmployeeProcedureRequest } from 'src/app/core/models/dto/procedure-request.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -43,9 +43,7 @@ export class FormCredentialService {
     this.selectedPowerNameSubject.next(powerName);
   }
 
-  public addPower(newPower: TempPower, isDisabled: boolean): void {
-    if (isDisabled) return;
-
+  public addPower(newPower: TempPower): void {
     const addedPowers = structuredClone([...this.getPlainAddedPowers(), newPower]);
     this.setAddedPowers(addedPowers);
   }
@@ -64,7 +62,7 @@ export class FormCredentialService {
     this.setSelectedPowerName('');
   }
 
-  public resetForm(): Mandatee {
+  public resetForm(): EmployeeMandatee {
     return { firstName: '', lastName: '', email: '', nationality: '' };
   }
 
@@ -74,10 +72,10 @@ export class FormCredentialService {
   }
 
   public submitCredential(
-    credential: Mandatee,
+    credential: EmployeeMandatee,
     selectedMandatorCountry: Country | undefined,
     addedPowers: TempPower[],
-    mandator: Mandator,
+    mandator: EmployeeMandator,
     mandatorLastName: string,
     credentialProcedureService: CredentialProcedureService
   ): Observable<void> {
@@ -99,11 +97,11 @@ export class FormCredentialService {
     }
 
     //Prepare powers
-    const power: Power[] = addedPowers.map(option => {
+    const power: StrictPower[] = addedPowers.map(option => {
       return this.checkFunction(option);
     });
 
-    const credentialProcedure: ProcedureRequest = {
+    const credentialProcedure: EmployeeProcedureRequest = {
       schema: "LEARCredentialEmployee",
       format: "jwt_vc_json",
       payload: {
@@ -123,38 +121,22 @@ export class FormCredentialService {
     );
   }
 
-  public convertToTempPower(power: Power): TempPower {
-    const action = Array.isArray(power.action) ? power.action : [power.action];
-    return {
-      action: power.action,
-      domain: power.domain,
-      function: power.function,
-      type: power.type,
-      execute: action.includes('Execute'),
-      create: action.includes('Create'),
-      update: action.includes('Update'),
-      delete: action.includes('Delete'),
-      upload: action.includes('Upload'),
-      attest: action.includes('Attest')
-    };
-  }
-
-  public checkFunction(option: TempPower): Power {
-    if (option.function === 'Onboarding') {
+  public checkFunction(option: TempPower): StrictPower {
+    if (option.function === 'Onboarding' && option.execute) {
       return {
-        action: option.execute ? 'Execute' : '',
+        action: 'Execute',
         domain: option.domain,
         function: option.function,
         type: option.type
       };
     }
-    let action: string[] = [];
+    let action: TmfAction[] = [];
     switch (option.function) {
       case 'Certification':
-        action=isCertification(option,action)
+        action=isCertification(option,action);
         break;
       case 'ProductOffering':
-        action=isProductOffering(option,action)
+        action=isProductOffering(option,action);
         break;
       default:
         break;
@@ -186,14 +168,14 @@ export class FormCredentialService {
 
 }
 
-export function isCertification(option: TempPower,action: string[]) {
+export function isCertification(option: TempPower, action: TmfAction[]) {
   const action2=action;
   if (option.upload) action2.push('Upload');
   if (option.attest) action2.push('Attest');
   return action2;
 }
 
-export function isProductOffering(option: TempPower,action: string[]) {
+export function isProductOffering(option: TempPower,action: TmfAction[]) {
   const action2=action;
   if (option.create) action2.push('Create');
   if (option.update) action2.push('Update');

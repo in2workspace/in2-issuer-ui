@@ -61,26 +61,65 @@
     "email": "Adreça de correu",
     "nationality": "Nacionalitat"
   },
-  "credentialDetail": {
-    "credentialDetail": "Detall de la credencial",
-    "textinformation": "S'ha emès una nova credencial DOME per a vostè amb la següent informació",
+  "credentialDetails": {
+    "title": "Detalls de la credencial",
+    "basic_info": "Informació bàsica",
+    "type" : "tipus",
+    "status": "estatus",
+    "valid_from": "vàlid des de",
+    "valid_until": "vàlid fins",
+    "issuer": "emissor",
+    "mandatee": "mandatari",
+    "mandator": "mandant",
+    "power": "poder",
+    "id": "id",
+    "organizationIdentifier": "número de NIF de l'empresa",
+    "country": "país",
+    "organization": "nom de l'empresa",
+    "commonName": "nom",
+    "emailAddress": "correu electrònic",
+    "email": "correu electrònic",
+    "serialNumber": "número del document d'identitat",
+    "firstName": "nom",
+    "lastName": "cognom",
+    "mobile_phone": "telèfon mòbil",
+    "nationality": "nacionalitat",
+    "serviceName": "nom del servei",
+    "serviceType": "tipus de servei",
+    "version": "versió",
+    "domain": "domini",
+    "ipAddress": "adreça IP",
+    "description": "descripció",
+    "contact": "informació de contacte",
+    "phone": "telèfon",
+    "address": "adreça",
+    "productId": "id del producte",
+    "productName": "nom del producte",
+    "productVersion": "versió del producte",
+    "attester": "entitat verificadora",
+    "company": "empresa",
+    "product": "producte",
+    "compliance": "compliment",
+    "hash": "hash",
+    "scope": "abast",
+    "standard": "estàndard",
     "sendReminderConfirm": {
       "title": "Enviar recordatori",
-      "message": "Estàs segur que vols enviar un recordatori d'aquesta oferta de credencial?"
+      "message": "Estàs segur que vols enviar un recordatori per aquesta oferta de credencial?"
     },
     "sendReminderSuccess": {
-      "title": "Recordatori enviat amb èxit",
-      "message": "El recordatori ha estat enviat amb èxit."
+      "title": "Recordatori enviat correctament",
+      "message": "El recordatori de l'oferta de credencial s'ha enviat correctament."
     },
     "signCredentialConfirm": {
-      "title": "Firmar Credencial",
+      "title": "Signar credencial",
       "message": "Estàs segur que vols signar aquesta credencial?"
     },
     "signCredentialSuccess": {
-      "title": "Credential firmada",
-      "message": "La credencial ha estat firmada amb èxit."
+      "title": "Credencial signada",
+      "message": "La credencial s'ha signat correctament."
     }
-  },
+  },  
   "credentialOffer": {
     "first-label": "Iniciar sessió al Wallet",
     "second-label": "Obtenir Credencial",
@@ -175,7 +214,8 @@
       "credentialOffer": {
         "invalid-url": "URL no vàlida. No es pot obtenir l'oferta de credencial.",
         "unexpected": "S'ha produït un error inesperat. Torna-ho a intentar més tard o posa't en contacte amb el Representant Legal de la teva empresa per obtenir una nova credencial.",
-        "expired": "Aquesta oferta de credencial no és vàlida. És possible que hagi caducat o que hagi estat substituïda per una nova. Si s'ha enviat una nova oferta, revisi el seu correu electrònic. Si ha caducat, posi's en contacte amb el representant legal de la seva empresa per sol·licitar una nova oferta de credencial."
+        "not-found": "Aquesta oferta de credencial no és vàlida. Pot ser que ja s'hagi descarregat, hagi caducat o hagi estat reemplaçada per una de nova. Si has rebut una nova oferta, consulta el teu correu electrònic. Si ha caducat o no pots trobar-ne cap de vàlida, contacta amb el Representant Legal de la teva empresa per sol·licitar-ne una de nova.",
+        "conflict": "L'oferta de credencial no és vàlida. Pot ser que ja s'hagi descarregat o hagi estat reemplaçada per una de nova. Si has rebut una nova oferta, consulta el teu correu electrònic."
       },
       "serverMailError": {
         "title": "Error del servidor de correu",

@@ -1,6 +1,6 @@
-import {LearCredentialEmployeePayload } from "./lear-credential-employee-payload.dto";
+import { EmployeeMandatee, EmployeeMandator, StrictPower } from "../entity/lear-credential";
 
-export interface ProcedureRequest {
+export interface EmployeeProcedureRequest {
     schema: string,
     format: string,
     payload: LearCredentialEmployeePayload,
@@ -9,3 +9,8 @@ export interface ProcedureRequest {
     response_uri?: string
 }
 
+export interface LearCredentialEmployeePayload {
+  mandator: EmployeeMandator;
+  mandatee: EmployeeMandatee;
+  power: StrictPower[];
+}

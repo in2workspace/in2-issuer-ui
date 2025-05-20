@@ -153,20 +153,19 @@ export class CredentialManagementComponent implements OnInit, AfterViewInit {
   }
 
   public navigateToCreateCredentialAsSigner(): void {
-    this.router.navigate(['/organization/credentials/create2', this.isValidOrganizationIdentifier ? "admin" : ""]);
+    const route = this.isValidOrganizationIdentifier
+      ? ['/organization/credentials/create-as-signer']
+      : ['/organization/credentials/create'];
+  
+    this.router.navigate(route);
   }
+  
 
   public onRowClick(row: CredentialProcedure): void {
     this.navigateToCredentialDetails(row);
   }
 
   public navigateToCredentialDetails(credential_procedures: CredentialProcedure): void {
-    if (credential_procedures.credential_procedure.credential_type !== 'LEAR_CREDENTIAL_EMPLOYEE') {
-      console.warn(
-        `Navigation prevented: Unsupported credential type "${credential_procedures.credential_procedure.credential_type}".`
-      );
-      return;
-    }
     this.router.navigate([
       '/organization/credentials/details',
       credential_procedures.credential_procedure?.procedure_id

@@ -1,10 +1,10 @@
 import { FormCredentialService } from '../form-credential/services/form-credential.service';
-import { Component, Input, OnInit, inject, DestroyRef } from '@angular/core';
+import { Component, OnInit, inject, DestroyRef } from '@angular/core';
 import { AuthService } from "../../../core/services/auth.service";
 import { MatSelectChange, MatSelect, MatSelectTrigger } from '@angular/material/select';
 import { DialogData } from '../dialog/dialog.component';
 import { EMPTY, Observable } from 'rxjs';
-import { TempPower } from 'src/app/core/models/temporal/temp-power.interface';
+import { TempPower } from 'src/app/core/models/temp/temp-power.interface';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MatIcon } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
@@ -14,6 +14,7 @@ import { MatOption } from '@angular/material/core';
 import { MatFormField } from '@angular/material/form-field';
 import { NgIf, NgFor, NgTemplateOutlet, AsyncPipe } from '@angular/common';
 import { DialogWrapperService } from '../dialog/dialog-wrapper/dialog-wrapper.service';
+import { TmfFunction } from 'src/app/core/models/entity/lear-credential';
 
 @Component({
     selector: 'app-power',
@@ -23,10 +24,7 @@ import { DialogWrapperService } from '../dialog/dialog-wrapper/dialog-wrapper.se
     imports: [NgIf, MatFormField, MatSelect, MatSelectTrigger, MatOption, MatButton, NgFor, NgTemplateOutlet, MatSlideToggle, FormsModule, MatMiniFabButton, MatIcon, AsyncPipe, TranslatePipe]
 })
 export class PowerComponent implements OnInit{
-  // set-once-and-don't-change properties
-  @Input() public isDisabled: boolean = false;
-  @Input() public viewMode: 'create' | 'detail' = 'create'; //currently isDisabled and viewMode are interchangeable
-  @Input() public power: TempPower[] = [];
+  // set-once-and-don't-change properties@Input() public power: TempPower[] = [];
   public organizationIdentifierIsIn2: boolean = false;
 
   //streams (form states)
@@ -50,8 +48,7 @@ export class PowerComponent implements OnInit{
   }
 
   public addPower(): void {
-    if (this.isDisabled) return;
-    const selectedPower = this.formService.getPlainSelectedPower();
+    const selectedPower = this.formService.getPlainSelectedPower() as TmfFunction;
 
     if(this.isOptionDisabled(selectedPower)) return;
 
@@ -93,7 +90,7 @@ export class PowerComponent implements OnInit{
         break;
     }
 
-    this.formService.addPower(newPower, this.isDisabled);
+    this.formService.addPower(newPower);
     this.formService.setSelectedPowerName('');
   }
 
