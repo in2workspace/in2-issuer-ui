@@ -66,12 +66,12 @@ export class SignaturesComponent  {
       this.signatureConfigDataSource.data = credentials ?? [];
   }
 
-  editCredential(element: any) {
+  editCredential(signatureConfigurationResponse: SignatureConfigurationResponse) {
     let title= this.translate.instant("signature.settings.modal.edit.title");
 
-    this.signatureConfigService.getSignatureConfigById(element.id).subscribe({
-      next: (credential) => {
-          this.openCredentialDialog('edit', title, credential)
+    this.signatureConfigService.getSignatureConfigById(signatureConfigurationResponse.id).subscribe({
+      next: (signatureConfig) => {
+          this.openCredentialDialog('edit', title, signatureConfig)
       },
       error: (err) => {
         console.error('Error retrieving credential', err);
@@ -79,9 +79,9 @@ export class SignaturesComponent  {
     });
   }
 
-  deleteCredential(credential: SignatureConfigurationResponse) {
+  deleteSignatureConfiguration(signatureConfigurationResponse: SignatureConfigurationResponse) {
     let title= this.translate.instant("signature.settings.modal.delete.title");
-    this.openCredentialDialog('delete', title, credential );
+    this.openCredentialDialog('delete', title, signatureConfigurationResponse );
   }
 
   addCredential(): void {
@@ -90,11 +90,11 @@ export class SignaturesComponent  {
   }
 
 
-  private createFormInjector(mode: FormMode, credential?: SignatureConfigurationResponse): Injector {
+  private createFormInjector(mode: FormMode, signatureConfigurationResponse?: SignatureConfigurationResponse): Injector {
     const providers: StaticProvider[] = [{ provide: FORM_MODE, useValue: mode }];
 
-    if (credential && mode === 'edit') {
-      providers.push({ provide: DATA_CREDENTIAL, useValue: credential });
+    if (signatureConfigurationResponse && mode === 'edit') {
+      providers.push({ provide: DATA_CREDENTIAL, useValue: signatureConfigurationResponse });
     }
 
     return Injector.create({
@@ -103,20 +103,20 @@ export class SignaturesComponent  {
     });
   }
 
-  private buildCreatePayload(formValue: SignatureConfigurationRequest):  SignatureConfigurationRequest {
+  private buildCreatePayload(signatureConfiguationRequest: SignatureConfigurationRequest):  SignatureConfigurationRequest {
     return {
-      ...formValue,
+      ...signatureConfiguationRequest,
       signatureMode: this.signatureMode,
       enableRemoteSignature: true,
     };
   }
 
-  private buildUpdatePayload(formValue: UpdateSignatureConfigurationRequest,signatureConfigInit: SignatureConfigurationResponse): Partial<UpdateSignatureConfigurationRequest> {
+  private buildUpdatePayload(updateSignatureConfigurationRequest: UpdateSignatureConfigurationRequest,signatureConfigInit: SignatureConfigurationResponse): Partial<UpdateSignatureConfigurationRequest> {
 
     const entries: [keyof UpdateSignatureConfigurationRequest, string][] = [];
 
-    for (const key of Object.keys(formValue) as (keyof UpdateSignatureConfigurationRequest)[]) {
-      const currentValue = formValue[key];
+    for (const key of Object.keys(updateSignatureConfigurationRequest) as (keyof UpdateSignatureConfigurationRequest)[]) {
+      const currentValue = updateSignatureConfigurationRequest[key];
 
       if (currentValue === SECRET_INITIAL_VALUE ||currentValue === '' || currentValue == null) continue;
 
@@ -138,30 +138,30 @@ export class SignaturesComponent  {
   }
 
 
-  private handleCreate(formValue: any): Observable<any> {
-    const payload = this.buildCreatePayload(formValue);
+  private handleCreate(signatureConfigurationRequest: SignatureConfigurationRequest): Observable<any> {
+    const payload = this.buildCreatePayload(signatureConfigurationRequest);
     return this.signatureConfigService.addCredentialConfiguration(payload);
   }
 
-  private handleEdit(formValue: any, credential: SignatureConfigurationResponse): Observable<any> {
-    let payload = this.buildUpdatePayload(formValue, credential);
+  private handleEdit(updateSignatureConfigurationRequest: UpdateSignatureConfigurationRequest, signatureConfigurationResponse: SignatureConfigurationResponse): Observable<any> {
+    let payload = this.buildUpdatePayload(updateSignatureConfigurationRequest, signatureConfigurationResponse);
      //If you only wrote the reason but didn't edit anything, it means there are no changes.
     if (!Object.keys(payload).length
       || (Object.keys(payload).length === 1 && payload?.rationale)) {
       return of({ noChanges: true });
     }
-    return this.signatureConfigService.updateConfiguration(credential.id, payload);
+    return this.signatureConfigService.updateConfiguration(signatureConfigurationResponse.id, payload);
   }
 
-  private handleDelete(formValue: any, credential: SignatureConfigurationResponse): Observable<any> {
-    const rationale = formValue?.rationale;
+  private handleDelete(updateSignatureConfigurationRequest: UpdateSignatureConfigurationRequest, credential: SignatureConfigurationResponse): Observable<any> {
+    const rationale = updateSignatureConfigurationRequest?.rationale;
     return this.signatureConfigService.deleteSignatureConfiguration(credential.id, rationale);
   }
 
 
   private getAsyncOperation(
     mode: FormMode,
-    credential?: SignatureConfigurationResponse
+    signatureConfigurationResponse?: SignatureConfigurationResponse
   ): (formValue: any) => Observable<any> {
     return (formValue: any) => {
       switch (mode) {
@@ -169,13 +169,13 @@ export class SignaturesComponent  {
           return this.handleCreate(formValue);
 
         case 'edit':
-          return credential
-            ? this.handleEdit(formValue, credential)
+          return signatureConfigurationResponse
+            ? this.handleEdit(formValue, signatureConfigurationResponse)
             : of(null);
 
         case 'delete':
-          return credential
-            ? this.handleDelete(formValue, credential)
+          return signatureConfigurationResponse
+            ? this.handleDelete(formValue, signatureConfigurationResponse)
             : of(null);
 
         default:
@@ -185,8 +185,8 @@ export class SignaturesComponent  {
   }
 
 
-  openCredentialDialog(mode: FormMode, title: string, credential?: SignatureConfigurationResponse): void {
-    const injector = this.createFormInjector(mode, credential);
+  openCredentialDialog(mode: FormMode, title: string, signatureConfigurationResponse?: SignatureConfigurationResponse): void {
+    const injector = this.createFormInjector(mode, signatureConfigurationResponse);
 
     const formPortal = new ComponentPortal(FormCloudSignatureConfigurationComponent, null, injector);
 
@@ -203,7 +203,7 @@ export class SignaturesComponent  {
     const validateForm = (formInst: any) => formInst.isValid();
     const getFormValue = (formInst: any) => formInst.getFormValue();
 
-    const asyncOperation = this.getAsyncOperation(mode, credential);
+    const asyncOperation = this.getAsyncOperation(mode, signatureConfigurationResponse);
 
     const dialogRef = this.dialog.openDialogWithForm(dialogData, validateForm, getFormValue, asyncOperation);
 

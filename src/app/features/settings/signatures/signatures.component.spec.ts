@@ -78,6 +78,16 @@ describe('SignaturesComponent', () => {
     updateIsLoading: jest.fn()
   };
 
+  const mockSignatureConfigurationResponse: SignatureConfigurationResponse = {
+    id: 'cred1',
+    enableRemoteSignature: true,
+    signatureMode: 'CLOUD',
+    cloudProviderId: 'cp1',
+    clientId: 'cli1',
+    credentialId: 'cred1',
+    credentialName: 'awsCred'
+  };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ SignaturesComponent, NoopAnimationsModule, TranslateModule.forRoot() ],
@@ -208,7 +218,7 @@ describe('SignaturesComponent', () => {
 
   it('editCredential should retrieve credential and open dialog in edit mode', fakeAsync(() => {
     jest.spyOn<any, any>(component as any, 'openCredentialDialog');
-    component.editCredential({ id: 'cred1' });
+    component.editCredential(mockSignatureConfigurationResponse);
     tick();
     expect(mockSignatureConfigService.getSignatureConfigById).toHaveBeenCalledWith('cred1');
     expect((component as any).openCredentialDialog)
@@ -218,7 +228,7 @@ describe('SignaturesComponent', () => {
   it('deleteCredential should open dialog in delete mode', () => {
     jest.spyOn<any, any>(component as any, 'openCredentialDialog');
     const cred = { id: 'cred1' } as SignatureConfigurationResponse;
-    component.deleteCredential(cred);
+    component.deleteSignatureConfiguration(cred);
     expect((component as any).openCredentialDialog).toHaveBeenCalledWith('delete', expect.any(String), cred);
   });
 
