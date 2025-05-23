@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, ComponentRef, inject, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { MatButton } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -6,7 +6,7 @@ import { AsyncPipe, NgClass } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Observable, Subject } from 'rxjs';
 import { LoaderService } from 'src/app/core/services/loader.service';
-import { ComponentPortal, DomPortal, PortalModule, TemplatePortal } from '@angular/cdk/portal';
+import { CdkPortalOutlet, ComponentPortal, DomPortal, PortalModule, TemplatePortal } from '@angular/cdk/portal';
 import { MatIconModule } from '@angular/material/icon';
 
 export type DialogStatus = 'default' | 'error';
@@ -21,6 +21,7 @@ export interface DialogData {
   loadingData?: LoadingData;
   confirmationLabel?: string;
   cancelLabel?: string;
+  style?: string;
 }
 export interface DialogDefaultContent {
   data: DialogData;
@@ -58,7 +59,12 @@ export class DialogComponent {
   private readonly confirmSubj$ = new Subject<true>();
 
   public constructor(){
-    this.dialogRef.addPanelClass('dialog-custom');
+    if(this.data?.style){
+      this.dialogRef.addPanelClass(this.data.style);
+    }
+    else{
+      this.dialogRef.addPanelClass('dialog-custom');
+    }
     this.updateStatus();
   }
   public updateStatus(): void{
@@ -109,6 +115,16 @@ export class DialogComponent {
     else if(this.data.confirmationType === 'async'){
       this.confirmWithoutClosing();
     }
+  }
+
+  @ViewChild(CdkPortalOutlet) portalOutlet!: CdkPortalOutlet;
+
+  getEmbeddedInstance<T>(): T | null {
+    const attachedRef = this.portalOutlet?.attachedRef;
+    if (attachedRef && 'instance' in attachedRef) {
+      return (attachedRef as ComponentRef<T>).instance;
+    }
+    return null;
   }
 
   public confirmWithoutClosing(){
