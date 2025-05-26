@@ -82,9 +82,9 @@ export class CredentialProcedureService {
     );
   }
 
-  public getCredentialOfferByTransactionCode(transactionCode: string): Observable<CredentialOfferResponse> {
-    console.info('Getting credential offer by transaction code: ' + transactionCode);
-    return this.http.get<CredentialOfferResponse>(`${this.credentialOfferUrl}/transaction-code/${transactionCode}`).pipe(
+  public getCredentialOfferByActivationCode(activationCode: string): Observable<CredentialOfferResponse> {
+    console.info('Getting credential offer by transaction code: ' + activationCode);
+    return this.http.get<CredentialOfferResponse>(`${this.credentialOfferUrl}/transaction-code/${activationCode}`).pipe(
       catchError(this.handleError),
       catchError(this.handleCredentialOfferError)
     );

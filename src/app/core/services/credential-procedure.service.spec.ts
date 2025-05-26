@@ -253,7 +253,7 @@ describe('CredentialProcedureService', () => {
     const transactionCode = 'abc123';
     const mockResponse = JSON.stringify({ qrCode: 'mockQRCode' });
 
-    service.getCredentialOfferByTransactionCode(transactionCode).subscribe(data => {
+    service.getCredentialOfferByActivationCode(transactionCode).subscribe(data => {
       expect(data).toBe('mockQRCode');
     });
 
@@ -266,7 +266,7 @@ describe('CredentialProcedureService', () => {
     const transactionCode = 'abc123';
     const mockResponse = JSON.stringify({});
 
-    service.getCredentialOfferByTransactionCode(transactionCode).subscribe(data => {
+    service.getCredentialOfferByActivationCode(transactionCode).subscribe(data => {
       expect(data).toBe(mockResponse);
     });
 
@@ -279,7 +279,7 @@ describe('CredentialProcedureService', () => {
     const transactionCode = 'abc123';
     const invalidJSONResponse = 'Invalid JSON string';
 
-    service.getCredentialOfferByTransactionCode(transactionCode).subscribe(data => {
+    service.getCredentialOfferByActivationCode(transactionCode).subscribe(data => {
       expect(data).toBe(invalidJSONResponse);
     });
 
@@ -427,7 +427,7 @@ describe('get credential offer by c-code', () => {
       const transactionCode = 'test-code';
       const error = new HttpErrorResponse({ status: 404, error: {} });
   
-      service.getCredentialOfferByTransactionCode(transactionCode).subscribe({
+      service.getCredentialOfferByActivationCode(transactionCode).subscribe({
         next: () => fail('Expected error'),
         error: err => {
           expect(err).toBe(error);

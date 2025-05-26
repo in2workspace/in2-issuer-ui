@@ -11,7 +11,6 @@ import { catchError, delayWhen, EMPTY, filter, interval, map, merge, Observable,
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogWrapperService } from 'src/app/shared/components/dialog/dialog-wrapper/dialog-wrapper.service';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
-import { HttpErrorResponse } from '@angular/common/http';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { CredentialOfferResponse } from 'src/app/core/models/dto/credential-offer-response.dto';
@@ -23,7 +22,8 @@ export type StepperIndex = 0 | 1;
 export type CredentialOfferStep = 'onboarding' | 'offer';
 export interface CredentialOfferParams {
   credential_offer_uri: string|undefined,
-  transaction_code: string|undefined,
+  activation_code: string|undefined,
+  //todo naming c_transaction_code? ?
   c_transaction_code: string|undefined,
   c_transaction_code_expires_in: number|undefined //expected in seconds
 }
@@ -34,7 +34,7 @@ export interface CredentialOfferParamsState extends CredentialOfferParams {
 
 export const undefinedCredentialOfferParamsState: CredentialOfferParamsState = { 
     credential_offer_uri: undefined,
-    transaction_code: undefined,
+    activation_code: undefined,
     c_transaction_code: undefined,
     c_transaction_code_expires_in: undefined,
     loading: false,
@@ -275,12 +275,11 @@ export class CredentialOfferStepperComponent implements OnInit{
   }
 
   public getUrlParams(): CredentialOfferParamsState{
-    const params = this.route.snapshot.queryParams;
-    const transactionCodeParam = params['transaction_code'];
-    const cCodeParam = params['c'];
+    const activationCodeParam = this.route.snapshot.paramMap.get('activationCode') ?? undefined;
+    const cCodeParam = this.route.snapshot.queryParams['c'];
 
-    if(!transactionCodeParam){
-      console.error("Client error: Missing transaction code in the URL. Can't get credential offer.");
+    if(!activationCodeParam){
+      console.error("Client error: Missing activation code in the URL. Can't get credential offer.");
       
       this.translate.get("error.credentialOffer.invalid-url")
       .pipe(take(1))
@@ -292,7 +291,7 @@ export class CredentialOfferStepperComponent implements OnInit{
     }
     const updatedParams: CredentialOfferParamsState = {
       credential_offer_uri: undefined,
-      transaction_code: transactionCodeParam,
+      activation_code: activationCodeParam,
       c_transaction_code: cCodeParam,
       c_transaction_code_expires_in: undefined,
       loading: false,
@@ -307,8 +306,8 @@ export class CredentialOfferStepperComponent implements OnInit{
     
     if(offer?.c_transaction_code){
       params = this.getCredentialOfferByCTransactionCode(offer.c_transaction_code);
-    }else if(offer?.transaction_code){
-      params = this.getCredentialOfferByTransactionCode(offer.transaction_code);
+    }else if(offer?.activation_code){
+      params = this.getCredentialOfferByActivationCode(offer.activation_code);
     }else{
       this.redirectToHome();
       console.error("Client error: Transaction code not found. Can't get credential offer");
@@ -318,8 +317,8 @@ export class CredentialOfferStepperComponent implements OnInit{
     return params;
   }
 
-  public getCredentialOfferByTransactionCode(transactionCode:string): Observable<CredentialOfferResponse> {
-    if(!transactionCode){
+  public getCredentialOfferByActivationCode(activationCode:string): Observable<CredentialOfferResponse> {
+    if(!activationCode){
       console.error("No transaction code was found, can't refresh QR.");
       const message = this.translate.instant("error.credentialOffer.invalid-url");
       this.dialog.openErrorInfoDialog(message);
@@ -327,7 +326,7 @@ export class CredentialOfferStepperComponent implements OnInit{
       return throwError(()=>new Error());
     }
 
-    return this.credentialProcedureService.getCredentialOfferByTransactionCode(transactionCode)
+    return this.credentialProcedureService.getCredentialOfferByActivationCode(activationCode)
     .pipe(
       takeUntilDestroyed(this.destroyRef),
     )
@@ -350,7 +349,7 @@ export class CredentialOfferStepperComponent implements OnInit{
 
   public updateUrlParams(offerParams:CredentialOfferParams): void{
       const cCode = offerParams.c_transaction_code;
-      const cCodeParam = cCode ? {c:cCode} : undefined;
+      const cCodeParam = cCode ? { c:cCode } : undefined;
         if(cCodeParam){
           this.router.navigate(
             [], {
