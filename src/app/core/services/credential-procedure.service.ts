@@ -83,16 +83,18 @@ export class CredentialProcedureService {
   }
 
   public getCredentialOfferByActivationCode(activationCode: string): Observable<CredentialOfferResponse> {
-    console.info('Getting credential offer by transaction code: ' + activationCode);
-    return this.http.get<CredentialOfferResponse>(`${this.credentialOfferUrl}/transaction-code/${activationCode}`).pipe(
+    console.info('Getting credential offer by activation code: ' + activationCode);
+    // todo API route to be defined
+    return this.http.get<CredentialOfferResponse>(`${this.credentialOfferUrl}/activation-code/${activationCode}`).pipe(
       catchError(this.handleError),
       catchError(this.handleCredentialOfferError)
     );
   }
 
-  public getCredentialOfferByCTransactionCode(cTransactionCode: string): Observable<CredentialOfferResponse> {
-    console.info('Refreshing QR code: getting credential offer by c-transaction code: ' + cTransactionCode);
-    return this.http.get<CredentialOfferResponse>(`${this.credentialOfferUrl}/c-transaction-code/${cTransactionCode}`).pipe(
+  public getCredentialOfferByCCode(cCode: string): Observable<CredentialOfferResponse> {
+    console.info('Refreshing QR code: getting credential offer by c code: ' + cCode);
+    // todo API route to be defined
+    return this.http.get<CredentialOfferResponse>(`${this.credentialOfferUrl}/c-code/${cCode}`).pipe(
       catchError(this.handleError),
       catchError(this.handleCredentialOfferError)
     );

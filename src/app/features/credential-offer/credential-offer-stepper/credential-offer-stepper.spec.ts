@@ -7,7 +7,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { OidcSecurityService, StsConfigLoader } from "angular-auth-oidc-client";
 import { AuthService } from 'src/app/core/services/auth.service';
 import { CUSTOM_ELEMENTS_SCHEMA, ViewContainerRef } from '@angular/core';
-import { CredentialOfferParamsState, CredentialOfferStepperComponent, defaultTotalAvailableTimeInMs, loadingBufferTimeInMs, undefinedCredentialOfferParamsState } from './credential-offer-stepper.component';
+import { CredentialOfferParamsState, CredentialOfferStepperComponent, loadingBufferTimeInMs, undefinedCredentialOfferParamsState } from './credential-offer-stepper.component';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { HomeComponent } from '../../home/home.component';
@@ -21,7 +21,7 @@ describe('Credential Offer Stepper', () => {
   let fixture: ComponentFixture<CredentialOfferStepperComponent>;
   let procedureService: {
     getCredentialOfferByActivationCode: jest.Mock,
-    getCredentialOfferByCTransactionCode: jest.Mock
+    getCredentialOfferByCCode: jest.Mock
   };
   let configService: any
 
@@ -48,7 +48,7 @@ describe('Credential Offer Stepper', () => {
     };
     procedureService = {
         getCredentialOfferByActivationCode: jest.fn(),
-        getCredentialOfferByCTransactionCode: jest.fn()
+        getCredentialOfferByCCode: jest.fn()
     }
 
     await TestBed.configureTestingModule({
@@ -131,9 +131,9 @@ it('should update index and step', ()=>{
 it('should initialize initUrlParams$ correctly', fakeAsync(() => {
   const offerParams = {
     credential_offer_uri: 'cred-offer-uri',
-    activation_code: 'transaction-code-param',
-    c_transaction_code: 'c-code-param',
-    c_transaction_code_expires_in: 10,
+    activation_code: 'activation-code-param',
+    c_code: 'c-code-param',
+    c_code_expires_in: 10,
     loading: false,
     error: false
   };
@@ -147,7 +147,7 @@ it('should initialize initUrlParams$ correctly', fakeAsync(() => {
 }));
 
 it('should fetch credential offer and emit correct values', fakeAsync(() => {
-  const mockParams = { credential_offer_uri: 'cred-uri', c_transaction_code: 'c-code' };
+  const mockParams = { credential_offer_uri: 'cred-uri', c_code: 'c-code' };
  jest.spyOn(component, 'getCredentialOffer').mockReturnValue(of(mockParams));
 
  component.fetchedCredentialOffer$.subscribe(paramsState => {
@@ -172,16 +172,16 @@ it('should emit the correct offerParams$ state when initUrlParams$ and fetchedCr
   const firstInitUrlParamsMock: CredentialOfferParamsState = {
     credential_offer_uri: 'cred-one',
     activation_code: 'trans-one',
-    c_transaction_code: 'c-one',
-    c_transaction_code_expires_in: 10,
+    c_code: 'c-one',
+    c_code_expires_in: 10,
     loading: false,
     error: false
   }; 
   const secondInitOfferMock: CredentialOfferParamsState = {
     credential_offer_uri: 'cred-two',
     activation_code: 'trans-two',
-    c_transaction_code: 'c-two',
-    c_transaction_code_expires_in: 20,
+    c_code: 'c-two',
+    c_code_expires_in: 20,
     loading: false,
     error: false
   };
@@ -215,8 +215,8 @@ describe('startOrEndFirstDountdown', ()=>{
       const mockOffer: CredentialOfferParamsState = {
         credential_offer_uri: undefined,
         activation_code: 'mock-trans-code',
-        c_transaction_code: 'mock-c-code',
-        c_transaction_code_expires_in: 10,
+        c_code: 'mock-c-code',
+        c_code_expires_in: 10,
         loading: true,
         error: false
        };
@@ -240,8 +240,8 @@ describe('startOrEndFirstDountdown', ()=>{
     const mockOffer: CredentialOfferParamsState = {
       credential_offer_uri: undefined,
       activation_code: 'mock-trans-code',
-      c_transaction_code: 'mock-c-code',
-      c_transaction_code_expires_in: 10,
+      c_code: 'mock-c-code',
+      c_code_expires_in: 10,
       loading: false,
       error: true
      };
@@ -466,8 +466,8 @@ describe('onSelectedStepChange', () => {
       const errorParamsResult: CredentialOfferParamsState = {
         credential_offer_uri: undefined,
         activation_code: undefined,
-        c_transaction_code: 'someCCode',
-        c_transaction_code_expires_in: undefined,
+        c_code: 'someCCode',
+        c_code_expires_in: undefined,
         loading: false,
         error: false
       }
@@ -478,7 +478,7 @@ describe('onSelectedStepChange', () => {
   
     it('should return updated params with activation_code and c', () => {
     const fakeParamMap = convertToParamMap({
-      activationCode: 'transaction123'
+      activationCode: 'code123'
     });
 
     component['route'].snapshot = {
@@ -493,16 +493,16 @@ describe('onSelectedStepChange', () => {
       expect(consoleErrorSpy).not.toHaveBeenCalled();
       expect(result).toEqual({
         credential_offer_uri: undefined,
-        activation_code: 'transaction123',
-        c_transaction_code: 'someCCode',
+        activation_code: 'code123',
+        c_code: 'someCCode',
         loading: false,
         error: false
       });
     });
   
-    it('should return default values for missing c_transaction_code', () => {
+    it('should return default values for missing c_code', () => {
       const fakeParamMap = convertToParamMap({
-        activationCode: 'transaction123'
+        activationCode: 'code123'
       });
 
       component['route'].snapshot = {
@@ -515,8 +515,8 @@ describe('onSelectedStepChange', () => {
       expect(consoleErrorSpy).not.toHaveBeenCalled();
       expect(result).toEqual({
         credential_offer_uri: undefined,
-        activation_code: 'transaction123',
-        c_transaction_code: undefined,
+        activation_code: 'code123',
+        c_code: undefined,
         loading: false,
         error: false
       });
@@ -529,7 +529,7 @@ describe('getCredentialOffer', () => {
     jest.clearAllMocks();
   });
 
-  it('should throw an error when no activation_code or c_transaction_code is available', (done) => {
+  it('should throw an error when no activation_code or c_code is available', (done) => {
     jest.spyOn(component, 'offerParams$').mockReturnValue(undefinedCredentialOfferParamsState);
     const dialogSpy = jest.spyOn(component['dialog'], 'openErrorInfoDialog');
     const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -537,58 +537,58 @@ describe('getCredentialOffer', () => {
 
     component.getCredentialOffer().subscribe({
       error: (error) => {
-        expect(error.message).toBe('No transaction nor c code to fetch credential offer.');
-        expect(consoleErrorSpy).toHaveBeenCalledWith("Client error: Transaction code not found. Can't get credential offer");
+        expect(error.message).toBe('No activation nor c code to fetch credential offer.');
+        expect(consoleErrorSpy).toHaveBeenCalledWith("Client error: Activation code not found. Can't get credential offer");
         expect(dialogSpy).toHaveBeenCalledWith(message);
         done();
       }
     });
   });
 
-  it('should fetch credential offer by c_transaction_code', () => {
-    const mockCTransactionCode = 'mockCTransactionCode';
+  it('should fetch credential offer by c_code', () => {
+    const mockCCode = 'mockCCode';
     const mockOffer = {
       credential_offer_uri: undefined,
       activation_code: 'mock-trans-code',
-      c_transaction_code: mockCTransactionCode,
-      c_transaction_code_expires_in: 10,
+      c_code: mockCCode,
+      c_code_expires_in: 10,
       loading: false,
       error: false
     };
     const mockResponse = {
       credential_offer_uri: 'some uri',
-      c_transaction_code: 'someCCode'
+      c_code: 'someCCode'
     };
 
     jest.spyOn(component, 'offerParams$').mockReturnValue(mockOffer);
-    procedureService.getCredentialOfferByCTransactionCode.mockReturnValue(of(mockResponse));
+    procedureService.getCredentialOfferByCCode.mockReturnValue(of(mockResponse));
 
     component.getCredentialOffer().subscribe((result) => {
-      expect(procedureService.getCredentialOfferByCTransactionCode).toHaveBeenCalledWith(mockCTransactionCode);
+      expect(procedureService.getCredentialOfferByCCode).toHaveBeenCalledWith(mockCCode);
       expect(result).toEqual(mockResponse);
     });
   });
 
   it('should fetch credential offer by activation_code', () => {
-    const mockTransactionCode = 'mockTransactionCode';
+    const mockActivationCode = 'mockActivationCode';
     const mockOffer = {
       credential_offer_uri: undefined,
-      activation_code: mockTransactionCode,
-      c_transaction_code: undefined,
-      c_transaction_code_expires_in: 10,
+      activation_code: mockActivationCode,
+      c_code: undefined,
+      c_code_expires_in: 10,
       loading: false,
       error: false
     };
     const mockResponse = {
       credential_offer_uri: 'some uri',
-      c_transaction_code: 'someCCode'
+      c_code: 'someCCode'
     };
 
     jest.spyOn(component, 'offerParams$').mockReturnValue(mockOffer);
     procedureService.getCredentialOfferByActivationCode.mockReturnValue(of(mockResponse));
 
     component.getCredentialOffer().subscribe((result) => {
-      expect(procedureService.getCredentialOfferByActivationCode).toHaveBeenCalledWith(mockTransactionCode);
+      expect(procedureService.getCredentialOfferByActivationCode).toHaveBeenCalledWith(mockActivationCode);
       expect(result).toEqual(mockResponse);
     });
   });
@@ -599,7 +599,7 @@ describe('getCredentialOfferByActivationCode', () => {
     jest.clearAllMocks();
   });
 
-  it('should open error dialog and throw an error when transactionCode is missing', (done) => {
+  it('should open error dialog and throw an error when activationCode is missing', (done) => {
     const dialogSpy = jest.spyOn(component['dialog'], 'openErrorInfoDialog');
     const redirectSpy = jest.spyOn(component, 'redirectToHome');
     const message = component['translate'].instant("error.credentialOffer.invalid-url");
@@ -616,9 +616,9 @@ describe('getCredentialOfferByActivationCode', () => {
     });
   });
 
-  it('should call the service and return the credential offer when transactionCode is valid', (done) => {
-    const mockActivationCode = 'validTransactionCode';
-    const mockResponse = { credential_offer_uri: 'offer uri', c_transaction_code: 'Test c' };
+  it('should call the service and return the credential offer when activation code is valid', (done) => {
+    const mockActivationCode = 'validActivationCode';
+    const mockResponse = { credential_offer_uri: 'offer uri', c_code: 'Test c' };
 
     procedureService.getCredentialOfferByActivationCode.mockReturnValue(of(mockResponse));
 
@@ -634,17 +634,17 @@ describe('getCredentialOfferByActivationCode', () => {
 
 
 });
-describe('getCredentialOfferByCTransactionCode', () => {
+describe('getCredentialOfferByCCode', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should open error dialog and throw an error when cTransactionCode is missing', (done) => {
+  it('should open error dialog and throw an error when CCode is missing', (done) => {
     const redirectSpy = jest.spyOn(component, 'redirectToHome');
     const dialogSpy = jest.spyOn(component['dialog'], 'openErrorInfoDialog');
     const message = component['translate'].instant("error.credentialOffer.invalid-url");
 
-    const result$ = component.getCredentialOfferByCTransactionCode('');
+    const result$ = component.getCredentialOfferByCCode('');
 
     result$.subscribe({
       error: (error) => {
@@ -656,17 +656,17 @@ describe('getCredentialOfferByCTransactionCode', () => {
     });
   });
 
-  it('should call the service and return the credential offer when cTransactionCode is valid', (done) => {
-    const mockTransactionCode = 'validCTransactionCode';
-    const mockResponse = { credential_offer_uri: 'offer uri', c_transaction_code: 'Test c' };
+  it('should call the service and return the credential offer when CCode is valid', (done) => {
+    const mockCCode = 'validCCode';
+    const mockResponse = { credential_offer_uri: 'offer uri', c_code: 'Test c' };
 
-    procedureService.getCredentialOfferByCTransactionCode.mockReturnValue(of(mockResponse));
+    procedureService.getCredentialOfferByCCode.mockReturnValue(of(mockResponse));
 
-    const result$ = component.getCredentialOfferByCTransactionCode(mockTransactionCode);
+    const result$ = component.getCredentialOfferByCCode(mockCCode);
 
     result$.subscribe((response) => {
-      expect(procedureService.getCredentialOfferByCTransactionCode)
-        .toHaveBeenCalledWith(mockTransactionCode);
+      expect(procedureService.getCredentialOfferByCCode)
+        .toHaveBeenCalledWith(mockCCode);
       expect(response).toEqual(mockResponse);
       done();
     });
@@ -674,8 +674,8 @@ describe('getCredentialOfferByCTransactionCode', () => {
 
 });
 
-it('should not navigate when c_transaction_code is not provided', () => {
-  const mockParams = { c_transaction_code: null } as any;
+it('should not navigate when c_code is not provided', () => {
+  const mockParams = { c_code: null } as any;
   const navigateSpy = jest.spyOn(component['router'], 'navigate');
 
   component.updateUrlParams(mockParams);
@@ -683,8 +683,8 @@ it('should not navigate when c_transaction_code is not provided', () => {
   expect(navigateSpy).not.toHaveBeenCalled();
 });
 
-it('should navigate when c_transaction_code is provided', () => {
-  const mockParams = { c_transaction_code: 'valid-code' } as any;
+it('should navigate when c_code is provided', () => {
+  const mockParams = { c_code: 'valid-code' } as any;
   const navigateSpy = jest.spyOn(component['router'], 'navigate');
 
   component.updateUrlParams(mockParams);
