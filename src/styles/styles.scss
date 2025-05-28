@@ -48,10 +48,10 @@ $custom-theme: mat.m2-define-light-theme((
   --Dark-Blue: #{$Dark-Blue};
   --Light-Blue-Secondary: #{$Light-Blue-Secondary};
   --white: #{$White};
-  --primary-custom-color: #2d58a7; 
-  --primary-contrast-custom-color: #ffffff; 
-  --secondary-custom-color: #2cb6b2; 
-  --secondary-contrast-custom-color: #dde6f6; 
+  --primary-custom-color: #2d58a7;
+  --primary-contrast-custom-color: #ffffff;
+  --secondary-custom-color: #2cb6b2;
+  --secondary-contrast-custom-color: #dde6f6;
   @include mat.all-component-themes($custom-theme);
 }
 
@@ -77,3 +77,6 @@ p{
   @include mat.all-component-densities(-3);
 }
 
+.ml-2{
+  margin-left:2rem ;
+}

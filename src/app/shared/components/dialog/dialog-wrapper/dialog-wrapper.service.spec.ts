@@ -362,6 +362,102 @@ describe('DialogWrapperService', () => {
   
     expect(result).toBe(dialogRefMock);
   });
+
+  it('should open dialog and execute async operation with valid form', () => {
+    const mockFormValue = { foo: 'bar' };
+    const validateForm = jest.fn().mockReturnValue(true);
+    const getFormValue = jest.fn().mockReturnValue(mockFormValue);
+    const asyncOperation = jest.fn(() => of({}));
+  
+    const afterConfirmSubject = new Subject<void>();
+    const embeddedInstanceMock = {
+      isValid: jest.fn().mockReturnValue(true),
+      getFormValue: jest.fn().mockReturnValue(mockFormValue)
+    };
+  
+    const dialogRefMock = {
+      componentInstance: {
+        afterConfirm$: () => afterConfirmSubject.asObservable(),
+        getEmbeddedInstance: jest.fn(() => embeddedInstanceMock)
+      },
+      close: jest.fn(),
+      disableClose: true
+    } as unknown as MatDialogRef<DialogComponent, any>;
+  
+    matDialogMock.open.mockReturnValue(dialogRefMock);
+  
+    const dialogData: DialogData = {
+      title: 'Test Dialog',
+      message: '',
+      confirmationType: 'async',
+      status: 'default',
+    };
+  
+    const resultRef = service.openDialogWithForm(
+      dialogData,
+      validateForm,
+      getFormValue,
+      asyncOperation
+    );
+  
+    afterConfirmSubject.next();
+    afterConfirmSubject.complete();
+  
+    expect(matDialogMock.open).toHaveBeenCalledWith(DialogComponent, {
+      data: { ...dialogData },
+      autoFocus: false,
+      disableClose: true,
+    });
+  
+    expect(resultRef).toBe(dialogRefMock);
+    expect(validateForm).toHaveBeenCalledWith(embeddedInstanceMock);
+    expect(getFormValue).toHaveBeenCalledWith(embeddedInstanceMock);
+    expect(asyncOperation).toHaveBeenCalledWith(mockFormValue);
+    expect(dialogRefMock.close).toHaveBeenCalled();
+    expect(loaderServiceMock.updateIsLoading).toHaveBeenCalledWith(true);
+    expect(loaderServiceMock.updateIsLoading).toHaveBeenCalledWith(false);
+  });
+  
+  it('should not proceed if form is invalid and should mark it as touched', () => {
+    const validateForm = jest.fn().mockReturnValue(false);
+    const getFormValue = jest.fn();
+    const asyncOperation = jest.fn();
+  
+    const afterConfirmSubject = new Subject<void>();
+  
+    const embeddedInstanceMock = {
+      markTouched: jest.fn()
+    };
+  
+    const dialogRefMock = {
+      componentInstance: {
+        afterConfirm$: () => afterConfirmSubject.asObservable(),
+        getEmbeddedInstance: jest.fn(() => embeddedInstanceMock)
+      },
+      close: jest.fn()
+    } as unknown as MatDialogRef<DialogComponent, any>;
+  
+    matDialogMock.open.mockReturnValue(dialogRefMock);
+  
+    const dialogData: DialogData = {
+      title: 'Test Invalid',
+      message: '',
+      confirmationType: 'async',
+      status: 'default',
+    };
+  
+    service.openDialogWithForm(dialogData, validateForm, getFormValue, asyncOperation);
+  
+    afterConfirmSubject.next();
+    afterConfirmSubject.complete();
+  
+    expect(validateForm).toHaveBeenCalledWith(embeddedInstanceMock);
+    expect(embeddedInstanceMock.markTouched).toHaveBeenCalled();
+    expect(getFormValue).not.toHaveBeenCalled();
+    expect(asyncOperation).not.toHaveBeenCalled();
+    expect(dialogRefMock.close).not.toHaveBeenCalled();
+  });
+  
   
   
 });
