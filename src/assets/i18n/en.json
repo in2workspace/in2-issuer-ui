@@ -21,17 +21,17 @@
     "footer-license": "CC BY 4.0",
     "footer-privacy": "Privacy Policy"
   },
-  "navbar":{
-    "menu":{
-      "logout":"Logout",
-      "settings":"Settings"
+  "navbar": {
+    "menu": {
+      "logout": "Logout",
+      "settings": "Settings"
     }
   },
-  "sidenav":{
-    "settings":"Settings",
-    "schemes":"Schemes",
-    "signatures":"Signatures",
-    "trushFramework":"TF"
+  "sidenav": {
+    "settings": "Settings",
+    "schemes": "Schemes",
+    "signatures": "Signatures",
+    "trushFramework": "TF"
   },
   "mandator": {
     "organizationid": "Company VAT number",
@@ -134,7 +134,7 @@
     "expired-title": "Credential offer expiring",
     "ask-refresh": "Credential offer is about to expire. Would you like to refresh it or leave? If it expires, you will need to request a new one from your legal representative.",
     "remaining-time": "Time remaining:",
-    "first-step":{
+    "first-step": {
       "title": "Scan the QR code to log in and access the DOME Wallet.",
       "test-purposes": "For tests purposes, access the "
     },
@@ -157,7 +157,7 @@
     "credentialType": "Credential Type",
     "updated": "Updated",
     "cancel": "Cancel",
-    "create" : "Create Credential",
+    "create": "Create Credential",
     "buttonAdmin": "New credential as Signer",
     "search": "Search by Subject",
     "searchPlaceholder": "Joe Doe"
@@ -182,11 +182,11 @@
     "invalid_power_title": "Access Denied",
     "invalid_power_message": "You do not have the required power to access.",
     "remove-dialog": {
-      "title":"Remove power",
+      "title": "Remove power",
       "message": "Are you sure you want to remove this power? "
     }
   },
-  "credentialIssuance":{
+  "credentialIssuance": {
     "learCredentialEmployee": "LEARCredentialEmployee",
     "create-confirm-dialog": {
       "title": "Create credential",
@@ -207,8 +207,8 @@
     "one_power_min": "There must be at least one power selected, and each power must have at least one action selected.",
     "unknown_error": "An unknown error occurred. Please try again.",
     "policy": {
-        "title": "Access Denied",
-        "message": "You do not have the required power to access."
+      "title": "Access Denied",
+      "message": "You do not have the required power to access."
     },
     "credentialOffer": {
       "invalid-url": "Unexpected error: invalid URL, can't get credential offer.",
@@ -232,7 +232,7 @@
       "min_9": "Minimum 9 characters",
       "min_7": "Minimum 7 characters",
       "min_2": "Minimum 2 characters",
-      "email":{
+      "email": {
         "invalid": "Invalid email. It may contain an invalid character or a character in an incorrect position.",
         "local_part_max": "The local part of the email can't exceed 64 characters.",
         "domain_part_max": "The domain part of the email can't exceed 189 characters.",
@@ -248,7 +248,49 @@
     "ok": "Ok",
     "close": "Close",
     "cancel": "Cancel",
-    "accept": "Accept"
+    "accept": "Accept",
+    "delete": "Delete",
+    "save": "Save"
+  },
+  "signature": {
+    "settings": {
+      "title": "Signature Configuration",
+      "enableRemote": "Enable remote signature",
+      "save": "Save",
+      "mode": {
+        "CLOUD": "Cloud",
+        "SERVER": "Server"
+      },
+      "table": {
+        "providerId": "Provider",
+        "credentialName": "Credential name",
+        "actions": "Actions",
+        "addCredential": "Add credential"
+      },
+      "modal": {
+          "delete": {
+            "title": "Delete credential",
+            "message": "Are you sure you want to delete this credential?"
+          },
+          "edit": {
+            "title": "Edit credential"
+          },
+          "create": {
+            "title": "Add credential"
+          }
+        },
+      "formCloudPrivider": {
+        "cloudProvider": "Cloud Provider",
+        "credentialName": "Credential Name",
+        "clientId": "Client ID",
+        "clientSecret": "Client Secret",
+        "credentialId": "Credential ID",
+        "credentialPassword": "Credential Password",
+        "secret": "Secret (TOTP)",
+        "rationale": "Reason"
+      }
+      
+    }
   }
 }
 

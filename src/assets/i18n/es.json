@@ -249,6 +249,48 @@
       "ok": "De acuerdo",
       "close": "Cerrar",
       "cancel": "Cancelar",
-      "accept": "Aceptar"
+      "accept": "Aceptar",
+      "delete": "Eliminar",
+      "save": "Guardar"
+    },
+    "signature": {
+      "settings": {
+        "title": "Configuración de firma",
+        "enableRemote": "Habilitar firma remota",
+        "save": "Guardar",
+        "mode": {
+          "CLOUD": "Nube",
+          "SERVER": "Servidor"
+        },
+        "table": {
+          "providerId": "Proveedor",
+          "credentialName": "Nombre de credencial",
+          "actions": "Acciones",
+          "addCredential": "Agregar credencial"
+        },
+        "modal":{
+          "delete":{
+            "title": "Eliminar credencial",
+            "message": "¿Está seguro de que desea eliminar esta credencial?"
+          },
+          "edit":{
+            "title": "Editar credencial"
+          },
+          "create":{
+            "title": "Agregar credencial"
+          }
+         },
+        "formCloudPrivider": {
+          "cloudProvider": "Proveedor en la Nube",
+          "credentialName": "Nombre de la Credencial",
+          "clientId": "ID del Cliente",
+          "clientSecret": "Secreto del Cliente",
+          "credentialId": "ID de la Credencial",
+          "credentialPassword": "Contraseña de la Credencial",
+          "secret": "Secreto (TOTP)",
+          "rationale": "Motivo"
+        }      
+      }
     }
+
 }
