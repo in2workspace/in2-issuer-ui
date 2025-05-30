@@ -3,7 +3,7 @@ import { CredentialOfferStepperComponent } from './credential-offer-stepper/cred
 
 export default [
   {
-    path: '/:activationCode',
+    path: ':activationCode',
     component: CredentialOfferStepperComponent
   },
 ] as Routes;
