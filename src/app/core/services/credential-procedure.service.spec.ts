@@ -257,8 +257,8 @@ describe('CredentialProcedureService', () => {
       expect(data).toBe('mockQRCode');
     });
 
-    const req = httpMock.expectOne(`${credentialOfferUrl}/activation-code/${activationCode}`);
-    expect(req.request.method).toBe('GET');
+    const req = httpMock.expectOne(`${credentialOfferUrl}/activation-code`);
+    expect(req.request.method).toBe('POST');
     req.flush(mockResponse);
   });
 
@@ -270,8 +270,8 @@ describe('CredentialProcedureService', () => {
       expect(data).toBe(mockResponse);
     });
 
-    const req = httpMock.expectOne(`${credentialOfferUrl}/activation-code/${activationCode}`);
-    expect(req.request.method).toBe('GET');
+    const req = httpMock.expectOne(`${credentialOfferUrl}/activation-code`);
+    expect(req.request.method).toBe('POST');
     req.flush(mockResponse);
   });
 
@@ -283,15 +283,15 @@ describe('CredentialProcedureService', () => {
       expect(data).toBe(invalidJSONResponse);
     });
 
-    const req = httpMock.expectOne(`${credentialOfferUrl}/activation-code/${activationCode}`);
-    expect(req.request.method).toBe('GET');
+    const req = httpMock.expectOne(`${credentialOfferUrl}/activation-code`);
+    expect(req.request.method).toBe('POST');
     req.flush(invalidJSONResponse);
   });
 
 
   });
 
-describe('get credential offer by c-code', () => {
+describe('get credential offer by c-activation-code', () => {
   it('should handle error when getting credential offer by c code', () => {
     const cCode = 'abc123';
     const errorResponse = serverErrorResp;
@@ -303,7 +303,7 @@ describe('get credential offer by c-code', () => {
       }
     );
 
-    const req = httpMock.expectOne(`${credentialOfferUrl}/c-code/${cCode}`);
+    const req = httpMock.expectOne(`${credentialOfferUrl}/c-activation-code`);
     req.flush('500 error', errorResponse);
   });
 
@@ -315,8 +315,8 @@ describe('get credential offer by c-code', () => {
       expect(data).toBe(mockResponse);
     });
 
-    const req = httpMock.expectOne(`${credentialOfferUrl}/c-code/${cCode}`);
-    expect(req.request.method).toBe('GET');
+    const req = httpMock.expectOne(`${credentialOfferUrl}/c-activation-code`);
+    expect(req.request.method).toBe('POST');
     req.flush(mockResponse);
   });
 });
@@ -451,7 +451,7 @@ describe('get credential offer by c-code', () => {
         }
       });
   
-      const req = httpMock.expectOne(`${credentialOfferUrl}/c-code/${cCode}`);
+      const req = httpMock.expectOne(`${credentialOfferUrl}/c-activation-code`);
       req.flush({}, error);
     });
   });
