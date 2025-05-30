@@ -434,7 +434,7 @@ describe('get credential offer by c-activation-code', () => {
         }
       });
   
-      const req = httpMock.expectOne(`${credentialOfferUrl}/activation-code/${activationCode}`);
+      const req = httpMock.expectOne(`${credentialOfferUrl}/activation-code`);
       req.flush({}, error);
     });
   });
