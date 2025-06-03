@@ -29,6 +29,7 @@ module.exports = {
       // '/src/app/core/mocks/',
       // '/src/app/app',
       // '/src/app/core/',
+      // '/src/app/core/services/(?!auth.service)',
       // '/src/app/features/(?!credential-details)',
       // '/src/app/shared/',
     ]
