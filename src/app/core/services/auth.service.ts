@@ -1,11 +1,12 @@
-import { inject, Injectable, WritableSignal, signal } from '@angular/core';
-import { OidcSecurityService } from 'angular-auth-oidc-client';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { inject, Injectable, WritableSignal, signal, DestroyRef } from '@angular/core';
+import { EventTypes, LoginResponse, OidcSecurityService, PublicEventsService } from 'angular-auth-oidc-client';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { catchError, filter, take, tap } from 'rxjs/operators';
 import { UserDataAuthenticationResponse } from "../models/dto/user-data-authentication-response.dto";
 import { Power, EmployeeMandator, LEARCredentialEmployee } from "../models/entity/lear-credential";
 import { RoleType } from '../models/enums/auth-rol-type.enum';
 import { LEARCredentialDataNormalizer } from '../models/entity/lear-credential-employee-data-normalizer';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root'
@@ -20,32 +21,146 @@ export class AuthService {
   private readonly nameSubject = new BehaviorSubject<string>('');
   private readonly normalizer = new LEARCredentialDataNormalizer();
   public readonly roleType: WritableSignal<RoleType> = signal(RoleType.LEAR);
-
-
-
+  
+  
+  
   private userPowers: Power[] = [];
-
+  private readonly broadcastChannel = new BroadcastChannel('auth');
+  private static readonly BROADCAST_FORCE_LOGOUT = 'forceIssuerLogout'; 
+  
+  private readonly authEvents = inject(PublicEventsService);
+  private readonly destroy$ = inject(DestroyRef);
   private readonly oidcSecurityService = inject(OidcSecurityService);
 
   public constructor() {
-    this.checkAuth()
-    .pipe(take(1))
-    .subscribe();
+    // handle silent renew errors and log when certain events occur
+    this.subscribeToAuthEvents();
+    // checks if the user is authenticated and gets related data; doesn't redirect to login page; this is done by the auto login guards
+    this.checkAuth$().subscribe();
+    // synchronize tabs when logging out
+    this.listenToCrossTabLogout();
   }
 
-  public checkAuth(): Observable<boolean> {
+  public subscribeToAuthEvents(): void {
+    this.authEvents.registerForEvents()
+      .pipe(
+        takeUntilDestroyed(this.destroy$),
+        filter((e) =>
+          [EventTypes.SilentRenewStarted, EventTypes.SilentRenewFailed, EventTypes.IdTokenExpired, EventTypes.TokenExpired].includes(e.type)
+        )
+      )
+      .subscribe((event) => {
+        const isOffline = !navigator.onLine;
+
+        switch (event.type) {
+          case EventTypes.SilentRenewStarted:
+            console.log('Silent renew started' + Date.now());
+            break;
+
+          // before this happens, the library cleans up the local auth data
+          case EventTypes.SilentRenewFailed:
+            
+            // the library generally doesn't throw/emit error when there is not internet connection, but the backup is needed in case the error is thrown
+            if (isOffline) {
+              console.warn('Silent token refresh failed: offline mode', event);
+
+              const onlineHandler = () => {
+                console.info('Connection restored. Retrying to authenticate...');
+                this.checkAuth$().subscribe(
+                  {
+                    next: ({ isAuthenticated }) => {
+                      if (!isAuthenticated) {
+                        console.warn('User still not authenticated after reconnect, logging out');
+                        this.logout$().subscribe();
+                      } else {
+                        console.info('User reauthenticated successfully after reconnect');
+                      }
+                    },
+                    error: (err) => {
+                      console.error('Error while reauthenticating after reconnect:', err);
+                      this.authorizeAndForceCrossTabLogout();
+                    },
+                    complete: () => {
+                      window.removeEventListener('online', onlineHandler);
+                    }
+                  });
+                
+              };
+
+              window.addEventListener('online', onlineHandler);
+
+            } else {
+              console.error('Silent token refresh failed: online mode, proceeding to logout', event);
+              this.authorizeAndForceCrossTabLogout();
+            }
+            break;
+
+          case EventTypes.IdTokenExpired:
+          case EventTypes.TokenExpired:
+            console.error('Session expired:', event);
+            console.error('At: ' + Date.now());
+            break;
+        }
+      });
+  }
+
+  public checkAuth$(): Observable<LoginResponse> {
     return this.oidcSecurityService.checkAuth().pipe(
       take(1),
-      map(({ isAuthenticated, userData}) => {
+      tap(({ isAuthenticated, userData}) => {
       this.isAuthenticatedSubject.next(isAuthenticated);
 
       if (isAuthenticated) {
-        if(this.getRole(userData)!=RoleType.LEAR)  throw new Error('Error Role. '+ this.getRole(userData));
+        if(this.getRole(userData) != RoleType.LEAR)  throw new Error('Error Role. '+ this.getRole(userData));
         this.userDataSubject.next(userData);
-        this.handleUserAuthentication(userData)
+        this.handleUserAuthentication(userData);
+      }else{
+          console.warn('Checking authentication: not authenticated.');
       }
-      return isAuthenticated;
+    }),
+    catchError((err:Error)=>{
+      console.error('Checking authentication: error in initial authentication.');
+      return throwError(()=>err);
     }));
+  }
+
+  public listenToCrossTabLogout(): void{
+    this.broadcastChannel.onmessage = (event) => {
+      console.log('Received Broadcast message: ', event);
+      if (event.data === AuthService.BROADCAST_FORCE_LOGOUT) {
+          console.warn('Detected logout with revoke, logging out locally');
+          this.localLogout$().subscribe();
+      }
+    };
+  }
+
+  
+private localLogout$(): Observable<unknown> {
+  console.info('Local logout.');
+  return this.oidcSecurityService.logoff().pipe(tap(()=>{console.log('after logoff tap')}));
+}
+
+
+  public logout$(): Observable<{}> {
+    console.info('Logout: revoking tokens.')
+
+    return this.oidcSecurityService.logoffAndRevokeTokens().pipe(
+      tap(() => {
+        console.info('Logout with revoke completed.');
+        this.broadcastChannel.postMessage(AuthService.BROADCAST_FORCE_LOGOUT);
+      }),
+      catchError((err:Error)=>{
+        console.error('Error when logging out with revoke.');
+        console.error(err);
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  public authorizeAndForceCrossTabLogout(){
+    console.info('Authorize and broadcast logout.');
+    this.oidcSecurityService.authorize();
+    this.broadcastChannel.postMessage(AuthService.BROADCAST_FORCE_LOGOUT);
   }
 
   private handleUserAuthentication(userData: UserDataAuthenticationResponse): void {
