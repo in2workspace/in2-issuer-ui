@@ -84,7 +84,7 @@ export class CredentialProcedureService {
 
   public getCredentialOfferByActivationCode(activationCode: string): Observable<CredentialOfferResponse> {
     console.info('Getting credential offer by activation code: ' + activationCode);
-    return this.http.post<CredentialOfferResponse>(`${this.credentialOfferUrl}/activation-code`, { activationCode: activationCode, c_activationCode: null }).pipe(
+    return this.http.post<CredentialOfferResponse>(`${this.credentialOfferUrl}`, { activationCode: activationCode, c_activationCode: null }).pipe(
       catchError(this.handleError),
       catchError(this.handleCredentialOfferError)
     );
@@ -92,7 +92,7 @@ export class CredentialProcedureService {
 
   public getCredentialOfferByCCode(cCode: string): Observable<CredentialOfferResponse> {
     console.info('Refreshing QR code: getting credential offer by c code: ' + cCode);
-    return this.http.post<CredentialOfferResponse>(`${this.credentialOfferUrl}/c-activation-code`, { activationCode: null, c_activationCode: cCode }).pipe(
+    return this.http.post<CredentialOfferResponse>(`${this.credentialOfferUrl}`, { activationCode: null, c_activationCode: cCode }).pipe(
       catchError(this.handleError),
       catchError(this.handleCredentialOfferError)
     );

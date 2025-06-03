@@ -257,7 +257,7 @@ describe('CredentialProcedureService', () => {
       expect(data).toBe('mockQRCode');
     });
 
-    const req = httpMock.expectOne(`${credentialOfferUrl}/activation-code`);
+    const req = httpMock.expectOne(`${credentialOfferUrl}`);
     expect(req.request.method).toBe('POST');
     req.flush(mockResponse);
   });
@@ -270,7 +270,7 @@ describe('CredentialProcedureService', () => {
       expect(data).toBe(mockResponse);
     });
 
-    const req = httpMock.expectOne(`${credentialOfferUrl}/activation-code`);
+    const req = httpMock.expectOne(`${credentialOfferUrl}`);
     expect(req.request.method).toBe('POST');
     req.flush(mockResponse);
   });
@@ -283,7 +283,7 @@ describe('CredentialProcedureService', () => {
       expect(data).toBe(invalidJSONResponse);
     });
 
-    const req = httpMock.expectOne(`${credentialOfferUrl}/activation-code`);
+    const req = httpMock.expectOne(`${credentialOfferUrl}`);
     expect(req.request.method).toBe('POST');
     req.flush(invalidJSONResponse);
   });
@@ -303,7 +303,7 @@ describe('get credential offer by c-activation-code', () => {
       }
     );
 
-    const req = httpMock.expectOne(`${credentialOfferUrl}/c-activation-code`);
+    const req = httpMock.expectOne(`${credentialOfferUrl}`);
     req.flush('500 error', errorResponse);
   });
 
@@ -315,7 +315,7 @@ describe('get credential offer by c-activation-code', () => {
       expect(data).toBe(mockResponse);
     });
 
-    const req = httpMock.expectOne(`${credentialOfferUrl}/c-activation-code`);
+    const req = httpMock.expectOne(`${credentialOfferUrl}`);
     expect(req.request.method).toBe('POST');
     req.flush(mockResponse);
   });
@@ -434,7 +434,7 @@ describe('get credential offer by c-activation-code', () => {
         }
       });
   
-      const req = httpMock.expectOne(`${credentialOfferUrl}/activation-code`);
+      const req = httpMock.expectOne(`${credentialOfferUrl}`);
       req.flush({}, error);
     });
   });
@@ -451,7 +451,7 @@ describe('get credential offer by c-activation-code', () => {
         }
       });
   
-      const req = httpMock.expectOne(`${credentialOfferUrl}/c-activation-code`);
+      const req = httpMock.expectOne(`${credentialOfferUrl}`);
       req.flush({}, error);
     });
   });
