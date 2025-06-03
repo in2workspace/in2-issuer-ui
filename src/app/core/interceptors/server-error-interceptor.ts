@@ -3,6 +3,7 @@ import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse
 import { catchError, Observable, throwError } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { DialogWrapperService } from 'src/app/shared/components/dialog/dialog-wrapper/dialog-wrapper.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class ServeErrorInterceptor implements HttpInterceptor {
@@ -15,6 +16,11 @@ export class ServeErrorInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
+        // ignore IAM endpoint; its errors are handled in a lower level
+        if (request.url.startsWith(environment.iam_url)) {
+          this.logHandledSilentlyError(error);
+          return throwError(() => error);
+        }
         let errorMessage: string;
         if (error.error instanceof ErrorEvent) {
           errorMessage = `Error: ${error.error.message}`;
@@ -42,5 +48,10 @@ export class ServeErrorInterceptor implements HttpInterceptor {
       default:
         return 'error.unknown_error';
     }
+  }
+
+  private logHandledSilentlyError(error: Error): void{
+    console.error('Handled silently:');
+    console.error(error);
   }
 }
