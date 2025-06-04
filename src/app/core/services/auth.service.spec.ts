@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { of, Subject } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { AuthService } from './auth.service';
 import { EventTypes, OidcSecurityService, PublicEventsService } from 'angular-auth-oidc-client';
 import { UserDataAuthenticationResponse } from '../models/dto/user-data-authentication-response.dto';
@@ -132,6 +132,7 @@ describe('AuthService', () => {
   // We'll mock OidcSecurityService and any direct dependencies (like normalizer).
   let oidcSecurityServiceMock: {
     checkAuth: jest.Mock,
+    logoff: jest.Mock,
     authorize: jest.Mock,
     logoffAndRevokeTokens: jest.Mock
   };
@@ -164,7 +165,8 @@ describe('AuthService', () => {
         accessToken: null 
       })),
       authorize: jest.fn(),
-      logoffAndRevokeTokens: jest.fn()
+      logoffAndRevokeTokens: jest.fn(),
+      logoff: jest.fn().mockReturnValue(of()),
     };
         mockPublicEventsService = {
       registerForEvents: jest.fn().mockReturnValue(of())
@@ -637,6 +639,37 @@ describe('AuthService', () => {
     expect(consoleError).toHaveBeenCalledWith('Session expired:', expect.anything());
 
     consoleError.mockRestore();
+  });
+});
+
+
+describe('localLogout$', () => {
+  it('should call oidcSecurityService.logoff and complete', () => {
+    const logoffSpy = jest.spyOn(service['oidcSecurityService'], 'logoff').mockReturnValue(of(undefined));
+
+    service['localLogout$']().subscribe({
+      next: (res) => {
+        expect(res).toBeUndefined();
+        expect(logoffSpy).toHaveBeenCalled();
+      },
+      error: () => {
+        fail('Should not error');
+      }
+    });
+  });
+
+  it('should propagate error from oidcSecurityService.logoff', () => {
+    const error = new Error('logoff failed');
+    jest.spyOn(service['oidcSecurityService'], 'logoff').mockReturnValue(throwError(() => error));
+
+    service['localLogout$']().subscribe({
+      next: () => {
+        fail('Should not succeed');
+      },
+      error: (err) => {
+        expect(err).toBe(error);
+      }
+    });
   });
 });
 
