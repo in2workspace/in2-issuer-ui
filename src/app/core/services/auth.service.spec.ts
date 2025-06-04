@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { of, Subject, throwError } from 'rxjs';
+import { finalize, of, Subject, throwError } from 'rxjs';
 import { AuthService } from './auth.service';
 import { EventTypes, OidcSecurityService, PublicEventsService } from 'angular-auth-oidc-client';
 import { UserDataAuthenticationResponse } from '../models/dto/user-data-authentication-response.dto';
@@ -477,6 +477,40 @@ describe('AuthService', () => {
     });
   });
 });
+
+describe('logout$', () => {
+it('should call logoffAndRevokeTokens and postMessage', (done) => {
+  const postMessageSpy = jest.spyOn(BroadcastChannel.prototype, 'postMessage').mockImplementation();
+  // Assegurar que l'Observable es completa
+  oidcSecurityServiceMock.logoffAndRevokeTokens.mockReturnValue(of(null).pipe(
+    // Forçar la finalització de l'Observable
+    finalize(() => {})
+  ));
+
+  service.logout$().subscribe({
+    next: () => {
+      expect(oidcSecurityServiceMock.logoffAndRevokeTokens).toHaveBeenCalled();
+      expect(postMessageSpy).toHaveBeenCalledWith('forceWalletLogout');
+    },
+    complete: () => {
+      postMessageSpy.mockRestore();
+      done(); // Cridar done() quan l'Observable es completa
+    }
+  });
+});
+
+    it('should handle error in logout$', (done) => {
+      const error = new Error('logout failed');
+      oidcSecurityServiceMock.logoffAndRevokeTokens.mockReturnValue(throwError(() => error));
+
+      service.logout$().subscribe({
+        error: (err) => {
+          expect(err).toBe(error);
+          done();
+        }
+      });
+    });
+  });
 
 
   it('should catch error if neither VC nor cert is present', () => {
