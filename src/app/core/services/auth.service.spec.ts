@@ -432,6 +432,12 @@ describe('AuthService', () => {
     const result = (service as any).getRole(mockUserData);
     expect(result).toBe(RoleType.LEAR);
   });
+
+  it('should return undefined if role is not present', () => {
+  const mockUserData = {} as UserDataAuthenticationResponse;
+  const result = (service as any).getRole(mockUserData);
+  expect(result).toBeNull();
+  });
   
   it('should extract certificate data correctly', () => {
     const result = (service as any).extractDataFromCertificate(mockUserDataWithCert);
@@ -446,6 +452,30 @@ describe('AuthService', () => {
     });
 
   })
+
+  describe('localLogout$', () => {
+  it('should call oidcSecurityService.logoff() and execute tap', () => {
+    const logoffMock = jest.fn(() => of(undefined));
+    const tapSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+    const infoSpy = jest.spyOn(console, 'info').mockImplementation(() => {});
+    (service as any).oidcSecurityService = { logoff: logoffMock };
+
+    const result$ = (service as any).localLogout$();
+
+    result$.subscribe({
+      complete: () => {
+        expect(infoSpy).toHaveBeenCalledWith('Local logout.');
+        expect(logoffMock).toHaveBeenCalled();
+        expect(tapSpy).toHaveBeenCalledWith('after logoff tap');
+
+        // Netejar els espies
+        tapSpy.mockRestore();
+        infoSpy.mockRestore();
+      }
+    });
+  });
+});
+
 
   it('should catch error if neither VC nor cert is present', () => {
     const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -519,6 +549,40 @@ describe('AuthService', () => {
     consoleSpy.mockRestore();
   });
 
+  describe('listenToCrossTabLogout', () => {
+  let localLogoutSpy: jest.SpyInstance;
+
+  beforeEach(() => {
+    localLogoutSpy = jest.spyOn(service as any, 'localLogout$').mockReturnValue(of(undefined));
+  });
+
+  it('should not trigger localLogout$ if message is not BROADCAST_FORCE_LOGOUT', () => {
+    service.listenToCrossTabLogout();
+
+    // Simular un missatge no rellevant
+    const event = { data: 'some-other-message' } as MessageEvent;
+    (service as any).broadcastChannel.onmessage(event);
+
+    expect(localLogoutSpy).not.toHaveBeenCalled();
+  });
+
+  it('should call localLogout$ and subscribe if BROADCAST_FORCE_LOGOUT is received', () => {
+    service.listenToCrossTabLogout();
+
+    // Simular el missatge de logout
+    const event = { data: 'forceIssuerLogout' } as MessageEvent;
+    (service as any).broadcastChannel.onmessage(event);
+
+    expect(localLogoutSpy).toHaveBeenCalled();
+  });
+
+  it('should assign a handler to broadcastChannel.onmessage', () => {
+    const channel = (service as any).broadcastChannel;
+    expect(typeof channel.onmessage).toBe('function');
+  });
+});
+
+
   it('should handle SilentRenewFailed when offline', () => {
     jest.spyOn(navigator, 'onLine', 'get').mockReturnValue(false);
     const consoleWarn = jest.spyOn(console, 'warn').mockImplementation();
@@ -575,4 +639,46 @@ describe('AuthService', () => {
     consoleError.mockRestore();
   });
 });
+
+it('should call .next with certData in handleCertificateLogin', () => {
+  const userData = mockUserDataWithCert;
+  const certData = { commonName: 'Cert Common Name' };
+
+  const extractSpy = jest
+    .spyOn(service as any, 'extractDataFromCertificate')
+    .mockReturnValue(certData);
+
+  const mandatorNextSpy = jest.spyOn((service as any).mandatorSubject, 'next');
+  const nameNextSpy = jest.spyOn((service as any).nameSubject, 'next');
+
+  (service as any).handleCertificateLogin(userData);
+
+  expect(extractSpy).toHaveBeenCalledWith(userData);
+  expect(mandatorNextSpy).toHaveBeenCalledWith(certData);
+  expect(nameNextSpy).toHaveBeenCalledWith(certData.commonName);
+});
+
+it('should return vc when present in userData', () => {
+  const result = (service as any).extractVCFromUserData(mockUserDataWithVC);
+  expect(result).toBe(mockUserDataWithVC.vc);
+});
+
+it('should throw error when vc is missing in userData', () => {
+  expect(() => {
+    (service as any).extractVCFromUserData(mockUserDataNoVCNoCert);
+  }).toThrowError('VC claim error.');
+});
+
+it('should return power array from learCredential', () => {
+  const result = (service as any).extractUserPowers(mockCredentialEmployee);
+  expect(result).toEqual(mockCredentialEmployee.credentialSubject.mandate.power);
+});
+
+it('should return empty array when error occurs accessing power', () => {
+  const invalidCredential: any = {};
+  const result = (service as any).extractUserPowers(invalidCredential);
+  expect(result).toEqual([]);
+});
+
+
 });
