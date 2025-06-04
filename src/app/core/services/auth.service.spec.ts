@@ -151,7 +151,7 @@ describe('AuthService', () => {
     close() {}
   }
 
-    beforeAll(() => {
+  beforeAll(() => {
     // Global mock del BroadcastChannel
     (globalThis as any).BroadcastChannel = BroadcastChannelMock;
   });

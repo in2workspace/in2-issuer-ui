@@ -34,8 +34,8 @@ describe('App Routes', () => {
   it('should define organization/credentials parent route with guards', () => {
     const parentRoute = routes.find((route) => route.path === 'organization/credentials');
     expect(parentRoute).toBeTruthy();
-    expect(parentRoute?.canActivate).toContain(AutoLoginPartialRoutesGuard);
-    expect(parentRoute?.canActivate).toContain(basicGuard);
+    expect(parentRoute?.canActivateChild).toContain(AutoLoginPartialRoutesGuard);
+    expect(parentRoute?.canActivateChild).toContain(basicGuard);
     expect(Array.isArray(parentRoute?.children)).toBe(true);
   });
 

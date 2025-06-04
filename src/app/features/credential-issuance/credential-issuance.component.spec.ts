@@ -14,6 +14,7 @@ import { of } from 'rxjs';
 describe('CredentialIssuanceComponent', () => {
   let component: CredentialIssuanceComponent;
   let fixture: ComponentFixture<CredentialIssuanceComponent>;
+  let broadcastMessages: any[] = [];
 
   let oidcSecurityService: {
     checkAuth: jest.Mock,
@@ -40,9 +41,27 @@ describe('CredentialIssuanceComponent', () => {
     };
   }
 
+      class BroadcastChannelMock {
+    name: string;
+    onmessage: ((this: BroadcastChannel, ev: MessageEvent) => any) | null = null;
+    constructor(name: string) {
+      this.name = name;
+      broadcastMessages = [];
+    }
+    postMessage(message: any) {
+      broadcastMessages.push(message);
+    }
+    close() {}
+  }
+
   afterEach(() => {
     TestBed.resetTestingModule();
     jest.clearAllMocks();
+  });
+
+    beforeAll(() => {
+    // Global mock del BroadcastChannel
+    (globalThis as any).BroadcastChannel = BroadcastChannelMock;
   });
 
   it('should set "asSigner" to true when path includes "create-as-signer"', async () => {
