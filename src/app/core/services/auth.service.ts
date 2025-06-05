@@ -7,6 +7,7 @@ import { Power, EmployeeMandator, LEARCredentialEmployee } from "../models/entit
 import { RoleType } from '../models/enums/auth-rol-type.enum';
 import { LEARCredentialDataNormalizer } from '../models/entity/lear-credential-employee-data-normalizer';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +30,7 @@ export class AuthService{
   private readonly authEvents = inject(PublicEventsService);
   private readonly destroy$ = inject(DestroyRef);
   private readonly oidcSecurityService = inject(OidcSecurityService);
+  private readonly router = inject(Router);
 
   public constructor() {
     // handle silent renew errors and log when certain events occur
@@ -139,7 +141,8 @@ export class AuthService{
 
   public authorize(){
     console.info('Authorize.');
-    this.oidcSecurityService.authorize();
+    // this.oidcSecurityService.authorize();
+    this.router.navigate(['/home']);
   }
 
   private handleUserAuthentication(userData: UserDataAuthenticationResponse): void {
