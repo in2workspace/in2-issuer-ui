@@ -106,6 +106,8 @@ export class AuthService {
   }
 
   public checkAuth$(): Observable<LoginResponse> {
+    console.log('checkAuth$')
+    console.info('checkAuth$ - info')
     return this.oidcSecurityService.checkAuth().pipe(
       take(1),
       tap(({ isAuthenticated, userData}) => {
@@ -126,6 +128,8 @@ export class AuthService {
   }
 
   public listenToCrossTabLogout(): void{
+    console.log('listenToCrossTabLogout');
+    console.info('info listenToCrossTabLogout');
     this.broadcastChannel.onmessage = (event) => {
       console.log('Received Broadcast message: ', event);
       if (event.data === AuthService.BROADCAST_FORCE_LOGOUT) {
@@ -146,10 +150,12 @@ private localLogout$(): Observable<unknown> {
     console.info('Logout: revoking tokens.')
     console.log('Logout: revoking tokens.')
 
+    console.log('broadcast in logout$');
+    this.broadcastChannel.postMessage(AuthService.BROADCAST_FORCE_LOGOUT);
+
     return this.oidcSecurityService.logoffAndRevokeTokens().pipe(
       tap(() => {
         console.info('Logout with revoke completed.');
-        this.broadcastChannel.postMessage(AuthService.BROADCAST_FORCE_LOGOUT);
       }),
       catchError((err:Error)=>{
         console.error('Error when logging out with revoke.');
