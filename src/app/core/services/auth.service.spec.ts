@@ -524,8 +524,9 @@ it('should call logoffAndRevokeTokens and postMessage', (done) => {
   });
 
   // ----------------------------------------------------------------------------
-  // checkAuth() coverage
+  // checkAuth$() coverage
   // ----------------------------------------------------------------------------
+  describe('checkAuth$', ()=> {
   it('should mark user as authenticated and invoke handleUserAuthentication if checkAuth sees a valid user', done => {
     const handleUserAuthSpy = jest.spyOn(service as any, 'handleUserAuthentication');
     oidcSecurityServiceMock.checkAuth.mockReturnValue(of({
@@ -557,6 +558,47 @@ it('should call logoffAndRevokeTokens and postMessage', (done) => {
       });
     });
   });
+
+  it('should handle error if checkAuth throws', done => {
+  const error = new Error('Some error');
+  const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  oidcSecurityServiceMock.checkAuth.mockReturnValue(throwError(() => error));
+
+  service.checkAuth$().subscribe({
+    next: () => {
+      // no hauria d'arribar aquí
+      fail('Expected an error to be thrown');
+    },
+    error: err => {
+      expect(err).toBe(error);
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        'Checking authentication: error in initial authentication.'
+      );
+      done();
+    }
+  });
+});
+
+it('should throw an error if user role is not LEAR', done => {
+  const badUserData = { ...mockUserDataWithVC, role: 'SOME_OTHER_ROLE' };
+  oidcSecurityServiceMock.checkAuth.mockReturnValue(of({
+    isAuthenticated: true,
+    userData: badUserData,
+    accessToken: 'xxx'
+  }));
+
+  service.checkAuth$().subscribe({
+    next: () => {
+      fail('Expected error due to invalid role');
+    },
+    error: err => {
+      expect(err).toBeInstanceOf(Error);
+      expect(err.message).toContain('Error Role');
+      done();
+    }
+  });
+});
+});
 
     describe('subscribeToAuthEvents', () => {
   let eventSubject: Subject<any>;
@@ -746,6 +788,14 @@ it('should return empty array when error occurs accessing power', () => {
   const result = (service as any).extractUserPowers(invalidCredential);
   expect(result).toEqual([]);
 });
+
+it('should authorize and broadcast force logout', () => {
+  service.authorizeAndForceCrossTabLogout();
+
+  expect(oidcSecurityServiceMock.authorize).toHaveBeenCalled();
+  expect(broadcastMessages).toEqual(['forceIssuerLogout']);
+});
+
 
 
 });
