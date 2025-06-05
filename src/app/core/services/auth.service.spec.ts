@@ -600,7 +600,7 @@ it('should throw an error if user role is not LEAR', done => {
 });
 });
 
-    describe('subscribeToAuthEvents', () => {
+describe('subscribeToAuthEvents', () => {
   let eventSubject: Subject<any>;
 
   beforeEach(() => {
@@ -796,6 +796,9 @@ it('should authorize and broadcast force logout', () => {
   expect(broadcastMessages).toEqual(['forceIssuerLogout']);
 });
 
-
-
+  it('should close the broadcast channel on destroy', () => {
+    const closeSpy = jest.spyOn(service['broadcastChannel'], 'close');
+    (service as any).ngOnDestroy();
+    expect(closeSpy).toHaveBeenCalled();
+  });
 });

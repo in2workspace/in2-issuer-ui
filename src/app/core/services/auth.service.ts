@@ -33,6 +33,7 @@ export class AuthService {
   private readonly oidcSecurityService = inject(OidcSecurityService);
 
   public constructor() {
+    console.log('init auth service');
     // handle silent renew errors and log when certain events occur
     this.subscribeToAuthEvents();
     // checks if the user is authenticated and gets related data; doesn't redirect to login page; this is done by the auto login guards
@@ -143,6 +144,7 @@ private localLogout$(): Observable<unknown> {
 
   public logout$(): Observable<{}> {
     console.info('Logout: revoking tokens.')
+    console.log('Logout: revoking tokens.')
 
     return this.oidcSecurityService.logoffAndRevokeTokens().pipe(
       tap(() => {
@@ -312,5 +314,9 @@ private localLogout$(): Observable<unknown> {
     } catch (error) {
       return [];
     }
+  }
+
+  private ngOnDestroy(){
+    this.broadcastChannel.close();
   }
 }
