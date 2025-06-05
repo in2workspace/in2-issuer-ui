@@ -22,10 +22,9 @@ export type StepperIndex = 0 | 1;
 export type CredentialOfferStep = 'onboarding' | 'offer';
 export interface CredentialOfferParams {
   credential_offer_uri: string|undefined,
-  activation_code: string|undefined,
-  //todo naming c_code? ?
+  c_activation_code: string|undefined,
   c_code: string|undefined,
-  c_code_expires_in: number|undefined //expected in seconds
+  c_activation_code_expires_in: number|undefined //expected in seconds
 }
 export interface CredentialOfferParamsState extends CredentialOfferParams {
   loading: boolean,
@@ -34,9 +33,9 @@ export interface CredentialOfferParamsState extends CredentialOfferParams {
 
 export const undefinedCredentialOfferParamsState: CredentialOfferParamsState = { 
     credential_offer_uri: undefined,
-    activation_code: undefined,
+    c_activation_code: undefined,
     c_code: undefined,
-    c_code_expires_in: undefined,
+    c_activation_code_expires_in: undefined,
     loading: false,
     error: false
   };
@@ -154,7 +153,7 @@ export class CredentialOfferStepperComponent implements OnInit{
   .pipe(
     filter(offerState => (offerState.loading === false) && (offerState.error === false)),
     switchMap(offerParams => {
-      const totalAvailableTimeFromBackendInSeconds = offerParams.c_code_expires_in;
+      const totalAvailableTimeFromBackendInSeconds = offerParams.c_activation_code_expires_in;
       let totalAvailableTimeInMs: number;
       if(!totalAvailableTimeFromBackendInSeconds){
         console.error('Offer expiration time not received from API; using default: ' + defaultTotalAvailableTimeInMs + ' - ' + loadingBufferTimeInMs);
@@ -291,9 +290,9 @@ export class CredentialOfferStepperComponent implements OnInit{
     }
     const updatedParams: CredentialOfferParamsState = {
       credential_offer_uri: undefined,
-      activation_code: activationCodeParam,
+      c_activation_code: activationCodeParam,
       c_code: cCodeParam,
-      c_code_expires_in: undefined,
+      c_activation_code_expires_in: undefined,
       loading: false,
       error: false
     };
@@ -306,8 +305,8 @@ export class CredentialOfferStepperComponent implements OnInit{
     
     if(offer?.c_code){
       params = this.getCredentialOfferByCCode(offer.c_code);
-    }else if(offer?.activation_code){
-      params = this.getCredentialOfferByActivationCode(offer.activation_code);
+    }else if(offer?.c_activation_code){
+      params = this.getCredentialOfferByActivationCode(offer.c_activation_code);
     }else{
       this.redirectToHome();
       console.error("Client error: Activation code not found. Can't get credential offer");

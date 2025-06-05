@@ -131,9 +131,9 @@ it('should update index and step', ()=>{
 it('should initialize initUrlParams$ correctly', fakeAsync(() => {
   const offerParams = {
     credential_offer_uri: 'cred-offer-uri',
-    activation_code: 'activation-code-param',
+    c_activation_code: 'activation-code-param',
     c_code: 'c-code-param',
-    c_code_expires_in: 10,
+    c_activation_code_expires_in: 10,
     loading: false,
     error: false
   };
@@ -171,17 +171,17 @@ it('should gracefully handle error when fetching credentials', fakeAsync(() => {
 it('should emit the correct offerParams$ state when initUrlParams$ and fetchedCredentialOffer$ emit values', () => {
   const firstInitUrlParamsMock: CredentialOfferParamsState = {
     credential_offer_uri: 'cred-one',
-    activation_code: 'trans-one',
+    c_activation_code: 'trans-one',
     c_code: 'c-one',
-    c_code_expires_in: 10,
+    c_activation_code_expires_in: 10,
     loading: false,
     error: false
   }; 
   const secondInitOfferMock: CredentialOfferParamsState = {
     credential_offer_uri: 'cred-two',
-    activation_code: 'trans-two',
+    c_activation_code: 'trans-two',
     c_code: 'c-two',
-    c_code_expires_in: 20,
+    c_activation_code_expires_in: 20,
     loading: false,
     error: false
   };
@@ -214,9 +214,9 @@ describe('startOrEndFirstDountdown', ()=>{
     jest.spyOn(component, 'redirectToHome').mockImplementation(() => {});
       const mockOffer: CredentialOfferParamsState = {
         credential_offer_uri: undefined,
-        activation_code: 'mock-trans-code',
+        c_activation_code: 'mock-trans-code',
         c_code: 'mock-c-code',
-        c_code_expires_in: 10,
+        c_activation_code_expires_in: 10,
         loading: true,
         error: false
        };
@@ -239,9 +239,9 @@ describe('startOrEndFirstDountdown', ()=>{
     jest.spyOn(component, 'redirectToHome').mockImplementation(() => {});
     const mockOffer: CredentialOfferParamsState = {
       credential_offer_uri: undefined,
-      activation_code: 'mock-trans-code',
+      c_activation_code: 'mock-trans-code',
       c_code: 'mock-c-code',
-      c_code_expires_in: 10,
+      c_activation_code_expires_in: 10,
       loading: false,
       error: true
      };
@@ -454,7 +454,7 @@ describe('onSelectedStepChange', () => {
       consoleErrorSpy.mockRestore();
     });
   
-    it('should log an error if activation_code is missing', () => {
+    it('should log an error if c_activation_code is missing', () => {
         const fakeParamMap = convertToParamMap({});
         component['route'].snapshot = {
           paramMap: fakeParamMap,
@@ -465,9 +465,9 @@ describe('onSelectedStepChange', () => {
 
       const errorParamsResult: CredentialOfferParamsState = {
         credential_offer_uri: undefined,
-        activation_code: undefined,
+        c_activation_code: undefined,
         c_code: 'someCCode',
-        c_code_expires_in: undefined,
+        c_activation_code_expires_in: undefined,
         loading: false,
         error: false
       }
@@ -476,7 +476,7 @@ describe('onSelectedStepChange', () => {
       expect(result).toEqual(errorParamsResult);
     });
   
-    it('should return updated params with activation_code and c', () => {
+    it('should return updated params with c_activation_code and c', () => {
     const fakeParamMap = convertToParamMap({
       activationCode: 'code123'
     });
@@ -493,7 +493,7 @@ describe('onSelectedStepChange', () => {
       expect(consoleErrorSpy).not.toHaveBeenCalled();
       expect(result).toEqual({
         credential_offer_uri: undefined,
-        activation_code: 'code123',
+        c_activation_code: 'code123',
         c_code: 'someCCode',
         loading: false,
         error: false
@@ -515,7 +515,7 @@ describe('onSelectedStepChange', () => {
       expect(consoleErrorSpy).not.toHaveBeenCalled();
       expect(result).toEqual({
         credential_offer_uri: undefined,
-        activation_code: 'code123',
+        c_activation_code: 'code123',
         c_code: undefined,
         loading: false,
         error: false
@@ -529,7 +529,7 @@ describe('getCredentialOffer', () => {
     jest.clearAllMocks();
   });
 
-  it('should throw an error when no activation_code or c_code is available', (done) => {
+  it('should throw an error when no c_activation_code or c_code is available', (done) => {
     jest.spyOn(component, 'offerParams$').mockReturnValue(undefinedCredentialOfferParamsState);
     const dialogSpy = jest.spyOn(component['dialog'], 'openErrorInfoDialog');
     const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -549,9 +549,9 @@ describe('getCredentialOffer', () => {
     const mockCCode = 'mockCCode';
     const mockOffer = {
       credential_offer_uri: undefined,
-      activation_code: 'mock-trans-code',
+      c_activation_code: 'mock-trans-code',
       c_code: mockCCode,
-      c_code_expires_in: 10,
+      c_activation_code_expires_in: 10,
       loading: false,
       error: false
     };
@@ -569,13 +569,13 @@ describe('getCredentialOffer', () => {
     });
   });
 
-  it('should fetch credential offer by activation_code', () => {
+  it('should fetch credential offer by c_activation_code', () => {
     const mockActivationCode = 'mockActivationCode';
     const mockOffer = {
       credential_offer_uri: undefined,
-      activation_code: mockActivationCode,
+      c_activation_code: mockActivationCode,
       c_code: undefined,
-      c_code_expires_in: 10,
+      c_activation_code_expires_in: 10,
       loading: false,
       error: false
     };
