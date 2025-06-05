@@ -42,7 +42,7 @@ bootstrapApplication(AppComponent, {
                 // not working; seems a library bug
                 renewTimeBeforeTokenExpiresInSeconds: 30,
                 //routes to which Authorization Bearer <access_token> is added
-                secureRoutes: [environment.server_url].filter((route): route is string => route !== undefined)
+                secureRoutes: [environment.server_url, environment.iam_url].filter((route): route is string => route !== undefined)
             },
         })),
         { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

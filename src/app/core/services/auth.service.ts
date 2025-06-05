@@ -141,8 +141,8 @@ export class AuthService{
 
   public authorize(){
     console.info('Authorize.');
-    // this.oidcSecurityService.authorize();
-    this.router.navigate(['/home']);
+    // this.router.navigate(['/home']);
+    this.oidcSecurityService.authorize();
   }
 
   private handleUserAuthentication(userData: UserDataAuthenticationResponse): void {
