@@ -11,7 +11,6 @@ import { catchError, delayWhen, EMPTY, filter, interval, map, merge, Observable,
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogWrapperService } from 'src/app/shared/components/dialog/dialog-wrapper/dialog-wrapper.service';
 import { CredentialProcedureService } from 'src/app/core/services/credential-procedure.service';
-import { HttpErrorResponse } from '@angular/common/http';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { CredentialOfferResponse } from 'src/app/core/models/dto/credential-offer-response.dto';
@@ -23,9 +22,9 @@ export type StepperIndex = 0 | 1;
 export type CredentialOfferStep = 'onboarding' | 'offer';
 export interface CredentialOfferParams {
   credential_offer_uri: string|undefined,
-  transaction_code: string|undefined,
-  c_transaction_code: string|undefined,
-  c_transaction_code_expires_in: number|undefined //expected in seconds
+  c_activation_code: string|undefined,
+  c_code: string|undefined,
+  c_activation_code_expires_in: number|undefined //expected in seconds
 }
 export interface CredentialOfferParamsState extends CredentialOfferParams {
   loading: boolean,
@@ -34,9 +33,9 @@ export interface CredentialOfferParamsState extends CredentialOfferParams {
 
 export const undefinedCredentialOfferParamsState: CredentialOfferParamsState = { 
     credential_offer_uri: undefined,
-    transaction_code: undefined,
-    c_transaction_code: undefined,
-    c_transaction_code_expires_in: undefined,
+    c_activation_code: undefined,
+    c_code: undefined,
+    c_activation_code_expires_in: undefined,
     loading: false,
     error: false
   };
@@ -154,7 +153,7 @@ export class CredentialOfferStepperComponent implements OnInit{
   .pipe(
     filter(offerState => (offerState.loading === false) && (offerState.error === false)),
     switchMap(offerParams => {
-      const totalAvailableTimeFromBackendInSeconds = offerParams.c_transaction_code_expires_in;
+      const totalAvailableTimeFromBackendInSeconds = offerParams.c_activation_code_expires_in;
       let totalAvailableTimeInMs: number;
       if(!totalAvailableTimeFromBackendInSeconds){
         console.error('Offer expiration time not received from API; using default: ' + defaultTotalAvailableTimeInMs + ' - ' + loadingBufferTimeInMs);
@@ -275,12 +274,11 @@ export class CredentialOfferStepperComponent implements OnInit{
   }
 
   public getUrlParams(): CredentialOfferParamsState{
-    const params = this.route.snapshot.queryParams;
-    const transactionCodeParam = params['transaction_code'];
-    const cCodeParam = params['c'];
+    const activationCodeParam = this.route.snapshot.paramMap.get('activationCode') ?? undefined;
+    const cCodeParam = this.route.snapshot.queryParams['c'];
 
-    if(!transactionCodeParam){
-      console.error("Client error: Missing transaction code in the URL. Can't get credential offer.");
+    if(!activationCodeParam){
+      console.error("Client error: Missing activation code in the URL. Can't get credential offer.");
       
       this.translate.get("error.credentialOffer.invalid-url")
       .pipe(take(1))
@@ -292,9 +290,9 @@ export class CredentialOfferStepperComponent implements OnInit{
     }
     const updatedParams: CredentialOfferParamsState = {
       credential_offer_uri: undefined,
-      transaction_code: transactionCodeParam,
-      c_transaction_code: cCodeParam,
-      c_transaction_code_expires_in: undefined,
+      c_activation_code: activationCodeParam,
+      c_code: cCodeParam,
+      c_activation_code_expires_in: undefined,
       loading: false,
       error: false
     };
@@ -303,54 +301,54 @@ export class CredentialOfferStepperComponent implements OnInit{
 
   public getCredentialOffer(): Observable<Partial<CredentialOfferParams>>{
     const offer = this.offerParams$();
-    let params: Observable<Partial<CredentialOfferParams>> = throwError(()=>new Error('No transaction nor c code to fetch credential offer.'));
+    let params: Observable<Partial<CredentialOfferParams>> = throwError(()=>new Error('No activation nor c code to fetch credential offer.'));
     
-    if(offer?.c_transaction_code){
-      params = this.getCredentialOfferByCTransactionCode(offer.c_transaction_code);
-    }else if(offer?.transaction_code){
-      params = this.getCredentialOfferByTransactionCode(offer.transaction_code);
+    if(offer?.c_code){
+      params = this.getCredentialOfferByCCode(offer.c_code);
+    }else if(offer?.c_activation_code){
+      params = this.getCredentialOfferByActivationCode(offer.c_activation_code);
     }else{
       this.redirectToHome();
-      console.error("Client error: Transaction code not found. Can't get credential offer");
+      console.error("Client error: Activation code not found. Can't get credential offer");
       const message = this.translate.instant("error.credentialOffer.invalid-url");
       this.dialog.openErrorInfoDialog(message);
     }
     return params;
   }
 
-  public getCredentialOfferByTransactionCode(transactionCode:string): Observable<CredentialOfferResponse> {
-    if(!transactionCode){
-      console.error("No transaction code was found, can't refresh QR.");
+  public getCredentialOfferByActivationCode(activationCode:string): Observable<CredentialOfferResponse> {
+    if(!activationCode){
+      console.error("No activation code was found, can't refresh QR.");
       const message = this.translate.instant("error.credentialOffer.invalid-url");
       this.dialog.openErrorInfoDialog(message);
       this.redirectToHome();
       return throwError(()=>new Error());
     }
 
-    return this.credentialProcedureService.getCredentialOfferByTransactionCode(transactionCode)
+    return this.credentialProcedureService.getCredentialOfferByActivationCode(activationCode)
     .pipe(
       takeUntilDestroyed(this.destroyRef),
     )
   }
 
-  public getCredentialOfferByCTransactionCode(cCode:string): Observable<CredentialOfferResponse> {
+  public getCredentialOfferByCCode(cCode:string): Observable<CredentialOfferResponse> {
     if (!cCode) {
-      console.error("No c-transaction code was found, can't refresh QR.");
+      console.error("No c-code was found, can't refresh QR.");
       const message = this.translate.instant("error.credentialOffer.invalid-url");
       this.dialog.openErrorInfoDialog(message);
       this.redirectToHome();
       return throwError(()=>new Error());
     }
 
-    return this.credentialProcedureService.getCredentialOfferByCTransactionCode(cCode)
+    return this.credentialProcedureService.getCredentialOfferByCCode(cCode)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
       )
   }
 
   public updateUrlParams(offerParams:CredentialOfferParams): void{
-      const cCode = offerParams.c_transaction_code;
-      const cCodeParam = cCode ? {c:cCode} : undefined;
+      const cCode = offerParams.c_code;
+      const cCodeParam = cCode ? { c:cCode } : undefined;
         if(cCodeParam){
           this.router.navigate(
             [], {

@@ -29,7 +29,7 @@ module.exports = {
       // '/src/app/core/mocks/',
       // '/src/app/app',
       // '/src/app/core/',
-      // '/src/app/features/(?!credential-details)',
+      // '/src/app/features/(?!credential-offer)',
       // '/src/app/shared/',
     ]
    };

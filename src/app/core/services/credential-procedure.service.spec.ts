@@ -248,75 +248,75 @@ describe('CredentialProcedureService', () => {
     });
   });
 
-  describe('Get credential offer by transaction code', () => {
+  describe('Get credential offer by activation code', () => {
   it('should get credential offer successfully', () => {
-    const transactionCode = 'abc123';
+    const activationCode = 'abc123';
     const mockResponse = JSON.stringify({ qrCode: 'mockQRCode' });
 
-    service.getCredentialOfferByTransactionCode(transactionCode).subscribe(data => {
+    service.getCredentialOfferByActivationCode(activationCode).subscribe(data => {
       expect(data).toBe('mockQRCode');
     });
 
-    const req = httpMock.expectOne(`${credentialOfferUrl}/transaction-code/${transactionCode}`);
-    expect(req.request.method).toBe('GET');
+    const req = httpMock.expectOne(`${credentialOfferUrl}`);
+    expect(req.request.method).toBe('POST');
     req.flush(mockResponse);
   });
 
   it('should return raw response if qrCode is not present in JSON response', () => {
-    const transactionCode = 'abc123';
+    const activationCode = 'abc123';
     const mockResponse = JSON.stringify({});
 
-    service.getCredentialOfferByTransactionCode(transactionCode).subscribe(data => {
+    service.getCredentialOfferByActivationCode(activationCode).subscribe(data => {
       expect(data).toBe(mockResponse);
     });
 
-    const req = httpMock.expectOne(`${credentialOfferUrl}/transaction-code/${transactionCode}`);
-    expect(req.request.method).toBe('GET');
+    const req = httpMock.expectOne(`${credentialOfferUrl}`);
+    expect(req.request.method).toBe('POST');
     req.flush(mockResponse);
   });
 
   it('should return raw response if JSON.parse fails', () => {
-    const transactionCode = 'abc123';
+    const activationCode = 'abc123';
     const invalidJSONResponse = 'Invalid JSON string';
 
-    service.getCredentialOfferByTransactionCode(transactionCode).subscribe(data => {
+    service.getCredentialOfferByActivationCode(activationCode).subscribe(data => {
       expect(data).toBe(invalidJSONResponse);
     });
 
-    const req = httpMock.expectOne(`${credentialOfferUrl}/transaction-code/${transactionCode}`);
-    expect(req.request.method).toBe('GET');
+    const req = httpMock.expectOne(`${credentialOfferUrl}`);
+    expect(req.request.method).toBe('POST');
     req.flush(invalidJSONResponse);
   });
 
 
   });
 
-describe('get credential offer by c-code', () => {
+describe('get credential offer by c-activation-code', () => {
   it('should handle error when getting credential offer by c code', () => {
-    const transactionCode = 'abc123';
+    const cCode = 'abc123';
     const errorResponse = serverErrorResp;
 
-    service.getCredentialOfferByCTransactionCode(transactionCode).subscribe(
+    service.getCredentialOfferByCCode(cCode).subscribe(
       () => fail('should have failed with 500 error'),
       (error: string) => {
         expect(error).toContain('Server-side error: 500');
       }
     );
 
-    const req = httpMock.expectOne(`${credentialOfferUrl}/c-transaction-code/${transactionCode}`);
+    const req = httpMock.expectOne(`${credentialOfferUrl}`);
     req.flush('500 error', errorResponse);
   });
 
-  it('should return raw response when qrCode is not present in getCredentialOffer', () => {
-    const transactionCode = 'abc123';
+  it('should return raw response when cCode is not present in getCredentialOffer', () => {
+    const cCode = 'abc123';
     const mockResponse = 'raw response';
 
-    service.getCredentialOfferByCTransactionCode(transactionCode).subscribe(data => {
+    service.getCredentialOfferByCCode(cCode).subscribe(data => {
       expect(data).toBe(mockResponse);
     });
 
-    const req = httpMock.expectOne(`${credentialOfferUrl}/c-transaction-code/${transactionCode}`);
-    expect(req.request.method).toBe('GET');
+    const req = httpMock.expectOne(`${credentialOfferUrl}`);
+    expect(req.request.method).toBe('POST');
     req.flush(mockResponse);
   });
 });
@@ -422,36 +422,36 @@ describe('get credential offer by c-code', () => {
     });
   });
 
-  describe('getCredentialOfferByTransactionCode', () => {
+  describe('getCredentialOfferByActivationCode', () => {
     it('should propagate error returned by handleCredentialOfferError', () => {
-      const transactionCode = 'test-code';
+      const activationCode = 'test-code';
       const error = new HttpErrorResponse({ status: 404, error: {} });
   
-      service.getCredentialOfferByTransactionCode(transactionCode).subscribe({
+      service.getCredentialOfferByActivationCode(activationCode).subscribe({
         next: () => fail('Expected error'),
         error: err => {
           expect(err).toBe(error);
         }
       });
   
-      const req = httpMock.expectOne(`${credentialOfferUrl}/transaction-code/${transactionCode}`);
+      const req = httpMock.expectOne(`${credentialOfferUrl}`);
       req.flush({}, error);
     });
   });
   
-  describe('getCredentialOfferByCTransactionCode', () => {
+  describe('getCredentialOfferByCCode', () => {
     it('should propagate error returned by handleCredentialOfferError', () => {
-      const cTransactionCode = 'test-code';
+      const cCode = 'test-code';
       const error = new HttpErrorResponse({ status: 409, error: {} });
   
-      service.getCredentialOfferByCTransactionCode(cTransactionCode).subscribe({
+      service.getCredentialOfferByCCode(cCode).subscribe({
         next: () => fail('Expected error'),
         error: err => {
           expect(err).toBe(error);
         }
       });
   
-      const req = httpMock.expectOne(`${credentialOfferUrl}/c-transaction-code/${cTransactionCode}`);
+      const req = httpMock.expectOne(`${credentialOfferUrl}`);
       req.flush({}, error);
     });
   });
