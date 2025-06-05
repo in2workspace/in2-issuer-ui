@@ -11,7 +11,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class AuthService{
   private readonly isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
   private readonly userDataSubject = new BehaviorSubject<UserDataAuthenticationResponse |null>(null);
@@ -25,21 +25,16 @@ export class AuthService {
   
   
   private userPowers: Power[] = [];
-  private readonly broadcastChannel = new BroadcastChannel('auth');
-  private static readonly BROADCAST_FORCE_LOGOUT = 'forceIssuerLogout'; 
   
   private readonly authEvents = inject(PublicEventsService);
   private readonly destroy$ = inject(DestroyRef);
   private readonly oidcSecurityService = inject(OidcSecurityService);
 
   public constructor() {
-    console.log('init auth service');
     // handle silent renew errors and log when certain events occur
     this.subscribeToAuthEvents();
     // checks if the user is authenticated and gets related data; doesn't redirect to login page; this is done by the auto login guards
     this.checkAuth$().subscribe();
-    // synchronize tabs when logging out
-    this.listenToCrossTabLogout();
   }
 
   public subscribeToAuthEvents(): void {
@@ -79,7 +74,7 @@ export class AuthService {
                     },
                     error: (err) => {
                       console.error('Error while reauthenticating after reconnect:', err);
-                      this.authorizeAndForceCrossTabLogout();
+                      this.authorize();
                     },
                     complete: () => {
                       window.removeEventListener('online', onlineHandler);
@@ -92,7 +87,7 @@ export class AuthService {
 
             } else {
               console.error('Silent token refresh failed: online mode, proceeding to logout', event);
-              this.authorizeAndForceCrossTabLogout();
+              this.authorize();
             }
             break;
 
@@ -106,8 +101,7 @@ export class AuthService {
   }
 
   public checkAuth$(): Observable<LoginResponse> {
-    console.log('checkAuth$')
-    console.info('checkAuth$ - info')
+    console.info('Start checkAuth');
     return this.oidcSecurityService.checkAuth().pipe(
       take(1),
       tap(({ isAuthenticated, userData}) => {
@@ -127,31 +121,9 @@ export class AuthService {
     }));
   }
 
-  public listenToCrossTabLogout(): void{
-    console.log('listenToCrossTabLogout');
-    console.info('info listenToCrossTabLogout');
-    this.broadcastChannel.onmessage = (event) => {
-      console.log('Received Broadcast message: ', event);
-      if (event.data === AuthService.BROADCAST_FORCE_LOGOUT) {
-          console.warn('Detected logout with revoke, logging out locally');
-          this.localLogout$().subscribe();
-      }
-    };
-  }
-
-  
-private localLogout$(): Observable<unknown> {
-  console.info('Local logout.');
-  return this.oidcSecurityService.logoff().pipe(tap(()=>{console.log('after logoff tap')}));
-}
-
 
   public logout$(): Observable<{}> {
-    console.info('Logout: revoking tokens.')
-    console.log('Logout: revoking tokens.')
-
-    console.log('broadcast in logout$');
-    this.broadcastChannel.postMessage(AuthService.BROADCAST_FORCE_LOGOUT);
+    console.info('Logout: revoking tokens.');
 
     return this.oidcSecurityService.logoffAndRevokeTokens().pipe(
       tap(() => {
@@ -165,10 +137,9 @@ private localLogout$(): Observable<unknown> {
     );
   }
 
-  public authorizeAndForceCrossTabLogout(){
-    console.info('Authorize and broadcast logout.');
+  public authorize(){
+    console.info('Authorize.');
     this.oidcSecurityService.authorize();
-    this.broadcastChannel.postMessage(AuthService.BROADCAST_FORCE_LOGOUT);
   }
 
   private handleUserAuthentication(userData: UserDataAuthenticationResponse): void {
@@ -179,7 +150,7 @@ private localLogout$(): Observable<unknown> {
         this.handleVCLogin(normalizedCredential);
       } 
       catch(error){
-        console.error(error)
+        console.error(error);
       }
   }
 
@@ -322,7 +293,4 @@ private localLogout$(): Observable<unknown> {
     }
   }
 
-  private ngOnDestroy(){
-    this.broadcastChannel.close();
-  }
 }
