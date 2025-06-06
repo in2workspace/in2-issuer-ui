@@ -455,6 +455,20 @@ describe('AuthService', () => {
 
   })
 
+
+  it('should catch error if neither VC nor cert is present', () => {
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    extractVcSpy.mockReturnValue(null);
+
+    (service as any).handleUserAuthentication(mockUserDataNoVCNoCert);
+
+    expect(consoleErrorSpy).toHaveBeenCalled(); 
+  });
+
+    // ----------------------------------------------------------------------------
+  // logout$() - direct coverage
+  // ----------------------------------------------------------------------------
 describe('logout$', () => {
 it('should call logoffAndRevokeTokens and postMessage', (done) => {
   const postMessageSpy = jest.spyOn(BroadcastChannel.prototype, 'postMessage').mockImplementation();
@@ -487,17 +501,6 @@ it('should call logoffAndRevokeTokens and postMessage', (done) => {
         }
       });
     });
-  });
-
-
-  it('should catch error if neither VC nor cert is present', () => {
-    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-
-    extractVcSpy.mockReturnValue(null);
-
-    (service as any).handleUserAuthentication(mockUserDataNoVCNoCert);
-
-    expect(consoleErrorSpy).toHaveBeenCalled(); 
   });
 
   // ----------------------------------------------------------------------------
@@ -593,7 +596,7 @@ describe('subscribeToAuthEvents', () => {
   });
 
   it('should handle SilentRenewStarted', () => {
-    const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+    const consoleSpy = jest.spyOn(console, 'info').mockImplementation();
 
     service.subscribeToAuthEvents();
 

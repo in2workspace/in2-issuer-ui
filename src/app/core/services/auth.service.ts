@@ -33,9 +33,7 @@ export class AuthService{
   private readonly router = inject(Router);
 
   public constructor() {
-    // handle silent renew errors and log when certain events occur
     this.subscribeToAuthEvents();
-    // checks if the user is authenticated and gets related data; doesn't redirect to login page; this is done by the auto login guards
     this.checkAuth$().subscribe();
   }
 
@@ -44,7 +42,12 @@ export class AuthService{
       .pipe(
         takeUntilDestroyed(this.destroy$),
         filter((e) =>
-          [EventTypes.SilentRenewStarted, EventTypes.SilentRenewFailed, EventTypes.IdTokenExpired, EventTypes.TokenExpired].includes(e.type)
+          [
+            EventTypes.SilentRenewStarted, 
+            EventTypes.SilentRenewFailed,
+            EventTypes.IdTokenExpired, 
+            EventTypes.TokenExpired
+          ].includes(e.type)
         )
       )
       .subscribe((event) => {
@@ -52,13 +55,12 @@ export class AuthService{
 
         switch (event.type) {
           case EventTypes.SilentRenewStarted:
-            console.log('Silent renew started' + Date.now());
+            console.info('Silent renew started' + Date.now());
             break;
 
           // before this happens, the library cleans up the local auth data
           case EventTypes.SilentRenewFailed:
             
-            // the library generally doesn't throw/emit error when there is not internet connection, but the backup is needed in case the error is thrown
             if (isOffline) {
               console.warn('Silent token refresh failed: offline mode', event);
 
@@ -69,7 +71,7 @@ export class AuthService{
                     next: ({ isAuthenticated }) => {
                       if (!isAuthenticated) {
                         console.warn('User still not authenticated after reconnect, logging out');
-                        this.logout$().subscribe();
+                        this.authorize();
                       } else {
                         console.info('User reauthenticated successfully after reconnect');
                       }
@@ -103,7 +105,7 @@ export class AuthService{
   }
 
   public checkAuth$(): Observable<LoginResponse> {
-    console.info('Start checkAuth');
+    console.info('Checking authentication.');
     return this.oidcSecurityService.checkAuth().pipe(
       take(1),
       tap(({ isAuthenticated, userData}) => {
@@ -141,7 +143,6 @@ export class AuthService{
 
   public authorize(){
     console.info('Authorize.');
-    // this.router.navigate(['/home']);
     this.oidcSecurityService.authorize();
   }
 
