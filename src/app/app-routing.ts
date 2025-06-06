@@ -15,7 +15,7 @@ export const routes: Routes = [
   },
   {
     path: 'organization/credentials',
-    canActivate: [AutoLoginPartialRoutesGuard, basicGuard],
+    canActivateChild: [AutoLoginPartialRoutesGuard, basicGuard],
     children: [
       {
         path: '',

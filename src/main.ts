@@ -11,7 +11,7 @@ import { RouterModule } from "@angular/router";
 import { routes } from "./app/app-routing";
 import { HttpLoaderFactory } from "./app/core/services/translate-http-loader.factory";
 import { overrideDefaultValueAccessor } from './app/core/overrides/value-accessor.overrides';
-import { IAM_PARAMS } from './app/core/constants/iam.constants';
+import { IAM_PARAMS, IAM_POST_LOGIN_ROUTE, IAM_POST_LOGOUT_URI, IAM_REDIRECT_URI } from './app/core/constants/iam.constants';
 
 overrideDefaultValueAccessor();
 
@@ -25,10 +25,11 @@ bootstrapApplication(AppComponent, {
             }
         }), AuthModule.forRoot({
             config: {
-                postLoginRoute: '/organization/credentials',
+                // Add "logLevel: 1" to see library logs
+                postLoginRoute: IAM_POST_LOGIN_ROUTE,
                 authority: environment.iam_url,
-                redirectUrl: `${window.location.origin}`,
-                postLogoutRedirectUri: window.location.origin,
+                redirectUrl: IAM_REDIRECT_URI,
+                postLogoutRedirectUri: IAM_POST_LOGOUT_URI,
                 clientId: IAM_PARAMS.CLIENT_ID,
                 scope: IAM_PARAMS.SCOPE,
                 responseType: IAM_PARAMS.GRANT_TYPE,
@@ -37,7 +38,7 @@ bootstrapApplication(AppComponent, {
                 historyCleanupOff: false,
                 ignoreNonceAfterRefresh: true,
                 triggerRefreshWhenIdTokenExpired: false,
-              secureRoutes: [environment.server_url].filter((route): route is string => route !== undefined)
+                secureRoutes: [environment.server_url, environment.iam_url].filter((route): route is string => route !== undefined)
             },
         })),
         { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

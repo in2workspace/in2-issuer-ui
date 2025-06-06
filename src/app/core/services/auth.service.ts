@@ -1,16 +1,18 @@
-import { inject, Injectable, WritableSignal, signal } from '@angular/core';
-import { OidcSecurityService } from 'angular-auth-oidc-client';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { inject, Injectable, WritableSignal, signal, DestroyRef } from '@angular/core';
+import { EventTypes, LoginResponse, OidcSecurityService, PublicEventsService } from 'angular-auth-oidc-client';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { catchError, filter, take, tap } from 'rxjs/operators';
 import { UserDataAuthenticationResponse } from "../models/dto/user-data-authentication-response.dto";
 import { Power, EmployeeMandator, LEARCredentialEmployee } from "../models/entity/lear-credential";
 import { RoleType } from '../models/enums/auth-rol-type.enum';
 import { LEARCredentialDataNormalizer } from '../models/entity/lear-credential-employee-data-normalizer';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class AuthService{
   private readonly isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
   private readonly userDataSubject = new BehaviorSubject<UserDataAuthenticationResponse |null>(null);
@@ -20,32 +22,128 @@ export class AuthService {
   private readonly nameSubject = new BehaviorSubject<string>('');
   private readonly normalizer = new LEARCredentialDataNormalizer();
   public readonly roleType: WritableSignal<RoleType> = signal(RoleType.LEAR);
-
-
-
+  
+  
+  
   private userPowers: Power[] = [];
-
+  
+  private readonly authEvents = inject(PublicEventsService);
+  private readonly destroy$ = inject(DestroyRef);
   private readonly oidcSecurityService = inject(OidcSecurityService);
+  private readonly router = inject(Router);
 
   public constructor() {
-    this.checkAuth()
-    .pipe(take(1))
-    .subscribe();
+    this.subscribeToAuthEvents();
+    this.checkAuth$().subscribe();
   }
 
-  public checkAuth(): Observable<boolean> {
+  public subscribeToAuthEvents(): void {
+    this.authEvents.registerForEvents()
+      .pipe(
+        takeUntilDestroyed(this.destroy$),
+        filter((e) =>
+          [
+            EventTypes.SilentRenewStarted, 
+            EventTypes.SilentRenewFailed,
+            EventTypes.IdTokenExpired, 
+            EventTypes.TokenExpired
+          ].includes(e.type)
+        )
+      )
+      .subscribe((event) => {
+        const isOffline = !navigator.onLine;
+
+        switch (event.type) {
+          case EventTypes.SilentRenewStarted:
+            console.info('Silent renew started' + Date.now());
+            break;
+
+          // before this happens, the library cleans up the local auth data
+          case EventTypes.SilentRenewFailed:
+            
+            if (isOffline) {
+              console.warn('Silent token refresh failed: offline mode', event);
+
+              const onlineHandler = () => {
+                console.info('Connection restored. Retrying to authenticate...');
+                this.checkAuth$().subscribe(
+                  {
+                    next: ({ isAuthenticated }) => {
+                      if (!isAuthenticated) {
+                        console.warn('User still not authenticated after reconnect, logging out');
+                        this.authorize();
+                      } else {
+                        console.info('User reauthenticated successfully after reconnect');
+                      }
+                    },
+                    error: (err) => {
+                      console.error('Error while reauthenticating after reconnect:', err);
+                      this.authorize();
+                    },
+                    complete: () => {
+                      window.removeEventListener('online', onlineHandler);
+                    }
+                  });
+                
+              };
+
+              window.addEventListener('online', onlineHandler);
+
+            } else {
+              console.error('Silent token refresh failed: online mode, proceeding to logout', event);
+              this.authorize();
+            }
+            break;
+
+          case EventTypes.IdTokenExpired:
+          case EventTypes.TokenExpired:
+            console.error('Session expired:', event);
+            console.error('At: ' + Date.now());
+            break;
+        }
+      });
+  }
+
+  public checkAuth$(): Observable<LoginResponse> {
+    console.info('Checking authentication.');
     return this.oidcSecurityService.checkAuth().pipe(
       take(1),
-      map(({ isAuthenticated, userData}) => {
+      tap(({ isAuthenticated, userData}) => {
       this.isAuthenticatedSubject.next(isAuthenticated);
 
       if (isAuthenticated) {
-        if(this.getRole(userData)!=RoleType.LEAR)  throw new Error('Error Role. '+ this.getRole(userData));
+        if(this.getRole(userData) != RoleType.LEAR)  throw new Error('Error Role. '+ this.getRole(userData));
         this.userDataSubject.next(userData);
-        this.handleUserAuthentication(userData)
+        this.handleUserAuthentication(userData);
+      }else{
+          console.warn('Checking authentication: not authenticated.');
       }
-      return isAuthenticated;
+    }),
+    catchError((err:Error)=>{
+      console.error('Checking authentication: error in initial authentication.');
+      return throwError(()=>err);
     }));
+  }
+
+
+  public logout$(): Observable<{}> {
+    console.info('Logout: revoking tokens.');
+
+    return this.oidcSecurityService.logoffAndRevokeTokens().pipe(
+      tap(() => {
+        console.info('Logout with revoke completed.');
+      }),
+      catchError((err:Error)=>{
+        console.error('Error when logging out with revoke.');
+        console.error(err);
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  public authorize(){
+    console.info('Authorize.');
+    this.oidcSecurityService.authorize();
   }
 
   private handleUserAuthentication(userData: UserDataAuthenticationResponse): void {
@@ -56,7 +154,7 @@ export class AuthService {
         this.handleVCLogin(normalizedCredential);
       } 
       catch(error){
-        console.error(error)
+        console.error(error);
       }
   }
 
@@ -198,4 +296,5 @@ export class AuthService {
       return [];
     }
   }
+
 }

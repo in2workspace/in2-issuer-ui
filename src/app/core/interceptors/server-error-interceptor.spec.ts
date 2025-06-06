@@ -4,6 +4,7 @@ import { of, throwError } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { ServeErrorInterceptor } from './server-error-interceptor';
 import { DialogWrapperService } from 'src/app/shared/components/dialog/dialog-wrapper/dialog-wrapper.service';
+import { environment } from 'src/environments/environment';
 
 describe('ServeErrorInterceptor', () => {
   let interceptor: ServeErrorInterceptor;
@@ -124,6 +125,32 @@ describe('ServeErrorInterceptor', () => {
         }
       });
     });
+
+it('should handle errors silently for IAM endpoint and rethrow error', done => {
+  const iamUrl = environment.iam_url;
+  const httpErrorResponse = new HttpErrorResponse({
+    status: 401,
+    statusText: 'Unauthorized',
+    url: iamUrl
+  });
+
+  const customRequest = { ...httpRequest, url: iamUrl } as HttpRequest<any>;
+
+  httpHandler.handle.mockReturnValue(throwError(() => httpErrorResponse));
+
+  const logSpy = jest.spyOn(interceptor as any, 'logHandledSilentlyError');
+
+  interceptor.intercept(customRequest, httpHandler).subscribe({
+    next: () => fail('expected an error, not a response'),
+    error: (err: HttpErrorResponse) => {
+      expect(err).toBe(httpErrorResponse);
+      expect(logSpy).toHaveBeenCalledWith(httpErrorResponse);
+      done();
+    }
+  });
+});
+
+
   });
 
   describe('when an empty body is received', () => {
@@ -162,5 +189,14 @@ describe('ServeErrorInterceptor', () => {
         error: () => fail('expected a response, not an error')
       });
     });
+  });
+
+  it('should handle error silently', () => {
+    const mockError = { message: 'Error!' } as any;
+    const logSpy = jest.spyOn(console, 'error');
+    
+    interceptor['logHandledSilentlyError'](mockError);
+    expect(logSpy).toHaveBeenCalledTimes(2);
+    
   });
 });

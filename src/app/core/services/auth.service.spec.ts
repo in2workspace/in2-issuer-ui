@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { finalize, of, Subject, throwError } from 'rxjs';
 import { AuthService } from './auth.service';
-import { OidcSecurityService } from 'angular-auth-oidc-client';
+import { EventTypes, OidcSecurityService, PublicEventsService } from 'angular-auth-oidc-client';
 import { UserDataAuthenticationResponse } from '../models/dto/user-data-authentication-response.dto';
 import { LEARCredentialEmployee } from '../models/entity/lear-credential';
 import { RoleType } from '../models/enums/auth-rol-type.enum';
@@ -126,16 +126,36 @@ const mockUserDataNoVCNoCert: UserDataAuthenticationResponse = {
 
 describe('AuthService', () => {
   let service: AuthService;
+  let mockPublicEventsService: jest.Mocked<any>;
+  let broadcastMessages: any[] = [];
 
   // We'll mock OidcSecurityService and any direct dependencies (like normalizer).
   let oidcSecurityServiceMock: {
     checkAuth: jest.Mock,
+    logoff: jest.Mock,
     authorize: jest.Mock,
     logoffAndRevokeTokens: jest.Mock
   };
 
   let extractVcSpy: jest.SpyInstance; 
  
+    class BroadcastChannelMock {
+    name: string;
+    onmessage: ((this: BroadcastChannel, ev: MessageEvent) => any) | null = null;
+    constructor(name: string) {
+      this.name = name;
+      broadcastMessages = [];
+    }
+    postMessage(message: any) {
+      broadcastMessages.push(message);
+    }
+    close() {}
+  }
+
+  beforeAll(() => {
+    // Global mock del BroadcastChannel
+    (globalThis as any).BroadcastChannel = BroadcastChannelMock;
+  });
 
   beforeEach(() => {
     oidcSecurityServiceMock = {
@@ -145,8 +165,12 @@ describe('AuthService', () => {
         accessToken: null 
       })),
       authorize: jest.fn(),
-      logoffAndRevokeTokens: jest.fn()
+      logoffAndRevokeTokens: jest.fn(),
+      logoff: jest.fn().mockReturnValue(of()),
     };
+        mockPublicEventsService = {
+      registerForEvents: jest.fn().mockReturnValue(of())
+    }
     jest.spyOn(LEARCredentialDataNormalizer.prototype, 'normalizeLearCredential')
     .mockImplementation((data) => data);
 
@@ -155,7 +179,10 @@ describe('AuthService', () => {
       providers: [
         AuthService,
         { provide: OidcSecurityService, useValue: oidcSecurityServiceMock },
-
+        {
+          provide: PublicEventsService,
+          useValue: mockPublicEventsService
+        }
       ]
     });
 
@@ -407,6 +434,12 @@ describe('AuthService', () => {
     const result = (service as any).getRole(mockUserData);
     expect(result).toBe(RoleType.LEAR);
   });
+
+  it('should return undefined if role is not present', () => {
+  const mockUserData = {} as UserDataAuthenticationResponse;
+  const result = (service as any).getRole(mockUserData);
+  expect(result).toBeNull();
+  });
   
   it('should extract certificate data correctly', () => {
     const result = (service as any).extractDataFromCertificate(mockUserDataWithCert);
@@ -422,6 +455,7 @@ describe('AuthService', () => {
 
   })
 
+
   it('should catch error if neither VC nor cert is present', () => {
     const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
@@ -432,9 +466,47 @@ describe('AuthService', () => {
     expect(consoleErrorSpy).toHaveBeenCalled(); 
   });
 
+    // ----------------------------------------------------------------------------
+  // logout$() - direct coverage
   // ----------------------------------------------------------------------------
-  // checkAuth() coverage
+describe('logout$', () => {
+it('should call logoffAndRevokeTokens and postMessage', (done) => {
+  const postMessageSpy = jest.spyOn(BroadcastChannel.prototype, 'postMessage').mockImplementation();
+  // Assegurar que l'Observable es completa
+  oidcSecurityServiceMock.logoffAndRevokeTokens.mockReturnValue(of(null).pipe(
+    // Forçar la finalització de l'Observable
+    finalize(() => {})
+  ));
+
+  service.logout$().subscribe({
+    next: () => {
+      expect(oidcSecurityServiceMock.logoffAndRevokeTokens).toHaveBeenCalled();
+      expect(postMessageSpy).toHaveBeenCalledWith('forceIssuerLogout');
+    },
+    complete: () => {
+      postMessageSpy.mockRestore();
+      done(); // Cridar done() quan l'Observable es completa
+    }
+  });
+});
+
+    it('should handle error in logout$', (done) => {
+      const error = new Error('logout failed');
+      oidcSecurityServiceMock.logoffAndRevokeTokens.mockReturnValue(throwError(() => error));
+
+      service.logout$().subscribe({
+        error: (err) => {
+          expect(err).toBe(error);
+          done();
+        }
+      });
+    });
+  });
+
   // ----------------------------------------------------------------------------
+  // checkAuth$() coverage
+  // ----------------------------------------------------------------------------
+  describe('checkAuth$', ()=> {
   it('should mark user as authenticated and invoke handleUserAuthentication if checkAuth sees a valid user', done => {
     const handleUserAuthSpy = jest.spyOn(service as any, 'handleUserAuthentication');
     oidcSecurityServiceMock.checkAuth.mockReturnValue(of({
@@ -443,8 +515,7 @@ describe('AuthService', () => {
       accessToken: 'xxx'
     }));
 
-    service.checkAuth().subscribe(result => {
-      expect(result).toBe(true);
+    service.checkAuth$().subscribe(() => {
       expect(handleUserAuthSpy).toHaveBeenCalledWith(mockUserDataWithVC);
       service.isLoggedIn().subscribe(isLoggedIn => {
         expect(isLoggedIn).toBe(true);
@@ -460,12 +531,176 @@ describe('AuthService', () => {
       accessToken: ''
     }));
 
-    service.checkAuth().subscribe(result => {
-      expect(result).toBe(false);
+    service.checkAuth$().subscribe(() => {
       service.isLoggedIn().subscribe(isLoggedIn => {
         expect(isLoggedIn).toBe(false);
         done();
       });
     });
   });
+
+  it('should handle error if checkAuth throws', done => {
+  const error = new Error('Some error');
+  const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  oidcSecurityServiceMock.checkAuth.mockReturnValue(throwError(() => error));
+
+  service.checkAuth$().subscribe({
+    next: () => {
+      // no hauria d'arribar aquí
+      fail('Expected an error to be thrown');
+    },
+    error: err => {
+      expect(err).toBe(error);
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        'Checking authentication: error in initial authentication.'
+      );
+      done();
+    }
+  });
+});
+
+it('should throw an error if user role is not LEAR', done => {
+  const badUserData = { ...mockUserDataWithVC, role: 'SOME_OTHER_ROLE' };
+  oidcSecurityServiceMock.checkAuth.mockReturnValue(of({
+    isAuthenticated: true,
+    userData: badUserData,
+    accessToken: 'xxx'
+  }));
+
+  service.checkAuth$().subscribe({
+    next: () => {
+      fail('Expected error due to invalid role');
+    },
+    error: err => {
+      expect(err).toBeInstanceOf(Error);
+      expect(err.message).toContain('Error Role');
+      done();
+    }
+  });
+});
+});
+
+describe('subscribeToAuthEvents', () => {
+  let eventSubject: Subject<any>;
+
+  beforeEach(() => {
+    eventSubject = new Subject();
+
+    // Espiar mètodes utilitzats en els switch
+    jest.spyOn(service, 'checkAuth$').mockReturnValue(of({ isAuthenticated: false } as any));
+    jest.spyOn(service, 'logout$').mockReturnValue(of({}));
+    jest.spyOn(service, 'authorize').mockImplementation();
+
+    // Mock de registerForEvents
+    mockPublicEventsService.registerForEvents.mockReturnValue(eventSubject.asObservable());
+  });
+
+  it('should handle SilentRenewStarted', () => {
+    const consoleSpy = jest.spyOn(console, 'info').mockImplementation();
+
+    service.subscribeToAuthEvents();
+
+    eventSubject.next({ type: EventTypes.SilentRenewStarted });
+
+    expect(consoleSpy).toHaveBeenCalledWith(expect.stringMatching(/Silent renew started/));
+
+    consoleSpy.mockRestore();
+  });
+
+  it('should handle SilentRenewFailed when offline', () => {
+    jest.spyOn(navigator, 'onLine', 'get').mockReturnValue(false);
+    const consoleWarn = jest.spyOn(console, 'warn').mockImplementation();
+    const consoleInfo = jest.spyOn(console, 'info').mockImplementation();
+
+    const addEventListenerSpy = jest.spyOn(window, 'addEventListener');
+
+    service.subscribeToAuthEvents();
+
+    eventSubject.next({ type: EventTypes.SilentRenewFailed });
+
+    expect(consoleWarn).toHaveBeenCalledWith(expect.stringContaining('offline mode'), expect.anything());
+    expect(addEventListenerSpy).toHaveBeenCalledWith('online', expect.any(Function));
+
+    consoleWarn.mockRestore();
+    consoleInfo.mockRestore();
+  });
+
+  it('should handle SilentRenewFailed when online', () => {
+    jest.spyOn(navigator, 'onLine', 'get').mockReturnValue(true);
+    const consoleError = jest.spyOn(console, 'error').mockImplementation();
+
+    service.subscribeToAuthEvents();
+
+    eventSubject.next({ type: EventTypes.SilentRenewFailed });
+
+    expect(consoleError).toHaveBeenCalledWith('Silent token refresh failed: online mode, proceeding to logout', expect.anything());
+    expect(service.authorize).toHaveBeenCalled();
+
+    consoleError.mockRestore();
+  });
+
+  it('should handle IdTokenExpired', () => {
+    const consoleError = jest.spyOn(console, 'error').mockImplementation();
+
+    service.subscribeToAuthEvents();
+
+    eventSubject.next({ type: EventTypes.IdTokenExpired });
+
+    expect(consoleError).toHaveBeenCalledWith('Session expired:', expect.anything());
+
+    consoleError.mockRestore();
+  });
+
+  it('should handle TokenExpired', () => {
+    const consoleError = jest.spyOn(console, 'error').mockImplementation();
+
+    service.subscribeToAuthEvents();
+
+    eventSubject.next({ type: EventTypes.TokenExpired });
+
+    expect(consoleError).toHaveBeenCalledWith('Session expired:', expect.anything());
+
+    consoleError.mockRestore();
+  });
+});
+
+it('should call .next with certData in handleCertificateLogin', () => {
+  const userData = mockUserDataWithCert;
+  const certData = { commonName: 'Cert Common Name' };
+
+  const extractSpy = jest
+    .spyOn(service as any, 'extractDataFromCertificate')
+    .mockReturnValue(certData);
+
+  const mandatorNextSpy = jest.spyOn((service as any).mandatorSubject, 'next');
+  const nameNextSpy = jest.spyOn((service as any).nameSubject, 'next');
+
+  (service as any).handleCertificateLogin(userData);
+
+  expect(extractSpy).toHaveBeenCalledWith(userData);
+  expect(mandatorNextSpy).toHaveBeenCalledWith(certData);
+  expect(nameNextSpy).toHaveBeenCalledWith(certData.commonName);
+});
+
+it('should return vc when present in userData', () => {
+  const result = (service as any).extractVCFromUserData(mockUserDataWithVC);
+  expect(result).toBe(mockUserDataWithVC.vc);
+});
+
+it('should throw error when vc is missing in userData', () => {
+  expect(() => {
+    (service as any).extractVCFromUserData(mockUserDataNoVCNoCert);
+  }).toThrowError('VC claim error.');
+});
+
+it('should return power array from learCredential', () => {
+  const result = (service as any).extractUserPowers(mockCredentialEmployee);
+  expect(result).toEqual(mockCredentialEmployee.credentialSubject.mandate.power);
+});
+
+it('should return empty array when error occurs accessing power', () => {
+  const invalidCredential: any = {};
+  const result = (service as any).extractUserPowers(invalidCredential);
+  expect(result).toEqual([]);
+});
 });
