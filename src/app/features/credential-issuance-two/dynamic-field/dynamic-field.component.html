@@ -1,0 +1,28 @@
+<p>dynamic-field works!</p>
+@if (fieldSchema.type === 'group') {
+      <fieldset [formGroupName]="fieldName">
+        <legend>{{ fieldName }}</legend>
+        @for (child of groupFields(); track child.key) {
+          <app-dynamic-field
+            [fieldName]="child.key"
+            [fieldSchema]="child.value"
+            [form]="group()!"
+          />
+        }
+      </fieldset>
+    } @else {
+      <div>
+        <label [for]="fieldName">{{ fieldName }}</label>
+        @if (fieldSchema.controlType === 'number') {
+          <input type="number" [formControlName]="fieldName" [id]="fieldName" />
+        } @else {
+          <input type="text" [formControlName]="fieldName" [id]="fieldName" />
+        }
+
+        @if (control()?.invalid && control()?.touched) {
+          <div style="color: red">
+            Invalid {{ fieldName }}
+          </div>
+        }
+      </div>
+    }
