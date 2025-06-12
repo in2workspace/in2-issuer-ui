@@ -1,15 +1,17 @@
 // --- Form Schemas ---
 
 import { CustomValidatorName, ValidatorEntry } from "src/app/shared/validators/issuance-validators";
+import { CredentialType } from "./lear-credential";
 
 export type CredentialIssuanceFormFieldSchema = {
     type: 'control' | 'group';
     display?: 'main' | 'side' | 'pref_side'; //should it be displayed in the main space or as a side card? 'pref_side' for sections that are only displayed in main in "asSigner" mode
+    // todo afegir-hi per a selector! (p. ex. country)
     controlType?: 'string' | 'number', // for 'control' only
     groupFields?: CredentialIssuanceFormSchema; //for 'group' only
     errors?: string[], // todo
     validators?: ValidatorEntry[];
-    // todo altres paràmetres? 
+    // todo altres paràmetres? placeholder, 
 };
 
 
@@ -99,12 +101,20 @@ export type CredentialIssuanceFormSchema = Record<string, CredentialIssuanceForm
         }, 
       },
     },
+
+    
     // todo later!
     // power: {
     //   type: 'group',
     //   display: 'main',
       //content will be set dynamically
     // },
+  };
+
+  export const IssuanceFormSchemaByType: Record<CredentialType, CredentialIssuanceFormSchema> = {
+    LEARCredentialEmployee: LearCredentialMachineIssuanceFormSchema,//todo
+    LEARCredentialMachine: LearCredentialMachineIssuanceFormSchema,
+    VerifiableCertification: LearCredentialMachineIssuanceFormSchema//todo
   };
   
   // export const VerifiableCertificationIssuanceFormSchema: CredentialIssuanceFormSchema = {

@@ -4,6 +4,8 @@ export type BuiltInValidatorEntry = { name: BuiltinValidatorName; args?: any[] }
 export type CustomValidatorEntry = { name: CustomValidatorName; args?: any[] };
 export type ValidatorEntry = BuiltInValidatorEntry | CustomValidatorEntry;
 
+
+//todo add validators from directives
 export class CustomValidators {
 
   public static isDomain(): ValidatorFn {
