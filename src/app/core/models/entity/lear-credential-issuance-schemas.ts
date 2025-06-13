@@ -1,8 +1,6 @@
 // --- Form Schemas ---
 
 import { ValidatorEntry } from "src/app/shared/validators/credential-issuance/issuance-validators";
-import { CredentialType } from "./lear-credential";
-
 
 // todo unir params de control en controlConfig i de group en groupConfig
 export type CredentialIssuanceFormFieldSchema = {

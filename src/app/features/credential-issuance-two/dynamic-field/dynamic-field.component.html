@@ -1,9 +1,13 @@
-@if(abstractControl$() && fieldSchema$()) {
-  @if (fieldSchema$().type === 'group' && groupFields$()) {
+@let fieldSchema = fieldSchema$();
+@let fieldName = fieldName$();
+@let control = control$();
+
+@if(abstractControl$() && fieldSchema) {
+  @if (fieldSchema.type === 'group' && groupFields$()) {
     <!-- Per als grups, mostrem el FormGroup específic del camp -->
     <mat-card class="mb-4">
       <mat-card-content [formGroup]="group$()!">
-        @for (field of fieldSchema$().groupFields | keyvalue; track $index) {
+        @for (field of fieldSchema.groupFields | keyvalue; track $index) {
           <app-dynamic-field 
             [fieldName$]="field.key" 
             [fieldSchema$]="field.value" 
@@ -15,22 +19,21 @@
   } @else {
     <!-- Controls individuals -->
     <mat-form-field appearance="outline" class="w-full" [formGroup]="parentFormGroup$()">
-      <mat-label>{{ fieldName$() }}</mat-label>
-      @if (fieldSchema$().controlType === 'number') {
-        <input matInput type="number" [formControlName]="fieldName$()" [id]="fieldName$()" />
-      }@else if (fieldSchema$().controlType === 'string'){
-        <input matInput type="text" [formControlName]="fieldName$()" [id]="fieldName$()" />
-      }@else if(fieldSchema$().controlType === 'selector'){
-          <mat-select>
-            <mat-option value="">Select a {{fieldName$()}}</mat-option>
-            @for(option of fieldSchema$().multiOptions; track $index){
+      <mat-label>{{ fieldName }}</mat-label>
+      @if (fieldSchema.controlType === 'number') {
+        <input matInput type="number" [formControlName]="fieldName" [id]="fieldName" />
+      }@else if (fieldSchema.controlType === 'string'){
+        <input matInput type="text" [formControlName]="fieldName" [id]="fieldName" />
+      }@else if(fieldSchema.controlType === 'selector'){
+          <mat-select [formControlName]="fieldName" [id]="fieldName">
+            <mat-option value="">Select a {{fieldName}}</mat-option>
+            @for(option of fieldSchema.multiOptions; track $index){
               <mat-option [value]="option.value">
                 {{ option.label }}
               </mat-option>
             }
           </mat-select>
       }
-      @let control = control$();
       @if (control?.invalid && control?.touched) {
         <mat-error>{{ control!.errors | firstElement | translate }}</mat-error>
       }
