@@ -1,0 +1,15 @@
+<mat-form-field>
+  <mat-label>Power</mat-label>
+  <mat-select [(ngModel)]="selectedPower$">
+    <!-- mat-select-trigger ?-->
+    <mat-option [value]="undefined" disabled>Default</mat-option>
+    @for(power of selectablePowers$(); track $index){
+      <mat-option [value]="power" [disabled]="power.isDisabled">{{power.function}}</mat-option>
+    }
+  </mat-select>
+</mat-form-field>
+<button (click)="addPower()" [disabled]="isAddDisabled$()">Add</button>
+
+@for(power of addedPowers$(); track $index){
+  <div>{{power.function}}</div>
+}

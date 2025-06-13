@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { FormControl, FormGroup, ValidatorFn } from '@angular/forms';
 import { CredentialType } from 'src/app/core/models/entity/lear-credential';
-import { CredentialIssuanceFormSchema, getLearCredentialMachineIssuanceFormSchema } from 'src/app/core/models/entity/lear-credential-issuance-schemas';
+import { CredentialIssuanceFormSchema, CredentialIssuancePowerFormSchema, getLearCredentialMachineIssuanceFormSchemas } from 'src/app/core/models/entity/lear-credential-issuance-schemas';
 import { CountryService } from 'src/app/shared/components/form-credential/services/country.service';
 import { ALL_VALIDATORS_FACTORY_MAP, ValidatorEntry } from 'src/app/shared/validators/credential-issuance/issuance-validators';
 
@@ -11,7 +11,7 @@ import { ALL_VALIDATORS_FACTORY_MAP, ValidatorEntry } from 'src/app/shared/valid
 })
 export class CredentialIssuanceTwoService {
 
-  private readonly countryService = inject(CountryService)
+  private readonly countryService = inject(CountryService);
 
   constructor() { }
 
@@ -24,6 +24,8 @@ export class CredentialIssuanceTwoService {
     const group: Record<string, any> = {};
 
     for (const [key, field] of Object.entries(schema)) {
+      if(field.ignore === true){ continue }
+
       if (field.type === 'control') {
         const validators = field.validators?.map(this.getValidatorFn).filter(Boolean) as ValidatorFn[];
         group[key] = new FormControl('', validators);
@@ -37,16 +39,26 @@ export class CredentialIssuanceTwoService {
     return new FormGroup(group);
   }
 
-  getShemaFromCredentialType(credType: CredentialType){
+  getShemasFromCredentialType(credType: CredentialType):[CredentialIssuanceFormSchema, CredentialIssuancePowerFormSchema]{
     //todo
     if(credType === 'LEARCredentialEmployee'){
-      return {} as any;
+      return [] as any;
     }else if(credType === 'LEARCredentialMachine'){
       const countries = this.countryService.getCountriesAsSelectorOptions();
-      return getLearCredentialMachineIssuanceFormSchema(countries);
+      return getLearCredentialMachineIssuanceFormSchemas(countries);
       //todo
     }else if(credType === 'VerifiableCertification'){
-      return {} as any;
+      return [] as any;
+    }else{
+      throw new Error(`Unknown credential type: ${credType}`);
     }
+  }
+
+  getFormSchemaFromCredentialType(credType: CredentialType): CredentialIssuanceFormSchema{
+    return this.getShemasFromCredentialType(credType)[0];
+  }
+
+  getPowersSchemaFromCredentialType(credType: CredentialType): CredentialIssuancePowerFormSchema{
+    return this.getShemasFromCredentialType(credType)[1];
   }
 }

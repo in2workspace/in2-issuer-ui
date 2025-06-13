@@ -2,7 +2,7 @@
 @let fieldName = fieldName$();
 @let control = control$();
 
-@if(abstractControl$() && fieldSchema) {
+@if(abstractControl$() && fieldSchema && !fieldSchema.ignore) {
   @if (fieldSchema.type === 'group' && groupFields$()) {
     <!-- Per als grups, mostrem el FormGroup específic del camp -->
     <mat-card class="mb-4">
@@ -20,6 +20,7 @@
     <!-- Controls individuals -->
     <mat-form-field appearance="outline" class="w-full" [formGroup]="parentFormGroup$()">
       <mat-label>{{ fieldName }}</mat-label>
+      <!-- todo use switch -->
       @if (fieldSchema.controlType === 'number') {
         <input matInput type="number" [formControlName]="fieldName" [id]="fieldName" />
       }@else if (fieldSchema.controlType === 'string'){

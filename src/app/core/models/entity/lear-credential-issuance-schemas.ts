@@ -1,10 +1,12 @@
 // --- Form Schemas ---
 
 import { ValidatorEntry } from "src/app/shared/validators/credential-issuance/issuance-validators";
+import { Power } from "./lear-credential";
 
 // todo unir params de control en controlConfig i de group en groupConfig
 export type CredentialIssuanceFormFieldSchema = {
     type: 'control' | 'group';
+    ignore?: boolean, // sets if it will be used to build form (model and view)
     display?: 'main' | 'side' | 'pref_side'; //should it be displayed in the main space or as a side card? 'pref_side' for sections that are only displayed in main in "asSigner" mode
     // todo afegir-hi per a selector! (p. ex. country)
     controlType?: 'string' | 'number' | 'selector', // for 'control' only
@@ -31,11 +33,11 @@ export type SelectorOption  = { label: string, value: string};
 //   groupFields?: CredentialIssuanceFormSchema;
 // }
 
-
-
-
-  
 export type CredentialIssuanceFormSchema = Record<string, CredentialIssuanceFormFieldSchema>;
+export interface IssuanceFormSchemaPower extends Power{
+  isIn2Required: boolean
+}
+export type CredentialIssuancePowerFormSchema = { power: IssuanceFormSchemaPower[]}
   
 
 // export const LearCredentialEmployeeIssuanceFormSchema: CredentialIssuanceFormSchema = {
@@ -67,8 +69,8 @@ export type CredentialIssuanceFormSchema = Record<string, CredentialIssuanceForm
 //   };
   
 // todo fer directori per cada schema
-export function getLearCredentialMachineIssuanceFormSchema(countries: SelectorOption[]): CredentialIssuanceFormSchema {
-  return {
+export function getLearCredentialMachineIssuanceFormSchemas(countries: SelectorOption[]): [CredentialIssuanceFormSchema, CredentialIssuancePowerFormSchema] {
+  return [{
     mandatee: {
       type: 'group',
       display: 'main',
@@ -116,8 +118,43 @@ export function getLearCredentialMachineIssuanceFormSchema(countries: SelectorOp
           validators: [{ name: 'required' }]
         }
       }
-    }
-  };
+    },
+  }, 
+  { 
+    power: [
+      {
+          "id": "4acd944a-e137-487f-a3f3-3bf4f71d191a",
+          "action": "Execute",
+          "domain": "DOME",
+          "function": "Onboarding",
+          "type": "Domain",
+          isIn2Required: true
+      },
+      {
+          "id": "f7da3294-81cd-42a3-b676-71bf9e982957",
+          "action": [
+              "Create",
+              "Update",
+              "Delete",
+          ],
+          "domain": "DOME",
+          "function": "ProductOffering",
+          "type": "Domain",
+          isIn2Required: false
+      },
+      {
+          "id": "3e272252-647f-4158-943e-6661c117c184",
+          "action": [
+              "Upload",
+              "Attest"
+          ],
+          "domain": "DOME",
+          "function": "Certification",
+          "type": "Domain",
+          isIn2Required: false
+      }
+  ]
+  }];
 }
     
     // todo later!
