@@ -1,19 +1,37 @@
 // --- Form Schemas ---
 
-import { CustomValidatorName, ValidatorEntry } from "src/app/shared/validators/issuance-validators";
+import { ValidatorEntry } from "src/app/shared/validators/credential-issuance/issuance-validators";
 import { CredentialType } from "./lear-credential";
 
+
+// todo unir params de control en controlConfig i de group en groupConfig
 export type CredentialIssuanceFormFieldSchema = {
     type: 'control' | 'group';
     display?: 'main' | 'side' | 'pref_side'; //should it be displayed in the main space or as a side card? 'pref_side' for sections that are only displayed in main in "asSigner" mode
     // todo afegir-hi per a selector! (p. ex. country)
-    controlType?: 'string' | 'number', // for 'control' only
+    controlType?: 'string' | 'number' | 'selector', // for 'control' only
+    multiOptions?: SelectorOption[], //only for 'selector', 'radio' and 'checkbox'
     groupFields?: CredentialIssuanceFormSchema; //for 'group' only
-    errors?: string[], // todo
+    errors?: string[], // todo remove?
     validators?: ValidatorEntry[];
     // todo altres paràmetres? placeholder, 
 };
 
+export type SelectorOption  = { label: string, value: string};
+
+//todo fer que CredentialIssuanceFormFieldSchema sigui union type de control i group
+// export type CredentialIssuanceFormControlSchema = {
+//   type: 'control',
+//   controlType: 'string' | 'number',
+//   errors?: string[],
+//   validators?: ValidatorEntry[]
+// }
+
+// export type CredentialIssuanceFormGroupSchema = {
+//   type: 'group';
+//   display?: 'main' | 'side' | 'pref_side';
+//   groupFields?: CredentialIssuanceFormSchema;
+// }
 
 
 
@@ -51,24 +69,23 @@ export type CredentialIssuanceFormSchema = Record<string, CredentialIssuanceForm
 //   };
   
 // todo fer directori per cada schema
-  export const LearCredentialMachineIssuanceFormSchema: CredentialIssuanceFormSchema = {
+export function getLearCredentialMachineIssuanceFormSchema(countries: SelectorOption[]): CredentialIssuanceFormSchema {
+  return {
     mandatee: {
       type: 'group',
       display: 'main',
       groupFields: {
-        // id: { type: 'control'} will use did-key generator
-        domain: { 
+        domain: {
           type: 'control',
           controlType: 'string',
-          errors: [],
-          validators: [{ name: 'required'}, { name: 'isDomain'}]
+          validators: [{ name: 'required' }, { name: 'isDomain' }]
         },
-        ipAddress: { 
-          type: 'control', 
+        ipAddress: {
+          type: 'control',
           controlType: 'string',
-          validators: [{ name: 'required'}, { name: 'isIP'}] 
-        },
-      },
+          validators: [{ name: 'required' }, { name: 'isIP' }]
+        }
+      }
     },
     mandator: {
       type: 'group',
@@ -77,31 +94,33 @@ export type CredentialIssuanceFormSchema = Record<string, CredentialIssuanceForm
         organizationId: {
           type: 'control',
           controlType: 'string',
-          validators: [{ name: 'required'}] 
+          validators: [{ name: 'required' }]
         },
-        organizationName:  {
+        organizationName: {
           type: 'control',
           controlType: 'string',
-          validators: [{ name: 'required'}] 
+          validators: [{ name: 'required' }]
         },
         country: {
           type: 'control',
-          controlType: 'string',
-          validators: [{ name: 'required'}] 
+          controlType: 'selector',
+          multiOptions: countries,
+          validators: [{ name: 'required' }]
         },
         commonName: {
           type: 'control',
           controlType: 'string',
-          validators: [{ name: 'required'}] 
+          validators: [{ name: 'required' }]
         },
-        serialNumber:  {
+        serialNumber: {
           type: 'control',
           controlType: 'string',
-          validators: [{ name: 'required'}] 
-        }, 
-      },
-    },
-
+          validators: [{ name: 'required' }]
+        }
+      }
+    }
+  };
+}
     
     // todo later!
     // power: {
@@ -109,13 +128,8 @@ export type CredentialIssuanceFormSchema = Record<string, CredentialIssuanceForm
     //   display: 'main',
       //content will be set dynamically
     // },
-  };
 
-  export const IssuanceFormSchemaByType: Record<CredentialType, CredentialIssuanceFormSchema> = {
-    LEARCredentialEmployee: LearCredentialMachineIssuanceFormSchema,//todo
-    LEARCredentialMachine: LearCredentialMachineIssuanceFormSchema,
-    VerifiableCertification: LearCredentialMachineIssuanceFormSchema//todo
-  };
+
   
   // export const VerifiableCertificationIssuanceFormSchema: CredentialIssuanceFormSchema = {
   //   attester: {

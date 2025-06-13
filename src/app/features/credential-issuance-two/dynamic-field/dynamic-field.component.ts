@@ -1,4 +1,5 @@
-import { Component, Input, computed, effect, input } from '@angular/core';
+import { FirstElementPipe } from './../../../shared/pipes/first-element.pipe';
+import { Component, computed, effect, input } from '@angular/core';
 import { FormGroup, FormControl, AbstractControl } from '@angular/forms';
 import { NgIf, NgFor, AsyncPipe, KeyValuePipe } from '@angular/common';
 import { CredentialIssuanceFormFieldSchema } from 'src/app/core/models/entity/lear-credential-issuance-schemas';
@@ -9,11 +10,13 @@ import { MatInput } from '@angular/material/input';
 import { MatIcon } from '@angular/material/icon';
 import { MatOption } from '@angular/material/core';
 import { MatButton } from '@angular/material/button';
+import { TranslatePipe } from '@ngx-translate/core';
+import { MatSelect } from '@angular/material/select';
 
 @Component({
   selector: 'app-dynamic-field',
   standalone: true,
-  imports: [KeyValuePipe, NgIf, NgFor, AsyncPipe, ReactiveFormsModule, MatCard, 
+  imports: [KeyValuePipe, NgIf, NgFor, AsyncPipe, FirstElementPipe, ReactiveFormsModule, MatCard, 
         MatButton,
         MatCard,
         MatCardContent,
@@ -22,7 +25,9 @@ import { MatButton } from '@angular/material/button';
         MatIcon,
         MatInput,
         MatLabel,
-        MatOption
+        MatOption,
+        MatSelect,
+        TranslatePipe
   ],
   templateUrl: './dynamic-field.component.html'
 })
@@ -58,5 +63,11 @@ export class DynamicFieldComponent {
       value,
     }))
   );
+
+  getFirstErrorMessage(control: AbstractControl | null): string | null {
+  if (!control || !control.errors) return null;
+  const firstKey = Object.keys(control.errors)[0];
+  return control.errors[firstKey];
+}
 }
 

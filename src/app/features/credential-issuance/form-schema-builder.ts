@@ -1,6 +1,6 @@
 import { FormControl, FormGroup, ValidatorFn } from "@angular/forms";
 import { CredentialIssuanceFormSchema } from "src/app/core/models/entity/lear-credential-issuance-schemas";
-import { ALL_VALIDATORS_FACTORY_MAP, ValidatorEntry } from "src/app/shared/validators/issuance-validators";
+import { ALL_VALIDATORS_FACTORY_MAP, ValidatorEntry } from "src/app/shared/validators/credential-issuance/issuance-validators";
 
 export function buildFormFromSchema(
   schema: CredentialIssuanceFormSchema

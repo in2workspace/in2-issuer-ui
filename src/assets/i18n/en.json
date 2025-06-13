@@ -221,6 +221,7 @@
       "message": "There was an error with the mail server. Please try again later to send a send reminder, if problem persist contact support team."
     },
     "form":{
+      "ip": "invaliiid ip",
       "required": "This field is required.",
       "invalid_character": "Invalid character/s",
       "only_letters_and_numbers": "Only letters and numbers are allowed",
