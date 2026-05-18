@@ -33,7 +33,6 @@ export const orgIdValidatorEntries: ValidatorEntryUnion[] = [
 ];
 
 export const serialNumberValidatorEntries: ValidatorEntryUnion[] = [
-  { name: 'required' },
   { name: 'minLength', args: [7] },
   { name: 'maxLength', args: [15] },
   { name: 'pattern', args: ["^[a-zA-Z0-9-]+$"] }
